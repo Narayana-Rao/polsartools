@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MF3CF (Model Free 3-Component decomposition for Full-pol data) &mdash; PolSARtools 0.1 (alpha) documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="PRVI (Polarimetric Radar Vegetation Index)" href="PRVI_fp.html" />
+    <link rel="prev" title="GRVI (Generalized volume based Radar Vegetation Index)" href="GRVI.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PolSARtools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../General_Information.html">General Information</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../functions_description.html">Functions Description</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../functions_description.html#full-pol-functions"><strong>Full-pol functions</strong></a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="RVI_fp.html"><code class="docutils literal notranslate"><span class="pre">RVI</span></code> (Radar Vegetation Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GRVI.html"><code class="docutils literal notranslate"><span class="pre">GRVI</span></code> (Generalized volume based Radar Vegetation Index)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">MF3CF</span></code> (Model Free 3-Component decomposition for Full-pol data)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PRVI_fp.html"><code class="docutils literal notranslate"><span class="pre">PRVI</span></code> (Polarimetric Radar Vegetation Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DOP_fp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../functions_description.html#compact-pol-functions"><strong>Compact-pol functions</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../functions_description.html#dual-pol"><strong>Dual-pol</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../References.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PolSARtools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../functions_description.html">Functions Description</a> &raquo;</li>
+      <li><code class="docutils literal notranslate"><span class="pre">MF3CF</span></code> (Model Free 3-Component decomposition for Full-pol data)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/files/functions/full_pol/MF3CF.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mf3cf-model-free-3-component-decomposition-for-full-pol-data">
+<h1><code class="docutils literal notranslate"><span class="pre">MF3CF</span></code> (Model Free 3-Component decomposition for Full-pol data)<a class="headerlink" href="#mf3cf-model-free-3-component-decomposition-for-full-pol-data" title="Permalink to this heading"></a></h1>
+<p>This functionality computes the model free 3 component scattering power decomposition for full polarimetric SAR data. The required input and the computed output are as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="p">:</span> <span class="n">input_T3</span><span class="o">/</span><span class="n">C3_folder</span><span class="p">,</span> <span class="n">window_size</span>
+<span class="n">output</span><span class="p">:</span> <span class="n">Ps_FP</span><span class="o">.</span><span class="n">bin</span><span class="p">,</span> <span class="n">Pd_FP</span><span class="o">.</span><span class="n">bin</span><span class="p">,</span> <span class="n">Pv_FP</span><span class="o">.</span><span class="n">bin</span><span class="p">,</span> <span class="n">Theta_FP</span><span class="o">.</span><span class="n">bin</span>
+</pre></div>
+</div>
+<p>The formulation of the scattering powers (<span class="math notranslate nohighlight">\(P_s\)</span> : Surface, <span class="math notranslate nohighlight">\(P_d\)</span> : Double bounce, <span class="math notranslate nohighlight">\(P_v\)</span> : volume) is as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P_{d}^{\text{FP}}=\frac{m_{\text{FP}}{\text{Span}}}{2}{\left(1-\sin2\theta_{\text{FP}}\right)}\\P_{v}^{\text{FP}}={\text{Span}}\left(1-m_{\text{FP}}\right)\\P_{s}^{\text{FP}}=\frac{m_{\text{FP}}{\text{Span}}}{2}\left(1+\sin2\theta_{\text{FP}}\right)\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(m_\text{FP}\)</span> is degree of polarization, <span class="math notranslate nohighlight">\(\theta_\text{FP}\)</span> scattering type parameter, Span is the sum of the diagonal elements os coherence matrix (T3).  The derivation of these parameters in-terms of coherancey matrix (T3) elements is as shown below. Further details can be obtained from [[4]](#4)</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}m_{\text{FP}}=\sqrt{1-\frac{27|\mathbf{T3}|}{\big(\mathrm{Trace}(\mathbf{T3})\big)^3}};\qquad{}\tan\theta_{\text{FP}}=\frac{m_{\text{FP}}{\text{Span}}\left(T_{11}-T_{22}-T_{33}\right)}{T_{11}\left(T_{22}+T_{33}\right)+m_{\text{FP}}^{2}{\text{Span}}^{2}}\\\text{Span}=T_{11}+T_{22}+T_{33}\end{aligned}\end{align} \]</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="GRVI.html" class="btn btn-neutral float-left" title="GRVI (Generalized volume based Radar Vegetation Index)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PRVI_fp.html" class="btn btn-neutral float-right" title="PRVI (Polarimetric Radar Vegetation Index)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Narayanarao Bhogapurapu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>General Information &mdash; PolSARtools 0.1 (alpha) documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Functions Description" href="functions_description.html" />
+    <link rel="prev" title="Welcome to PolSAR tools’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> PolSARtools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">General Information</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#up-and-running">Up and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#available-functionalities">Available functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-usage">Example usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions-description">Functions description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributions">Contributions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="functions_description.html">Functions Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="References.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PolSARtools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>General Information</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/files/General_Information.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="general-information">
+<h1>General Information<a class="headerlink" href="#general-information" title="Permalink to this heading"></a></h1>
+<p>This plugin generates derived SAR parameters (viz. vegetation indices, polarimetric decomposition parameters) from input polarimetric matrix (C3, T3, C2, T2). The input data needs to be in <a class="reference external" href="https://earth.esa.int/web/polsarpro/home">PolSARpro</a>/<a class="reference external" href="https://www.l3harrisgeospatial.com/Software-Technology/ENVI">ENVI</a> format (*.bin and *.hdr). It requires <a class="reference external" href="https://numpy.org/">numpy</a>, <a class="reference external" href="https://matplotlib.org/">matplotlib</a> python libraries pre-installed.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>PolSAR tools requires QGIS version &gt;=3.0.</p>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt>The easiest way (requires internet connection) :</dt><dd><ul>
+<li><p>Open QGIS -&gt; Plugins -&gt; Manage and Install Plugins… –&gt; select <code class="docutils literal notranslate"><span class="pre">All</span></code> tab -&gt; search for <code class="docutils literal notranslate"><span class="pre">PolSAR</span> <span class="pre">tools</span></code> –&gt; select and install plugin</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Alternative way (offline installation) :</dt><dd><ul>
+<li><p>Go to <a class="reference external" href="https://github.com/Narayana-Rao/SAR-tools/releases">releases</a> of PolSAR tools -&gt; select desired version -&gt; download the <code class="docutils literal notranslate"><span class="pre">.zip</span></code> file.</p></li>
+<li><p>Open QGIS -&gt; Plugins -&gt; Manage and Install Plugins… –&gt; <code class="docutils literal notranslate"><span class="pre">install</span> <span class="pre">from</span> <span class="pre">ZIP</span></code> tab –&gt; select the downloaded zip –&gt; install plugin (ignore warnings, if any).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="up-and-running">
+<span id="id1"></span><h2>Up and running<a class="headerlink" href="#up-and-running" title="Permalink to this heading"></a></h2>
+<p>After successful installation, find the plugin by opening <strong>QGIS</strong> –&gt; Plugins –&gt; <code class="docutils literal notranslate"><span class="pre">PolSAR</span> <span class="pre">tools</span></code> –&gt; Process. As shown in the following figure.</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="../_images/open_ui.png"><img alt="../_images/open_ui.png" src="../_images/open_ui.png" style="width: 626.4000000000001px; height: 237.60000000000002px;" /></a>
+<figcaption>
+<p><span class="caption-text">Opening the plugin</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="../_images/main_ui.png"><img alt="../_images/main_ui.png" src="../_images/main_ui.png" style="width: 475.2px; height: 613.1999999999999px;" /></a>
+<figcaption>
+<p><span class="caption-text">GUI-Main window layout</span><a class="headerlink" href="#id4" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>Layout</strong>:</p>
+<ol class="arabic simple">
+<li><p>Data type tabs: Functions are arranged according to the data dype (full-, compact- and dual-pol).</p></li>
+<li><p>Function detials viewer: Contains list of functions for respective data tab.</p></li>
+<li><p>Derived arameter selection, required input variables and constraints.</p></li>
+<li><p>Input data folder</p></li>
+<li><p>Logger: displays the log of procesing parameters</p></li>
+<li><p>progressbar: displays the progress of current task.</p></li>
+<li><p>Credits and quick help.</p></li>
+</ol>
+<p>Additional <code class="docutils literal notranslate"><span class="pre">reset</span></code> button to clear the envirinment, <code class="docutils literal notranslate"><span class="pre">view</span> <span class="pre">data</span></code> button to import the data into <strong>QGIS</strong> environment and <code class="docutils literal notranslate"><span class="pre">Process</span></code> button to start processing after selecting valid input data variables.</p>
+</section>
+<section id="available-functionalities">
+<h2>Available functionalities<a class="headerlink" href="#available-functionalities" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><strong>Full-pol</strong></p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>Model free 3-Component decomposition for full-pol data (MF3CF)</p></li>
+<li><p>Radar Vegetation Index (RVI)</p></li>
+<li><p>Generalized volume Radar Vegetation Index (GRVI)</p></li>
+<li><p>Polarimetric Radar Vegetation Index (PRVI)</p></li>
+<li><p>Degree of Polarization (DOP)</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p><strong>Compact-pol</strong></p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>Model free 3-Component decomposition for compact-pol data (MF3CC)</p></li>
+<li><p>Improved S-Omega decomposition for compact-pol data (iS-Omega)</p></li>
+<li><p>Compact-pol Radar Vegetation Index (CpRVI)</p></li>
+<li><p>Degree of Polarization (DOP)</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p><strong>Dual-pol</strong></p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>Dual-pol Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/DpRVI.html">DpRVI</a>)</p></li>
+<li><p>Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/RVI_dp.html">RVI</a>)</p></li>
+<li><p>Degree of Polarization (<a class="reference external" href="functions/dual_pol/DOP_dp.html">DOP</a>)</p></li>
+<li><p>Polarimetric Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/PRVI_dp.html">PRVI</a>)</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="example-usage">
+<h2>Example usage<a class="headerlink" href="#example-usage" title="Permalink to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All the following processing steps should be done in sequential manner. Sample data for all the polarization modes is provided in [sample_data](/sample_data/) folder.</p>
+</div>
+<p><strong>STEP 1</strong>: Open the plugin as explained in <a class="reference internal" href="#up-and-running"><span class="std std-ref">Up and running</span></a> section.</p>
+<p><strong>STEP 2</strong>: Select the polarimetric data type (Full/compact/dual).</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="../_images/step2.png"><img alt="../_images/step2.png" src="../_images/step2.png" style="width: 307.0px; height: 450.0px;" /></a>
+<figcaption>
+<p><span class="caption-text">Selecting the polarimetric mode</span><a class="headerlink" href="#id5" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>STEP 3</strong>: Select the parameter/descriptor from the dropdown menu.</p>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="../_images/step3.png"><img alt="../_images/step3.png" src="../_images/step3.png" style="width: 331.5px; height: 494.5px;" /></a>
+<figcaption>
+<p><span class="caption-text">Selecting the polarimetric descriptor</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>STEP 4</strong>: Provide the required input variables.</p>
+<figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="../_images/step4.png"><img alt="../_images/step4.png" src="../_images/step4.png" style="width: 332.0px; height: 497.0px;" /></a>
+<figcaption>
+<p><span class="caption-text">Selecting the input variables</span><a class="headerlink" href="#id7" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>STEP 5</strong>: Select the input matrix folder.</p>
+<figure class="align-center" id="id8">
+<a class="reference internal image-reference" href="../_images/step5.png"><img alt="../_images/step5.png" src="../_images/step5.png" style="width: 549.45px; height: 236.25px;" /></a>
+<figcaption>
+<p><span class="caption-text">Selecting the input folder</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>STEP 6</strong>: Wait for the logger to prompt <code class="docutils literal notranslate"><span class="pre">`-&gt;&gt;</span> <span class="pre">Ready</span> <span class="pre">to</span> <span class="pre">process.`</span></code> –&gt; click process</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not click process button more than once while it is processing. It may crash the QGIS and the plugin.
+It is possible that the plugin may show not responding for larger datasets but please wait for the process to complete.</p>
+</div>
+<figure class="align-center" id="id9">
+<a class="reference internal image-reference" href="../_images/step6.png"><img alt="../_images/step6.png" src="../_images/step6.png" style="width: 610.65px; height: 448.65000000000003px;" /></a>
+<figcaption>
+<p><span class="caption-text">Processing the data for selected descriptor</span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>STEP 7</strong> (optional): Click view data to import the data into QGIS for vizualisation of the generated descriptors.</p>
+<figure class="align-center" id="id10">
+<a class="reference internal image-reference" href="../_images/step7a.png"><img alt="../_images/step7a.png" src="../_images/step7a.png" style="width: 756.0px; height: 445.5px;" /></a>
+<figcaption>
+<p><span class="caption-text">Importing the data into QGIS for visualization</span><a class="headerlink" href="#id10" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id11">
+<a class="reference internal image-reference" href="../_images/step7b.png"><img alt="../_images/step7b.png" src="../_images/step7b.png" style="width: 531.0px; height: 391.5px;" /></a>
+<figcaption>
+<p><span class="caption-text">Imported data in QGIS</span><a class="headerlink" href="#id11" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="functions-description">
+<h2>Functions description<a class="headerlink" href="#functions-description" title="Permalink to this heading"></a></h2>
+<p>Description and the details of all the core functions of this plugin are available here: (<a class="reference external" href="functions_description.html">Functions description</a>)</p>
+</section>
+<section id="contributions">
+<h2>Contributions<a class="headerlink" href="#contributions" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Contribute to the software</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/Narayana-Rao/PolSAR-tools/blob/master/help/CONTRIBUTING.md">Contribution guidelines for this project</a></p>
+</div></blockquote>
+</li>
+<li><p>Report issues or problems with the software</p></li>
+</ol>
+<blockquote>
+<div><p>Please raise your issues here : <a class="reference external" href="https://github.com/Narayana-Rao/PolSAR-tools/issues">https://github.com/Narayana-Rao/PolSAR-tools/issues</a></p>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>Seek support</p></li>
+</ol>
+<blockquote>
+<div><p>Please write to us: <a class="reference external" href="mailto:bnarayanarao&#37;&#52;&#48;iitb&#46;ac&#46;in">bnarayanarao<span>&#64;</span>iitb<span>&#46;</span>ac<span>&#46;</span>in</a></p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to PolSAR tools’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="functions_description.html" class="btn btn-neutral float-right" title="Functions Description" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Narayanarao Bhogapurapu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

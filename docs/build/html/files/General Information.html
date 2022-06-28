@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>General Information &#8212; SAR tools v0.6 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="general-information">
+<h1>General Information<a class="headerlink" href="#general-information" title="Permalink to this headline">¶</a></h1>
+<p>This plugin generates derived SAR parameters (viz. vegetation indices, polarimetric decomposition parameters) from input polarimetric matrix (C3, T3, C2, T2). The input data needs to be in [PolSARpro](<a class="reference external" href="https://earth.esa.int/web/polsarpro/home)/[ENVI](https://www.l3harrisgeospatial.com/Software-Technology/ENVI">https://earth.esa.int/web/polsarpro/home)/[ENVI](https://www.l3harrisgeospatial.com/Software-Technology/ENVI</a>) format (*.bin and *.hdr). It requires [numpy](<a class="reference external" href="https://numpy.org/">https://numpy.org/</a>), [matplotlib](<a class="reference external" href="https://matplotlib.org/">https://matplotlib.org/</a>) python libraries pre-installed.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>&gt; <strong>__Note:__</strong> SAR tools requires QGIS version &gt;=3.0.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>The easiest way (requires internet connection) :</dt><dd><ul>
+<li><p>Open QGIS -&gt; Plugins -&gt; Manage and Install Plugins… -&gt; select <code class="docutils literal notranslate"><span class="pre">`All`</span></code> tab -&gt; search for <code class="docutils literal notranslate"><span class="pre">`SAR</span> <span class="pre">tools`</span></code> –&gt; select and install plugin</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Alternative way (offline installation) :</dt><dd><ul>
+<li><p>Go to [releases](<a class="reference external" href="https://github.com/Narayana-Rao/SAR-tools/releases">https://github.com/Narayana-Rao/SAR-tools/releases</a>) of this repository -&gt; select desired version -&gt; download the <code class="docutils literal notranslate"><span class="pre">`.zip`</span></code> file.</p></li>
+<li><p>Open QGIS -&gt; Plugins -&gt; Manage and Install Plugins… -&gt; <code class="docutils literal notranslate"><span class="pre">`install</span> <span class="pre">from</span> <span class="pre">ZIP`</span></code> tab –&gt; select the downloaded zip –&gt; install plugin (ignore warnings, if any).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="available-functionalities">
+<h2>Available functionalities:<a class="headerlink" href="#available-functionalities" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>Indices :</dt><dd><ul>
+<li><p>Radar Vegetation Index (RVI) (Full-pol and dual-pol)</p></li>
+<li><p>Generalized volume Radar Vegetation Index (GRVI)</p></li>
+<li><p>Polarimetric Radar Vegetation Index (PRVI) (Full-pol and dual-pol)</p></li>
+<li><p>Dual-pol Radar Vegetation Index (DpRVI)</p></li>
+<li><p>Degree of Polarization (DOP) (Full-pol, dual-pol, and compact-pol)</p></li>
+<li><p>Compact-pol Radar Vegetation Index (CpRVI)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Polarimetric Decompositions :</dt><dd><ul>
+<li><p>Model free 3-Component decomposition for full-pol data (MF3CF).</p></li>
+<li><p>Model free 3-Component decomposition for compact-pol data (MF3CC)</p></li>
+<li><p>Improved S-Omega decomposition for compact-pol data (iS-Omega)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">SAR tools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Narayanarao Bhogapurapu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/files/General Information.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

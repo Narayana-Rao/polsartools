@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Functions Description &mdash; PolSARtools 0.1 (alpha) documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="RVI (Radar Vegetation Index)" href="functions/full_pol/RVI_fp.html" />
+    <link rel="prev" title="General Information" href="General_Information.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> PolSARtools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="General_Information.html">General Information</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Functions Description</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#full-pol-functions"><strong>Full-pol functions</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions/full_pol/RVI_fp.html"><code class="docutils literal notranslate"><span class="pre">RVI</span></code> (Radar Vegetation Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/full_pol/GRVI.html"><code class="docutils literal notranslate"><span class="pre">GRVI</span></code> (Generalized volume based Radar Vegetation Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/full_pol/MF3CF.html"><code class="docutils literal notranslate"><span class="pre">MF3CF</span></code> (Model Free 3-Component decomposition for Full-pol data)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/full_pol/PRVI_fp.html"><code class="docutils literal notranslate"><span class="pre">PRVI</span></code> (Polarimetric Radar Vegetation Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/full_pol/DOP_fp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#compact-pol-functions"><strong>Compact-pol functions</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions/compact_pol/cprvi.html"><code class="docutils literal notranslate"><span class="pre">CpRVI</span></code> (Compact-pol Radar Vegetation Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/compact_pol/iS_Omega.html"><code class="docutils literal notranslate"><span class="pre">iS-Omega</span></code> (improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/compact_pol/MF3CC.html"><code class="docutils literal notranslate"><span class="pre">MF3CC</span></code> (Model Free 3-Component decomposition for Compact-pol data)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/compact_pol/DOP_cp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dual-pol"><strong>Dual-pol</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions/dual_pol/RVI_dp.html"><code class="docutils literal notranslate"><span class="pre">RVI</span></code> (Radar Vegetation Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/dual_pol/DpRVI.html"><code class="docutils literal notranslate"><span class="pre">DpRVI</span></code> (Dual-pol Radar Vegetation Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/dual_pol/PRVI_dp.html"><code class="docutils literal notranslate"><span class="pre">PRVI</span></code> (Polarimetric Radar Vegetation Index)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/dual_pol/DOP_dp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="References.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PolSARtools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Functions Description</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/files/functions_description.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="functions-description">
+<h1>Functions Description<a class="headerlink" href="#functions-description" title="Permalink to this heading"></a></h1>
+<section id="full-pol-functions">
+<h2><strong>Full-pol functions</strong><a class="headerlink" href="#full-pol-functions" title="Permalink to this heading"></a></h2>
+<p>Full-pol functionalities require the SAR data in the form of covariance (C3) or coherency matrix (T3). A typical file structures of T3 and C3 matrices are as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2"><p>C3 matrix files</p></th>
+<th class="head" colspan="2"><p>T3 matrix files</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>C11.bin</p></td>
+<td><p>C11.hdr</p></td>
+<td><p>T11.bin</p></td>
+<td><p>T11.hdr</p></td>
+</tr>
+<tr class="row-odd"><td><p>C12_real.bin</p></td>
+<td><p>C12_real.hdr</p></td>
+<td><p>T12_real.bin</p></td>
+<td><p>T12_real.hdr</p></td>
+</tr>
+<tr class="row-even"><td><p>C12_imag.bin</p></td>
+<td><p>C12_imag.hdr</p></td>
+<td><p>T12_imag.bin</p></td>
+<td><p>T12_imag.hdr</p></td>
+</tr>
+<tr class="row-odd"><td><p>C13_real.bin</p></td>
+<td><p>C13_real.hdr</p></td>
+<td><p>T13_real.bin</p></td>
+<td><p>T13_real.hdr</p></td>
+</tr>
+<tr class="row-even"><td><p>C13_imag.bin</p></td>
+<td><p>C13_imag.hdr</p></td>
+<td><p>T13_imag.bin</p></td>
+<td><p>T13_imag.hdr</p></td>
+</tr>
+<tr class="row-odd"><td><p>C22.bin</p></td>
+<td><p>C22.hdr</p></td>
+<td><p>T22.bin</p></td>
+<td><p>T22.hdr</p></td>
+</tr>
+<tr class="row-even"><td><p>C23_real.bin</p></td>
+<td><p>C23_real.hdr</p></td>
+<td><p>T23_real.bin</p></td>
+<td><p>T23_real.hdr</p></td>
+</tr>
+<tr class="row-odd"><td><p>C23_imag.bin</p></td>
+<td><p>C23_imag.hdr</p></td>
+<td><p>T23_imag.bin</p></td>
+<td><p>T23_imag.hdr</p></td>
+</tr>
+<tr class="row-even"><td><p>C33.bin</p></td>
+<td><p>C33.hdr</p></td>
+<td><p>T33.bin</p></td>
+<td><p>T33.hdr</p></td>
+</tr>
+</tbody>
+</table>
+<p>Following are the avaialble functions for full-pol data:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/RVI_fp.html"><code class="docutils literal notranslate"><span class="pre">RVI</span></code> (Radar Vegetation Index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/GRVI.html"><code class="docutils literal notranslate"><span class="pre">GRVI</span></code> (Generalized volume based Radar Vegetation Index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/MF3CF.html"><code class="docutils literal notranslate"><span class="pre">MF3CF</span></code> (Model Free 3-Component decomposition for Full-pol data)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/PRVI_fp.html"><code class="docutils literal notranslate"><span class="pre">PRVI</span></code> (Polarimetric Radar Vegetation Index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/DOP_fp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+</ul>
+</div>
+</section>
+<section id="compact-pol-functions">
+<h2><strong>Compact-pol functions</strong><a class="headerlink" href="#compact-pol-functions" title="Permalink to this heading"></a></h2>
+<p>Compact-pol functionalities require the SAR data in the form of 2x2 covariance matrix (C2). A typical file structures of C2 matrix is as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2"><p>C2 matrix files</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>C11.bin</p></td>
+<td><p>C11.hdr</p></td>
+</tr>
+<tr class="row-odd"><td><p>C12_real.bin</p></td>
+<td><p>C12_real.hdr</p></td>
+</tr>
+<tr class="row-even"><td><p>C12_imag.bin</p></td>
+<td><p>C12_imag.hdr</p></td>
+</tr>
+<tr class="row-odd"><td><p>C22.bin</p></td>
+<td><p>C22.hdr</p></td>
+</tr>
+</tbody>
+</table>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/cprvi.html"><code class="docutils literal notranslate"><span class="pre">CpRVI</span></code> (Compact-pol Radar Vegetation Index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/iS_Omega.html"><code class="docutils literal notranslate"><span class="pre">iS-Omega</span></code> (improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/MF3CC.html"><code class="docutils literal notranslate"><span class="pre">MF3CC</span></code> (Model Free 3-Component decomposition for Compact-pol data)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/DOP_cp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+</ul>
+</div>
+</section>
+<section id="dual-pol">
+<h2><strong>Dual-pol</strong><a class="headerlink" href="#dual-pol" title="Permalink to this heading"></a></h2>
+<p>Dual-pol functionalities require the SAR data in the form of 2x2 covariance matrix (C2). A typical file structures of C2 matrix is as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2"><p>C2 matrix files</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>C11.bin</p></td>
+<td><p>C11.hdr</p></td>
+</tr>
+<tr class="row-odd"><td><p>C12_real.bin</p></td>
+<td><p>C12_real.hdr</p></td>
+</tr>
+<tr class="row-even"><td><p>C12_imag.bin</p></td>
+<td><p>C12_imag.hdr</p></td>
+</tr>
+<tr class="row-odd"><td><p>C22.bin</p></td>
+<td><p>C22.hdr</p></td>
+</tr>
+</tbody>
+</table>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/RVI_dp.html"><code class="docutils literal notranslate"><span class="pre">RVI</span></code> (Radar Vegetation Index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/DpRVI.html"><code class="docutils literal notranslate"><span class="pre">DpRVI</span></code> (Dual-pol Radar Vegetation Index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/PRVI_dp.html"><code class="docutils literal notranslate"><span class="pre">PRVI</span></code> (Polarimetric Radar Vegetation Index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/DOP_dp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="General_Information.html" class="btn btn-neutral float-left" title="General Information" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="functions/full_pol/RVI_fp.html" class="btn btn-neutral float-right" title="RVI (Radar Vegetation Index)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Narayanarao Bhogapurapu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

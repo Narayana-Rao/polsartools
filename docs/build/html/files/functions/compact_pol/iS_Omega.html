@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iS-Omega (improved S-\(\Omega\) decomposition) &mdash; PolSARtools 0.1 (alpha) documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="MF3CC (Model Free 3-Component decomposition for Compact-pol data)" href="MF3CC.html" />
+    <link rel="prev" title="CpRVI (Compact-pol Radar Vegetation Index)" href="cprvi.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PolSARtools
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../General_Information.html">General Information</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../functions_description.html">Functions Description</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../functions_description.html#full-pol-functions"><strong>Full-pol functions</strong></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../functions_description.html#compact-pol-functions"><strong>Compact-pol functions</strong></a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cprvi.html"><code class="docutils literal notranslate"><span class="pre">CpRVI</span></code> (Compact-pol Radar Vegetation Index)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">iS-Omega</span></code> (improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MF3CC.html"><code class="docutils literal notranslate"><span class="pre">MF3CC</span></code> (Model Free 3-Component decomposition for Compact-pol data)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DOP_cp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../functions_description.html#dual-pol"><strong>Dual-pol</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../References.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PolSARtools</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../functions_description.html">Functions Description</a> &raquo;</li>
+      <li><code class="docutils literal notranslate"><span class="pre">iS-Omega</span></code> (improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/files/functions/compact_pol/iS_Omega.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="is-omega-improved-s-omega-decomposition">
+<h1><code class="docutils literal notranslate"><span class="pre">iS-Omega</span></code> (improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition)<a class="headerlink" href="#is-omega-improved-s-omega-decomposition" title="Permalink to this heading"></a></h1>
+<p>This functionality computes the scattering powers for compact polarimetric SAR data. This is an improved decomposition technique based on Stokes vector(S) and the polarized power fraction (<span class="math notranslate nohighlight">\(\Omega\)</span>). The required input and the computed output are as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="p">:</span> <span class="n">input_C2_folder</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">chi</span>
+<span class="n">output</span><span class="p">:</span> <span class="n">Ps_iSOmega</span><span class="o">.</span><span class="n">bin</span><span class="p">,</span> <span class="n">Pd_iSOmega</span><span class="o">.</span><span class="n">bin</span><span class="p">,</span><span class="n">Pv_iSOmega</span><span class="o">.</span><span class="n">bin</span>
+</pre></div>
+</div>
+<p>The stokes paramters can be written in terms of the covariance matrx (C2) elements as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}S_0=\text{C11+C22};\qquad{}S_1=\text{C11-C22};\\
+S_2=\text{C12+C21};\qquad{}S_3=\pm\text{j(C12-C21)}\end{split}\]</div>
+<p>Then, the parameters Same-sense Circular (<span class="math notranslate nohighlight">\(\text{SC}\)</span>) and Opposite-sense Circular (<span class="math notranslate nohighlight">\(\text{OC}\)</span>) can be expressed as follows:</p>
+<div class="math notranslate nohighlight">
+\[\text{SC}=\frac{S_0-S_3}{2};\qquad{}\text{OC}=\frac{S_0+S_3}{2};\]</div>
+<p>Now, based on the ratio of <span class="math notranslate nohighlight">\(\text{SC}\)</span> and <span class="math notranslate nohighlight">\(\text{OC}\)</span> the decomposition powers can be derived as given below. Further details can be found in [[7]](#7)</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\text{SC/OC}&lt;1;\qquad{}\qquad{}\qquad{}\qquad{}\qquad{}\qquad{}\qquad{}\text{SC/OC}&gt;1\\P_s=\Omega\left(S_{0}-\left(1-\Omega\right)\text{SC}\right);\qquad{}\qquad{}\qquad{}P_s=\Omega\left(1-\Omega\right)\text{OC}\\P_d=\Omega\left(1-\Omega\right)\text{SC};\qquad{}\qquad{}\qquad{}P_d=\Omega\left(S_{r0}-\left(1-\Omega\right)\text{OC}\right)
+\\P_v=S_{0}\left(1-\Omega\right)\qquad{}\qquad{}\qquad{}\qquad{}\qquad{}P_v=S_{0}\left(1-\Omega\right)\end{split}\]</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cprvi.html" class="btn btn-neutral float-left" title="CpRVI (Compact-pol Radar Vegetation Index)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MF3CC.html" class="btn btn-neutral float-right" title="MF3CC (Model Free 3-Component decomposition for Compact-pol data)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Narayanarao Bhogapurapu.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
