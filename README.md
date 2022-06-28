@@ -1,2 +1,2 @@
-# polsartools
+# polsartools PyPI package
  
