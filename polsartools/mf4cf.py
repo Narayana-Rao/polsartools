@@ -6,7 +6,7 @@ warnings.filterwarnings('ignore')
 
 from .basic_func import read_bin, write_bin, conv2d
 
-def mf4cf(T3_folder,ws,write_flag=None):
+def mf4cf(T3_folder,window_size=1,write_flag=None):
         
     T11 = read_bin(T3_folder+"/T11.bin").astype(np.float32)
     T22 = read_bin(T3_folder+"/T22.bin").astype(np.float32)
@@ -35,7 +35,7 @@ def mf4cf(T3_folder,ws,write_flag=None):
 
     del T11, T22, T33,T12, T13, T23, T12_i,T12_r, T13_i, T13_r, T23_i, T23_r
 
-    kernel = np.ones((ws,ws),np.float32)/(ws*ws)
+    kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
 
 
     t11_T1r = conv2d(np.real(t11_T1),kernel)
