@@ -32,7 +32,7 @@ release = '0.1 (alpha)'
 # ones.
 extensions = [
 	'sphinx_rtd_theme',
-	'rinoh.frontend.sphinx',
+	# 'rinoh.frontend.sphinx',
     # 'sphinx.ext.mathjax',
     # 'sphinx.ext.ifconfig',
     # 'sphinx.ext.viewcode',
