@@ -1,5 +1,7 @@
 # PolSARtools PyPI package (under development!)
  
+ [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
+
  Dowload the repo
  
  cd to the downloaded folder
