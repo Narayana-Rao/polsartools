@@ -1,9 +1,9 @@
 from osgeo import gdal
 import numpy as np
 import os 
-import warnings
+# import warnings
 from shutil import copyfile
-warnings.filterwarnings('ignore')
+# warnings.filterwarnings('ignore')
 
 from .basic_func import read_bin, write_bin, conv2d
 
@@ -130,6 +130,8 @@ def C3_c2(inFolder):
 	    
 	    # copy config file
 	    copyfile(inFolder+'/config.txt', inFolder+'\\C2_pp3\\config.txt')
+	else:
+		pass
 
 def S2_T3(S11,S12,S22):
 
@@ -145,7 +147,4 @@ def S2_T3(S11,S12,S22):
 	T12 = Kp[0]*np.conj(Kp[1])
 	T13 = Kp[0]*np.conj(Kp[2])
 	T23 = Kp[1]*np.conj(Kp[2])
-    
-    return np.dstack((T11,T12,T13,
-                     np.conjugate(T12),T22,T23,
-                     np.conjugate(T13),T23,T33))
+	return np.dstack((T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),T23,T33))
