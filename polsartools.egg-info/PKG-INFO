@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: polsartools
+Version: 0.1
+Summary: A package to process Synthetic Aperture Radar data
+Home-page: https://github.com/Narayana-Rao/polsartools
+Author: Narayanarao Bhogapurapu
+Author-email: bnarayanarao@iitb.ac.in
+License: GPL-3.0 license
+Platform: UNKNOWN
+Classifier: Development Status :: 1 - alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved ::  GPL-3.0 license
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3
+License-File: LICENSE
+
+UNKNOWN
+
