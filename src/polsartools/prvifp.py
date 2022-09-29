@@ -7,7 +7,7 @@ warnings.filterwarnings('ignore')
 from .basic_func import read_bin, write_bin, conv2d
 
 
-def mf3cf(T3_folder,window_size=1,write_flag=None):
+def prvifp(T3_folder,window_size=1,write_flag=None):
 
     T11 = read_bin(T3_folder+"/T11.bin")
     T22 = read_bin(T3_folder+"/T22.bin")
@@ -82,23 +82,13 @@ def mf3cf(T3_folder,window_size=1,write_flag=None):
     t33_T1i = conv2d(np.imag(t33_T1),kernel)
     t33s = t33_T1r+1j*t33_T1i
     del t33_T1r,t33_T1i
+    
 
-                
     det_T3 = t11s*(t22s*t33s-t23s*t32s)-t12s*(t21s*t33s-t23s*t31s)+t13s*(t21s*t32s-t22s*t31s)
     trace_T3 = t11s + t22s + t33s
-    m1 = np.real(np.sqrt(1-(27*(det_T3/(trace_T3**3)))))
-    h = (t11s - t22s - t33s)
-    g = (t22s + t33s)
-    span = t11s + t22s + t33s
-                
-    val = (m1*span*h)/(t11s*g+m1**2*span**2)
-    thet = np.real(np.arctan(val))
-        
-    theta_FP = np.rad2deg(thet).astype(np.float32)
-                
-    Ps_FP = np.nan_to_num(np.real(((m1*(span)*(1+np.sin(2*thet))/2)))).astype(np.float32)
-    Pd_FP = np.nan_to_num(np.real(((m1*(span)*(1-np.sin(2*thet))/2)))).astype(np.float32)
-    Pv_FP = np.nan_to_num(np.real(span*(1-m1))).astype(np.float32)
+    dop_fp = np.sqrt(1-((27*det_T3)/trace_T3**3)) 
+    prvi = (1-dop_fp)* t33s*0.5  # (1-dop)*vh
+
 
     if write_flag:
         infile = T3_folder+'/T11.bin'
@@ -108,16 +98,8 @@ def mf3cf(T3_folder,window_size=1,write_flag=None):
         elif os.path.exists(T3_folder+'/C11.bin'):
             infile = T3_folder+'/C11.bin'
 
-        ofilegrvi = T3_folder+'/Theta_FP_3c.bin'
-        write_bin(ofilegrvi,theta_FP,infile)
+        ofilegrvi = T3_folder+'/PRVI.bin'
+        write_bin(ofilegrvi,prvi,infile)
                     
-        ofilegrvi1 = T3_folder+'/Pd_FP_3c.bin'
-        write_bin(ofilegrvi1,Pd_FP,infile)
-                    
-        ofilegrvi2 = T3_folder+'/Ps_FP_3c.bin'
-        write_bin(ofilegrvi2,Ps_FP,infile)
-                    
-        ofilegrvi3 = T3_folder+'/Pv_FP_3c.bin'
-        write_bin(ofilegrvi3,Pv_FP,infile)
 
-    return Ps_FP, Pd_FP, Pv_FP,theta_FP
+    return prvi

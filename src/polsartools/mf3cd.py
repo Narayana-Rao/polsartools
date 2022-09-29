@@ -18,7 +18,7 @@ def mf3cd(T2_folder,window_size=1,write_flag=None):
     t22_T1 = T2_stack[:,:,3]
     
     
-    kernel = np.ones((ws,ws),np.float32)/(ws*ws)
+    kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
 
     t11_T1r = conv2d(np.real(t11_T1),kernel)
     t11_T1i = conv2d(np.imag(t11_T1),kernel)

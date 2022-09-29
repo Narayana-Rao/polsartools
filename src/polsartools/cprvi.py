@@ -33,7 +33,7 @@ def cprvi(C2_folder,chi_in=45,window_size=1,write_flag=None):
     fp22 = np.zeros((ncols,nrows))
     l_lambda = np.zeros((ncols,nrows))
 
-    wsi=wsj=ws
+    wsi=wsj=window_size
 
     inci=int(np.fix(wsi/2)) # Up & down movement margin from the central row
     incj=int(np.fix(wsj/2)) # Left & right movement from the central column

@@ -4,21 +4,24 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-from .basic_func import read_bin, write_bin, conv2d
+from .basic_func import read_bin, write_bin, conv2d,load_C2
 
-def load_C2(folder):
 
-    C11 = read_bin(folder+"/C11.bin")
-    C22 = read_bin(folder+"/C22.bin")
+def eig22(c2):
+    c11 = c2[:,:,0].flatten()
+    c12 = c2[:,:,1].flatten()
+    c21 = c2[:,:,2].flatten()
+    c22 = c2[:,:,3].flatten()
+    trace = -(c11+c22)
+    det = c11*c22-c12*c21
+    # const= 1
+    sqdiscr = np.sqrt(trace*trace - 4*det);
+    lambda1 = -(trace + sqdiscr)*0.5;
+    lambda2 = -(trace - sqdiscr)*0.5;
+    
+    return lambda1,lambda2
 
-    C12_i = read_bin(folder+'/C12_imag.bin')
-    C12_r = read_bin(folder+'/C12_real.bin')
-
-    C12 = C12_r + 1j*C12_i
-
-    return np.dstack((C11,C12,np.conj(C12),C22))
-
-def dopcp(C2_folder,chi_in=45,window_size=1,write_flag=None):
+def rvidp(C2_folder,window_size=1,write_flag=None):
 
     C2_stack = load_C2(C2_folder)
 
@@ -46,18 +49,9 @@ def dopcp(C2_folder,chi_in=45,window_size=1,write_flag=None):
     c22_T1i = conv2d(np.imag(c22_T1),kernel)
     c22s = c22_T1r+1j*c22_T1i
 
-    # Stokes Parameter
-    s0 = c11s + c22s;
-    s1 = c11s - c22s;
-    s2 = (c12s + c21s);
-
-    if (chi_in >= 0):
-        s3 = (1j*(c12s - c21s)); # The sign is according to RC or LC sign !!
-    if (chi_in < 0):
-        s3 = -(1j*(c12s - c21s)); # The sign is according to RC or LC sign !!
-    
-
-    dop= np.sqrt(np.power(s1,2) + np.power(s2,2) + np.power(s3,2))/(s0);   
+    c2_det = (c11s*c22s-c12s*c21s)
+    c2_trace = c11s+c22s
+    rvi = 4*c22s/c2_trace
 
     if write_flag:
         infile = C2_folder+'/C11.bin'
@@ -65,8 +59,7 @@ def dopcp(C2_folder,chi_in=45,window_size=1,write_flag=None):
         if os.path.exists(C2_folder+'/C11.bin'):
             infile = C2_folder+'/C11.bin'
 
-        ofile = C2_folder+'/DOP_CP.bin'
-        write_bin(ofile,dop,infile)
+        ofile = C2_folder+'/RVI_dp.bin'
+        write_bin(ofile,rvi,infile)
                     
-
-    return dop
+    return rvi

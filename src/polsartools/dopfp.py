@@ -36,44 +36,54 @@ def dopfp(T3_folder,window_size=1,dop_type=1,write_flag=None):
 	kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
 
 	        
-	t11_T1r = conv2d(np.real(t11_T1),kernel)
-	t11_T1i = conv2d(np.imag(t11_T1),kernel)
-	t11s = t11_T1r+1j*t11_T1i
+    t11_T1r = conv2d(np.real(t11_T1),kernel)
+    t11_T1i = conv2d(np.imag(t11_T1),kernel)
+    t11s = t11_T1r+1j*t11_T1i
+    del t11_T1r,t11_T1i
 
-	t12_T1r = conv2d(np.real(t12_T1),kernel)
-	t12_T1i = conv2d(np.imag(t12_T1),kernel)
-	t12s = t12_T1r+1j*t12_T1i
+    t12_T1r = conv2d(np.real(t12_T1),kernel)
+    t12_T1i = conv2d(np.imag(t12_T1),kernel)
+    t12s = t12_T1r+1j*t12_T1i
+    del t12_T1r,t12_T1i
 
-	t13_T1r = conv2d(np.real(t13_T1),kernel)
-	t13_T1i = conv2d(np.imag(t13_T1),kernel)
-	t13s = t13_T1r+1j*t13_T1i
+    t13_T1r = conv2d(np.real(t13_T1),kernel)
+    t13_T1i = conv2d(np.imag(t13_T1),kernel)
+    t13s = t13_T1r+1j*t13_T1i
+    del t13_T1r,t13_T1i
 
-	t21_T1r = conv2d(np.real(t21_T1),kernel)
-	t21_T1i = conv2d(np.imag(t21_T1),kernel)
-	t21s = t21_T1r+1j*t21_T1i
+    t21_T1r = conv2d(np.real(t21_T1),kernel)
+    t21_T1i = conv2d(np.imag(t21_T1),kernel)
+    t21s = t21_T1r+1j*t21_T1i
+    del t21_T1r,t21_T1i
 
-	t22_T1r = conv2d(np.real(t22_T1),kernel)
-	t22_T1i = conv2d(np.imag(t22_T1),kernel)
-	t22s = t22_T1r+1j*t22_T1i
+    t22_T1r = conv2d(np.real(t22_T1),kernel)
+    t22_T1i = conv2d(np.imag(t22_T1),kernel)
+    t22s = t22_T1r+1j*t22_T1i
+    del t22_T1r,t22_T1i
 
-	t23_T1r = conv2d(np.real(t23_T1),kernel)
-	t23_T1i = conv2d(np.imag(t23_T1),kernel)
-	t23s = t23_T1r+1j*t23_T1i
-	            
-	t31_T1r = conv2d(np.real(t31_T1),kernel)
-	t31_T1i = conv2d(np.imag(t31_T1),kernel)
-	t31s = t31_T1r+1j*t31_T1i
+    t23_T1r = conv2d(np.real(t23_T1),kernel)
+    t23_T1i = conv2d(np.imag(t23_T1),kernel)
+    t23s = t23_T1r+1j*t23_T1i
+    del t23_T1r,t23_T1i
 
-	t32_T1r = conv2d(np.real(t32_T1),kernel)
-	t32_T1i = conv2d(np.imag(t32_T1),kernel)
-	t32s = t32_T1r+1j*t32_T1i
+    t31_T1r = conv2d(np.real(t31_T1),kernel)
+    t31_T1i = conv2d(np.imag(t31_T1),kernel)
+    t31s = t31_T1r+1j*t31_T1i
+    del t31_T1r,t31_T1i
 
-	t33_T1r = conv2d(np.real(t33_T1),kernel)
-	t33_T1i = conv2d(np.imag(t33_T1),kernel)
-	t33s = t33_T1r+1j*t33_T1i
+    t32_T1r = conv2d(np.real(t32_T1),kernel)
+    t32_T1i = conv2d(np.imag(t32_T1),kernel)
+    t32s = t32_T1r+1j*t32_T1i
+    del t32_T1r,t32_T1i
+
+    t33_T1r = conv2d(np.real(t33_T1),kernel)
+    t33_T1i = conv2d(np.imag(t33_T1),kernel)
+    t33s = t33_T1r+1j*t33_T1i
+    del t33_T1r,t33_T1i
 
 	if dop_type==0:
 		dop_fp=0
+
 	# Barakat DOP
 	if dop_type==1:            
 	    det_T3 = t11s*(t22s*t33s-t23s*t32s)-t12s*(t21s*t33s-t23s*t31s)+t13s*(t21s*t32s-t22s*t31s)

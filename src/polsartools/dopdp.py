@@ -18,7 +18,7 @@ def load_C2(folder):
 
     return np.dstack((C11,C12,np.conj(C12),C22))
 
-def dopcp(C2_folder,chi_in=45,window_size=1,write_flag=None):
+def dopdp(C2_folder,window_size=1,write_flag=None):
 
     C2_stack = load_C2(C2_folder)
 
@@ -46,18 +46,11 @@ def dopcp(C2_folder,chi_in=45,window_size=1,write_flag=None):
     c22_T1i = conv2d(np.imag(c22_T1),kernel)
     c22s = c22_T1r+1j*c22_T1i
 
-    # Stokes Parameter
-    s0 = c11s + c22s;
-    s1 = c11s - c22s;
-    s2 = (c12s + c21s);
+    c2_det = (c11s*c22s-c12s*c21s)
+    c2_trace = c11s+c22s
+    # t2_span = t11s*t22s
+    dop = (np.sqrt(1.0-(4.0*c2_det/np.power(c2_trace,2))))
 
-    if (chi_in >= 0):
-        s3 = (1j*(c12s - c21s)); # The sign is according to RC or LC sign !!
-    if (chi_in < 0):
-        s3 = -(1j*(c12s - c21s)); # The sign is according to RC or LC sign !!
-    
-
-    dop= np.sqrt(np.power(s1,2) + np.power(s2,2) + np.power(s3,2))/(s0);   
 
     if write_flag:
         infile = C2_folder+'/C11.bin'
@@ -65,7 +58,7 @@ def dopcp(C2_folder,chi_in=45,window_size=1,write_flag=None):
         if os.path.exists(C2_folder+'/C11.bin'):
             infile = C2_folder+'/C11.bin'
 
-        ofile = C2_folder+'/DOP_CP.bin'
+        ofile = C2_folder+'/DOP_DP.bin'
         write_bin(ofile,dop,infile)
                     
 

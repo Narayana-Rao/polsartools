@@ -22,7 +22,7 @@ def mod_is_omega(C2_folder,chi_in=45,psi_in=0,window_size=1,write_flag=None):
 
     C2_stack = load_C2(C2_folder)
 
-    kernel = np.ones((ws,ws),np.float32)/(ws*ws)
+    kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11_T1 = C2_stack[:,:,0]
     c12_T1 = C2_stack[:,:,1]
     c21_T1 = C2_stack[:,:,2]
