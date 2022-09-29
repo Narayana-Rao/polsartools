@@ -25,3 +25,5 @@ windows_size=3
 ps,pd,pv,pc,tfp,taufp = pst.mf4cf(T3_folder,window_size=window_size,write_flag=1)
 
 ```
+
+#### sample use case is provided in [tests](https://github.com/Narayana-Rao/polsartools/tests)
