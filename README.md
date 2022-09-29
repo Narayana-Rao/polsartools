@@ -1,4 +1,4 @@
-# PolSARtools PyPI package (Alpha version!)
+# PolSARtools PyPI package (beta version!)
  
  [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
 
