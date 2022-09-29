@@ -1,21 +1,21 @@
-# PolSARtools PyPI package (under development!)
+# PolSARtools PyPI package (Alpha version!)
  
  [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
 
- Dowload the repo
+#### Installation
+```
+pip install polsartools
+```
  
- cd to the downloaded folder
+#### Prerequesites 
  
- pip install .
+ ```gdal, Numpy```
  
- Prerequesites 
+#### gdal installation error fix
  
- Gdal, Numpy
- 
- gdal installation error fix
- 
- conda install -c conda-forge gdal
- 
+ ```conda install -c conda-forge gdal```
+
+#### Example
 ```python
 import polsartools as pst
 
