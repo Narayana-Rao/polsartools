@@ -1,5 +1,7 @@
 from osgeo import gdal
 import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
 
 def conv2d(a, f):
     filt = np.zeros(a.shape)
@@ -27,3 +29,66 @@ def write_bin(file,wdata,refData):
     outdata.SetDescription(file)
     outdata.GetRasterBand(1).WriteArray(wdata)
     outdata.FlushCache() 
+
+def load_C2(folder):
+
+    C11 = read_bin(folder+"/C11.bin")
+    C22 = read_bin(folder+"/C22.bin")
+
+    C12_i = read_bin(folder+'/C12_imag.bin')
+    C12_r = read_bin(folder+'/C12_real.bin')
+
+    C12 = C12_r + 1j*C12_i
+
+    return np.dstack((C11,C12,np.conj(C12),C22))
+
+def load_C3(folder):
+    
+    C11 = read_bin(folder+"/C11.bin")
+    C22 = read_bin(folder+"/C22.bin")
+    C33 = read_bin(folder+"/C33.bin")
+
+    C12_i = read_bin(folder+'/C12_imag.bin')
+    C12_r = read_bin(folder+'/C12_real.bin')
+    C13_i = read_bin(folder+'/C13_imag.bin')
+    C13_r = read_bin(folder+'/C13_real.bin')
+    C23_i = read_bin(folder+'/C23_imag.bin')
+    C23_r = read_bin(folder+'/C23_real.bin')
+        
+    C12 = C12_r + 1j*C12_i
+    C13 = C13_r + 1j*C13_i
+    C23 = C23_r + 1j*C23_i
+    
+    return np.dstack((C11,C12,C13,np.conj(C12),C22,C23,np.conj(C13),np.conj(C23),C33))
+
+
+def load_T3(folder):
+    
+    T11 = read_bin(folder+"/T11.bin")
+    T22 = read_bin(folder+"/T22.bin")
+    T33 = read_bin(folder+"/T33.bin")
+
+    T12_i = read_bin(folder+'/T12_imag.bin')
+    T12_r = read_bin(folder+'/T12_real.bin')
+    T13_i = read_bin(folder+'/T13_imag.bin')
+    T13_r = read_bin(folder+'/T13_real.bin')
+    T23_i = read_bin(folder+'/T23_imag.bin')
+    T23_r = read_bin(folder+'/T23_real.bin')
+        
+    T12 = T12_r + 1j*T12_i
+    T13 = T13_r + 1j*T13_i
+    T23 = T23_r + 1j*T23_i
+    
+    return np.dstack((T11,T12,T13,np.conj(T12),T22,T23,np.conj(T13),np.conj(T23),T33))
+
+def load_T2(self,folder):
+
+    T11 = read_bin(folder+"/T11.bin")
+    T22 = read_bin(folder+"/T22.bin")
+
+    T12_i = read_bin(folder+'/T12_imag.bin')
+    T12_r = read_bin(folder+'/T12_real.bin')
+
+    T12 = T12_r + 1j*T12_i
+
+    return np.dstack((T11,T12,np.conj(T12),T22))
