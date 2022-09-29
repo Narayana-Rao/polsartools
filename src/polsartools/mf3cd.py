@@ -49,9 +49,9 @@ def mf3cd(T2_folder,window_size=1,write_flag=None):
     # thet = np.rad2deg(thet)
     theta_DP = np.rad2deg(thet)
     
-    Ps_DP = (((m1*(span)*(1+np.sin(2*thet))/2)))
-    Pd_DP = (((m1*(span)*(1-np.sin(2*thet))/2)))
-    Pv_DP = (span*(1-m1))  
+    Ps_DP = np.real((((m1*(span)*(1+np.sin(2*thet))/2))))
+    Pd_DP = np.real((((m1*(span)*(1-np.sin(2*thet))/2))))
+    Pv_DP = np.real((span*(1-m1))) 
 
     if write_flag:
         infile = T2_folder+'/T11.bin'

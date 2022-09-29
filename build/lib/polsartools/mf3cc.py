@@ -22,7 +22,7 @@ def mf3cc(C2_folder,chi_in=45,window_size=1,write_flag=None):
 
     C2_stack = load_C2(C2_folder)
 
-    kernel = np.ones((ws,ws),np.float32)/(ws*ws)
+    kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11_T1 = C2_stack[:,:,0]
     c12_T1 = C2_stack[:,:,1]
     c21_T1 = C2_stack[:,:,2]
@@ -91,4 +91,4 @@ def mf3cc(C2_folder,chi_in=45,window_size=1,write_flag=None):
         write_bin(ofile3,Pv_CP,infile)   
                     
 
-    return Ps_CP, Pd_CP, Pv_CP, theta_CP
+    return np.real(Ps_CP), np.real(Pd_CP), np.real(Pv_CP), np.real(theta_CP)

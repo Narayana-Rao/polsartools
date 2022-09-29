@@ -9,16 +9,16 @@ from .basic_func import read_bin, write_bin, conv2d
 
 def grvi(T3_folder,window_size=1,write_flag=None):
 
-    T11 = read_bin(T3_folder+"/T11.bin")
-    T22 = read_bin(T3_folder+"/T22.bin")
-    T33 = read_bin(T3_folder+"/T33.bin")
+    T11 = read_bin(os.path.join(T3_folder,"T11.bin"))
+    T22 = read_bin(os.path.join(T3_folder,"T22.bin"))
+    T33 = read_bin(os.path.join(T3_folder,"T33.bin"))
 
-    T12_i = read_bin(T3_folder+'/T12_imag.bin')
-    T12_r = read_bin(T3_folder+'/T12_real.bin')
-    T13_i = read_bin(T3_folder+'/T13_imag.bin')
-    T13_r = read_bin(T3_folder+'/T13_real.bin')
-    T23_i = read_bin(T3_folder+'/T23_imag.bin')
-    T23_r = read_bin(T3_folder+'/T23_real.bin')
+    T12_i = read_bin(os.path.join(T3_folder,'T12_imag.bin'))
+    T12_r = read_bin(os.path.join(T3_folder,'T12_real.bin'))
+    T13_i = read_bin(os.path.join(T3_folder,'T13_imag.bin'))
+    T13_r = read_bin(os.path.join(T3_folder,'T13_real.bin'))
+    T23_i = read_bin(os.path.join(T3_folder,'T23_imag.bin'))
+    T23_r = read_bin(os.path.join(T3_folder,'T23_real.bin'))
 
     T12 = T12_r + 1j*T12_i
     T13 = T13_r + 1j*T13_i
@@ -33,13 +33,14 @@ def grvi(T3_folder,window_size=1,write_flag=None):
     t31_T1 = np.conj(T13)
     t32_T1 = np.conj(T23)
     t33_T1 = T33
-    del T11, T22, T33,T12, T13, T23, T12_i,T12_r, T13_i, T13_r, T23_i, T23_r
+
                 
     nrows  = np.shape(T11)[1]
     ncols = np.shape(T11)[0]
     # nrows  = 100
     # ncols = 100
-   
+    del T11, T22, T33,T12, T13, T23, T12_i,T12_r, T13_i, T13_r, T23_i, T23_r
+
     span = np.zeros((ncols,nrows))
     rho_13_hhvv = np.zeros((ncols,nrows))
     # temp_rvi = np.zeros((ncols,nrows))
@@ -87,8 +88,6 @@ def grvi(T3_folder,window_size=1,write_flag=None):
     
     for ii in np.arange(startj,stopj+1):
 
-        # self.progress.emit(str(ii)+'/'+str(nrows))
-        self.pBar.emit(int((ii/ncols)*90))
         for jj in np.arange(starti,stopi+1):
     
             t11s = np.nanmean(t11_T1[ii-inci:ii+inci+1,jj-incj:jj+incj+1])#i sample
@@ -260,14 +259,14 @@ def grvi(T3_folder,window_size=1,write_flag=None):
     
 
     if write_flag:
-        infile = T3_folder+'/T11.bin'
+        infile = os.path.join(T3_folder,'T11.bin')
         """Write files to disk"""
-        if os.path.exists(T3_folder+'/T11.bin'):
-            infile = iFolder+'/T11.bin'
-        elif os.path.exists(T3_folder+'/C11.bin'):
-            infile = T3_folder+'/C11.bin'
+        if os.path.exists(os.path.join(T3_folder,'T11.bin')):
+            infile = os.path.join(iFolder,'T11.bin')
+        elif os.path.exists(os.path.join(T3_folder,'C11.bin')):
+            infile = os.path.join(T3_folder,'C11.bin')
 
-        ofilegrvi = T3_folder+'/GRVI.bin'
+        ofilegrvi = os.path.join(T3_folder,'GRVI.bin')
         write_bin(ofilegrvi,vi,infile)
                     
 

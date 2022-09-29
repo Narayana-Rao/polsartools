@@ -64,16 +64,16 @@ def load_C3(folder):
 
 def load_T3(folder):
     
-    T11 = read_bin(folder+"/T11.bin")
-    T22 = read_bin(folder+"/T22.bin")
-    T33 = read_bin(folder+"/T33.bin")
+    T11 = read_bin(os.path.join(folder,"T11.bin"))
+    T22 = read_bin(os.path.join(folder,"T22.bin"))
+    T33 = read_bin(os.path.join(folder,"T33.bin"))
 
-    T12_i = read_bin(folder+'/T12_imag.bin')
-    T12_r = read_bin(folder+'/T12_real.bin')
-    T13_i = read_bin(folder+'/T13_imag.bin')
-    T13_r = read_bin(folder+'/T13_real.bin')
-    T23_i = read_bin(folder+'/T23_imag.bin')
-    T23_r = read_bin(folder+'/T23_real.bin')
+    T12_i = read_bin(os.path.join(folder,'T12_imag.bin'))
+    T12_r = read_bin(os.path.join(folder,'T12_real.bin'))
+    T13_i = read_bin(os.path.join(folder,'T13_imag.bin'))
+    T13_r = read_bin(os.path.join(folder,'T13_real.bin'))
+    T23_i = read_bin(os.path.join(folder,'T23_imag.bin'))
+    T23_r = read_bin(os.path.join(folder,'T23_real.bin'))
         
     T12 = T12_r + 1j*T12_i
     T13 = T13_r + 1j*T13_i
@@ -81,14 +81,13 @@ def load_T3(folder):
     
     return np.dstack((T11,T12,T13,np.conj(T12),T22,T23,np.conj(T13),np.conj(T23),T33))
 
-def load_T2(self,folder):
+def load_T2(folder):
 
-    T11 = read_bin(folder+"/T11.bin")
-    T22 = read_bin(folder+"/T22.bin")
+    T11 = read_bin(os.path.join(folder,"T11.bin"))
+    T22 = read_bin(os.path.join(folder,"T22.bin"))
 
-    T12_i = read_bin(folder+'/T12_imag.bin')
-    T12_r = read_bin(folder+'/T12_real.bin')
-
+    T12_i = read_bin(os.path.join(folder,'T12_imag.bin'))
+    T12_r = read_bin(os.path.join(folder,'T12_real.bin'))
     T12 = T12_r + 1j*T12_i
 
     return np.dstack((T11,T12,np.conj(T12),T22))

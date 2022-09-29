@@ -120,4 +120,4 @@ def mod_is_omega(C2_folder,chi_in=45,psi_in=0,window_size=1,write_flag=None):
         write_bin(ofilepv,diffused_new,infile)
         
 
-    return ofileps, ofilepd, ofilepv
+    return surface_new, double_bounce_new, diffused_new
