@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='polsartools',
-    version='0.1.1',    
+    version='0.2',    
     description='A package to process Synthetic Aperture Radar data',
     url='https://github.com/Narayana-Rao/polsartools',
     author='Narayanarao Bhogapurapu',

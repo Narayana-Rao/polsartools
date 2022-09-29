@@ -9,16 +9,16 @@ from .basic_func import read_bin, write_bin, conv2d
 
 def rvifp(T3_folder,window_size=1,write_flag=None):
 
-    T11 = read_bin(os.path.join(T3_folder,"T11.bin"))
-    T22 = read_bin(os.path.join(T3_folder,"T22.bin"))
-    T33 = read_bin(os.path.join(T3_folder,"T33.bin"))
+    T11 = read_bin(os.path.join(T3_folder,"T11.bin")).astype(np.float32)
+    T22 = read_bin(os.path.join(T3_folder,"T22.bin")).astype(np.float32)
+    T33 = read_bin(os.path.join(T3_folder,"T33.bin")).astype(np.float32)
 
-    T12_i = read_bin(os.path.join(T3_folder,'T12_imag.bin'))
-    T12_r = read_bin(os.path.join(T3_folder,'T12_real.bin'))
-    T13_i = read_bin(os.path.join(T3_folder,'T13_imag.bin'))
-    T13_r = read_bin(os.path.join(T3_folder,'T13_real.bin'))
-    T23_i = read_bin(os.path.join(T3_folder,'T23_imag.bin'))
-    T23_r = read_bin(os.path.join(T3_folder,'T23_real.bin'))
+    T12_i = read_bin(os.path.join(T3_folder,'T12_imag.bin')).astype(np.float32)
+    T12_r = read_bin(os.path.join(T3_folder,'T12_real.bin')).astype(np.float32)
+    T13_i = read_bin(os.path.join(T3_folder,'T13_imag.bin')).astype(np.float32)
+    T13_r = read_bin(os.path.join(T3_folder,'T13_real.bin')).astype(np.float32)
+    T23_i = read_bin(os.path.join(T3_folder,'T23_imag.bin')).astype(np.float32)
+    T23_r = read_bin(os.path.join(T3_folder,'T23_real.bin')).astype(np.float32)
 
     T12 = T12_r + 1j*T12_i
     T13 = T13_r + 1j*T13_i
@@ -108,11 +108,13 @@ def rvifp(T3_folder,window_size=1,write_flag=None):
     rvi[~idx] = rvi[~idx];
     rvi[rvi==0] = np.NaN
 
+    rvi = np.real(rvi)
+    
     if write_flag:
         infile = os.path.join(T3_folder,'T11.bin')
         """Write files to disk"""
         if os.path.exists(os.path.join(T3_folder,'T11.bin')):
-            infile = os.path.join(iFolder,'T11.bin')
+            infile = os.path.join(T3_folder,'T11.bin')
         elif os.path.exists(os.path.join(T3_folder,'C11.bin')):
             infile = os.path.join(T3_folder,'C11.bin')
 

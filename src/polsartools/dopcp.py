@@ -4,19 +4,8 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-from .basic_func import read_bin, write_bin, conv2d
+from .basic_func import read_bin, write_bin, conv2d, load_C2
 
-def load_C2(folder):
-
-    C11 = read_bin(folder+"/C11.bin")
-    C22 = read_bin(folder+"/C22.bin")
-
-    C12_i = read_bin(folder+'/C12_imag.bin')
-    C12_r = read_bin(folder+'/C12_real.bin')
-
-    C12 = C12_r + 1j*C12_i
-
-    return np.dstack((C11,C12,np.conj(C12),C22))
 
 def dopcp(C2_folder,chi_in=45,window_size=1,write_flag=None):
 
@@ -60,12 +49,12 @@ def dopcp(C2_folder,chi_in=45,window_size=1,write_flag=None):
     dop= np.sqrt(np.power(s1,2) + np.power(s2,2) + np.power(s3,2))/(s0);   
 
     if write_flag:
-        infile = C2_folder+'/C11.bin'
+        infile = os.path.join(C2_folder,'C11.bin')
         """Write files to disk"""
-        if os.path.exists(C2_folder+'/C11.bin'):
-            infile = C2_folder+'/C11.bin'
+        if os.path.exists(os.path.join(C2_folder,'C11.bin')):
+            infile = os.path.join(C2_folder,'C11.bin')
 
-        ofile = C2_folder+'/DOP_CP.bin'
+        ofile = os.path.join(C2_folder,'DOP_CP.bin')
         write_bin(ofile,dop,infile)
                     
 

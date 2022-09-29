@@ -4,22 +4,8 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-from .basic_func import read_bin, write_bin, conv2d,load_C2
+from .basic_func import read_bin, write_bin, conv2d,load_C2,eig22
 
-
-def eig22(c2):
-    c11 = c2[:,:,0].flatten()
-    c12 = c2[:,:,1].flatten()
-    c21 = c2[:,:,2].flatten()
-    c22 = c2[:,:,3].flatten()
-    trace = -(c11+c22)
-    det = c11*c22-c12*c21
-    # const= 1
-    sqdiscr = np.sqrt(trace*trace - 4*det);
-    lambda1 = -(trace + sqdiscr)*0.5;
-    lambda2 = -(trace - sqdiscr)*0.5;
-    
-    return lambda1,lambda2
 
 def rvidp(C2_folder,window_size=1,write_flag=None):
 
@@ -54,12 +40,12 @@ def rvidp(C2_folder,window_size=1,write_flag=None):
     rvi = np.real(4*c22s/c2_trace)
 
     if write_flag:
-        infile = C2_folder+'/C11.bin'
+        infile = os.path.join(C2_folder,'C11.bin')
         """Write files to disk"""
-        if os.path.exists(C2_folder+'/C11.bin'):
-            infile = C2_folder+'/C11.bin'
+        if os.path.exists(os.path.join(C2_folder,'C11.bin')):
+            infile = os.path.join(C2_folder,'C11.bin')
 
-        ofile = C2_folder+'/RVI_dp.bin'
+        ofile = os.path.join(C2_folder,'RVI_dp.bin')
         write_bin(ofile,rvi,infile)
                     
     return np.real(rvi)

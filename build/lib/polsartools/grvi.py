@@ -256,13 +256,13 @@ def grvi(T3_folder,window_size=1,write_flag=None):
     idx1 = np.argwhere(GD_t1_rv>f)
     vi[idx1] = 0;
     vi[~idx1] = vi[~idx1];
-    
+    vi = np.real(vi)
 
     if write_flag:
         infile = os.path.join(T3_folder,'T11.bin')
         """Write files to disk"""
         if os.path.exists(os.path.join(T3_folder,'T11.bin')):
-            infile = os.path.join(iFolder,'T11.bin')
+            infile = os.path.join(T3_folder,'T11.bin')
         elif os.path.exists(os.path.join(T3_folder,'C11.bin')):
             infile = os.path.join(T3_folder,'C11.bin')
 

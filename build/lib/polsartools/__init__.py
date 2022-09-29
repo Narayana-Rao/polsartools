@@ -27,6 +27,6 @@ from .convert import T3_C3, C3_compact_C2, C3_c2, S2_T3
 
 
 ############################
-__version__ = "0.1.1"
+__version__ = "0.2"
 __author__ = 'Narayanarao Bhogapurapu'
 __credits__ = 'Microwave Remote Sensing Lab (MRSLab)'

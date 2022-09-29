@@ -4,22 +4,8 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-from .basic_func import read_bin, write_bin, conv2d,load_C2
+from .basic_func import read_bin, write_bin, conv2d,load_C2,eig22
 
-
-def eig22(c2):
-    c11 = c2[:,:,0].flatten()
-    c12 = c2[:,:,1].flatten()
-    c21 = c2[:,:,2].flatten()
-    c22 = c2[:,:,3].flatten()
-    trace = -(c11+c22)
-    det = c11*c22-c12*c21
-    # const= 1
-    sqdiscr = np.sqrt(trace*trace - 4*det);
-    lambda1 = -(trace + sqdiscr)*0.5;
-    lambda2 = -(trace - sqdiscr)*0.5;
-    
-    return lambda1,lambda2
 
 def dprvi(C2_folder,window_size=1,write_flag=None):
 
@@ -60,12 +46,12 @@ def dprvi(C2_folder,window_size=1,write_flag=None):
     dprvi = np.real(1-(m*beta))
 
     if write_flag:
-        infile = C2_folder+'/C11.bin'
+        infile = os.path.join(C2_folder,'C11.bin')
         """Write files to disk"""
-        if os.path.exists(C2_folder+'/C11.bin'):
-            infile = C2_folder+'/C11.bin'
+        if os.path.exists(os.path.join(C2_folder,'C11.bin')):
+            infile = os.path.join(C2_folder,'C11.bin')
 
-        ofile = C2_folder+'/DpRVI.bin'
+        ofile = os.path.join(C2_folder,'DpRVI.bin')
         write_bin(ofile,dprvi,infile)
                     
     return np.real(dprvi)

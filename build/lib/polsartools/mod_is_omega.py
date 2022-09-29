@@ -4,19 +4,8 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-from .basic_func import read_bin, write_bin, conv2d
+from .basic_func import read_bin, write_bin, conv2d,load_C2
 
-def load_C2(folder):
-
-    C11 = read_bin(folder+"/C11.bin")
-    C22 = read_bin(folder+"/C22.bin")
-
-    C12_i = read_bin(folder+'/C12_imag.bin')
-    C12_r = read_bin(folder+'/C12_real.bin')
-
-    C12 = C12_r + 1j*C12_i
-
-    return np.dstack((C11,C12,np.conj(C12),C22))
 
 def mod_is_omega(C2_folder,chi_in=45,psi_in=0,window_size=1,write_flag=None):
 
@@ -103,20 +92,23 @@ def mod_is_omega(C2_folder,chi_in=45,psi_in=0,window_size=1,write_flag=None):
     double_bounce_new[double_bounce_new==0] = np.nan
     diffused_new[diffused_new==0] = np.nan
 
+    surface_new = np.real(surface_new)
+    double_bounce_new = np.real(double_bounce_new)
+    diffused_new = np.real(diffused_new)
 
     if write_flag:
-        infile = C2_folder+'/C11.bin'
+        infile = os.path.join(C2_folder,'C11.bin')
         """Write files to disk"""
-        if os.path.exists(C2_folder+'/C11.bin'):
-            infile = C2_folder+'/C11.bin'
+        if os.path.exists(os.path.join(C2_folder,'C11.bin')):
+            infile = os.path.join(C2_folder,'C11.bin')
 
-        ofileps = C2_folder+'/Ps_iSOmega.bin'
+        ofileps = os.path.join(C2_folder,'Ps_iSOmega.bin')
         write_bin(ofileps,surface_new,infile)
         
-        ofilepd = C2_folder+'/Pd_iSOmega.bin'
+        ofilepd = os.path.join(C2_folder,'Pd_iSOmega.bin')
         write_bin(ofilepd,double_bounce_new,infile)
         
-        ofilepv = C2_folder+'/Pv_iSOmega.bin'
+        ofilepv = os.path.join(C2_folder,'Pv_iSOmega.bin')
         write_bin(ofilepv,diffused_new,infile)
         
 

@@ -4,19 +4,7 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-from .basic_func import read_bin, write_bin, conv2d
-
-def load_C2(folder):
-
-    C11 = read_bin(folder+"/C11.bin")
-    C22 = read_bin(folder+"/C22.bin")
-
-    C12_i = read_bin(folder+'/C12_imag.bin')
-    C12_r = read_bin(folder+'/C12_real.bin')
-
-    C12 = C12_r + 1j*C12_i
-
-    return np.dstack((C11,C12,np.conj(C12),C22))
+from .basic_func import read_bin, write_bin, conv2d, load_C2
 
 def cprvi(C2_folder,chi_in=45,window_size=1,write_flag=None):
 
@@ -118,15 +106,15 @@ def cprvi(C2_folder,chi_in=45,window_size=1,write_flag=None):
             fp22[ii,jj] = (min_sc_oc/max_sc_oc);
 
 
-    vi_c = (1 - l_lambda)*np.power(fp22, 2*l_lambda);
+    vi_c = np.real((1 - l_lambda)*np.power(fp22, 2*l_lambda))
 
     if write_flag:
-        infile = C2_folder+'/C11.bin'
+        infile = os.path.join(C2_folder,'C11.bin')
         """Write files to disk"""
-        if os.path.exists(C2_folder+'/C11.bin'):
-            infile = iFolder+'/C11.bin'
+        if os.path.exists(os.path.join(C2_folder,'C11.bin')):
+            infile = os.path.join(C2_folder,'C11.bin')
 
-        ofile = C2_folder+'/CpRVI.bin'
+        ofile = os.path.join(C2_folder,'CpRVI.bin')
         write_bin(ofile,vi_c,infile)
                     
 

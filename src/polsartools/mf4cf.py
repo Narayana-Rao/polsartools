@@ -8,16 +8,16 @@ from .basic_func import read_bin, write_bin, conv2d
 
 def mf4cf(T3_folder,window_size=1,write_flag=None):
         
-    T11 = read_bin(T3_folder+"/T11.bin").astype(np.float32)
-    T22 = read_bin(T3_folder+"/T22.bin").astype(np.float32)
-    T33 = read_bin(T3_folder+"/T33.bin").astype(np.float32)
+    T11 = read_bin(os.path.join(T3_folder,"T11.bin")).astype(np.float32)
+    T22 = read_bin(os.path.join(T3_folder,"T22.bin")).astype(np.float32)
+    T33 = read_bin(os.path.join(T3_folder,"T33.bin")).astype(np.float32)
 
-    T12_i = read_bin(T3_folder+'/T12_imag.bin').astype(np.float32)
-    T12_r = read_bin(T3_folder+'/T12_real.bin').astype(np.float32)
-    T13_i = read_bin(T3_folder+'/T13_imag.bin').astype(np.float32)
-    T13_r = read_bin(T3_folder+'/T13_real.bin').astype(np.float32)
-    T23_i = read_bin(T3_folder+'/T23_imag.bin').astype(np.float32)
-    T23_r = read_bin(T3_folder+'/T23_real.bin').astype(np.float32)
+    T12_i = read_bin(os.path.join(T3_folder,'T12_imag.bin')).astype(np.float32)
+    T12_r = read_bin(os.path.join(T3_folder,'T12_real.bin')).astype(np.float32)
+    T13_i = read_bin(os.path.join(T3_folder,'T13_imag.bin')).astype(np.float32)
+    T13_r = read_bin(os.path.join(T3_folder,'T13_real.bin')).astype(np.float32)
+    T23_i = read_bin(os.path.join(T3_folder,'T23_imag.bin')).astype(np.float32)
+    T23_r = read_bin(os.path.join(T3_folder,'T23_real.bin')).astype(np.float32)
 
     T12 = T12_r + 1j*T12_i
     T13 = T13_r + 1j*T13_i
@@ -117,29 +117,29 @@ def mf4cf(T3_folder,window_size=1,write_flag=None):
     pd_f = ((res_pow/2)*(1-np.sin((2*theta_f)))).astype(np.float32)
     
     if write_flag:
-        infile = T3_folder+'/T11.bin'
+        infile = os.path.join(T3_folder,'T11.bin')
         """Write files to disk"""
-        if os.path.exists(T3_folder+'/T11.bin'):
-            infile = iFolder+'/T11.bin'
-        elif os.path.exists(T3_folder+'/C11.bin'):
-            infile = T3_folder+'/C11.bin'
+        if os.path.exists(os.path.join(T3_folder,'T11.bin')):
+            infile = os.path.join(T3_folder,'T11.bin')
+        elif os.path.exists(os.path.join(T3_folder,'C11.bin')):
+            infile = os.path.join(T3_folder,'C11.bin')
 
-        ofilegrvi0 = T3_folder+'/Tau_FP_4c.bin'
+        ofilegrvi0 = os.path.join(T3_folder,'Tau_FP_4c.bin')
         write_bin(ofilegrvi0,tau_FP,infile)
 
-        ofilegrvi = T3_folder+'/Theta_FP_4c.bin'
+        ofilegrvi = os.path.join(T3_folder,'Theta_FP_4c.bin')
         write_bin(ofilegrvi,theta_FP,infile)
         
-        ofilegrvi1 = T3_folder+'/Pd_FP_4c.bin'
+        ofilegrvi1 = os.path.join(T3_folder,'Pd_FP_4c.bin')
         write_bin(ofilegrvi1,pd_f,infile)
         
-        ofilegrvi2 = T3_folder+'/Ps_FP_4c.bin'
+        ofilegrvi2 = os.path.join(T3_folder,'Ps_FP_4c.bin')
         write_bin(ofilegrvi2,ps_f,infile)
         
-        ofilegrvi3 = T3_folder+'/Pv_FP_4c.bin'
+        ofilegrvi3 = os.path.join(T3_folder,'Pv_FP_4c.bin')
         write_bin(ofilegrvi3,pv_f,infile)
 
-        ofilegrvi4 = T3_folder+'/Pc_FP_4c.bin'
+        ofilegrvi4 = os.path.join(T3_folder,'Pc_FP_4c.bin')
         write_bin(ofilegrvi4,pc_f,infile)     
 
     return ps_f, pd_f, pv_f,pc_f,theta_FP,tau_FP

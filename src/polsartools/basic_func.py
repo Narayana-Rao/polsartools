@@ -1,5 +1,6 @@
 from osgeo import gdal
 import numpy as np
+import os 
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -32,11 +33,11 @@ def write_bin(file,wdata,refData):
 
 def load_C2(folder):
 
-    C11 = read_bin(folder+"/C11.bin")
-    C22 = read_bin(folder+"/C22.bin")
+    C11 = read_bin(os.path.join(folder,"C11.bin"))
+    C22 = read_bin(os.path.join(folder,"C22.bin"))
 
-    C12_i = read_bin(folder+'/C12_imag.bin')
-    C12_r = read_bin(folder+'/C12_real.bin')
+    C12_i = read_bin(os.path.join(folder,'C12_imag.bin'))
+    C12_r = read_bin(os.path.join(folder,'C12_real.bin'))
 
     C12 = C12_r + 1j*C12_i
 
@@ -44,16 +45,16 @@ def load_C2(folder):
 
 def load_C3(folder):
     
-    C11 = read_bin(folder+"/C11.bin")
-    C22 = read_bin(folder+"/C22.bin")
-    C33 = read_bin(folder+"/C33.bin")
+    C11 = read_bin(os.path.join(folder,"C11.bin"))
+    C22 = read_bin(os.path.join(folder,"C22.bin"))
+    C33 = read_bin(os.path.join(folder,"C33.bin"))
 
-    C12_i = read_bin(folder+'/C12_imag.bin')
-    C12_r = read_bin(folder+'/C12_real.bin')
-    C13_i = read_bin(folder+'/C13_imag.bin')
-    C13_r = read_bin(folder+'/C13_real.bin')
-    C23_i = read_bin(folder+'/C23_imag.bin')
-    C23_r = read_bin(folder+'/C23_real.bin')
+    C12_i = read_bin(os.path.join(folder,'C12_imag.bin'))
+    C12_r = read_bin(os.path.join(folder,'C12_real.bin'))
+    C13_i = read_bin(os.path.join(folder,'C13_imag.bin'))
+    C13_r = read_bin(os.path.join(folder,'C13_real.bin'))
+    C23_i = read_bin(os.path.join(folder,'C23_imag.bin'))
+    C23_r = read_bin(os.path.join(folder,'C23_real.bin'))
         
     C12 = C12_r + 1j*C12_i
     C13 = C13_r + 1j*C13_i
@@ -91,3 +92,17 @@ def load_T2(folder):
     T12 = T12_r + 1j*T12_i
 
     return np.dstack((T11,T12,np.conj(T12),T22))
+
+def eig22(c2):
+    c11 = c2[:,:,0].flatten()
+    c12 = c2[:,:,1].flatten()
+    c21 = c2[:,:,2].flatten()
+    c22 = c2[:,:,3].flatten()
+    trace = -(c11+c22)
+    det = c11*c22-c12*c21
+    # const= 1
+    sqdiscr = np.sqrt(trace*trace - 4*det);
+    lambda1 = -(trace + sqdiscr)*0.5;
+    lambda2 = -(trace - sqdiscr)*0.5;
+    
+    return lambda1,lambda2

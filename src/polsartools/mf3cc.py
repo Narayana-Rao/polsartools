@@ -4,19 +4,8 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
-from .basic_func import read_bin, write_bin, conv2d
+from .basic_func import read_bin, write_bin, conv2d, load_C2
 
-def load_C2(folder):
-
-    C11 = read_bin(folder+"/C11.bin")
-    C22 = read_bin(folder+"/C22.bin")
-
-    C12_i = read_bin(folder+'/C12_imag.bin')
-    C12_r = read_bin(folder+'/C12_real.bin')
-
-    C12 = C12_r + 1j*C12_i
-
-    return np.dstack((C11,C12,np.conj(C12),C22))
 
 def mf3cc(C2_folder,chi_in=45,window_size=1,write_flag=None):
 
@@ -68,26 +57,26 @@ def mf3cc(C2_folder,chi_in=45,window_size=1,write_flag=None):
 
     val = ((m1*s0*h))/((SC*OC + (m1**2)*(s0**2)))
     thet = np.real(np.arctan(val))
-    theta_CP = np.rad2deg(thet)
+    theta_CP = np.real(np.rad2deg(thet))
 
-    Ps_CP= (((m1*(span)*(1.0+np.sin(2*thet))/2)))
-    Pd_CP= (((m1*(span)*(1.0-np.sin(2*thet))/2)))
-    Pv_CP= (span*(1.0-m1))
+    Ps_CP= np.real(((m1*(span)*(1.0+np.sin(2*thet))/2)))
+    Pd_CP= np.real(((m1*(span)*(1.0-np.sin(2*thet))/2)))
+    Pv_CP= np.real((span*(1.0-m1)))
 
 
     if write_flag:
-        infile = C2_folder+'/C11.bin'
+        infile = os.path.join(C2_folder,'C11.bin')
         """Write files to disk"""
-        if os.path.exists(C2_folder+'/C11.bin'):
-            infile = C2_folder+'/C11.bin'
+        if os.path.exists(os.path.join(C2_folder,'C11.bin')):
+            infile = os.path.join(C2_folder,'C11.bin')
 
-        ofile = C2_folder+'/Theta_CP.bin'
+        ofile = os.path.join(C2_folder,'Theta_CP.bin')
         write_bin(ofile,theta_CP,infile)
-        ofile1 = C2_folder+'/Pd_CP.bin'
+        ofile1 = os.path.join(C2_folder,'Pd_CP.bin')
         write_bin(ofile1,Pd_CP,infile)
-        ofile2 = C2_folder+'/Ps_CP.bin'
+        ofile2 = os.path.join(C2_folder,'Ps_CP.bin')
         write_bin(ofile2,Ps_CP,infile)
-        ofile3 = C2_folder+'/Pv_CP.bin'
+        ofile3 = os.path.join(C2_folder,'Pv_CP.bin')
         write_bin(ofile3,Pv_CP,infile)   
                     
 
