@@ -13,11 +13,11 @@ setup(
                       'numpy',                     
                       ],
 
-    classifiers=[
-        'Development Status :: 1 - alpha',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved ::  GPL-3.0 license',  
-        'Operating System :: POSIX :: Linux',        
-        'Programming Language :: Python :: 3',
-    ],
+    # classifiers=[
+    #     'Development Status :: 1 - alpha',
+    #     'Intended Audience :: Science/Research',
+    #     'License :: OSI Approved ::  GPL-3.0 license',  
+    #     'Operating System :: POSIX :: Linux',        
+    #     'Programming Language :: Python :: 3',
+    # ],
 )
