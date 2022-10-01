@@ -24,11 +24,11 @@ def dpdesc(cpol,xpol,window_size=1,write_flag=None):
 
     if write_flag:
         infile = copol
-        ofile = os.path.join(os.path.dirname(copol),'mc.bin')
+        ofile = os.path.join(os.path.dirname(cpol),'mc.bin')
         write_bin(ofile,mc,infile)
-        ofile = os.path.join(os.path.dirname(copol),'Hc.bin')
+        ofile = os.path.join(os.path.dirname(cpol),'Hc.bin')
         write_bin(ofile,Hc,infile)
-        ofile = os.path.join(os.path.dirname(copol),'Thetac.bin')
+        ofile = os.path.join(os.path.dirname(cpol),'Thetac.bin')
         write_bin(ofile,thetac,infile)
                     
     return np.real(mc),np.real(Hc),np.real(thetac)
