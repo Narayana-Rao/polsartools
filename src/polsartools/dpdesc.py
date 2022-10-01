@@ -14,7 +14,7 @@ def dpdesc(cpol,xpol,window_size=1,write_flag=None):
     c11 = conv2d(read_bin(cpol),kernel)
     c22 = conv2d(read_bin(xpol),kernel)
 
-    q = c12/c11
+    q = c22/c11
     q[q>=1]=1
     mc = (1-q)/(1+q)
     p1 = 1/(1+q)
