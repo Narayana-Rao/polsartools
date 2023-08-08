@@ -10,8 +10,11 @@ src/polsartools/cprvi.py
 src/polsartools/dopcp.py
 src/polsartools/dopdp.py
 src/polsartools/dopfp.py
+src/polsartools/dpdesc.py
 src/polsartools/dprvi.py
+src/polsartools/dprvic.py
 src/polsartools/grvi.py
+src/polsartools/import_uavsar.py
 src/polsartools/mf3cc.py
 src/polsartools/mf3cd.py
 src/polsartools/mf3cf.py
@@ -26,3 +29,4 @@ src/polsartools.egg-info/SOURCES.txt
 src/polsartools.egg-info/dependency_links.txt
 src/polsartools.egg-info/requires.txt
 src/polsartools.egg-info/top_level.txt
+tests/test_functions.py

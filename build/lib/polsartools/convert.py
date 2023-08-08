@@ -22,6 +22,20 @@ def T3_C3(T3_stack):
 
     return np.reshape(TT1,(nrows,ncols,9)) 
 
+def C3_T3(C3_stack):
+    nrows = np.size(C3_stack,0)
+    ncols = np.size(C3_stack,1)
+    
+    D = (1/np.sqrt(2))*np.array([[1,0,1], [1,0,-1],[0,np.sqrt(2),0]])
+    CC1 = np.dstack((C3_stack[:,:,0].flatten(), C3_stack[:,:,1].flatten(), C3_stack[:,:,2].flatten(),
+                     C3_stack[:,:,3].flatten(), C3_stack[:,:,4].flatten(), C3_stack[:,:,5].flatten(),
+                     C3_stack[:,:,6].flatten(), C3_stack[:,:,7].flatten(), C3_stack[:,:,8].flatten()))
+    CC1 = CC1[0,:,:]
+    CC1 = np.reshape(CC1,(CC1.shape[0],3,3))
+    CC1 = np.matmul(np.matmul((D),CC1),D.T)
+    CC1 = np.reshape(CC1,(CC1.shape[0],9))
+
+    return np.reshape(CC1,(nrows,ncols,9)) 
 
 def C3_compact_C2(C3,psi,chi):
 
@@ -61,7 +75,18 @@ def C3_compact_C2(C3,psi,chi):
 	                (1j/np.sqrt(2))*np.sin(2*chi)*(C3[:,:,5]-np.conj(C3[:,:,5])) 
 	            )
 
-	return CP11, CP12, CP22
+	return np.dstack((CP11, CP12, np.conjugate(CP12),CP22))
+
+
+def C3_c21(C3_stack):
+	return np.dstack((np.real(C3_stack[:,:,0]),np.real((C3_stack[:,:,1])/np.sqrt(2))+1j*np.imag((C3_stack[:,:,1])/np.sqrt(2)), np.real((C3_stack[:,:,1])/np.sqrt(2))-1j*np.imag((C3_stack[:,:,1])/np.sqrt(2)), np.real((C3_stack[:,:,4])/(2))))
+
+def C3_c22(C3_stack):
+	return np.dstack((np.real(C3_stack[:,:,8]),np.real((C3_stack[:,:,5])/np.sqrt(2))+1j*np.imag((C3_stack[:,:,5])/np.sqrt(2)), np.real((C3_stack[:,:,5])/np.sqrt(2))-1j*np.imag((C3_stack[:,:,5])/np.sqrt(2)), np.real((C3_stack[:,:,4])/(2))))
+	
+def C3_c23(C3_stack):
+	return np.dstack((np.real(C3_stack[:,:,0]),np.real((C3_stack[:,:,2])/np.sqrt(2))+1j*np.imag((C3_stack[:,:,2])/np.sqrt(2)), np.real((C3_stack[:,:,2])/np.sqrt(2))-1j*np.imag((C3_stack[:,:,2])/np.sqrt(2)), np.real((C3_stack[:,:,8])/(2))))
+	
 
 def C3_c2(inFolder):
 
@@ -148,3 +173,14 @@ def S2_T3(S11,S12,S22):
 	T13 = Kp[0]*np.conj(Kp[2])
 	T23 = Kp[1]*np.conj(Kp[2])
 	return np.dstack((T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),T23,T33))
+
+
+
+
+
+
+
+
+
+
+
