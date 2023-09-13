@@ -106,3 +106,37 @@ def eig22(c2):
     lambda2 = -(trace - sqdiscr)*0.5;
     
     return lambda1,lambda2
+    
+def clipRaster(inRaster,outRaster,minx,maxx,miny,maxy):
+    ds = gdal.Open(inRaster)
+    options = gdal.WarpOptions(
+        width             = ds.RasterXSize, 
+        height             = ds.RasterYSize, 
+        creationOptions  = "COMPRESS=LZW", #optional 
+#         dstSRS           =  "EPSG:4326",
+        srcNodata = 0,
+        dstNodata = np.nan,
+        options          = 'overwrite'
+    )
+    tempFile = r'temp_.tiff' # temporary projected file
+    dsIn = gdal.Warp(tempFile, inRaster, options=options)
+    dsOut = gdal.Translate(outRaster, dsIn, projWin = [minx, maxy, maxx, miny])
+    dsIn=None
+    dsOut = None
+    os.remove(tempFile) # remove the temporary file
+    
+def write_tif(file,wdata,refData):
+    
+    ds = gdal.Open(refData)
+    [cols, rows] = wdata.shape
+
+    driver = gdal.GetDriverByName("GTiff")
+    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_Float32,options=['COMPRESS=DEFLATE','PREDICTOR=2','ZLEVEL=9', 'BIGTIFF=YES','TILED=YES'])
+    outdata.SetGeoTransform(ds.GetGeoTransform())
+    outdata.SetProjection(ds.GetProjection())
+    
+    outdata.SetDescription(file)
+    outdata.GetRasterBand(1).WriteArray(wdata)
+    outdata.GetRasterBand(1).SetNoDataValue(np.nan) 
+    outdata.FlushCache() ##saves to disk!! 
+    outdata = None
