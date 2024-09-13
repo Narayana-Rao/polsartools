@@ -1,0 +1,6 @@
+include README.md
+include requirements.txt
+include dev_requirements.txt
+include polsartools/**/*.py
+include cpp/src/**/*.cpp
+include cpp/include/**/*.h
