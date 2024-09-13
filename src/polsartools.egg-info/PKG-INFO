@@ -1,3 +1,19 @@
+Metadata-Version: 2.1
+Name: polsartools
+Version: 0.3
+Summary: A package to process Synthetic Aperture Radar data
+Home-page: https://github.com/Narayana-Rao/polsartools
+Author: Narayanarao Bhogapurapu
+Author-email: bnarayanarao@iitb.ac.in
+License: GPL-3.0 license
+Project-URL: Bug Tracker, https://github.com/Narayana-Rao/polsartools/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
 <p align="center">
   <img src="logo.png" alt=""/>
 </p>
@@ -9,11 +25,6 @@
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
 [![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-ffd040.svg)](https://www.python.org/)
-
-
-> **Cite:** Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi:  [10.21105/joss.02970](https://doi.org/10.21105/joss.02970)  
-
-
 
 #### Installation
 ```

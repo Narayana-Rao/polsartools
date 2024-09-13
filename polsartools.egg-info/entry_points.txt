@@ -1,2 +1,0 @@
-[console_scripts]
-polsartools-cli = polsartools.io.main:main

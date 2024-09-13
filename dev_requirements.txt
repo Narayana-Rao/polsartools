@@ -1,4 +1,0 @@
-pytest
-sphinx
-doxygen
-# Other development tools
