@@ -1,0 +1,10 @@
+numpy
+xarray
+gdal
+scipy
+pillow
+
+[dev]
+pytest
+sphinx
+doxygen
