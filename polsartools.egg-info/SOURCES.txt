@@ -19,9 +19,11 @@ polsartools/polsar/dxp/prvidp.py
 polsartools/polsar/dxp/rvidp.py
 polsartools/polsar/fp/__init__.py
 polsartools/polsar/fp/grvi.py
+polsartools/polsar/fp/mf3cf.py
 polsartools/polsar/fp/rvifp.py
 polsartools/postprocessing/visualization.py
 polsartools/preprocessing/calibration.py
 polsartools/python_bindings/__init__.py
+polsartools/utils/convert_matrices.py
 polsartools/utils/utils.py
 tests/test_processing.py

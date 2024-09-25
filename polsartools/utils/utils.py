@@ -29,7 +29,7 @@ def eig22(c2):
     return lambda1,lambda2
 
 
-def process_chunks_parallel(input_filepaths, output_filepaths,  window_size, write_flag, processing_func,block_size=(512, 512), max_workers=None,  num_outputs=1):
+def process_chunks_parallel(input_filepaths, output_filepaths, window_size, write_flag, processing_func, block_size=(512, 512), max_workers=None, num_outputs=1):
     if len(input_filepaths) not in [2, 4, 9]:
         raise ValueError("This function only supports 2, 4, or 9 input rasters.")
 
@@ -45,16 +45,19 @@ def process_chunks_parallel(input_filepaths, output_filepaths,  window_size, wri
     geotransform = input_datasets[0].GetGeoTransform()
     projection = input_datasets[0].GetProjection()
 
-    # num_outputs = 2  # Adjust based on the number of outputs from the processing function
+    # Ensure block_size does not exceed raster dimensions
+    adjusted_block_size_x = min(block_size[0], raster_width)
+    adjusted_block_size_y = min(block_size[1], raster_height)
+
+    merged_arrays = [np.zeros((raster_height, raster_width), dtype=np.float32) for _ in range(num_outputs)] if not write_flag else None
 
     tasks = []
-    merged_arrays = [np.zeros((raster_height, raster_width), dtype=np.float32) for _ in range(num_outputs)] if not write_flag else None
-    
-    with ProcessPoolExecutor(max_workers=max_workers) as executor:  # Use ProcessPoolExecutor instead of ThreadPoolExecutor
-        for y in range(0, raster_height, block_size[1]):
-            for x in range(0, raster_width, block_size[0]):
-                read_block_width = min(block_size[0], raster_width - x)
-                read_block_height = min(block_size[1], raster_height - y)
+
+    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+        for y in range(0, raster_height, adjusted_block_size_y):
+            for x in range(0, raster_width, adjusted_block_size_x):
+                read_block_width = min(adjusted_block_size_x, raster_width - x)
+                read_block_height = min(adjusted_block_size_y, raster_height - y)
 
                 args = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height)
                 tasks.append(executor.submit(process_and_write_chunk, args, processing_func, num_outputs))
@@ -175,7 +178,7 @@ def process_and_write_chunk(args, processing_func, num_outputs):
         chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
 
         # Process the chunks using the given function
-        processed_chunks = processing_func(chunks, window_size)
+        processed_chunks = processing_func(chunks, window_size, input_filepaths)
 
         # If num_outputs is 1, make sure processed_chunks is treated as a list
         if num_outputs == 1:

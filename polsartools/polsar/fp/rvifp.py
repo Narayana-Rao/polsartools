@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel
+from polsartools.utils.utils import process_chunks_parallel, conv2d
 
 def rvifp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
 
@@ -28,10 +28,8 @@ def rvifp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None
         os.path.join(infolder,"C33.bin"),
         ]
 
-
-
     else:
-
+        print(f"Invalid C3 or T3 folder!!")
     output_filepaths = []
     if outname is None:
         output_filepaths.append(os.path.join(infolder, "rvifp.tif"))
@@ -41,8 +39,6 @@ def rvifp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None
 
 
 def process_chunk_rvifp(chunks, window_size):
-
-    kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
 
     t11_T1 = np.array(chunks[0])
     t12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
@@ -54,10 +50,27 @@ def process_chunk_rvifp(chunks, window_size):
     t32_T1 = np.conj(t23_T1)
     t33_T1 = np.array(chunks[8])
 
-
     T_T1 = np.array([[t11_T1, t12_T1, t13_T1], 
                      [t21_T1, t22_T1, t23_T1], 
                      [t31_T1, t32_T1, t33_T1]])
+
+    if window_size>1:
+        kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
+
+        t11f = conv2d(np.real(t11_T1),kernel)
+        t12f = conv2d(np.real(t12_T1),kernel)
+        t13f = conv2d(np.real(t13_T1),kernel)
+        
+        t21f = conv2d(np.real(t21_T1),kernel)
+        t22f = conv2d(np.real(t22_T1),kernel)
+        t23f = conv2d(np.real(t23_T1),kernel)
+
+        t31f = conv2d(np.real(t31_T1),kernel)
+        t32f = conv2d(np.real(t32_T1),kernel)
+        t33f = conv2d(np.real(t33_T1),kernel)
+
+        T_T1 = np.array([[t11f, t12f, t13f], [t21f, t22f, t23f], [t31f, t32f, t33f]])
+
 
     reshaped_arr = T_T1.reshape(3, 3, -1).transpose(2, 0, 1)
     eigenvalues = np.linalg.eigvals(reshaped_arr)
@@ -88,22 +101,3 @@ def process_chunk_rvifp(chunks, window_size):
     rvi = np.real(rvi)
 
     return rvi
-
-    # if window_size>1:
-    #     c11_T1r = conv2d(np.real(c11_T1),kernel)
-    #     c11_T1i = conv2d(np.imag(c11_T1),kernel)
-    #     c11s = c11_T1r+1j*c11_T1i
-
-    #     c12_T1r = conv2d(np.real(c12_T1),kernel)
-    #     c12_T1i = conv2d(np.imag(c12_T1),kernel)
-    #     c12s = c12_T1r+1j*c12_T1i
-
-
-    #     c21_T1r = conv2d(np.real(c21_T1),kernel)
-    #     c21_T1i = conv2d(np.imag(c21_T1),kernel)
-    #     c21s = c21_T1r+1j*c21_T1i
-
-
-    #     c22_T1r = conv2d(np.real(c22_T1),kernel)
-    #     c22_T1i = conv2d(np.imag(c22_T1),kernel)
-    #     c22s = c22_T1r+1j*c22_T1i
