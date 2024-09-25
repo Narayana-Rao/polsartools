@@ -3,16 +3,18 @@ import numpy as np
 # from ..utils.utils import process_chunks_parallel,conv2d,eig22
 from polsartools.utils.utils import process_chunks_parallel,conv2d,eig22
 
-def rvidp(infolder, outname=None, window_size=1,max_workers=None):
+def rvidp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
     input_filepaths = [
         os.path.join(infolder, "C11.bin"), 
         os.path.join(infolder, "C12_real.bin"),
         os.path.join(infolder, "C12_imag.bin"),
         os.path.join(infolder, "C22.bin")
     ]
+    output_filepaths = []
     if outname is None:
-        outname = os.path.join(infolder, "rvidp.tif")
-    process_chunks_parallel(outname, input_filepaths, processing_func=process_chunk_rvidp, window_size=window_size, max_workers=max_workers)
+        output_filepaths.append(os.path.join(infolder, "rvidp.tif"))
+
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,processing_func=process_chunk_rvidp,block_size=(512, 512), max_workers=max_workers,  num_outputs=1)
 
 def process_chunk_rvidp(chunks, window_size):
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)

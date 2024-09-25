@@ -27,7 +27,7 @@ class CustomInstall(install):
 
 setup(
     name='polsartools',
-    version='0.1.0',
+    version='0.4.0',
     description='A package for processing geospatial raster data with PolSAR tools.',
     author='Narayana',
     author_email='your.email@example.com',
