@@ -2,32 +2,28 @@ import os, tempfile
 from osgeo import gdal
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor, as_completed
-from threading import Lock
-
 
 def conv2d(a, f):
     filt = np.zeros(a.shape)
     wspad = int(f.shape[0]/2)
     s = f.shape + tuple(np.subtract(a.shape, f.shape) + 1)
     strd = np.lib.stride_tricks.as_strided
-    subM = strd(a, shape = s, strides = a.strides * 2)
+    subM = strd(a, shape=s, strides=a.strides * 2)
     filt_data = np.einsum('ij,ijkl->kl', f, subM)
-    filt[wspad:wspad+filt_data.shape[0],wspad:wspad+filt_data.shape[1]] = filt_data
+    filt[wspad:wspad+filt_data.shape[0], wspad:wspad+filt_data.shape[1]] = filt_data
     return filt
-def eig22(c2):
-    c11 = c2[:,:,0].flatten()
-    c12 = c2[:,:,1].flatten()
-    c21 = c2[:,:,2].flatten()
-    c22 = c2[:,:,3].flatten()
-    trace = -(c11+c22)
-    det = c11*c22-c12*c21
-    # const= 1
-    sqdiscr = np.sqrt(trace*trace - 4*det);
-    lambda1 = -(trace + sqdiscr)*0.5;
-    lambda2 = -(trace - sqdiscr)*0.5;
-    
-    return lambda1,lambda2
 
+def eig22(c2):
+    c11 = c2[:, :, 0].flatten()
+    c12 = c2[:, :, 1].flatten()
+    c21 = c2[:, :, 2].flatten()
+    c22 = c2[:, :, 3].flatten()
+    trace = -(c11 + c22)
+    det = c11 * c22 - c12 * c21
+    sqdiscr = np.sqrt(trace * trace - 4 * det)
+    lambda1 = -(trace + sqdiscr) * 0.5
+    lambda2 = -(trace - sqdiscr) * 0.5
+    return lambda1, lambda2
 
 def process_chunks_parallel(input_filepaths, output_filepaths, window_size, write_flag, processing_func, block_size=(512, 512), max_workers=None, num_outputs=1):
     if len(input_filepaths) not in [2, 4, 9]:
@@ -64,19 +60,25 @@ def process_chunks_parallel(input_filepaths, output_filepaths, window_size, writ
 
         temp_files = []
         for future in as_completed(tasks):
-            temp_paths, x_start, y_start = future.result()
-            if write_flag:
-                temp_files.append((temp_paths, x_start, y_start))
-            else:
-                for i in range(num_outputs):
-                    temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
-                    temp_band = temp_dataset.GetRasterBand(1)
-                    temp_chunk = temp_band.ReadAsArray()
+            try:
+                result = future.result()
+                if result is None:
+                    raise ValueError("Chunk processing returned None")
+                temp_paths, x_start, y_start = result
+                if write_flag:
+                    temp_files.append((temp_paths, x_start, y_start))
+                else:
+                    for i in range(num_outputs):
+                        temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
+                        temp_band = temp_dataset.GetRasterBand(1)
+                        temp_chunk = temp_band.ReadAsArray()
 
-                    temp_height, temp_width = temp_chunk.shape
-                    merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
-                    temp_dataset = None
-                    os.remove(temp_paths[i])
+                        temp_height, temp_width = temp_chunk.shape
+                        merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
+                        temp_dataset = None
+                        os.remove(temp_paths[i])
+            except Exception as e:
+                print(f"Error in processing task: {e}")
 
     if write_flag:
         merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs)
@@ -86,20 +88,13 @@ def process_chunks_parallel(input_filepaths, output_filepaths, window_size, writ
     else:
         return merged_arrays
 
-
-
 def read_chunk_with_overlap(filepath, x_start, y_start, width, height, window_size):
-    """
-    Read a chunk from the input raster with an overlap equal to the window size.
-    Opens a new dataset for each thread.
-    """
     dataset = gdal.Open(filepath, gdal.GA_ReadOnly)
     if dataset is None:
         raise FileNotFoundError(f"Cannot open {filepath}")
 
     band = dataset.GetRasterBand(1)
 
-    # Ensure we don't read beyond the edges of the raster
     xoff = max(x_start - window_size, 0)
     yoff = max(y_start - window_size, 0)
     xsize = min(width + 2 * window_size, dataset.RasterXSize - xoff)
@@ -109,29 +104,22 @@ def read_chunk_with_overlap(filepath, x_start, y_start, width, height, window_si
     dataset = None  # Close the dataset after reading
     return chunk
 
-    
 def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, block_height, window_size, raster_width, raster_height, num_outputs):
     temp_paths = []
     for i in range(num_outputs):
         temp_fd, temp_path = tempfile.mkstemp(suffix=f'_output_{i}.tif')
         os.close(temp_fd)
-        
+
         driver = gdal.GetDriverByName('GTiff')
         temp_dataset = driver.Create(temp_path, block_width, block_height, 1, gdal.GDT_Float32)
-        geotransform = (x_start, 1, 0, y_start, 0, -1)
+        # geotransform = (x_start, 1, 0, y_start, 0, -1)
+        geotransform = (x_start - window_size, 1, 0, y_start - window_size, 0, -1)
         temp_dataset.SetGeoTransform(geotransform)
         temp_dataset.SetProjection('')
 
         temp_band = temp_dataset.GetRasterBand(1)
-        
-        if x_start == 0 and y_start == 0:
-            temp_band.WriteArray(processed_chunks[i][0:-window_size * 2, 0:-window_size * 2])
-        if x_start == 0 and y_start != 0:
-            temp_band.WriteArray(processed_chunks[i][window_size:-window_size, 0:-window_size * 2])
-        if x_start != 0 and y_start == 0:
-            temp_band.WriteArray(processed_chunks[i][0:-window_size * 2, window_size:-window_size])
-        elif x_start != 0 and y_start != 0:
-            temp_band.WriteArray(processed_chunks[i][window_size:-window_size, window_size:-window_size])
+
+        temp_band.WriteArray(processed_chunks[i][window_size:-window_size, window_size:-window_size])
 
         temp_dataset.FlushCache()
         temp_dataset = None
@@ -139,7 +127,6 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
         temp_paths.append(temp_path)
 
     return temp_paths, x_start, y_start
-
 
 def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs):
     for i in range(num_outputs):
@@ -149,8 +136,6 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
         output_dataset.SetProjection(projection)
         output_band = output_dataset.GetRasterBand(1)
 
-        mask = np.zeros((raster_height, raster_width), dtype=np.float32)
-
         for temp_path_set, x_start, y_start in temp_files:
             temp_dataset = gdal.Open(temp_path_set[i], gdal.GA_ReadOnly)
             temp_band = temp_dataset.GetRasterBand(1)
@@ -158,33 +143,24 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
             temp_chunk = temp_band.ReadAsArray()
             temp_height, temp_width = temp_chunk.shape
 
-            output_band.WriteArray(temp_chunk[:temp_height, :temp_width], xoff=x_start, yoff=y_start)
-            mask[y_start:y_start + temp_height, x_start:x_start + temp_width] += temp_chunk[:temp_height, :temp_width]
+            output_band.WriteArray(temp_chunk, xoff=x_start, yoff=y_start)
 
             temp_dataset = None
 
-        mask[mask == 0] = np.nan
-        mask[np.isnan(mask)] = 0
-
         output_dataset.FlushCache()
         output_dataset = None
-
 
 def process_and_write_chunk(args, processing_func, num_outputs):
     try:
         (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height) = args
 
-        # Read chunks for each input file
         chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
 
-        # Process the chunks using the given function
         processed_chunks = processing_func(chunks, window_size, input_filepaths)
 
-        # If num_outputs is 1, make sure processed_chunks is treated as a list
         if num_outputs == 1:
             processed_chunks = [processed_chunks]
 
-        # Write the processed chunks to a temporary file
         temp_paths, temp_x_start, temp_y_start = write_chunk_to_temp_file(
             processed_chunks,
             x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, num_outputs
@@ -193,4 +169,4 @@ def process_and_write_chunk(args, processing_func, num_outputs):
         return temp_paths, temp_x_start, temp_y_start
     except Exception as e:
         print(f"Error in processing chunk: {e}")
-        return None  # Ensure the function returns something even if an error occurs
+        return None
