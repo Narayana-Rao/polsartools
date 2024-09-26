@@ -1,8 +1,4 @@
 numpy
-xarray
 gdal
 scipy
-pillow
-dask 
-rioxarray
-rasterio
+functools

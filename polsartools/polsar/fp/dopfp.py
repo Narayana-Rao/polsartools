@@ -37,7 +37,7 @@ def dopfp(infolder, outname=None, window_size=1, write_flag=True,max_workers=Non
             block_size=(512, 512), max_workers=max_workers, 
             num_outputs=1)
 
-def process_chunk_dopfp(chunks, window_size, input_filepaths):
+def process_chunk_dopfp(chunks, window_size,input_filepaths,*args):
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])

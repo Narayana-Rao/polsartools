@@ -40,7 +40,10 @@ def mf3cf(infolder, outname=None, window_size=1,write_flag=True,max_workers=None
             block_size=(512, 512), max_workers=max_workers, 
             num_outputs=4)
 
-def process_chunk_mf3cf(chunks, window_size, input_filepaths):
+def process_chunk_mf3cf(chunks, window_size, input_filepaths, *args):
+
+    # additional_arg1 = args[0] if len(args) > 0 else None
+    # additional_arg2 = args[1] if len(args) > 1 else None
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])

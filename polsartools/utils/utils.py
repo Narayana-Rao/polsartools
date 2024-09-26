@@ -1,18 +1,23 @@
 import os, tempfile
 from osgeo import gdal
 import numpy as np
+from functools import wraps
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
 import time
 
 def time_it(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         start_time = time.time()
-        result = func(*args, **kwargs)
-        end_time = time.time()
-        processing_time = end_time - start_time
-        print(f"Completed {func.__name__} in : {processing_time:.2f} seconds")
-        return result
+        try:
+            result = func(*args, **kwargs)  # Call the original function
+            end_time = time.time()
+            print(f"Execution time for {func.__name__}: {end_time - start_time:.2f} seconds")
+            return result
+        except Exception as e:
+            # If an exception occurs, re-raise it but don't print the execution time
+            raise e
     return wrapper
 
 def conv2d(a, f):
@@ -37,7 +42,12 @@ def eig22(c2):
     lambda2 = -(trace - sqdiscr) * 0.5
     return lambda1, lambda2
 
-def process_chunks_parallel(input_filepaths, output_filepaths, window_size, write_flag, processing_func, block_size=(512, 512), max_workers=None, num_outputs=1):
+def process_chunks_parallel(input_filepaths, output_filepaths, 
+                            window_size, write_flag, processing_func, 
+                            block_size=(512, 512), max_workers=None, 
+                            num_outputs=1, chi_in=None):
+
+
     if len(input_filepaths) not in [2, 4, 9]:
         raise ValueError("This function only supports 2, 4, or 9 input rasters.")
 
@@ -67,8 +77,8 @@ def process_chunks_parallel(input_filepaths, output_filepaths, window_size, writ
                 read_block_width = min(adjusted_block_size_x, raster_width - x)
                 read_block_height = min(adjusted_block_size_y, raster_height - y)
 
-                args = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height)
-                tasks.append(executor.submit(process_and_write_chunk, args, processing_func, num_outputs))
+                args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in)
+                tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
 
         temp_files = []
         for future in as_completed(tasks):
@@ -205,11 +215,11 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
 
 def process_and_write_chunk(args, processing_func, num_outputs):
     try:
-        (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height) = args
+        (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in) = args
 
         chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
-
-        processed_chunks = processing_func(chunks, window_size, input_filepaths)
+        
+        processed_chunks = processing_func(chunks, window_size, input_filepaths, chi_in)
 
         if num_outputs == 1:
             processed_chunks = [processed_chunks]
