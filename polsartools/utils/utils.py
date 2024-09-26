@@ -106,20 +106,60 @@ def read_chunk_with_overlap(filepath, x_start, y_start, width, height, window_si
 
 def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, block_height, window_size, raster_width, raster_height, num_outputs):
     temp_paths = []
+    
     for i in range(num_outputs):
         temp_fd, temp_path = tempfile.mkstemp(suffix=f'_output_{i}.tif')
         os.close(temp_fd)
 
         driver = gdal.GetDriverByName('GTiff')
         temp_dataset = driver.Create(temp_path, block_width, block_height, 1, gdal.GDT_Float32)
-        # geotransform = (x_start, 1, 0, y_start, 0, -1)
-        geotransform = (x_start - window_size, 1, 0, y_start - window_size, 0, -1)
+        geotransform = (x_start, 1, 0, y_start, 0, -1)
         temp_dataset.SetGeoTransform(geotransform)
         temp_dataset.SetProjection('')
 
         temp_band = temp_dataset.GetRasterBand(1)
 
-        temp_band.WriteArray(processed_chunks[i][window_size:-window_size, window_size:-window_size])
+        # Check if the block size is equal to the raster size
+        if block_width == raster_width and block_height == raster_height:
+            temp_band.WriteArray(processed_chunks[i])  # Write without any reductions
+            temp_dataset.FlushCache()
+            temp_dataset = None
+            temp_paths.append(temp_path)
+            continue  # Skip to the next output
+        
+        # Determine the boundaries
+        is_left_border = x_start == 0
+        is_right_border = x_start + block_width >= raster_width
+        is_top_border = y_start == 0
+        is_bottom_border = y_start + block_height >= raster_height
+
+        if is_left_border and is_top_border:
+            # Top-left corner: reduce only from right and bottom
+            temp_band.WriteArray(processed_chunks[i][:, window_size:][window_size:, :])
+        elif is_left_border and is_bottom_border:
+            # Bottom-left corner: reduce only from right and top
+            temp_band.WriteArray(processed_chunks[i][:, window_size:][:-window_size, :])
+        elif is_right_border and is_top_border:
+            # Top-right corner: reduce only from left and bottom
+            temp_band.WriteArray(processed_chunks[i][:, :-window_size][window_size:, :])
+        elif is_right_border and is_bottom_border:
+            # Bottom-right corner: reduce only from left and top
+            temp_band.WriteArray(processed_chunks[i][:, :-window_size][:-window_size, :])
+        elif is_left_border:
+            # Left edge: reduce from right, top, and bottom
+            temp_band.WriteArray(processed_chunks[i][window_size:, window_size:])  # Skip left
+        elif is_right_border:
+            # Right edge: reduce from left, top, and bottom
+            temp_band.WriteArray(processed_chunks[i][window_size:, :-window_size])  # Skip right
+        elif is_top_border:
+            # Top edge: reduce from left, right, and bottom
+            temp_band.WriteArray(processed_chunks[i][:-window_size, window_size:])  # Skip top
+        elif is_bottom_border:
+            # Bottom edge: reduce from left, right, and top
+            temp_band.WriteArray(processed_chunks[i][:-window_size, :-window_size])  # Skip bottom
+        else:
+            # Non-border chunks: apply window size reduction
+            temp_band.WriteArray(processed_chunks[i][window_size:-window_size, window_size:-window_size])
 
         temp_dataset.FlushCache()
         temp_dataset = None
@@ -127,6 +167,7 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
         temp_paths.append(temp_path)
 
     return temp_paths, x_start, y_start
+
 
 def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs):
     for i in range(num_outputs):

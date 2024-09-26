@@ -38,7 +38,7 @@ def rvifp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None
             processing_func=process_chunk_rvifp,block_size=(512, 512), max_workers=max_workers,  num_outputs=1)
 
 
-def process_chunk_rvifp(chunks, window_size):
+def process_chunk_rvifp(chunks, window_size,input_filepaths):
 
     t11_T1 = np.array(chunks[0])
     t12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
