@@ -1,7 +1,8 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel, conv2d
+from polsartools.utils.utils import process_chunks_parallel, conv2d, time_it
 
+@time_it
 def rvifp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
 
     if os.path.isfile(os.path.join(infolder,"T11.bin")):

@@ -1,8 +1,9 @@
 import os
 import numpy as np
 # from ..utils.utils import process_chunks_parallel,conv2d,eig22
-from polsartools.utils.utils import process_chunks_parallel,conv2d,eig22
+from polsartools.utils.utils import process_chunks_parallel,conv2d,eig22, time_it
 
+@time_it
 def rvidp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
     input_filepaths = [
         os.path.join(infolder, "C11.bin"), 

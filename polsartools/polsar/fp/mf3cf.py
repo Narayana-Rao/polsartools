@@ -1,8 +1,9 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel, conv2d
+from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
 from polsartools.utils.convert_matrices import C3_T3_mat
 
+@time_it
 def mf3cf(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
 
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
