@@ -4,7 +4,7 @@ from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
 from polsartools.utils.convert_matrices import C3_T3_mat
 
 @time_it
-def mf3cf(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
+def mf4cf(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
 
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
@@ -30,17 +30,19 @@ def mf3cf(infolder, outname=None, window_size=1,write_flag=True,max_workers=None
 
     output_filepaths = []
     if outname is None:
-        output_filepaths.append(os.path.join(infolder, "Ps_mf3cf.tif"))
-        output_filepaths.append(os.path.join(infolder, "Pd_mf3cf.tif"))
-        output_filepaths.append(os.path.join(infolder, "Pv_mf3cf.tif"))
-        output_filepaths.append(os.path.join(infolder, "Theta_FP_mf3cf.tif"))
+        output_filepaths.append(os.path.join(infolder, "Ps_mf4cf.tif"))
+        output_filepaths.append(os.path.join(infolder, "Pd_mf4cf.tif"))
+        output_filepaths.append(os.path.join(infolder, "Pv_mf4cf.tif"))
+        output_filepaths.append(os.path.join(infolder, "Pc_mf4cf.tif"))
+        output_filepaths.append(os.path.join(infolder, "Theta_FP_mf4cf.tif"))
+        output_filepaths.append(os.path.join(infolder, "Tau_FP_mf4cf.tif"))
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-            processing_func=process_chunk_mf3cf,
+            processing_func=process_chunk_mf4cf,
             block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=4)
+            num_outputs=6)
 
-def process_chunk_mf3cf(chunks, window_size, input_filepaths):
+def process_chunk_mf4cf(chunks, window_size, input_filepaths):
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])
@@ -92,26 +94,41 @@ def process_chunk_mf3cf(chunks, window_size, input_filepaths):
 
         T_T1 = np.array([[t11f, t12f, t13f], [t21f, t22f, t23f], [t31f, t32f, t33f]])
 
+    # det_T3 = t11s*(t22s*t33s-t23s*t32s)-t12s*(t21s*t33s-t23s*t31s)+t13s*(t21s*t32s-t22s*t31s)
+    # trace_T3 = t11s + t22s + t33s
+    # m1 = np.real(np.sqrt(1-(27*(det_T3/(trace_T3**3)))))
 
     reshaped_arr = T_T1.reshape(3, 3, -1).transpose(2, 0, 1)
     det_T3 = np.linalg.det(reshaped_arr)
     # del reshaped_arr
     det_T3 = det_T3.reshape(T_T1.shape[2], T_T1.shape[3])
 
-    trace_T3 = T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:]
-    m1 = np.real(np.sqrt(1-(27*(det_T3/(trace_T3**3)))))
-    
-    h = (T_T1[0,0,:,:] - T_T1[1,1,:,:] - T_T1[2,2,:,:])
-    g = (T_T1[1,1,:,:] + T_T1[2,2,:,:])
-    span = T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:]
-                
-    val = (m1*span*h)/(T_T1[0,0,:,:]*g+m1**2*span**2)
-    thet = np.real(np.arctan(val))
-        
-    theta_FP = np.rad2deg(thet).astype(np.float32)
-                
-    Ps_FP = np.nan_to_num(np.real(((m1*(span)*(1+np.sin(2*thet))/2)))).astype(np.float32)
-    Pd_FP = np.nan_to_num(np.real(((m1*(span)*(1-np.sin(2*thet))/2)))).astype(np.float32)
-    Pv_FP = np.nan_to_num(np.real(span*(1-m1))).astype(np.float32)
+    s0_f = T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:] #trace_T3
+    dop_f = np.real(np.sqrt(1-(27*(det_T3/(s0_f**3)))))
 
-    return Ps_FP, Pd_FP, Pv_FP,theta_FP
+    k11_f = (T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:])/2
+    k44_f = (-T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:])/2
+    k14_f = np.imag(T_T1[1,2,:,:])
+
+    
+    # s0_f = trace_T3
+    # dop_f = m1
+
+    val1 = (4*dop_f*k11_f*k44_f)/(k44_f**2 - (1 + 4*dop_f**2)*k11_f**2)
+    val2 = np.abs(k14_f)/(k11_f)
+    
+
+
+    theta_f = np.real(np.arctan(val1)) # separation for surface and dbl
+    tau_f = np.real(np.arctan(val2)) # separation for helix
+    # thet = np.rad2deg(thet)
+    theta_FP = np.rad2deg(theta_f).astype(np.float32)
+    tau_FP = np.rad2deg(tau_f).astype(np.float32)
+
+    pc_f = (dop_f*s0_f*(np.sin(2*tau_f))).astype(np.float32)
+    pv_f = ((1-dop_f)*s0_f).astype(np.float32)
+    res_pow = s0_f - (pc_f + pv_f)
+    ps_f = ((res_pow/2)*(1+np.sin((2*theta_f)))).astype(np.float32)
+    pd_f = ((res_pow/2)*(1-np.sin((2*theta_f)))).astype(np.float32)
+
+    return ps_f, pd_f, pv_f,pc_f,theta_FP,tau_FP

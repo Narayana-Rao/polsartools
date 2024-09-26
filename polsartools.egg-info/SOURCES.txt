@@ -20,6 +20,7 @@ polsartools/polsar/dxp/rvidp.py
 polsartools/polsar/fp/__init__.py
 polsartools/polsar/fp/grvi.py
 polsartools/polsar/fp/mf3cf.py
+polsartools/polsar/fp/mf4cf.py
 polsartools/polsar/fp/rvifp.py
 polsartools/postprocessing/visualization.py
 polsartools/preprocessing/calibration.py

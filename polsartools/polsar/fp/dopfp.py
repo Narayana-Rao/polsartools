@@ -4,7 +4,7 @@ from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
 from polsartools.utils.convert_matrices import C3_T3_mat
 
 @time_it
-def mf3cf(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
+def dopfp(infolder, outname=None, window_size=1, write_flag=True,max_workers=None):
 
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
@@ -30,17 +30,14 @@ def mf3cf(infolder, outname=None, window_size=1,write_flag=True,max_workers=None
 
     output_filepaths = []
     if outname is None:
-        output_filepaths.append(os.path.join(infolder, "Ps_mf3cf.tif"))
-        output_filepaths.append(os.path.join(infolder, "Pd_mf3cf.tif"))
-        output_filepaths.append(os.path.join(infolder, "Pv_mf3cf.tif"))
-        output_filepaths.append(os.path.join(infolder, "Theta_FP_mf3cf.tif"))
+        output_filepaths.append(os.path.join(infolder, "dop_fp.tif"))
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-            processing_func=process_chunk_mf3cf,
+            processing_func=process_chunk_dopfp,
             block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=4)
+            num_outputs=1)
 
-def process_chunk_mf3cf(chunks, window_size, input_filepaths):
+def process_chunk_dopfp(chunks, window_size, input_filepaths):
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])
@@ -101,17 +98,5 @@ def process_chunk_mf3cf(chunks, window_size, input_filepaths):
     trace_T3 = T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:]
     m1 = np.real(np.sqrt(1-(27*(det_T3/(trace_T3**3)))))
     
-    h = (T_T1[0,0,:,:] - T_T1[1,1,:,:] - T_T1[2,2,:,:])
-    g = (T_T1[1,1,:,:] + T_T1[2,2,:,:])
-    span = T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:]
-                
-    val = (m1*span*h)/(T_T1[0,0,:,:]*g+m1**2*span**2)
-    thet = np.real(np.arctan(val))
-        
-    theta_FP = np.rad2deg(thet).astype(np.float32)
-                
-    Ps_FP = np.nan_to_num(np.real(((m1*(span)*(1+np.sin(2*thet))/2)))).astype(np.float32)
-    Pd_FP = np.nan_to_num(np.real(((m1*(span)*(1-np.sin(2*thet))/2)))).astype(np.float32)
-    Pv_FP = np.nan_to_num(np.real(span*(1-m1))).astype(np.float32)
 
-    return Ps_FP, Pd_FP, Pv_FP,theta_FP
+    return m1
