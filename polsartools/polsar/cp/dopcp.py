@@ -3,7 +3,7 @@ import numpy as np
 from polsartools.utils.utils import process_chunks_parallel,conv2d,eig22, time_it
 
 @time_it
-def dopcp(infolder, outname=None, chi_in=45, window_size=1,write_flag=True,max_workers=None):
+def dopcp(infolder, outname=None, chi_in=45, psi_in=0, window_size=1,write_flag=True,max_workers=None):
     input_filepaths = [
         os.path.join(infolder, "C11.bin"), 
         os.path.join(infolder, "C12_real.bin"),
@@ -17,9 +17,9 @@ def dopcp(infolder, outname=None, chi_in=45, window_size=1,write_flag=True,max_w
 
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, 
                 write_flag=write_flag,processing_func=process_chunk_dopcp,block_size=(512, 512), 
-                max_workers=max_workers,  num_outputs=1, chi_in=chi_in)
+                max_workers=max_workers,  num_outputs=1, chi_in=chi_in,psi_in=psi_in)
 
-def process_chunk_dopcp(chunks, window_size,input_filepaths,chi_in):
+def process_chunk_dopcp(chunks, window_size,input_filepaths,chi_in,psi_in):
 
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11_T1 = np.array(chunks[0])
