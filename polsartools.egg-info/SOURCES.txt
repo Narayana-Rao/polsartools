@@ -35,6 +35,7 @@ polsartools/preprocessing/calibration.py
 polsartools/preprocessing/filters.py
 polsartools/preprocessing/gamma_filter.py
 polsartools/preprocessing/lee_filter.py
+polsartools/preprocessing/pre_utils.py
 polsartools/preprocessing/rflee_filter.py
 polsartools/python_bindings/__init__.py
 polsartools/utils/convert_matrices.py

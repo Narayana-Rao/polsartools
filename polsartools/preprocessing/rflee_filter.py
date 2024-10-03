@@ -1,11 +1,12 @@
 import os
 import numpy as np
 from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
+from polsartools.preprocessing.pre_utils import get_filter_io_paths
 
 @time_it
 def refined_lee_filter(infolder, outname=None, window_size=3, k=1, write_flag=True, max_workers=None):
     # File reading and output setup similar to the boxcar filter
-    input_filepaths, output_filepaths = get_input_output_filepaths(infolder, outname, window_size, filter_type="refined_lee")
+    input_filepaths, output_filepaths = get_filter_io_paths(infolder, outname, window_size, filter_type="refined_lee")
 
     # Process chunks in parallel
     num_outputs = len(output_filepaths)
