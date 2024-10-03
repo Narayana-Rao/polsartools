@@ -193,7 +193,11 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
 def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs):
     for i in range(num_outputs):
-        driver = gdal.GetDriverByName('GTiff')
+        if '.tif' in output_filepaths[0]:
+            driver = gdal.GetDriverByName('GTiff')
+        if '.bin' in output_filepaths[0]:
+            driver = gdal.GetDriverByName('ENVI')
+        
         output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32)
         output_dataset.SetGeoTransform(geotransform)
         output_dataset.SetProjection(projection)
