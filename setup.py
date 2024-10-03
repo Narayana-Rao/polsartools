@@ -27,17 +27,15 @@ class CustomInstall(install):
 
 setup(
     name='polsartools',
-    version='0.4.0',
-    description='A package for processing geospatial raster data with PolSAR tools.',
-    author='Narayana',
-    author_email='your.email@example.com',
+    version='0.4',
+    description='A package for processing Polarimetric Syntthetic Aperture Radar (PolSAR) data.',
+    author='Narayanarao Bhogapurapu',
+    author_email='bnarayanarao@iitb.ac.in',
     packages=find_packages(),
     install_requires=[
         'numpy',
-        'xarray',
         'gdal',
         'scipy',
-        'pillow',  # For image processing if needed
     ],
     extras_require={
         'dev': [
@@ -48,7 +46,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'polsartools-cli=polsartools.io.main:main',  # If you have a CLI
+            'polsartools-cli=polsartools.io.main:main',  # For CLI
         ],
     },
     python_requires='>=3.6',

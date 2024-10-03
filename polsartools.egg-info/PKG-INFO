@@ -1,9 +1,9 @@
 Metadata-Version: 2.1
 Name: polsartools
-Version: 0.4.0
-Summary: A package for processing geospatial raster data with PolSAR tools.
-Author: Narayana
-Author-email: your.email@example.com
+Version: 0.4
+Summary: A package for processing Polarimetric Syntthetic Aperture Radar (PolSAR) data.
+Author: Narayanarao Bhogapurapu
+Author-email: bnarayanarao@iitb.ac.in
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
@@ -13,10 +13,8 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Requires-Dist: numpy
-Requires-Dist: xarray
 Requires-Dist: gdal
 Requires-Dist: scipy
-Requires-Dist: pillow
 Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: sphinx; extra == "dev"
