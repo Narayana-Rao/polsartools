@@ -1,9 +1,10 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel, conv2d, time_it
+from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
+from polsartools.utils.convert_matrices import C3_T3_mat
 
 @time_it
-def rvifp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
+def rvifp(infolder, outname=None,  chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
 
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
@@ -39,7 +40,7 @@ def rvifp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None
             processing_func=process_chunk_rvifp,block_size=(512, 512), max_workers=max_workers,  num_outputs=1)
 
 
-def process_chunk_rvifp(chunks, window_size,input_filepaths):
+def process_chunk_rvifp(chunks, window_size,input_filepaths,*args):
 
     t11_T1 = np.array(chunks[0])
     t12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])

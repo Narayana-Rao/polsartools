@@ -4,7 +4,7 @@ from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
 from polsartools.utils.convert_matrices import C3_T3_mat
 
 @time_it
-def prvifp(infolder, outname=None, window_size=1, write_flag=True,max_workers=None):
+def prvifp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
 
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
@@ -37,7 +37,7 @@ def prvifp(infolder, outname=None, window_size=1, write_flag=True,max_workers=No
             block_size=(512, 512), max_workers=max_workers, 
             num_outputs=1)
 
-def process_chunk_prvifp(chunks, window_size, input_filepaths):
+def process_chunk_prvifp(chunks, window_size, input_filepaths,*args):
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])
