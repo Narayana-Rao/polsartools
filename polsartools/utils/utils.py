@@ -142,8 +142,11 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
         temp_band = temp_dataset.GetRasterBand(1)
 
         # Check if the block size is equal to the raster size
-        if block_width == raster_width and block_height == raster_height:
-            temp_band.WriteArray(processed_chunks[i])  # Write without any reductions
+        if block_width >= raster_width and block_height >= raster_height:
+
+            temp_band.WriteArray(processed_chunks[i])  
+            # temp_band.WriteArray(processed_chunks[i])  # Write without any reductions
+            
             temp_dataset.FlushCache()
             temp_dataset = None
             temp_paths.append(temp_path)
@@ -211,7 +214,7 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
             temp_height, temp_width = temp_chunk.shape
 
             output_band.WriteArray(temp_chunk, xoff=x_start, yoff=y_start)
-
+            # print(x_start,y_start)
             temp_dataset = None
 
         output_dataset.FlushCache()

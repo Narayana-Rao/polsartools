@@ -1,0 +1,4 @@
+-fix small rasters shifting if window_size>1
+-vectorize grvi, refined_lee
+-correct boxcar elements 
+-split utils.py
