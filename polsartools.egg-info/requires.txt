@@ -1,0 +1,8 @@
+numpy
+gdal
+scipy
+
+[dev]
+pytest
+sphinx
+doxygen

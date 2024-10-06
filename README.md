@@ -35,7 +35,9 @@ import polsartools as pst
 T3_folder = r'../T3'
 windows_size=3
 
-ps,pd,pv,pc,tfp,taufp = pst.mf4cf(T3_folder,window_size=window_size,write_flag=1)
+pst.polsar.fp.mf4cf(T3_folder,window_size=window_size)
+
+ps,pd,pv,pc,tfp,taufp = pst.polsar.fp.mf4cf(T3_folder,window_size=window_size,write_flag=False)
 
 ```
 

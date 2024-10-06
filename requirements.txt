@@ -1,0 +1,4 @@
+numpy
+gdal
+scipy
+functools
