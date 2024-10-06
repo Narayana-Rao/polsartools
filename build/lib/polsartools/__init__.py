@@ -8,6 +8,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-__version__ = '0.4.0'  # Replace with your current version
+__version__ = '0.4'  # update current version
 
 from . import polsar
+from . import preprocessing
