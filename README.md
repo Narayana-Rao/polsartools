@@ -26,7 +26,7 @@ pip install polsartools
  
 #### gdal installation error fix
  
- ```conda install -c conda-forge gdal```
+ ```conda install gdal```
 
 #### Example
 ```python
