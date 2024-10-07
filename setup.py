@@ -28,7 +28,7 @@ class CustomInstall(install):
 setup(
     name='polsartools',
     version='0.4',
-    description='A package for processing Polarimetric Syntthetic Aperture Radar (PolSAR) data.',
+    description='A package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.',
     author='Narayanarao Bhogapurapu',
     author_email='bnarayanarao@iitb.ac.in',
     packages=find_packages(),
@@ -64,4 +64,6 @@ setup(
         'install': CustomInstall,
     },
     ext_modules=[],
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
 )

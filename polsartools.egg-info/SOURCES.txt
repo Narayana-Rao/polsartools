@@ -40,4 +40,5 @@ polsartools/preprocessing/rflee_filter.py
 polsartools/python_bindings/__init__.py
 polsartools/utils/convert_matrices.py
 polsartools/utils/utils.py
+tests/test_functions.py
 tests/test_processing.py

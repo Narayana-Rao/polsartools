@@ -1,0 +1,13 @@
+
+
+python -m sphinx -h
+python -m sphinx -M html docs/source/ docs/build/
+
+python -m build
+python -m twine check dist/*
+
+
+python -m twine upload --repository-url https://pypi.org/project/polsartools/ dist/polsartools-0.4.tar.gz
+
+
+https://betterscientificsoftware.github.io/python-for-hpc/tutorials/python-pypi-packaging/
