@@ -3,11 +3,19 @@
 python -m sphinx -h
 python -m sphinx -M html docs/source/ docs/build/
 
-python -m build
+python -m build or 
+
+python setup.py bdist_wheel
+python setup.py sdist
+
+
 python -m twine check dist/*
 
+python -m twine upload --repository-url https://pypi.org/project/polsartools/ dist/*
 
 python -m twine upload --repository-url https://pypi.org/project/polsartools/ dist/polsartools-0.4.tar.gz
 
-
+################### REFERNCES
+https://packaging.python.org/en/latest/tutorials/packaging-projects/
+https://realpython.com/pypi-publish-python-package/
 https://betterscientificsoftware.github.io/python-for-hpc/tutorials/python-pypi-packaging/
