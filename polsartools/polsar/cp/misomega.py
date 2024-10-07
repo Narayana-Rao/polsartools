@@ -39,9 +39,9 @@ def process_chunk_misomega(chunks, window_size,input_filepaths,chi_in,psi_in):
         c22_T1 = conv2d(np.real(c22_T1),kernel)+1j*conv2d(np.imag(c22_T1),kernel)
         
     # Compute Stokes parameters
-    s0 = c11_T1 + c22_T1
-    s1 = c11_T1 - c22_T1
-    s2 = np.real(c12_T1 + c21_T1)
+    s0 = np.abs(c11_T1 + c22_T1)
+    s1 = np.abs(c11_T1 - c22_T1)
+    s2 = np.abs(c12_T1 + c21_T1)
     s3 = np.where(chi_in >= 0, 1j * (c12_T1 - c21_T1), -1j * (c12_T1 - c21_T1))
     s3 = np.real(s3)
 
