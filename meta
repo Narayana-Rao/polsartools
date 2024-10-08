@@ -8,10 +8,14 @@ python -m build or
 python setup.py bdist_wheel
 python setup.py sdist
 
-
 python -m twine check dist/*
 
-python -m twine upload --repository-url https://pypi.org/project/polsartools/ dist/*
+python -m twine upload --repository-url https://pypi.org/project/polsartools dist/*
+
+python -m twine upload --repository-url  https://upload.pypi.org dist/*
+
+python -m twine upload -r testpypi dist/*
+
 
 python -m twine upload --repository-url https://pypi.org/project/polsartools/ dist/polsartools-0.4.tar.gz
 
