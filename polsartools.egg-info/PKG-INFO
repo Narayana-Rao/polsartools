@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: polsartools
-Version: 0.4
+Version: 0.4.1
 Summary: A package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
 Author: Narayanarao Bhogapurapu
 Author-email: bnarayanarao@iitb.ac.in
@@ -50,7 +50,7 @@ pip install polsartools
  
 #### gdal installation error fix
  
- ```conda install -c conda-forge gdal```
+ ```conda install gdal```
 
 #### Example
 ```python

@@ -10,14 +10,10 @@ python setup.py sdist
 
 python -m twine check dist/*
 
-python -m twine upload --repository-url https://pypi.org/project/polsartools dist/*
+python -m twine upload dist/*
 
-python -m twine upload --repository-url  https://upload.pypi.org dist/*
+enter token
 
-python -m twine upload -r testpypi dist/*
-
-
-python -m twine upload --repository-url https://pypi.org/project/polsartools/ dist/polsartools-0.4.tar.gz
 
 ################### REFERNCES
 https://packaging.python.org/en/latest/tutorials/packaging-projects/
