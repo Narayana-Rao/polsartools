@@ -27,12 +27,11 @@ Requires-Dist: doxygen; extra == "dev"
 </p>
 
 # PolSARtools PyPI package (beta version!)
- [![Downloads](https://static.pepy.tech/badge/polsartools)](https://pepy.tech/project/polsartools)
- [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
+[![image](https://img.shields.io/pypi/v/polsartools.svg)](https://pypi.python.org/pypi/polsartools)
+[![Downloads](https://static.pepy.tech/badge/polsartools)](https://pepy.tech/project/polsartools)
+[![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FNarayana-Rao%2Fpolsartools&count_bg=%2379C83D&title_bg=%23555555&icon=cliqz.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
-[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
-[![made-with-python](https://img.shields.io/badge/Made%20with-Python-ffd040.svg)](https://www.python.org/)
 
 
 > **Cite:** Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi:  [10.21105/joss.02970](https://doi.org/10.21105/joss.02970)  
@@ -62,6 +61,40 @@ windows_size=3
 pst.polsar.fp.mf4cf(T3_folder,window_size=window_size)
 
 ps,pd,pv,pc,tfp,taufp = pst.polsar.fp.mf4cf(T3_folder,window_size=window_size,write_flag=False)
+
+#%%
+compact_c2 = r'./sample_data/compact_pol/C2_RHV'
+
+cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=3,  write_flag=False)
+dcp = pst.polsar.cp.dopcp(compact_c2,chi_in=45,window_size=3,  write_flag=False)
+ccp = pst.polsar.cp.mf3cc(compact_c2,chi_in=45,window_size=3,  write_flag=False)
+socp = pst.polsar.cp.misomega(compact_c2,chi_in=45,psi_in=0,window_size=3,  write_flag=False)
+print('compact pol')
+#%%
+full_T3 = r'./sample_data/full_pol/T3'
+
+cf3 = pst.polsar.fp.mf3cf(full_T3,window_size=3,write_flag=False)
+cf4 = pst.polsar.fp.mf4cf(full_T3,window_size=3,write_flag=False)
+dfp = pst.polsar.fp.dopfp(full_T3,window_size=3,write_flag=False)
+gr = pst.polsar.fp.grvi(full_T3,window_size=3,write_flag=False)
+rv = pst.polsar.fp.rvifp(full_T3,window_size=3,write_flag=False)
+pr = pst.polsar.fp.prvifp(full_T3,window_size=3,write_flag=False)
+
+print('full pol')
+
+#%%
+
+dxp_C2 = r'./sample_data/dual_pol/C2_VVVH'
+
+dpr = pst.polsar.dxp.dprvi(dxp_C2,window_size=3,write_flag=False)
+rvdp = pst.polsar.dxp.rvidp(dxp_C2,window_size=3,write_flag=False)
+prvdp = pst.polsar.dxp.prvidp(dxp_C2,window_size=3,write_flag=False)
+ddp = pst.polsar.dxp.dopdp(dxp_C2,window_size=3,write_flag=False)
+
+print('dual cross-pol')
+
+
+
 
 ```
 

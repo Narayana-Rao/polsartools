@@ -18,6 +18,7 @@ polsartools/polsar/cp/cprvi.py
 polsartools/polsar/cp/dopcp.py
 polsartools/polsar/cp/mf3cc.py
 polsartools/polsar/cp/misomega.py
+polsartools/polsar/dcp/__init__.py
 polsartools/polsar/dxp/__init__.py
 polsartools/polsar/dxp/dopdp.py
 polsartools/polsar/dxp/dprvi.py
@@ -38,6 +39,7 @@ polsartools/preprocessing/lee_filter.py
 polsartools/preprocessing/pre_utils.py
 polsartools/preprocessing/rflee_filter.py
 polsartools/python_bindings/__init__.py
+polsartools/utils/__init__.py
 polsartools/utils/convert_matrices.py
 polsartools/utils/utils.py
 tests/test_functions.py
