@@ -2,3 +2,4 @@ numpy
 gdal
 scipy
 functools
+click

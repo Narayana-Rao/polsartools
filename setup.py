@@ -36,6 +36,7 @@ setup(
         'numpy',
         'gdal',
         'scipy',
+        'click'
     ],
     extras_require={
         'dev': [
@@ -46,7 +47,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'polsartools-cli=polsartools.io.main:main',  # For CLI
+            'polsartools=polsartools.cli:cli',  # For CLI
         ],
     },
     python_requires='>=3.6',
