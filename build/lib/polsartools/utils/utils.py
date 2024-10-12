@@ -116,15 +116,73 @@ def read_chunk_with_overlap(filepath, x_start, y_start, width, height, window_si
         raise FileNotFoundError(f"Cannot open {filepath}")
 
     band = dataset.GetRasterBand(1)
-
+    # Handle edge cases for window overlap near the borders of the raster
     xoff = max(x_start - window_size, 0)
     yoff = max(y_start - window_size, 0)
+    
     xsize = min(width + 2 * window_size, dataset.RasterXSize - xoff)
     ysize = min(height + 2 * window_size, dataset.RasterYSize - yoff)
 
+
+    # Check if the raster size is less than or equal to  block size read entire raster
+    if width >= dataset.RasterXSize and height >= dataset.RasterYSize:
+        chunk = band.ReadAsArray(xoff=xoff, yoff=yoff, win_xsize=xsize, win_ysize=ysize)
+        dataset = None  
+        return chunk
+
+
+    # Determine if the chunk is near the borders of the dataset
+    is_left_border = x_start == 0
+    is_right_border = x_start + width >= dataset.RasterXSize
+    is_top_border = y_start == 0
+    is_bottom_border = y_start + height >= dataset.RasterYSize
+
+    # Handle corner cases
+    if is_left_border and is_top_border:
+        # Top-left corner: no overlap on top and left
+        xoff = x_start
+        yoff = y_start
+        xsize = min(width + window_size, dataset.RasterXSize - xoff)
+        ysize = min(height + window_size, dataset.RasterYSize - yoff)
+    elif is_left_border and is_bottom_border:
+        # Bottom-left corner: no overlap on bottom and left
+        xoff = x_start
+        yoff = max(y_start - window_size, 0)
+        xsize = min(width + window_size, dataset.RasterXSize - xoff)
+        ysize = min(height + window_size, dataset.RasterYSize - yoff)
+    elif is_right_border and is_top_border:
+        # Top-right corner: no overlap on top and right
+        xoff = max(x_start - window_size, 0)
+        yoff = y_start
+        xsize = min(width + window_size, dataset.RasterXSize - xoff)
+        ysize = min(height + window_size, dataset.RasterYSize - yoff)
+    elif is_right_border and is_bottom_border:
+        # Bottom-right corner: no overlap on bottom and right
+        xoff = max(x_start - window_size, 0)
+        yoff = max(y_start - window_size, 0)
+        xsize = min(width + window_size, dataset.RasterXSize - xoff)
+        ysize = min(height + window_size, dataset.RasterYSize - yoff)
+    elif is_left_border:
+        # Left edge: no overlap on left, adjust only horizontally
+        xoff = x_start
+        xsize = min(width + window_size, dataset.RasterXSize - xoff)
+    elif is_right_border:
+        # Right edge: no overlap on right, adjust only horizontally
+        xsize = min(width + window_size, dataset.RasterXSize - x_start)
+    elif is_top_border:
+        # Top edge: no overlap on top, adjust only vertically
+        yoff = y_start
+        ysize = min(height + window_size, dataset.RasterYSize - yoff)
+    elif is_bottom_border:
+        # Bottom edge: no overlap on bottom, adjust only vertically
+        ysize = min(height + window_size, dataset.RasterYSize - y_start)
+
+    # Read the adjusted chunk with overlap
     chunk = band.ReadAsArray(xoff=xoff, yoff=yoff, win_xsize=xsize, win_ysize=ysize)
+
     dataset = None  # Close the dataset after reading
     return chunk
+
 
 def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, block_height, window_size, raster_width, raster_height, num_outputs):
     temp_paths = []
@@ -143,10 +201,7 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
         # Check if the block size is equal to the raster size
         if block_width >= raster_width and block_height >= raster_height:
-
-            temp_band.WriteArray(processed_chunks[i])  
-            # temp_band.WriteArray(processed_chunks[i])  # Write without any reductions
-            
+            temp_band.WriteArray(processed_chunks[i])          
             temp_dataset.FlushCache()
             temp_dataset = None
             temp_paths.append(temp_path)
@@ -160,28 +215,28 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
         if is_left_border and is_top_border:
             # Top-left corner: reduce only from right and bottom
-            temp_band.WriteArray(processed_chunks[i][:, window_size:][window_size:, :])
+            temp_band.WriteArray(processed_chunks[i][:-window_size, :][:, :-window_size])
         elif is_left_border and is_bottom_border:
             # Bottom-left corner: reduce only from right and top
-            temp_band.WriteArray(processed_chunks[i][:, window_size:][:-window_size, :])
+            temp_band.WriteArray(processed_chunks[i][window_size:, :][:, :-window_size])
         elif is_right_border and is_top_border:
             # Top-right corner: reduce only from left and bottom
-            temp_band.WriteArray(processed_chunks[i][:, :-window_size][window_size:, :])
+            temp_band.WriteArray(processed_chunks[i][:-window_size, :][:, window_size:])
         elif is_right_border and is_bottom_border:
             # Bottom-right corner: reduce only from left and top
-            temp_band.WriteArray(processed_chunks[i][:, :-window_size][:-window_size, :])
+            temp_band.WriteArray(processed_chunks[i][window_size:, :][:, window_size:])
         elif is_left_border:
             # Left edge: reduce from right, top, and bottom
-            temp_band.WriteArray(processed_chunks[i][window_size:, window_size:])  # Skip left
+            temp_band.WriteArray(processed_chunks[i][window_size:-window_size,:-window_size ])  # Skip left
         elif is_right_border:
             # Right edge: reduce from left, top, and bottom
-            temp_band.WriteArray(processed_chunks[i][window_size:, :-window_size])  # Skip right
+            temp_band.WriteArray(processed_chunks[i][ window_size:-window_size,window_size:])  # Skip right
         elif is_top_border:
             # Top edge: reduce from left, right, and bottom
-            temp_band.WriteArray(processed_chunks[i][:-window_size, window_size:])  # Skip top
+            temp_band.WriteArray(processed_chunks[i][ :-window_size,window_size:-window_size])  # Skip top
         elif is_bottom_border:
             # Bottom edge: reduce from left, right, and top
-            temp_band.WriteArray(processed_chunks[i][:-window_size, :-window_size])  # Skip bottom
+            temp_band.WriteArray(processed_chunks[i][window_size:,window_size:-window_size])  # Skip bottom
         else:
             # Non-border chunks: apply window size reduction
             temp_band.WriteArray(processed_chunks[i][window_size:-window_size, window_size:-window_size])
