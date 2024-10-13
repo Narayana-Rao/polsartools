@@ -11,7 +11,6 @@
 
 
 > **Cite:** Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi:  [10.21105/joss.02970](https://doi.org/10.21105/joss.02970)  
-
 ```bibtex
 @article{bhogapurapu2021polsar,
   title={PolSAR tools: A QGIS plugin for generating SAR descriptors},
@@ -26,20 +25,24 @@
 
 ```
 
-#### Installation
+## General Information
+-------------------
+This plugin generates derived SAR parameters (viz. vegetation indices, polarimetric decomposition parameters) from input polarimetric matrix (C3, T3, C2, T2). The input data needs to be in [PolSARpro](https://earth.esa.int/web/polsarpro/home)/[ENVI](https://www.l3harrisgeospatial.com/Software-Technology/ENVI) format (\*.bin and \*.hdr). It requires [numpy](https://numpy.org/), [matplotlib](https://matplotlib.org/) python libraries pre-installed.
+
+## Installation
 ```
 pip install polsartools
 ```
  
-#### Prerequesites 
+### Prerequesites 
  
  ```gdal, Numpy```
  
-#### gdal installation error fix
+### gdal installation error fix
  
  ```conda install gdal```
 
-#### Example
+## Example
 ```python
 import polsartools as pst
 
