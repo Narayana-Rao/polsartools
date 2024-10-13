@@ -2,7 +2,7 @@
   <img src="logo.png" alt=""/>
 </p>
 
-# PolSARtools PyPI package (beta version!)
+# PolSARtools PyPI package
 [![image](https://img.shields.io/pypi/v/polsartools.svg)](https://pypi.python.org/pypi/polsartools)
 [![Downloads](https://static.pepy.tech/badge/polsartools)](https://pepy.tech/project/polsartools)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
