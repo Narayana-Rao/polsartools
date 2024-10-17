@@ -6,6 +6,26 @@ from polsartools.utils.convert_matrices import C3_T3_mat
 @time_it
 def grvi(infolder, outname=None,  chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
     
+    """
+    Computes the GRVI polarimetric parameter from a given 3x3 covariance or coherency matrix.
+
+    Parameters
+    ----------
+    infolder : str
+        Folder containing the input files.
+    outname : str, optional
+        Output file name. If not given, the output will be "grvi.tif".
+    window_size : int, optional
+        Size of the window used to compute the average. If not given, it will be assumed to be 1.
+    write_flag : bool, optional
+        If True, the output will be written to a file. If not given, it will be assumed to be True.
+    max_workers : int, optional
+        Maximum number of workers to use. If not given, it will be assumed to be None.
+
+    Returns
+    -------
+    A geotiff file containing the GRVI.
+    """
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
         os.path.join(infolder,"T11.bin"),

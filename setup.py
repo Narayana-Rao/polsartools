@@ -36,7 +36,8 @@ setup(
         'numpy',
         'gdal',
         'scipy',
-        'click'
+        'click',
+        'simplekml',
     ],
     extras_require={
         'dev': [

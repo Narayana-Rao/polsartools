@@ -6,6 +6,27 @@ from polsartools.utils.convert_matrices import C3_T3_mat
 @time_it
 def dopfp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
 
+    """
+    Computes the degree of polarimetric coherence (DOP) of a coherence matrix for full polarimetric SAR data.
+
+    Parameters
+    ----------
+    infolder : string
+        The folder containing the input files.
+    outname : string
+        The name of the output file. If None, the output file will be named "dop_fp.tif".
+    window_size : int
+        The size of the window used for computing the DOP.
+    write_flag : bool
+        Whether to write the output to file or not.
+    max_workers : int
+        The maximum number of workers to use for parallel processing. If None, the number of workers
+        will be set to the number of cores available.
+
+    Returns
+    -------
+    A geotiff file containing the DOP.
+    """
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
         os.path.join(infolder,"T11.bin"),

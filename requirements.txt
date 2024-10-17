@@ -3,3 +3,4 @@ gdal
 scipy
 functools
 click
+simplekml
