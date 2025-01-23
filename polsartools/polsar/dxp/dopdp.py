@@ -26,10 +26,10 @@ def process_chunk_dopdp(chunks, window_size,*args):
     c22_T1 = np.array(chunks[3])
 
     if window_size>1:
-        c11_T1 = conv2d(c11_T1,kernel)
-        c12_T1 = conv2d(c12_T1,kernel)
-        c21_T1 = conv2d(c21_T1,kernel)
-        c22_T1 = conv2d(c22_T1,kernel)
+        c11_T1 = conv2d(np.real(c11_T1),kernel)+1j*conv2d(np.imag(c11_T1),kernel)
+        c12_T1 = conv2d(np.real(c12_T1),kernel)+1j*conv2d(np.imag(c12_T1),kernel)
+        c21_T1 = conv2d(np.real(c21_T1),kernel)+1j*conv2d(np.imag(c21_T1),kernel)
+        c22_T1 = conv2d(np.real(c22_T1),kernel)+1j*conv2d(np.imag(c22_T1),kernel)
         
     c2_det = (c11_T1*c22_T1-c12_T1*c21_T1)
     c2_trace = c11_T1+c22_T1
