@@ -1,2 +1,2 @@
 [console_scripts]
-polsartools-cli = polsartools.io.main:main
+polsartools = polsartools.cli:cli

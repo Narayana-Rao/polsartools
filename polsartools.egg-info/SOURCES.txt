@@ -22,6 +22,7 @@ polsartools/polsar/dcp/__init__.py
 polsartools/polsar/dxp/__init__.py
 polsartools/polsar/dxp/dopdp.py
 polsartools/polsar/dxp/dprvi.py
+polsartools/polsar/dxp/halphadp.py
 polsartools/polsar/dxp/prvidp.py
 polsartools/polsar/dxp/rvidp.py
 polsartools/polsar/fp/__init__.py
@@ -29,6 +30,8 @@ polsartools/polsar/fp/dopfp.py
 polsartools/polsar/fp/grvi.py
 polsartools/polsar/fp/mf3cf.py
 polsartools/polsar/fp/mf4cf.py
+polsartools/polsar/fp/neufp.py
+polsartools/polsar/fp/nnedfp.py
 polsartools/polsar/fp/prvifp.py
 polsartools/polsar/fp/rvifp.py
 polsartools/preprocessing/__init__.py
@@ -39,6 +42,10 @@ polsartools/preprocessing/lee_filter.py
 polsartools/preprocessing/pre_utils.py
 polsartools/preprocessing/rflee_filter.py
 polsartools/python_bindings/__init__.py
+polsartools/sensors/__init__.py
+polsartools/sensors/basic_func.py
+polsartools/sensors/import_s1grd.py
+polsartools/sensors/uavsar.py
 polsartools/utils/__init__.py
 polsartools/utils/convert_matrices.py
 polsartools/utils/utils.py

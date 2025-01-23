@@ -4,7 +4,7 @@ from osgeo import gdal,osr
 import os
 import sys
 import simplekml
-def write_bin_uav(file,wdata,lat,lon,dx,dy):
+def write_bin_uav_old(file,wdata,lat,lon,dx,dy):
     
     [cols, rows] = wdata.shape
 
@@ -17,29 +17,48 @@ def write_bin_uav(file,wdata,lat,lon,dx,dy):
     # outdata.GetRasterBand(1).SetNoDataValue(np.NaN)##if you want these values transparent
     outdata.FlushCache() ##saves to disk!!
 
+def write_bin_uav(file, wdata, lat, lon, dx, dy, sensor_type="UAVSAR"):
+    [rows, cols] = wdata.shape
+    driver = gdal.GetDriverByName("ENVI")
+    outdata = driver.Create(file, cols, rows, 1, gdal.GDT_Float32)
+    outdata.SetGeoTransform([lon, dx, 0, lat, 0, dy])
+    outdata.SetProjection("EPSG:4326")
+    outdata.GetRasterBand(1).WriteArray(wdata)
+    outdata.FlushCache()
+
+    # Write the header file
+    header_filename = file.replace('.bin', '.hdr') 
+    with open(header_filename, 'w') as header_file:
+        header_file.write("ENVI\n")
+        header_file.write(f"description = {{{file}}}\n")
+        header_file.write(f"samples = {cols}\n")
+        header_file.write(f"lines = {rows}\n")
+        header_file.write("bands = 1\n")
+        header_file.write("header offset = 0\n")
+        header_file.write("file type = ENVI Standard\n")
+        header_file.write("data type = 4\n")  # Float32
+        header_file.write("interleave = bsq\n")
+        # header_file.write("wavelength units = METERS\n")
+        header_file.write("byte order = 0\n")
+        header_file.write(f"sensor type = {sensor_type}\n")
+        map_info = f"map info = {{Geographic Lat/Lon, 1, 1, {lon}, {lat}, {dx}, {dy}, WGS-84}}\n"
+        header_file.write(map_info)
+        # Write the projection information
+        # header_file.write("projection = GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS_84\",6378137,298.257223563]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.017453292519943295],AUTHORITY[\"EPSG\",\"4326\"]]\n")
+        header_file.write(f"band names = {{{os.path.basename(file)}}}\n")
 
 def create_kml_polygon(corner_coords, output_filename):
-    # Create a KML object
+    
     kml = simplekml.Kml()
-
-    # Create a polygon from the corner coordinates
     pol = kml.newpolygon(name="Polygon")
-    
-    # Close the polygon by repeating the first point at the end
     polygon_coords = corner_coords + [corner_coords[0]]
-    
-    # Assign the polygon coordinates (in (longitude, latitude) format)
     pol.outerboundaryis.coords = polygon_coords
-
-    # Set a basic style for the polygon (optional)
-    pol.style.polystyle.color = simplekml.Color.changealphaint(150, simplekml.Color.red)  # Set transparency and color
-    pol.style.polystyle.outline = 1  # Outline on
-    
-    # Save the KML file
+    pol.style.polystyle.color = simplekml.Color.changealphaint(150, simplekml.Color.red)  
     kml.save(output_filename)
-    # print(f"KML file saved as {output_filename}")
-def create_extent(inFolder):
-    annFile = open(glob.glob(inFolder+'/*.ann')[0], 'r')
+
+def create_extent(annFile):
+    inFolder = os.path.dirname(annFile)
+    annFile = open(annFile, 'r')
     for line in annFile:
         if "Approximate Upper Left Latitude" in line:
             uly = float(line.split('=')[1].split(';')[0])
@@ -70,9 +89,10 @@ def create_extent(inFolder):
     create_kml_polygon(corner_coordinates, output_file)
     
     
-def uavsar_grd_c3(inFolder):
-    create_extent(inFolder)
-    annFile = open(glob.glob(inFolder+'/*.ann')[0], 'r')
+def uavsar_grd(annFile):
+    inFolder = os.path.dirname(annFile)
+    create_extent(annFile)
+    annFile = open(annFile, 'r')
     for line in annFile:
         if "grd_mag.set_rows" in line:
             rows = int(line.split('=')[1].split(';')[0])
@@ -117,9 +137,11 @@ def uavsar_grd_c3(inFolder):
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
     file.close()   
 
-def uavsar_mlc_c3(inFolder):
-    create_extent(inFolder)
-    annFile = open(glob.glob(inFolder+'/*.ann')[0], 'r')
+def uavsar_mlc(annFile):
+    create_extent(annFile)
+    inFolder = os.path.dirname(annFile)
+    create_extent(annFile)
+    annFile = open(annFile, 'r')
     for line in annFile:
         if "mlc_mag.set_rows" in line:
             rows = int(line.split('=')[1].split(';')[0])

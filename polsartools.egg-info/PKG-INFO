@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: polsartools
-Version: 0.4.2
+Version: 0.5
 Summary: A package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
 Author: Narayanarao Bhogapurapu
 Author-email: bnarayanarao@iitb.ac.in
@@ -17,16 +17,27 @@ License-File: LICENSE
 Requires-Dist: numpy
 Requires-Dist: gdal
 Requires-Dist: scipy
+Requires-Dist: click
+Requires-Dist: simplekml
 Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: sphinx; extra == "dev"
 Requires-Dist: doxygen; extra == "dev"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 <p align="center">
   <img src="logo.png" alt=""/>
 </p>
 
-# PolSARtools PyPI package (beta version!)
+# PolSARtools PyPI package
 [![image](https://img.shields.io/pypi/v/polsartools.svg)](https://pypi.python.org/pypi/polsartools)
 [![Downloads](https://static.pepy.tech/badge/polsartools)](https://pepy.tech/project/polsartools)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
@@ -35,50 +46,65 @@ Requires-Dist: doxygen; extra == "dev"
 
 
 > **Cite:** Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi:  [10.21105/joss.02970](https://doi.org/10.21105/joss.02970)  
+```bibtex
+@article{bhogapurapu2021polsar,
+  title={PolSAR tools: A QGIS plugin for generating SAR descriptors},
+  author={Bhogapurapu, Narayanarao and Dey, Subhadip and Mandal, Dipankar and Bhattacharya, Avik and Rao, YS},
+  journal={Journal of Open Source Software},
+  volume={6},
+  number={60},
+  pages={2970},
+  year={2021},
+  doi= {10.21105/joss.02970}
+}
 
+```
 
+## General Information
+-------------------
+This package generates derived SAR parameters (viz. vegetation indices, polarimetric decomposition parameters) from input polarimetric matrix (C3, T3, C2, T2). The input data needs to be in [PolSARpro](https://earth.esa.int/web/polsarpro/home)/[ENVI](https://www.l3harrisgeospatial.com/Software-Technology/ENVI) format (\*.bin and \*.hdr). 
 
-#### Installation
+## Installation
 ```
 pip install polsartools
 ```
  
-#### Prerequesites 
+### Prerequesites 
  
  ```gdal, Numpy```
  
-#### gdal installation error fix
+### gdal installation error fix
  
  ```conda install gdal```
 
-#### Example
+## Example
 ```python
 import polsartools as pst
 
 T3_folder = r'../T3'
 windows_size=3
 
-pst.polsar.fp.mf4cf(T3_folder,window_size=window_size)
+pst.mf4cf(T3_folder,window_size=window_size)
 
-ps,pd,pv,pc,tfp,taufp = pst.polsar.fp.mf4cf(T3_folder,window_size=window_size,write_flag=False)
+ps,pd,pv,pc,tfp,taufp = pst.mf4cf(T3_folder,window_size=window_size,write_flag=False)
 
 #%%
 compact_c2 = r'./sample_data/compact_pol/C2_RHV'
 
-cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=3,  write_flag=False)
-dcp = pst.polsar.cp.dopcp(compact_c2,chi_in=45,window_size=3,  write_flag=False)
-ccp = pst.polsar.cp.mf3cc(compact_c2,chi_in=45,window_size=3,  write_flag=False)
-socp = pst.polsar.cp.misomega(compact_c2,chi_in=45,psi_in=0,window_size=3,  write_flag=False)
+cprvi = pst.cprvi(compact_c2,chi_in=45,window_size=3,  write_flag=False)
+dcp = pst.dopcp(compact_c2,chi_in=45,window_size=3,  write_flag=False)
+ccp = pst.mf3cc(compact_c2,chi_in=45,window_size=3,  write_flag=False)
+socp = pst.misomega(compact_c2,chi_in=45,psi_in=0,window_size=3,  write_flag=False)
 print('compact pol')
 #%%
 full_T3 = r'./sample_data/full_pol/T3'
 
-cf3 = pst.polsar.fp.mf3cf(full_T3,window_size=3,write_flag=False)
-cf4 = pst.polsar.fp.mf4cf(full_T3,window_size=3,write_flag=False)
-dfp = pst.polsar.fp.dopfp(full_T3,window_size=3,write_flag=False)
-gr = pst.polsar.fp.grvi(full_T3,window_size=3,write_flag=False)
-rv = pst.polsar.fp.rvifp(full_T3,window_size=3,write_flag=False)
-pr = pst.polsar.fp.prvifp(full_T3,window_size=3,write_flag=False)
+mf3 = pst.mf3cf(full_T3,window_size=3,write_flag=False)
+mf4 = pst.mf4cf(full_T3,window_size=3,write_flag=False)
+dfp = pst.dopfp(full_T3,window_size=3,write_flag=False)
+grvi = pst.grvi(full_T3,window_size=3,write_flag=False)
+rvi = pst.rvifp(full_T3,window_size=3,write_flag=False)
+prvi = pst.prvifp(full_T3,window_size=3,write_flag=False)
 
 print('full pol')
 
@@ -86,15 +112,12 @@ print('full pol')
 
 dxp_C2 = r'./sample_data/dual_pol/C2_VVVH'
 
-dpr = pst.polsar.dxp.dprvi(dxp_C2,window_size=3,write_flag=False)
-rvdp = pst.polsar.dxp.rvidp(dxp_C2,window_size=3,write_flag=False)
-prvdp = pst.polsar.dxp.prvidp(dxp_C2,window_size=3,write_flag=False)
-ddp = pst.polsar.dxp.dopdp(dxp_C2,window_size=3,write_flag=False)
+dpr = pst.dprvi(dxp_C2,window_size=3,write_flag=False)
+rvdp = pst.rvidp(dxp_C2,window_size=3,write_flag=False)
+prvdp = pst.prvidp(dxp_C2,window_size=3,write_flag=False)
+ddp = pst.dopdp(dxp_C2,window_size=3,write_flag=False)
 
 print('dual cross-pol')
-
-
-
 
 ```
 

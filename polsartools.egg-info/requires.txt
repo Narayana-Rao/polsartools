@@ -1,6 +1,8 @@
 numpy
 gdal
 scipy
+click
+simplekml
 
 [dev]
 pytest
