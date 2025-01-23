@@ -21,11 +21,13 @@ def write_bin_uav(file, wdata, lat, lon, dx, dy, sensor_type="UAVSAR"):
     [rows, cols] = wdata.shape
     driver = gdal.GetDriverByName("ENVI")
     outdata = driver.Create(file, cols, rows, 1, gdal.GDT_Float32)
+    if dy<0:
+        dy = -dy
     outdata.SetGeoTransform([lon, dx, 0, lat, 0, dy])
     outdata.SetProjection("EPSG:4326")
     outdata.GetRasterBand(1).WriteArray(wdata)
     outdata.FlushCache()
-
+    
     # Write the header file
     header_filename = file.replace('.bin', '.hdr') 
     with open(header_filename, 'w') as header_file:
