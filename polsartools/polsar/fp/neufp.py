@@ -30,10 +30,10 @@ def neufp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=T
 
     output_filepaths = []
     if outname is None:
-        output_filepaths.append(os.path.join(infolder, "Neumann_psi.tif"))
-        output_filepaths.append(os.path.join(infolder, "Neumann_delta_mod.tif"))
-        output_filepaths.append(os.path.join(infolder, "Neumann_delta_pha.tif"))
-        output_filepaths.append(os.path.join(infolder, "Neumann_tau.tif"))
+        output_filepaths.append(os.path.join(infolder, "Neu_psi.tif"))
+        output_filepaths.append(os.path.join(infolder, "Neu_delta_mod.tif"))
+        output_filepaths.append(os.path.join(infolder, "Neu_delta_pha.tif"))
+        output_filepaths.append(os.path.join(infolder, "Neu_tau.tif"))
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
             processing_func=process_chunk_neufp,

@@ -22,33 +22,32 @@ def write_bin_uav(file, wdata, lat, lon, dx, dy, sensor_type="UAVSAR"):
     [rows, cols] = wdata.shape
     driver = gdal.GetDriverByName("ENVI")
     outdata = driver.Create(file, cols, rows, 1, gdal.GDT_Float32)
-    if dy<0:
-        dy = -dy
     outdata.SetGeoTransform([lon, dx, 0, lat, 0, dy])
     outdata.SetProjection("EPSG:4326")
     outdata.GetRasterBand(1).WriteArray(wdata)
     outdata.FlushCache()
-    
+    # if dy<0:
+    #     dy = -dy
     # Write the header file
-    header_filename = file.replace('.bin', '.hdr') 
-    with open(header_filename, 'w') as header_file:
-        header_file.write("ENVI\n")
-        header_file.write(f"description = {{{file}}}\n")
-        header_file.write(f"samples = {cols}\n")
-        header_file.write(f"lines = {rows}\n")
-        header_file.write("bands = 1\n")
-        header_file.write("header offset = 0\n")
-        header_file.write("file type = ENVI Standard\n")
-        header_file.write("data type = 4\n")  # Float32
-        header_file.write("interleave = bsq\n")
-        # header_file.write("wavelength units = METERS\n")
-        header_file.write("byte order = 0\n")
-        header_file.write(f"sensor type = {sensor_type}\n")
-        map_info = f"map info = {{Geographic Lat/Lon, 1, 1, {lon}, {lat}, {dx}, {dy}, WGS-84}}\n"
-        header_file.write(map_info)
-        # Write the projection information
-        # header_file.write("projection = GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS_84\",6378137,298.257223563]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.017453292519943295],AUTHORITY[\"EPSG\",\"4326\"]]\n")
-        header_file.write(f"band names = {{{os.path.basename(file)}}}\n")
+    # header_filename = file.replace('.bin', '.hdr') 
+    # with open(header_filename, 'w') as header_file:
+    #     header_file.write("ENVI\n")
+    #     header_file.write(f"description = {{{file}}}\n")
+    #     header_file.write(f"samples = {cols}\n")
+    #     header_file.write(f"lines = {rows}\n")
+    #     header_file.write("bands = 1\n")
+    #     header_file.write("header offset = 0\n")
+    #     header_file.write("file type = ENVI Standard\n")
+    #     header_file.write("data type = 4\n")  # Float32
+    #     header_file.write("interleave = bsq\n")
+    #     # header_file.write("wavelength units = METERS\n")
+    #     header_file.write("byte order = 0\n")
+    #     header_file.write(f"sensor type = {sensor_type}\n")
+    #     map_info = f"map info = {{Geographic Lat/Lon, 1, 1, {lon}, {lat}, {dx}, {dy}, WGS-84}}\n"
+    #     header_file.write(map_info)
+    #     # Write the projection information
+    #     # header_file.write("projection = GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS_84\",6378137,298.257223563]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.017453292519943295],AUTHORITY[\"EPSG\",\"4326\"]]\n")
+    #     header_file.write(f"band names = {{{os.path.basename(file)}}}\n")
 
 def create_kml_polygon(corner_coords, output_filename):
     
@@ -112,7 +111,10 @@ def uavsar_grd(annFile):
 
     outFolder = inFolder+'/C3'
     if not os.path.isdir(outFolder):
+        print("C3 folder does not exist. Creating folder {}".format(outFolder))
         os.mkdir(outFolder)
+    else:
+        print("C3 folder exists. Replacing C3 elements in folder {}".format(outFolder))
 
     hhhh = np.fromfile(glob.glob(inFolder+'/*HHHH*.grd')[0], dtype='<f',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C11.bin',hhhh,lat,lon,dx,dy)
@@ -170,7 +172,10 @@ def uavsar_mlc(annFile):
 
     outFolder = inFolder+'/C3'
     if not os.path.isdir(outFolder):
+        print("C3 folder does not exist. Creating folder {}".format(outFolder))
         os.mkdir(outFolder)
+    else:
+        print("C3 folder exists. Replacing C3 elements in folder {}".format(outFolder))
 
         
     hhhh = np.fromfile(glob.glob(inFolder+'/*HHHH*.mlc')[0], dtype='<f',).reshape(rows,cols)

@@ -32,13 +32,15 @@ def halphafp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_fla
     if outname is None:
         output_filepaths.append(os.path.join(infolder, "H_fp.tif"))
         output_filepaths.append(os.path.join(infolder, "alpha_fp.tif"))
-        output_filepaths.append(os.path.join(infolder, "A_fp.tif"))
-        
+        output_filepaths.append(os.path.join(infolder, "anisotropy_fp.tif"))
+        output_filepaths.append(os.path.join(infolder, "e1_norm.tif"))
+        output_filepaths.append(os.path.join(infolder, "e2_norm.tif"))
+        output_filepaths.append(os.path.join(infolder, "e3_norm.tif"))
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
             processing_func=process_chunk_halphafp,
             block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=3)
+            num_outputs=6)
 
 def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
 
@@ -62,7 +64,7 @@ def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
         # T_T1 = T3_C3_mat(T3)
 
 
-    if 'C11' in input_filepaths[0] and 'C22' in input_filepaths[5] and 'C33' in input_filepaths[8]:
+    elif 'C11' in input_filepaths[0] and 'C22' in input_filepaths[5] and 'C33' in input_filepaths[8]:
         C11 = np.array(chunks[0])
         C12 = np.array(chunks[1])+1j*np.array(chunks[2])
         C13 = np.array(chunks[3])+1j*np.array(chunks[4])
@@ -75,6 +77,9 @@ def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
         T_T1 = np.array([[C11, C12, C13], 
                          [C21, C22, C23], 
                          [C31, C32, C33]])
+
+    else:
+        raise ValueError("Invalid input matrices. Ensure the input is either T3 or C3 matrix foolder.")
 
 
     if window_size>1:
@@ -105,9 +110,20 @@ def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
     
     data = T_T1.reshape( T_T1.shape[0]*T_T1.shape[1], T_T1.shape[2]).reshape((-1,3,3))
 
-    evals, evecs = np.linalg.eig(data)
-    # print('Eigen!')
+    evals_, evecs_ = np.linalg.eig(data.reshape(-1, 3, 3))
+
+    # Sort eigenvalues for each pixel in descending order; 
+    sorted_indices = np.argsort(evals_, axis=-1)[:, ::-1] 
     
+    # Reorder eigenvalues and eigenvectors based on sorted indices
+    evals = np.take_along_axis(evals_, sorted_indices, axis=-1)  # Reorder eigenvalues
+    
+    # To reorder the eigenvectors, we use  indexing
+    # Use `sorted_indices` to index along the second axis (the 3 components of the eigenvector)
+    evecs = np.array([evecs_[i, :, sorted_indices[i]] for i in range(evecs_.shape[0])])
+    
+    # print('Eigen!')
+    # Not sure if this is required; if enabled entropy values are different between polsarpro and this code
     # evals[:,0][evals[:,0] <0] = 0
     # evals[:,1][evals[:,1] <0] = 0
     # evals[:,2][evals[:,2] <0] = 0
@@ -115,29 +131,29 @@ def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
     # evals[:,1][evals[:,1] >1] = 1
     # evals[:,2][evals[:,2] >1] = 1
     
-    eval_norm1 = (evals[:,1])/(evals[:,0] + evals[:,1]+ evals[:,2])
+    eval_norm1 = (evals[:,0])/(evals[:,0] + evals[:,1]+ evals[:,2])
     eval_norm1[eval_norm1<0]=0
-    eval_norm1[eval_norm1>1]=1
+    # eval_norm1[eval_norm1>1]=1
     
     
-    eval_norm2 = (evals[:,0])/(evals[:,0] + evals[:,1]+ evals[:,2])
+    eval_norm2 = (evals[:,1])/(evals[:,0] + evals[:,1]+ evals[:,2])
     eval_norm2[eval_norm2<0]=0
-    eval_norm2[eval_norm2>1]=1
+    # eval_norm2[eval_norm2>1]=1
     
     
     eval_norm3 = (evals[:,2])/(evals[:,0] + evals[:,1]+evals[:,2])
     eval_norm3[eval_norm3<0]=0
-    eval_norm3[eval_norm3>1]=1
+    # eval_norm3[eval_norm3>1]=1
       
     
     # # %Alpha 1
-    eig_vec_r1 = np.real(evecs[:,0,1])
-    eig_vec_c1 = np.imag(evecs[:,0,1])
+    eig_vec_r1 = np.real(evecs[:,0,0])
+    eig_vec_c1 = np.imag(evecs[:,0,0])
     alpha1 = np.arccos(np.sqrt(eig_vec_r1*eig_vec_r1 + eig_vec_c1*eig_vec_c1))*180/np.pi
     
     # # %Alpha 2
-    eig_vec_r2 = np.real(evecs[:,0,0])
-    eig_vec_c2 = np.imag(evecs[:,0,0])
+    eig_vec_r2 = np.real(evecs[:,0,1])
+    eig_vec_c2 = np.imag(evecs[:,0,1])
     alpha2 = np.arccos(np.sqrt(eig_vec_r2*eig_vec_r2 + eig_vec_c2*eig_vec_c2))*180/np.pi
     
     # # %Alpha 3
@@ -155,8 +171,11 @@ def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
     H = - eval_norm1*np.log10(eval_norm1)/np.log10(3) - eval_norm2*np.log10(eval_norm2)/np.log10(3) - eval_norm3*np.log10(eval_norm3)/np.log10(3)
     H = H.reshape(rows,cols)
 
-    alpha1 = alpha1.reshape(rows,cols)
-    alpha2 = alpha2.reshape(rows,cols)
-    alpha3 = alpha3.reshape(rows,cols)
+    # alpha1 = alpha1.reshape(rows,cols)
+    # alpha2 = alpha2.reshape(rows,cols)
+    # alpha3 = alpha3.reshape(rows,cols)
     
-    return H,alpha_,alpha_
+    ## POLARIMETRIC SCATTERING ANISOTROPY (A)
+    Anisotropy = (eval_norm2-eval_norm3)/(eval_norm2+eval_norm3)
+    
+    return H,alpha_,Anisotropy.reshape(rows,cols),eval_norm1.reshape(rows,cols),eval_norm2.reshape(rows,cols),eval_norm3.reshape(rows,cols)

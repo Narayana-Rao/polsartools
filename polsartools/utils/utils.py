@@ -256,7 +256,8 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
         if '.bin' in output_filepaths[0]:
             driver = gdal.GetDriverByName('ENVI')
         
-        output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32)
+        output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
+                                       options=['COMPRESS=LZW','BIGTIFF=YES','TILED=YES'])
         output_dataset.SetGeoTransform(geotransform)
         output_dataset.SetProjection(projection)
         output_band = output_dataset.GetRasterBand(1)
@@ -274,6 +275,7 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
 
         output_dataset.FlushCache()
         output_dataset = None
+        print(f"Saved file {output_filepaths[i]}")
 
 def process_and_write_chunk(args, processing_func, num_outputs):
     try:
