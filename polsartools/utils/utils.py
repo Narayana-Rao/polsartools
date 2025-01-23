@@ -3,7 +3,7 @@ from osgeo import gdal
 import numpy as np
 from functools import wraps
 from concurrent.futures import ProcessPoolExecutor, as_completed
-
+from tqdm import tqdm
 import time
 
 def time_it(func):
@@ -70,8 +70,41 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
     merged_arrays = [np.zeros((raster_height, raster_width), dtype=np.float32) for _ in range(num_outputs)] if not write_flag else None
 
     tasks = []
+    
+    """ without progress bar"""
+    # with ProcessPoolExecutor(max_workers=max_workers) as executor:
+    #     for y in range(0, raster_height, adjusted_block_size_y):
+    #         for x in range(0, raster_width, adjusted_block_size_x):
+    #             read_block_width = min(adjusted_block_size_x, raster_width - x)
+    #             read_block_height = min(adjusted_block_size_y, raster_height - y)
 
+    #             args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in)
+    #             tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
+
+    #     temp_files = []
+    #     for future in as_completed(tasks):
+    #         try:
+    #             result = future.result()
+    #             if result is None:
+    #                 raise ValueError("Chunk processing returned None")
+    #             temp_paths, x_start, y_start = result
+    #             if write_flag:
+    #                 temp_files.append((temp_paths, x_start, y_start))
+    #             else:
+    #                 for i in range(num_outputs):
+    #                     temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
+    #                     temp_band = temp_dataset.GetRasterBand(1)
+    #                     temp_chunk = temp_band.ReadAsArray()
+
+    #                     temp_height, temp_width = temp_chunk.shape
+    #                     merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
+    #                     temp_dataset = None
+    #                     os.remove(temp_paths[i])
+    #         except Exception as e:
+    #             print(f"Error in processing task: {e}")
+    """ with progress bar"""
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
+        tasks = []
         for y in range(0, raster_height, adjusted_block_size_y):
             for x in range(0, raster_width, adjusted_block_size_x):
                 read_block_width = min(adjusted_block_size_x, raster_width - x)
@@ -80,27 +113,32 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
                 args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in)
                 tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
 
-        temp_files = []
-        for future in as_completed(tasks):
-            try:
-                result = future.result()
-                if result is None:
-                    raise ValueError("Chunk processing returned None")
-                temp_paths, x_start, y_start = result
-                if write_flag:
-                    temp_files.append((temp_paths, x_start, y_start))
-                else:
-                    for i in range(num_outputs):
-                        temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
-                        temp_band = temp_dataset.GetRasterBand(1)
-                        temp_chunk = temp_band.ReadAsArray()
+        # Initialize tqdm progress bar with the total number of tasks
+        with tqdm(total=len(tasks), desc=f"Progress ", unit=" block") as pbar:
+            temp_files = []
+            for future in as_completed(tasks):
+                try:
+                    result = future.result()
+                    if result is None:
+                        raise ValueError("Block processing returned None")
+                    temp_paths, x_start, y_start = result
+                    if write_flag:
+                        temp_files.append((temp_paths, x_start, y_start))
+                    else:
+                        for i in range(num_outputs):
+                            temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
+                            temp_band = temp_dataset.GetRasterBand(1)
+                            temp_chunk = temp_band.ReadAsArray()
 
-                        temp_height, temp_width = temp_chunk.shape
-                        merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
-                        temp_dataset = None
-                        os.remove(temp_paths[i])
-            except Exception as e:
-                print(f"Error in processing task: {e}")
+                            temp_height, temp_width = temp_chunk.shape
+                            merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
+                            temp_dataset = None
+                            os.remove(temp_paths[i])
+                    
+                    pbar.update(1)
+                except Exception as e:
+                    print(f"Error in processing task: {e}")
+
 
     if write_flag:
         merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs)

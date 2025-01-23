@@ -38,6 +38,8 @@ setup(
         'scipy',
         'click',
         'simplekml',
+        'tqdm',  
+        
     ],
     extras_require={
         'dev': [

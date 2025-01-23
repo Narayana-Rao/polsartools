@@ -4,7 +4,7 @@ from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
 from polsartools.utils.convert_matrices import C3_T3_mat
 
 @time_it
-def prvifp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
+def neufp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
 
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
@@ -30,14 +30,20 @@ def prvifp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=
 
     output_filepaths = []
     if outname is None:
-        output_filepaths.append(os.path.join(infolder, "dop_fp.tif"))
+        output_filepaths.append(os.path.join(infolder, "Neu_psi.tif"))
+        output_filepaths.append(os.path.join(infolder, "Neu_delta_mod.tif"))
+        output_filepaths.append(os.path.join(infolder, "Neu_delta_pha.tif"))
+        output_filepaths.append(os.path.join(infolder, "Neu_tau.tif"))
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-            processing_func=process_chunk_prvifp,
+            processing_func=process_chunk_neufp,
             block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=1)
+            num_outputs=4)
 
-def process_chunk_prvifp(chunks, window_size, input_filepaths,*args):
+def process_chunk_neufp(chunks, window_size, input_filepaths, *args):
+
+    # additional_arg1 = args[0] if len(args) > 0 else None
+    # additional_arg2 = args[1] if len(args) > 1 else None
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])
@@ -89,15 +95,52 @@ def process_chunk_prvifp(chunks, window_size, input_filepaths,*args):
 
         T_T1 = np.array([[t11f, t12f, t13f], [t21f, t22f, t23f], [t31f, t32f, t33f]])
 
-
-    reshaped_arr = T_T1.reshape(3, 3, -1).transpose(2, 0, 1)
-    det_T3 = np.linalg.det(reshaped_arr)
-    # del reshaped_arr
-    det_T3 = det_T3.reshape(T_T1.shape[2], T_T1.shape[3])
-
-    trace_T3 = T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:]
-    dop_fp = np.real(np.sqrt(1-(27*(det_T3/(trace_T3**3)))))
     
-    prvi = np.real((1-dop_fp)* T_T1[2,2,:,:]*0.5)  # (1-dop)*vh
 
-    return prvi
+    _,_,rows,cols = np.shape(T_T1)
+    T_T1 = T_T1.reshape(9, rows, cols)
+    
+    # Indices for vectorized access
+    i, j = np.indices((rows, cols))
+
+    # Extract components of T3_stack once
+    T3_stack_real = np.real(T_T1[:,i, j ])
+    T3_stack_imag = np.imag(T_T1[:, i, j])
+
+    T_00_0 = T3_stack_real[0, :, :]
+    T_01_0 = T3_stack_real[1, :, :]
+    T_01_1 = T3_stack_imag[1, :, :]
+    T_02_0 = T3_stack_real[2, :, :]
+    T_02_1 = T3_stack_imag[2, :, :]
+    T_11_0 = T3_stack_real[4, :, :]
+    T_12_0 = T3_stack_real[5, :, :]
+    T_22_0 = T3_stack_real[8, :, :]
+
+    # Compute the Phi value using the given formula
+    Phi = 0.25 * (np.pi + np.arctan2(-2. * T_12_0, T_22_0 - T_11_0))
+
+    # Adjust Phi for the correct orientation
+    Phi[Phi <= np.pi / 4.] = Phi[Phi <= np.pi / 4.]
+    Phi[Phi > np.pi / 4.] -= np.pi / 2.
+
+    # Convert Phi to degrees
+    Neumann_psi = Phi * 180. / np.pi
+
+    # Pre-compute trigonometric terms
+    cos_2Phi = np.cos(2 * Phi)
+    sin_2Phi = np.sin(2 * Phi)
+    sin_4Phi = np.sin(4 * Phi)
+
+    # Coherency Matrix de-orientation
+    T110 = T_00_0
+    T12re0 = T_01_0 * cos_2Phi - T_02_0 * sin_2Phi
+    T12im0 = T_01_1 * cos_2Phi - T_02_1 * sin_2Phi
+    T220 = T_11_0 * cos_2Phi**2 - T_12_0 * sin_4Phi + T_22_0 * sin_2Phi**2
+    T330 = T_11_0 * sin_2Phi**2 - T_12_0 * sin_4Phi + T_22_0 * cos_2Phi**2
+
+    # Compute Neumann_delta_mod, Neumann_delta_pha, and Neumann_tau
+    Neumann_delta_mod = np.sqrt((T220 + T330) / (T110 + np.finfo(float).eps))
+    Neumann_delta_pha = np.arctan2(T12im0, T12re0) * 180. / np.pi
+    Neumann_tau = 1. - ((np.sqrt(T12re0 ** 2 + T12im0 ** 2) / T110) / (Neumann_delta_mod + np.finfo(float).eps))
+
+    return Neumann_psi, Neumann_delta_mod, Neumann_delta_pha,Neumann_tau

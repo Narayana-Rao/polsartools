@@ -6,6 +6,27 @@ from polsartools.utils.convert_matrices import C3_T3_mat
 @time_it
 def dopfp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
 
+    """
+    Computes the degree of polarimetric coherence (DOP) of a coherence matrix for full polarimetric SAR data.
+
+    Parameters
+    ----------
+    infolder : string
+        The folder containing the input files.
+    outname : string
+        The name of the output file. If None, the output file will be named "dop_fp.tif".
+    window_size : int
+        The size of the window used for computing the DOP.
+    write_flag : bool
+        Whether to write the output to file or not.
+    max_workers : int
+        The maximum number of workers to use for parallel processing. If None, the number of workers
+        will be set to the number of cores available.
+
+    Returns
+    -------
+    A geotiff file containing the DOP.
+    """
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
         os.path.join(infolder,"T11.bin"),
@@ -76,15 +97,15 @@ def process_chunk_dopfp(chunks, window_size,input_filepaths,*args):
         kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
 
         t11f = conv2d(T_T1[0,0,:,:],kernel)
-        t12f = conv2d(T_T1[0,1,:,:],kernel)
-        t13f = conv2d(T_T1[0,2,:,:],kernel)
+        t12f = conv2d(np.real(T_T1[0,1,:,:]),kernel)+1j*conv2d(np.imag(T_T1[0,1,:,:]),kernel)
+        t13f = conv2d(np.real(T_T1[0,2,:,:]),kernel)+1j*conv2d(np.imag(T_T1[0,2,:,:]),kernel)
         
-        t21f = conv2d(T_T1[1,0,:,:],kernel)
+        t21f = np.conj(t12f) 
         t22f = conv2d(T_T1[1,1,:,:],kernel)
-        t23f = conv2d(T_T1[1,2,:,:],kernel)
+        t23f = conv2d(np.real(T_T1[1,2,:,:]),kernel)+1j*conv2d(np.imag(T_T1[1,2,:,:]),kernel)
 
-        t31f = conv2d(T_T1[2,0,:,:],kernel)
-        t32f = conv2d(T_T1[2,1,:,:],kernel)
+        t31f = np.conj(t13f) 
+        t32f = np.conj(t23f) 
         t33f = conv2d(T_T1[2,2,:,:],kernel)
 
         T_T1 = np.array([[t11f, t12f, t13f], [t21f, t22f, t23f], [t31f, t32f, t33f]])

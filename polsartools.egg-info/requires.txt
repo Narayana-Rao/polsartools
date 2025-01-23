@@ -3,6 +3,7 @@ gdal
 scipy
 click
 simplekml
+tqdm
 
 [dev]
 pytest
