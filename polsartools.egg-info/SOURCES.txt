@@ -28,6 +28,7 @@ polsartools/polsar/dxp/rvidp.py
 polsartools/polsar/fp/__init__.py
 polsartools/polsar/fp/dopfp.py
 polsartools/polsar/fp/grvi.py
+polsartools/polsar/fp/halphafp.py
 polsartools/polsar/fp/mf3cf.py
 polsartools/polsar/fp/mf4cf.py
 polsartools/polsar/fp/neufp.py

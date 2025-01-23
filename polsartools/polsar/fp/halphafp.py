@@ -1,10 +1,10 @@
 import os
 import numpy as np
 from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
-from polsartools.utils.convert_matrices import C3_T3_mat
+from polsartools.utils.convert_matrices import T3_C3_mat
 
 @time_it
-def prvifp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
+def halphafp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
 
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
@@ -30,14 +30,20 @@ def prvifp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=
 
     output_filepaths = []
     if outname is None:
-        output_filepaths.append(os.path.join(infolder, "dop_fp.tif"))
+        output_filepaths.append(os.path.join(infolder, "H_fp.tif"))
+        output_filepaths.append(os.path.join(infolder, "alpha_fp.tif"))
+        output_filepaths.append(os.path.join(infolder, "A_fp.tif"))
+        
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-            processing_func=process_chunk_prvifp,
+            processing_func=process_chunk_halphafp,
             block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=1)
+            num_outputs=3)
 
-def process_chunk_prvifp(chunks, window_size, input_filepaths,*args):
+def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
+
+    # additional_arg1 = args[0] if len(args) > 0 else None
+    # additional_arg2 = args[1] if len(args) > 1 else None
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])
@@ -53,6 +59,7 @@ def process_chunk_prvifp(chunks, window_size, input_filepaths,*args):
         T_T1 = np.array([[t11_T1, t12_T1, t13_T1], 
                      [t21_T1, t22_T1, t23_T1], 
                      [t31_T1, t32_T1, t33_T1]])
+        # T_T1 = T3_C3_mat(T3)
 
 
     if 'C11' in input_filepaths[0] and 'C22' in input_filepaths[5] and 'C33' in input_filepaths[8]:
@@ -65,11 +72,9 @@ def process_chunk_prvifp(chunks, window_size, input_filepaths,*args):
         C31 = np.conj(C13)
         C32 = np.conj(C23)
         C33 = np.array(chunks[8])
-        C3 = np.array([[C11, C12, C13], 
+        T_T1 = np.array([[C11, C12, C13], 
                          [C21, C22, C23], 
                          [C31, C32, C33]])
-
-        T_T1 = C3_T3_mat(C3)
 
 
     if window_size>1:
@@ -89,15 +94,69 @@ def process_chunk_prvifp(chunks, window_size, input_filepaths,*args):
 
         T_T1 = np.array([[t11f, t12f, t13f], [t21f, t22f, t23f], [t31f, t32f, t33f]])
 
-
-    reshaped_arr = T_T1.reshape(3, 3, -1).transpose(2, 0, 1)
-    det_T3 = np.linalg.det(reshaped_arr)
-    # del reshaped_arr
-    det_T3 = det_T3.reshape(T_T1.shape[2], T_T1.shape[3])
-
-    trace_T3 = T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:]
-    dop_fp = np.real(np.sqrt(1-(27*(det_T3/(trace_T3**3)))))
+    _,_,rows,cols = np.shape(T_T1)
+    T_T1 = T_T1.reshape(9, rows, cols)
     
-    prvi = np.real((1-dop_fp)* T_T1[2,2,:,:]*0.5)  # (1-dop)*vh
+    # Indices for vectorized access
+    i, j = np.indices((rows, cols))
+    
+    T_T1 = np.dstack((T_T1[0,:,:],T_T1[1,:,:],T_T1[2,:,:],
+                      T_T1[3,:,:],T_T1[4,:,:],T_T1[5,:,:],T_T1[6,:,:],T_T1[7,:,:],T_T1[8,:,:]))
+    
+    data = T_T1.reshape( T_T1.shape[0]*T_T1.shape[1], T_T1.shape[2]).reshape((-1,3,3))
 
-    return prvi
+    evals, evecs = np.linalg.eig(data)
+    # print('Eigen!')
+    
+    # evals[:,0][evals[:,0] <0] = 0
+    # evals[:,1][evals[:,1] <0] = 0
+    # evals[:,2][evals[:,2] <0] = 0
+    # evals[:,0][evals[:,0] >1] = 1
+    # evals[:,1][evals[:,1] >1] = 1
+    # evals[:,2][evals[:,2] >1] = 1
+    
+    eval_norm1 = (evals[:,1])/(evals[:,0] + evals[:,1]+ evals[:,2])
+    eval_norm1[eval_norm1<0]=0
+    eval_norm1[eval_norm1>1]=1
+    
+    
+    eval_norm2 = (evals[:,0])/(evals[:,0] + evals[:,1]+ evals[:,2])
+    eval_norm2[eval_norm2<0]=0
+    eval_norm2[eval_norm2>1]=1
+    
+    
+    eval_norm3 = (evals[:,2])/(evals[:,0] + evals[:,1]+evals[:,2])
+    eval_norm3[eval_norm3<0]=0
+    eval_norm3[eval_norm3>1]=1
+      
+    
+    # # %Alpha 1
+    eig_vec_r1 = np.real(evecs[:,0,1])
+    eig_vec_c1 = np.imag(evecs[:,0,1])
+    alpha1 = np.arccos(np.sqrt(eig_vec_r1*eig_vec_r1 + eig_vec_c1*eig_vec_c1))*180/np.pi
+    
+    # # %Alpha 2
+    eig_vec_r2 = np.real(evecs[:,0,0])
+    eig_vec_c2 = np.imag(evecs[:,0,0])
+    alpha2 = np.arccos(np.sqrt(eig_vec_r2*eig_vec_r2 + eig_vec_c2*eig_vec_c2))*180/np.pi
+    
+    # # %Alpha 3
+    eig_vec_r3 = np.real(evecs[:,0,2])
+    eig_vec_c3 = np.imag(evecs[:,0,2])
+    alpha3 = np.arccos(np.sqrt(eig_vec_r3*eig_vec_r3 + eig_vec_c3*eig_vec_c3))*180/np.pi
+        
+    # # %Cloude Alpha
+    alpha_ = (eval_norm1*alpha1 + eval_norm2*alpha2+ eval_norm3*alpha3)
+    alpha_ = alpha_.reshape(rows,cols)
+    
+    # print('Alpha!')
+    
+    # # %Entropy
+    H = - eval_norm1*np.log10(eval_norm1)/np.log10(3) - eval_norm2*np.log10(eval_norm2)/np.log10(3) - eval_norm3*np.log10(eval_norm3)/np.log10(3)
+    H = H.reshape(rows,cols)
+
+    alpha1 = alpha1.reshape(rows,cols)
+    alpha2 = alpha2.reshape(rows,cols)
+    alpha3 = alpha3.reshape(rows,cols)
+    
+    return H,alpha_,alpha_

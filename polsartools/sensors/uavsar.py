@@ -4,6 +4,7 @@ from osgeo import gdal,osr
 import os
 import sys
 import simplekml
+from polsartools.utils.utils import time_it
 def write_bin_uav_old(file,wdata,lat,lon,dx,dy):
     
     [cols, rows] = wdata.shape
@@ -85,12 +86,12 @@ def create_extent(annFile):
         (lrx, lry),  # coordinate 3
         (llx, lly),  # coordinate 4
     ]
-    print(corner_coordinates)
+    # print(corner_coordinates)
 
     output_file = os.path.join(inFolder,"scene_extent.kml")
     create_kml_polygon(corner_coordinates, output_file)
     
-    
+@time_it    
 def uavsar_grd(annFile):
     inFolder = os.path.dirname(annFile)
     create_extent(annFile)
@@ -137,8 +138,9 @@ def uavsar_grd(annFile):
 
     file = open(outFolder +'/config.txt',"w+")
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
-    file.close()   
-
+    file.close()  
+    print("Extracted C3 files to %s"%outFolder)
+@time_it  
 def uavsar_mlc(annFile):
     create_extent(annFile)
     inFolder = os.path.dirname(annFile)
@@ -197,3 +199,4 @@ def uavsar_mlc(annFile):
     file = open(outFolder +'/config.txt',"w+")
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
     file.close()   
+    print("Extracted C3 files to %s"%outFolder)

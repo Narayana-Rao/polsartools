@@ -8,3 +8,4 @@ from .prvifp import prvifp
 from .grvi import grvi
 from .neufp import neufp
 from .nnedfp import nnedfp
+from .halphafp import halphafp
