@@ -1,7 +1,7 @@
 Metadata-Version: 2.2
 Name: polsartools
-Version: 0.5
-Summary: A package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
+Version: 0.5.1
+Summary: A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
 Author: Narayanarao Bhogapurapu
 Author-email: bnarayanarao@iitb.ac.in
 Classifier: Programming Language :: Python :: 3
@@ -20,6 +20,7 @@ Requires-Dist: scipy
 Requires-Dist: click
 Requires-Dist: simplekml
 Requires-Dist: tqdm
+Requires-Dist: matplotlib
 Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: sphinx; extra == "dev"

@@ -239,7 +239,21 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
         # Check if the block size is equal to the raster size
         if block_width >= raster_width and block_height >= raster_height:
-            temp_band.WriteArray(processed_chunks[i])          
+            # temp_band.WriteArray(processed_chunks[i][:-window_size//2, :][:, :-window_size//2])  
+            
+            # rows, cols = processed_chunks[i].shape
+            
+            # # Calculate the shift
+            # shift = window_size // 2
+            # # Create a new array with dimensions adjusted for the shift
+            # new_rows = rows + shift
+            # new_cols = cols + shift
+            # new_arr = np.zeros((new_rows, new_cols), dtype=processed_chunks[i].dtype)
+            # new_arr[shift:shift+rows, shift:shift+cols] = processed_chunks[i]
+            # new_arr[:shift, :shift] = processed_chunks[i][-shift:, -shift:]
+
+            # temp_band.WriteArray(new_arr)       
+            temp_band.WriteArray(processed_chunks[i]) 
             temp_dataset.FlushCache()
             temp_dataset = None
             temp_paths.append(temp_path)
@@ -306,7 +320,10 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
 
             temp_chunk = temp_band.ReadAsArray()
             temp_height, temp_width = temp_chunk.shape
-
+            
+            if len(temp_files) == 1:
+                x_start, y_start = 0, 0
+                
             output_band.WriteArray(temp_chunk, xoff=x_start, yoff=y_start)
             # print(x_start,y_start)
             temp_dataset = None

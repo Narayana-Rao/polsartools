@@ -5,3 +5,4 @@ functools
 click
 simplekml
 tqdm
+matplotlib

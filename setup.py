@@ -27,8 +27,8 @@ class CustomInstall(install):
 
 setup(
     name='polsartools',
-    version='0.5',
-    description='A package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.',
+    version='0.5.1',
+    description='A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.',
     author='Narayanarao Bhogapurapu',
     author_email='bnarayanarao@iitb.ac.in',
     packages=find_packages(),
@@ -39,6 +39,7 @@ setup(
         'click',
         'simplekml',
         'tqdm',  
+        'matplotlib',
         
     ],
     extras_require={

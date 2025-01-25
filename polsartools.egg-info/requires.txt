@@ -4,6 +4,7 @@ scipy
 click
 simplekml
 tqdm
+matplotlib
 
 [dev]
 pytest

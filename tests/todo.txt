@@ -1,4 +1,4 @@
--fix small rasters shifting if window_size>1
+-fix small rasters shifting if window_size>1 (issue is only for filters)
 -vectorize grvi, refined_lee
 -correct boxcar elements 
 -split utils.py
