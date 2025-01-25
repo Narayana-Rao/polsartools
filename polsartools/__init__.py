@@ -18,6 +18,7 @@ from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,ha
 from .polsar.cp import cprvi, dopcp, misomega, mf3cc
 from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp
 from .sensors.uavsar import uavsar_grd,uavsar_mlc
+from .utils import convert_T3_C3
 __all__ = [
     'uavsar_grd', 'uavsar_mlc', #import data from sensors
     'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 'halphafp', # Full-pol

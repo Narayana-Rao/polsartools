@@ -1,4 +1,4 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: polsartools
 Version: 0.5
 Summary: A package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
@@ -24,6 +24,15 @@ Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
 Requires-Dist: sphinx; extra == "dev"
 Requires-Dist: doxygen; extra == "dev"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
 
 <p align="center">
   <img src="logo.png" alt=""/>
