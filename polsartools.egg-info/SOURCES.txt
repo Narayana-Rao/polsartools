@@ -51,6 +51,7 @@ polsartools/utils/__init__.py
 polsartools/utils/convert_C3_T3.py
 polsartools/utils/convert_T3_C3.py
 polsartools/utils/convert_matrices.py
+polsartools/utils/pauliRGB.py
 polsartools/utils/utils.py
 tests/test_functions.py
 tests/test_processing.py
