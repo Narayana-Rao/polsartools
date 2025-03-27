@@ -1,7 +1,9 @@
 import os
 import numpy as np
 from polsartools.utils.utils import process_chunks_parallel,conv2d,eig22, time_it
-
+from polsartools.cprvicpp import process_chunk_cprvicpp
+import polsartools
+import traceback
 @time_it
 def cprvi(infolder, outname=None, chi_in=45, psi_in=0,window_size=1,write_flag=True,max_workers=None):
     input_filepaths = [
@@ -20,7 +22,19 @@ def cprvi(infolder, outname=None, chi_in=45, psi_in=0,window_size=1,write_flag=T
                 max_workers=max_workers,  num_outputs=1, chi_in=chi_in,psi_in=psi_in)
 
 def process_chunk_cprvi(chunks, window_size,input_filepaths,chi_in,psi_in):
+    try:
+        from polsartools import cprvicpp
+        chunk_arrays = [np.array(ch) for ch in chunks]  
+        vi_c_raw = cprvicpp.process_chunk_cprvicpp( chunk_arrays, window_size, input_filepaths, chi_in, psi_in )
+        return np.array(vi_c_raw, copy=True)  
 
+    except Exception as e:
+        error_msg = f"Error in C++ function call: {e}\n{traceback.format_exc()}"
+        print(error_msg)  # Print to console
+        with open("error_log.txt", "a") as f:  # Save logs
+            f.write(error_msg + "\n")
+        return np.zeros_like(np.array(chunks[0]))  
+    
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11_T1 = np.array(chunks[0])
     c12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
