@@ -6,6 +6,15 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from tqdm import tqdm
 import time
 
+import multiprocessing
+import sys
+
+# Set multiprocessing start method based on OS
+if sys.platform == "win32":
+    multiprocessing.set_start_method("spawn", force=True)  # Required for Windows
+else:
+    multiprocessing.set_start_method("fork", force=True)   # Preferred for Linux/macOS
+
 def time_it(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -338,7 +347,20 @@ def process_and_write_chunk(args, processing_func, num_outputs):
 
         chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
         
+        # for i, chunk in enumerate(chunks):
+        #     print(f"Chunk {i} shape: {chunk.shape}")
+            
         processed_chunks = processing_func(chunks, window_size, input_filepaths, chi_in,psi_in)
+
+        ###########################################
+        ### Ensure outputs are serialization-friendly for c++ codes
+        # if isinstance(processed_chunks, list):
+        #     processed_chunks = [np.array(chunk).tolist() for chunk in processed_chunks]
+        # elif isinstance(processed_chunks, np.ndarray):
+        #     processed_chunks = [processed_chunks.tolist()]
+        # else:
+        #     raise TypeError("Processed chunks must be serializable (e.g., lists or numpy arrays).")
+        ##################################
 
         if num_outputs == 1:
             processed_chunks = [processed_chunks]

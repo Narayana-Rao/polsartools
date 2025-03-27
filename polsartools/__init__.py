@@ -20,6 +20,12 @@ from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp
 from .sensors.uavsar import uavsar_grd,uavsar_mlc
 from .utils import convert_T3_C3,convert_C3_T3
 from .preprocessing.filters import boxcar,rlee
+
+## CPP functions
+import polsartools.refined_lee
+import polsartools.moving_average
+import polsartools.sum_arrays
+import polsartools.cprvicpp #process_chunk_cprvicpp
 __all__ = [
     'uavsar_grd', 'uavsar_mlc', #import data from sensors
     'rl', 'boxcar', #import filters

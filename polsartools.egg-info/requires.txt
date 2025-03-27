@@ -5,6 +5,7 @@ click
 simplekml
 tqdm
 matplotlib
+pybind11
 
 [dev]
 pytest

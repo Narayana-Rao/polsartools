@@ -5,11 +5,20 @@ dev_requirements.txt
 pyproject.toml
 requirements.txt
 setup.py
+cpp/src/cprvicpp.cpp
+cpp/src/moving_average.cpp
+cpp/src/refined_lee.cpp
+cpp/src/sum_arrays.cpp
+cpp/src/cprvicpp.cpp
+cpp/src/moving_average.cpp
+cpp/src/refined_lee.cpp
+cpp/src/sum_arrays.cpp
 polsartools/__init__.py
 polsartools.egg-info/PKG-INFO
 polsartools.egg-info/SOURCES.txt
 polsartools.egg-info/dependency_links.txt
 polsartools.egg-info/entry_points.txt
+polsartools.egg-info/not-zip-safe
 polsartools.egg-info/requires.txt
 polsartools.egg-info/top_level.txt
 polsartools/polsar/__init__.py
@@ -55,3 +64,5 @@ polsartools/utils/pauliRGB.py
 polsartools/utils/utils.py
 tests/test_functions.py
 tests/test_processing.py
+tests/testcpp.py
+tests/testcpp_cprvi.py

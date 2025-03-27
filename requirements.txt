@@ -6,3 +6,4 @@ click
 simplekml
 tqdm
 matplotlib
+pybind11
