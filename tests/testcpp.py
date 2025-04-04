@@ -125,12 +125,29 @@ def process_chunk_cprvi(chunks, window_size,input_filepaths,chi_in,psi_in):
     return vi_c.astype(np.float32)
 
 
+
+
 # Example input: List of 2D NumPy arrays
 arr1 = np.random.rand(100, 100).astype(np.float32)
 arr2 = np.random.rand(100, 100).astype(np.float32)
 arr3 = np.random.rand(100, 100).astype(np.float32)
 arr4 = np.random.rand(100, 100).astype(np.float32)
 # arr2 = np.random.rand(200, 200).astype(np.float32)
+
+
+
+
+num_nans = 500  # Number of NaNs to insert
+nan_indices = np.random.choice(arr1.size, num_nans, replace=False) 
+
+nan_indices_2d = np.unravel_index(nan_indices, arr1.shape)
+
+arr1[nan_indices_2d] = np.nan
+arr2[nan_indices_2d] = np.nan
+arr3[nan_indices_2d] = np.nan
+arr4[nan_indices_2d] = np.nan
+
+
 
 
 arr_list = [arr1, arr2, arr3, arr4]
@@ -144,7 +161,7 @@ arr_list = [arr1, arr2, arr3, arr4]
 
 print("Input array statistics:")
 for i, arr in enumerate(arr_list):
-    print(f"Array {i}: mean={np.mean(arr)}, min={np.min(arr)}, max={np.max(arr)}")
+    print(f"Array {i}: mean={np.nanmean(arr)}, min={np.nanmin(arr)}, max={np.nanmax(arr)}")
 
 # processed_arr_list = testpip.refined_lee.refined_lee(arr_list,7)
 
@@ -152,9 +169,11 @@ import time
 t0 = time.time()
 
 cprvi_cpp_out = polsartools.cprvicpp.process_chunk_cprvicpp(arr_list,5,['sdfgfd0','sdfgfd1','sdfgfd2','sdfgfd3'],-45,0)
+print(f"Output array statistics: mean={np.nanmean(cprvi_cpp_out)}, min={np.nanmin(cprvi_cpp_out)}, max={np.nanmax(cprvi_cpp_out)}")
 print('Time for cprvi_cpp:', time.time() - t0)
 t1 = time.time()
 cprvi_py_out = process_chunk_cprvi(arr_list,5,['sdfgfd0','sdfgfd1','sdfgfd2','sdfgfd3'],-45,0)
+print(f"Output array statistics: mean={np.nanmean(cprvi_py_out)}, min={np.nanmin(cprvi_py_out)}, max={np.nanmax(cprvi_py_out)}")
 print('Time for cprvi_py:', time.time() - t1)
 
 print('Done!!')
