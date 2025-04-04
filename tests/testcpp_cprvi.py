@@ -15,6 +15,10 @@ def main():
     compact_c2 =r"C://Users/nbhogapurapu/Desktop/temp\ALOS2_read\data/C2"
 
     cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
+    # cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
+    # cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
+    # cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
+    # cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
     
 # dcp = pst.polsar.cp.dopcp(compact_c2,chi_in=45,window_size=3,  write_flag=False)
 # ccp = pst.polsar.cp.mf3cc(compact_c2,chi_in=45,window_size=3,  write_flag=False)

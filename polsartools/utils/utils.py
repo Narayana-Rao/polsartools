@@ -5,7 +5,7 @@ from functools import wraps
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor,as_completed
 from tqdm import tqdm
 import time
-
+import dill
 import multiprocessing
 from multiprocessing import Manager,Array
 import sys
@@ -51,7 +51,8 @@ def eig22(c2):
     lambda1 = -(trace + sqdiscr) * 0.5
     lambda2 = -(trace - sqdiscr) * 0.5
     return lambda1, lambda2
-    
+ 
+
 def process_chunks_parallel(input_filepaths, output_filepaths, 
                             window_size, write_flag, processing_func, 
                             block_size=(512, 512), max_workers=None, 
@@ -63,7 +64,7 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
 
     if max_workers is None:
         max_workers = os.cpu_count()-1  # Use all available CPUs
-        max_workers = 1
+        # max_workers = 1
     input_datasets = [gdal.Open(fp, gdal.GA_ReadOnly) for fp in input_filepaths]
     if any(ds is None for ds in input_datasets):
         raise FileNotFoundError("One or more input files could not be opened.")
@@ -120,8 +121,8 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
             for x in range(0, raster_width, adjusted_block_size_x):
                 read_block_width = min(adjusted_block_size_x, raster_width - x)
                 read_block_height = min(adjusted_block_size_y, raster_height - y)
-
                 args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in)
+                print(f"Submitting task for chunk at ({x}, {y})")
                 tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
 
         # Initialize tqdm progress bar with the total number of tasks
