@@ -2,6 +2,8 @@ import os
 import numpy as np
 from polsartools.utils.utils import process_chunks_parallel,conv2d,eig22, time_it
 from polsartools.cprvicpp import process_chunk_cprvicpp
+from polsartools.testcprvi import sum_filt
+
 import polsartools
 import traceback
 import pickle
@@ -33,9 +35,12 @@ def process_chunk_cprvi(chunks, window_size,input_filepaths,chi_in,psi_in):
     # except pickle.PickleError:
     #     print("Object cannot be pickled.")
     try:
-        from polsartools import cprvicpp
+        from polsartools import cprvicpp,testcprvi
         chunk_arrays = [np.array(ch) for ch in chunks]  
-        vi_c_raw = cprvicpp.process_chunk_cprvicpp( chunk_arrays, window_size, input_filepaths, chi_in, psi_in )
+        # vi_c_raw = cprvicpp.process_chunk_cprvicpp( chunk_arrays, window_size, input_filepaths, chi_in, psi_in )
+        vi_c_raw = testcprvi.sum_filt(chunk_arrays, window_size, input_filepaths, chi_in, psi_in )
+        
+
         # print('---------------------------------------------------------')
         return np.array(vi_c_raw, copy=True)  
 

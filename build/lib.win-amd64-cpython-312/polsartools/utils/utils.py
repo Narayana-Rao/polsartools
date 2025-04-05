@@ -64,7 +64,7 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
 
     if max_workers is None:
         max_workers = os.cpu_count()-1  # Use all available CPUs
-        max_workers = 1
+        # max_workers = 1
     input_datasets = [gdal.Open(fp, gdal.GA_ReadOnly) for fp in input_filepaths]
     if any(ds is None for ds in input_datasets):
         raise FileNotFoundError("One or more input files could not be opened.")

@@ -73,44 +73,70 @@ Matrix transpose(const Matrix& mat) {
 }
 
 // Function to process chunks with proper GIL handling
-py::array_t<double> process_chunk_cprvicpp(const std::vector<Matrix>& chunks, int window_size,
-    const std::vector<std::string>& input_filepaths, double chi_in, double psi_in) {
+py::array_t<double> process_chunk_cprvicpp(
+    const std::vector<py::array_t<double>>& chunks,
+    int window_size,
+    const std::vector<std::string>& input_filepaths,
+    double chi_in,
+    double psi_in) {
 
-    // Check for input validity
     if (chunks.size() < 4) {
         throw std::runtime_error("Insufficient chunks provided.");
     }
 
-    int nrows = static_cast<int>(chunks[0].size());
-    int ncols = static_cast<int>(chunks[0][0].size());
-    Matrix fp22(nrows, std::vector<double>(ncols, 0.0));
-    Matrix l_lambda(nrows, std::vector<double>(ncols, 0.0));
+    auto buf0 = chunks[0].request();
+    int nrows = buf0.shape[0];
+    int ncols = buf0.shape[1];
+
+    std::vector<const double*> chunk_ptrs(chunks.size());
+    for (size_t i = 0; i < chunks.size(); ++i) {
+        auto buf = chunks[i].request();
+        if (buf.ndim != 2 || buf.shape[0] != nrows || buf.shape[1] != ncols)
+            throw std::runtime_error("All chunks must be 2D arrays of the same shape.");
+        chunk_ptrs[i] = static_cast<const double*>(buf.ptr);
+    }
+
+    auto fp22 = std::vector<std::vector<double>>(nrows, std::vector<double>(ncols, 0.0));
+    auto l_lambda = fp22;
 
     int inci = window_size / 2;
     int incj = window_size / 2;
     int starti = inci;
-    int startj = incj;
     int stopi = nrows - inci - 1;
+    int startj = incj;
     int stopj = ncols - incj - 1;
 
     {
-        py::gil_scoped_release release; // Release the GIL for intensive computation
+        py::gil_scoped_release release;
 
         for (int ii = startj; ii <= stopj; ++ii) {
             for (int jj = starti; jj <= stopi; ++jj) {
                 try {
-                    double C11c = nanmean(chunks[0], ii - inci, ii + inci, jj - incj, jj + incj);
-                    std::complex<double> C12c = std::complex<double>(
-                        nanmean(chunks[1], ii - inci, ii + inci, jj - incj, jj + incj),
-                        nanmean(chunks[2], ii - inci, ii + inci, jj - incj, jj + incj)
-                    );
-                    std::complex<double> C21c = std::conj(C12c);
-                    double C22c = nanmean(chunks[3], ii - inci, ii + inci, jj - incj, jj + incj);
+                    auto nanmean_from_ptr = [&](const double* data) {
+                        double sum = 0.0;
+                        int count = 0;
+                        for (int i = ii - inci; i <= ii + inci; ++i) {
+                            for (int j = jj - incj; j <= jj + incj; ++j) {
+                                double val = data[i * ncols + j];
+                                if (!std::isnan(val) && !std::isinf(val)) {
+                                    sum += val;
+                                    ++count;
+                                }
+                            }
+                        }
+                        return count > 0 ? sum / count : std::numeric_limits<double>::quiet_NaN();
+                    };
 
-                    if (std::isnan(C11c) || std::isnan(C22c) || std::isnan(std::real(C12c)) || std::isnan(std::imag(C12c))) {
+                    double C11c = nanmean_from_ptr(chunk_ptrs[0]);
+                    std::complex<double> C12c(nanmean_from_ptr(chunk_ptrs[1]), nanmean_from_ptr(chunk_ptrs[2]));
+                    std::complex<double> C21c = std::conj(C12c);
+                    double C22c = nanmean_from_ptr(chunk_ptrs[3]);
+
+                    if (std::isnan(C11c) || std::isnan(C22c) || std::isnan(C12c.real()) || std::isnan(C12c.imag())) {
                         throw std::runtime_error("NaN detected in input values.");
                     }
 
+                    // Polarimetric decomposition calculations (unchanged)
                     double s0 = C11c + C22c;
                     double s1 = C11c - C22c;
                     double s2 = std::real(C12c + C21c);
@@ -121,13 +147,13 @@ py::array_t<double> process_chunk_cprvicpp(const std::vector<Matrix>& chunks, in
                     double min_sc_oc = std::min(SC, OC);
                     double max_sc_oc = std::max(SC, OC);
 
+                    // Build matrices and compute trace-based depolarization
                     Matrix K_T = {
                         {0.5 * s0, 0, 0.5 * s2, 0},
                         {0, 0, 0, 0.5 * s1},
                         {0.5 * s2, 0, 0, 0},
                         {0, 0.5 * s1, 0, 0.5 * s3}
                     };
-
                     Matrix K_depol = {
                         {1.0, 0, 0, 0},
                         {0, 0, 0, 0},
@@ -135,46 +161,31 @@ py::array_t<double> process_chunk_cprvicpp(const std::vector<Matrix>& chunks, in
                         {0, 0, 0, 0}
                     };
 
-                    Matrix K_T_T = transpose(K_T);
-                    Matrix K_depol_T = transpose(K_depol);
-
-                    double num = trace(multiply(K_T_T, K_depol));
-                    double den1 = std::sqrt(std::abs(trace(multiply(K_T_T, K_T))));
-                    double den2 = std::sqrt(std::abs(trace(multiply(K_depol_T, K_depol))));
+                    double num = trace(multiply(transpose(K_T), K_depol));
+                    double den1 = std::sqrt(std::abs(trace(multiply(transpose(K_T), K_T))));
+                    double den2 = std::sqrt(std::abs(trace(multiply(transpose(K_depol), K_depol))));
                     double den = den1 * den2;
-                    double GD_t1_depol;
-                    if ((num == 0 && den == 0) || std::isnan(num) || std::isnan(den) || den == 0.0) {
-                        GD_t1_depol = 0.0; // Fallback value for undefined or invalid input
-                    } else {
-                        GD_t1_depol = 2.0 * std::acos(std::clamp(num / den, -1.0, 1.0)) * 180.0 / M_PI / 180.0;
-                    }
 
-                    l_lambda[ii][jj] = (3.0 / 2.0) * GD_t1_depol;
+                    double GD_t1_depol = (den == 0 || std::isnan(num) || std::isnan(den)) ? 0.0 :
+                        2.0 * std::acos(std::clamp(num / den, -1.0, 1.0)) / M_PI;
+
+                    l_lambda[ii][jj] = 1.5 * GD_t1_depol;
                     fp22[ii][jj] = (max_sc_oc > 0.0 && !std::isnan(max_sc_oc)) ? (min_sc_oc / max_sc_oc) : 0.0;
 
                 } catch (const std::exception& e) {
-                    py::print("Error at ii =", ii, ", jj =", jj, ":", e.what());
                     l_lambda[ii][jj] = 0.0;
                     fp22[ii][jj] = 0.0;
                 }
             }
         }
-     } // GIL is re-acquired automatically here
-
-    py::gil_scoped_acquire acquire; // Re-acquire the GIL for Python interactions
-
-    Matrix vi_c(nrows, std::vector<double>(ncols, 0.0));
-    for (int i = 0; i < nrows; ++i) {
-        for (int j = 0; j < ncols; ++j) {
-            vi_c[i][j] = (1.0 - l_lambda[i][j]) * std::pow(fp22[i][j], 2.0 * l_lambda[i][j]);
-        }
     }
 
+    // Final CPRVI matrix computation
     py::array_t<double> result({nrows, ncols});
     auto r = result.mutable_unchecked<2>();
     for (int i = 0; i < nrows; ++i) {
         for (int j = 0; j < ncols; ++j) {
-            r(i, j) = vi_c[i][j];
+            r(i, j) = (1.0 - l_lambda[i][j]) * std::pow(fp22[i][j], 2.0 * l_lambda[i][j]);
         }
     }
 
