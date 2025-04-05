@@ -14,194 +14,126 @@ namespace py = pybind11;
 #define M_PI 3.14159265358979323846
 #endif
 
-using Matrix = std::vector<std::vector<double>>;
-
-// Function to calculate mean ignoring NaNs and infinity
-double nanmean(const std::vector<std::vector<double>>& mat, int start_row, int end_row, int start_col, int end_col) {
-    double sum = 0.0;
-    int count = 0;
-
-    for (int i = start_row; i <= end_row; ++i) {
-        for (int j = start_col; j <= end_col; ++j) {
-            if (!std::isnan(mat[i][j]) && !std::isinf(mat[i][j])) {
-                sum += mat[i][j];
-                count++;
-            }
-        }
-    }
-    return count > 0 ? sum / count : std::numeric_limits<double>::quiet_NaN();
-}
-
-// Function to calculate trace of a square matrix
-double trace(const Matrix& mat) {
-    double sum = 0.0;
-    for (size_t i = 0; i < mat.size(); ++i) {
-        sum += mat[i][i];
-    }
-    return sum;
-}
-
-// Matrix multiplication function
-Matrix multiply(const Matrix& mat1, const Matrix& mat2) {
-    size_t nrows = mat1.size();
-    size_t ncols = mat2[0].size();
-    size_t inner_dim = mat2.size();
-    Matrix result(nrows, std::vector<double>(ncols, 0.0));
-
-    for (size_t i = 0; i < nrows; ++i) {
-        for (size_t j = 0; j < ncols; ++j) {
-            for (size_t k = 0; k < inner_dim; ++k) {
-                result[i][j] += mat1[i][k] * mat2[k][j];
-            }
-        }
-    }
-    return result;
-}
-
-// Transpose function for a square matrix
-Matrix transpose(const Matrix& mat) {
-    size_t nrows = mat.size();
-    size_t ncols = mat[0].size();
-    Matrix transposed(ncols, std::vector<double>(nrows, 0.0));
-
-    for (size_t i = 0; i < nrows; ++i) {
-        for (size_t j = 0; j < ncols; ++j) {
-            transposed[j][i] = mat[i][j];
-        }
-    }
-    return transposed;
-}
-
-// Function to process chunks with proper GIL handling
 py::array_t<double> process_chunk_cprvicpp(
     const std::vector<py::array_t<double>>& chunks,
     int window_size,
     const std::vector<std::string>& input_filepaths,
     double chi_in,
-    double psi_in) {
-
+    double psi_in
+) {
     if (chunks.size() < 4) {
-        throw std::runtime_error("Insufficient chunks provided.");
+        throw std::runtime_error("At least 4 chunks required");
     }
 
-    auto buf0 = chunks[0].request();
-    int nrows = buf0.shape[0];
-    int ncols = buf0.shape[1];
+    py::buffer_info buf_c11 = chunks[0].request();
+    py::buffer_info buf_c12r = chunks[1].request();
+    py::buffer_info buf_c12i = chunks[2].request();
+    py::buffer_info buf_c22 = chunks[3].request();
 
-    std::vector<const double*> chunk_ptrs(chunks.size());
-    for (size_t i = 0; i < chunks.size(); ++i) {
-        auto buf = chunks[i].request();
-        if (buf.ndim != 2 || buf.shape[0] != nrows || buf.shape[1] != ncols)
-            throw std::runtime_error("All chunks must be 2D arrays of the same shape.");
-        chunk_ptrs[i] = static_cast<const double*>(buf.ptr);
-    }
+    int nrows = buf_c11.shape[1];
+    int ncols = buf_c11.shape[0];
 
-    auto fp22 = std::vector<std::vector<double>>(nrows, std::vector<double>(ncols, 0.0));
-    auto l_lambda = fp22;
+    const double* c11_T1 = static_cast<double*>(buf_c11.ptr);
+    const double* c12r_T1 = static_cast<double*>(buf_c12r.ptr);
+    const double* c12i_T1 = static_cast<double*>(buf_c12i.ptr);
+    const double* c22_T1 = static_cast<double*>(buf_c22.ptr);
+
+    auto fp22_out = py::array_t<double>({ncols, nrows});
+    auto lambda_out = py::array_t<double>({ncols, nrows});
+    double* fp22 = static_cast<double*>(fp22_out.request().ptr);
+    double* l_lambda = static_cast<double*>(lambda_out.request().ptr);
 
     int inci = window_size / 2;
     int incj = window_size / 2;
     int starti = inci;
-    int stopi = nrows - inci - 1;
     int startj = incj;
+    int stopi = nrows - inci - 1;
     int stopj = ncols - incj - 1;
 
-    {
-        py::gil_scoped_release release;
+    for (int ii = startj; ii <= stopj; ++ii) {
+        for (int jj = starti; jj <= stopi; ++jj) {
+            int count = 0;
+            std::complex<double> C11c(0.0), C12c(0.0), C21c(0.0), C22c(0.0);
 
-        for (int ii = startj; ii <= stopj; ++ii) {
-            for (int jj = starti; jj <= stopi; ++jj) {
-                try {
-                    auto nanmean_from_ptr = [&](const double* data) {
-                        double sum = 0.0;
-                        int count = 0;
-                        for (int i = ii - inci; i <= ii + inci; ++i) {
-                            for (int j = jj - incj; j <= jj + incj; ++j) {
-                                double val = data[i * ncols + j];
-                                if (!std::isnan(val) && !std::isinf(val)) {
-                                    sum += val;
-                                    ++count;
-                                }
-                            }
-                        }
-                        return count > 0 ? sum / count : std::numeric_limits<double>::quiet_NaN();
-                    };
-
-                    double C11c = nanmean_from_ptr(chunk_ptrs[0]);
-                    std::complex<double> C12c(nanmean_from_ptr(chunk_ptrs[1]), nanmean_from_ptr(chunk_ptrs[2]));
-                    std::complex<double> C21c = std::conj(C12c);
-                    double C22c = nanmean_from_ptr(chunk_ptrs[3]);
-
-                    if (std::isnan(C11c) || std::isnan(C22c) || std::isnan(C12c.real()) || std::isnan(C12c.imag())) {
-                        throw std::runtime_error("NaN detected in input values.");
+            for (int wi = -inci; wi <= inci; ++wi) {
+                for (int wj = -incj; wj <= incj; ++wj) {
+                    int x = ii + wi;
+                    int y = jj + wj;
+                    if (x >= 0 && x < ncols && y >= 0 && y < nrows) {
+                        int idx = x * nrows + y;
+                        C11c += c11_T1[idx];
+                        C12c += std::complex<double>(c12r_T1[idx], c12i_T1[idx]);
+                        C21c += std::conj(std::complex<double>(c12r_T1[idx], c12i_T1[idx]));
+                        C22c += c22_T1[idx];
+                        count++;
                     }
-
-                    // Polarimetric decomposition calculations (unchanged)
-                    double s0 = C11c + C22c;
-                    double s1 = C11c - C22c;
-                    double s2 = std::real(C12c + C21c);
-                    double s3 = (chi_in >= 0) ? -std::imag(C12c - C21c) : std::imag(C12c - C21c);
-
-                    double SC = (s0 - s3) / 2.0;
-                    double OC = (s0 + s3) / 2.0;
-                    double min_sc_oc = std::min(SC, OC);
-                    double max_sc_oc = std::max(SC, OC);
-
-                    // Build matrices and compute trace-based depolarization
-                    Matrix K_T = {
-                        {0.5 * s0, 0, 0.5 * s2, 0},
-                        {0, 0, 0, 0.5 * s1},
-                        {0.5 * s2, 0, 0, 0},
-                        {0, 0.5 * s1, 0, 0.5 * s3}
-                    };
-                    Matrix K_depol = {
-                        {1.0, 0, 0, 0},
-                        {0, 0, 0, 0},
-                        {0, 0, 0, 0},
-                        {0, 0, 0, 0}
-                    };
-
-                    double num = trace(multiply(transpose(K_T), K_depol));
-                    double den1 = std::sqrt(std::abs(trace(multiply(transpose(K_T), K_T))));
-                    double den2 = std::sqrt(std::abs(trace(multiply(transpose(K_depol), K_depol))));
-                    double den = den1 * den2;
-
-                    double GD_t1_depol = (den == 0 || std::isnan(num) || std::isnan(den)) ? 0.0 :
-                        2.0 * std::acos(std::clamp(num / den, -1.0, 1.0)) / M_PI;
-
-                    l_lambda[ii][jj] = 1.5 * GD_t1_depol;
-                    fp22[ii][jj] = (max_sc_oc > 0.0 && !std::isnan(max_sc_oc)) ? (min_sc_oc / max_sc_oc) : 0.0;
-
-                } catch (const std::exception& e) {
-                    l_lambda[ii][jj] = 0.0;
-                    fp22[ii][jj] = 0.0;
                 }
             }
+
+            if (count > 0) {
+                C11c /= count;
+                C12c /= count;
+                C21c /= count;
+                C22c /= count;
+            }
+
+            if (!std::isfinite(C11c.real()) || !std::isfinite(C12c.real()) || !std::isfinite(C21c.real()) || !std::isfinite(C22c.real())) {
+                C11c = C12c = C21c = C22c = {0.0, 0.0};
+            }
+
+            std::complex<double> s0 = C11c + C22c;
+            std::complex<double> s1 = C11c - C22c;
+            std::complex<double> s2 = C12c + C21c;
+            std::complex<double> s3 = chi_in >= 0 ? std::complex<double>(0, 1) * (C12c - C21c)
+                                                  : -std::complex<double>(0, 1) * (C12c - C21c);
+
+            std::complex<double> K[4][4] = {
+                {s0, 0.0, s2, 0.0},
+                {0.0, 0.0, 0.0, s1},
+                {s2, 0.0, 0.0, 0.0},
+                {0.0, s1, 0.0, s3}
+            };
+
+            std::complex<double> SC = (s0 - s3) * 0.5;
+            std::complex<double> OC = (s0 + s3) * 0.5;
+
+            double min_val = std::min(SC.real(), OC.real());
+            double max_val = std::max(SC.real(), OC.real());
+
+            std::complex<double> K_depol[4][4] = {};
+            K_depol[0][0] = 1.0;
+
+            std::complex<double> num = 0.0, den1 = 0.0, den2 = 0.0;
+
+            for (int a = 0; a < 4; ++a)
+                for (int b = 0; b < 4; ++b) {
+                    num += std::conj(K[b][a]) * K_depol[a][b];
+                    den1 += std::conj(K[b][a]) * K[b][a];
+                    den2 += std::conj(K_depol[b][a]) * K_depol[b][a];
+                }
+
+            double depol_ang = std::real(2 * std::acos(num.real() / std::sqrt(std::abs(den1.real() * den2.real()))) * 180.0 / M_PI);
+            double GD_t1_depol = depol_ang / 180.0;
+            l_lambda[ii * nrows + jj] = (3.0 / 2.0) * GD_t1_depol;
+
+            fp22[ii * nrows + jj] = min_val / max_val;
         }
     }
 
-    // Final CPRVI matrix computation
-    py::array_t<double> result({nrows, ncols});
-    auto r = result.mutable_unchecked<2>();
-    for (int i = 0; i < nrows; ++i) {
-        for (int j = 0; j < ncols; ++j) {
-            r(i, j) = (1.0 - l_lambda[i][j]) * std::pow(fp22[i][j], 2.0 * l_lambda[i][j]);
-        }
+    auto vi_c = py::array_t<double>({ncols, nrows});
+    double* vi_c_ptr = static_cast<double*>(vi_c.request().ptr);
+
+    for (int i = 0; i < ncols * nrows; ++i) {
+        vi_c_ptr[i] = (1.0 - l_lambda[i]) * std::pow(fp22[i], 2 * l_lambda[i]);
     }
 
-    return result;
+    return vi_c;
 }
-// Pybind11 module definition
 
+// Pybind11 module definition
 PYBIND11_MODULE(cprvicpp, m) {
-    m.doc() = "CPRVI Processing Module";
+    m.doc() = "CpRVI Processing Module";
     m.def("process_chunk_cprvicpp", &process_chunk_cprvicpp, 
-          "Process a chunk using CPRVI algorithm",
-          py::arg("chunks"), 
-          py::arg("window_size"), 
-          py::arg("input_filepaths"), 
-          py::arg("chi_in"), 
-          py::arg("psi_in")
-        //   py::call_guard<py::gil_scoped_release>() // GIL is released here
+          "Process a C2 chunk to generate CPRVI"
         );
 }

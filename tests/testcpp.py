@@ -128,13 +128,11 @@ def process_chunk_cprvi(chunks, window_size,input_filepaths,chi_in,psi_in):
 
 
 # Example input: List of 2D NumPy arrays
-arr1 = np.random.rand(100, 100).astype(np.float32)
-arr2 = np.random.rand(100, 100).astype(np.float32)
-arr3 = np.random.rand(100, 100).astype(np.float32)
-arr4 = np.random.rand(100, 100).astype(np.float32)
+arr1 = np.random.rand(200,200).astype(np.float32)
+arr2 = np.random.rand(200, 200).astype(np.float32)
+arr3 = np.random.rand(200, 200).astype(np.float32)
+arr4 = np.random.rand(200, 200).astype(np.float32)
 # arr2 = np.random.rand(200, 200).astype(np.float32)
-
-
 
 
 num_nans = 500  # Number of NaNs to insert
@@ -146,8 +144,6 @@ arr1[nan_indices_2d] = np.nan
 arr2[nan_indices_2d] = np.nan
 arr3[nan_indices_2d] = np.nan
 arr4[nan_indices_2d] = np.nan
-
-
 
 
 arr_list = [arr1, arr2, arr3, arr4]

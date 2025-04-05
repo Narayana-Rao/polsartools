@@ -26,30 +26,11 @@ def cprvi(infolder, outname=None, chi_in=45, psi_in=0,window_size=1,write_flag=T
 
 def process_chunk_cprvi(chunks, window_size,input_filepaths,chi_in,psi_in):
 
-    # try:
-    #     from polsartools import cprvicpp
-    #     chunk_arrays = [np.array(ch) for ch in chunks] 
-    #     print("---------------------------------------------------------")
-    #     pickle.dumps(cprvicpp.process_chunk_cprvicpp)
-    #     print("Object is picklable!")
-    # except pickle.PickleError:
-    #     print("Object cannot be pickled.")
-    try:
-        from polsartools import cprvicpp,testcprvi
-        chunk_arrays = [np.array(ch) for ch in chunks]  
-        # vi_c_raw = cprvicpp.process_chunk_cprvicpp( chunk_arrays, window_size, input_filepaths, chi_in, psi_in )
-        vi_c_raw = testcprvi.sum_filt(chunk_arrays, window_size, input_filepaths, chi_in, psi_in )
-        
-
-        # print('---------------------------------------------------------')
-        return np.array(vi_c_raw, copy=True)  
-
-    except Exception as e:
-        error_msg = f"Error in C++ function call: {e}\n{traceback.format_exc()}"
-        print(error_msg)  # Print to console
-        with open("error_log.txt", "a") as f:  # Save logs
-            f.write(error_msg + "\n")
-        return np.zeros_like(np.array(chunks[0]))  
+    chunk_arrays = [np.array(ch) for ch in chunks]  
+    vi_c_raw = process_chunk_cprvicpp( chunk_arrays, window_size, input_filepaths, chi_in, psi_in )
+    # vi_c_raw = sum_filt(chunk_arrays, window_size, input_filepaths, chi_in, psi_in )
+    
+    return np.array(vi_c_raw, copy=True)  
     
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11_T1 = np.array(chunks[0])

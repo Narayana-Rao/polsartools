@@ -7,42 +7,6 @@
 
 namespace py = pybind11;
 
-// Function to compute the sliding window mean of a 2D numpy array
-py::array_t<double> sliding_window_mean(const py::array_t<double>& arr, int window_size) {
-    py::buffer_info buf_info = arr.request();
-    int rows = buf_info.shape[0];
-    int cols = buf_info.shape[1];
-
-    // Create a result array to store the sliding window means
-    auto result = py::array_t<double>(buf_info.shape);
-    py::buffer_info buf_info_result = result.request();
-    double* ptr_result = static_cast<double*>(buf_info_result.ptr);
-
-    // Iterate over the array, apply the sliding window, and compute the mean
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            // Get the window bounds
-            int row_start = std::max(i - window_size / 2, 0);
-            int row_end = std::min(i + window_size / 2 + 1, rows);
-            int col_start = std::max(j - window_size / 2, 0);
-            int col_end = std::min(j + window_size / 2 + 1, cols);
-
-            // Sum the elements within the window and compute the mean
-            double sum = 0.0;
-            int count = 0;
-            for (int r = row_start; r < row_end; ++r) {
-                for (int c = col_start; c < col_end; ++c) {
-                    sum += static_cast<double*>(buf_info.ptr)[r * cols + c];
-                    ++count;
-                }
-            }
-            ptr_result[i * cols + j] = sum / count;
-        }
-    }
-
-    return result;
-}
-
 // Function to sum the sliding window means of a list of 2D numpy arrays
 py::array_t<double> sum_filt(const std::vector<py::array_t<double>>& arrays, int window_size,  
     const std::vector<std::string>& input_filepaths,
@@ -76,9 +40,7 @@ py::array_t<double> sum_filt(const std::vector<py::array_t<double>>& arrays, int
 
     // Sum the sliding window means for each array
     for (const auto& arr : arrays) {
-        // Compute the sliding window mean for the current array
-        auto window_mean = sliding_window_mean(arr, window_size);
-        py::buffer_info buf_info_window = window_mean.request();
+        py::buffer_info buf_info_window = arr.request();
         double* ptr_window = static_cast<double*>(buf_info_window.ptr);
 
         // Add the mean values to the result
