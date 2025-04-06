@@ -274,11 +274,16 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
     for i in range(num_outputs):
         if '.tif' in output_filepaths[0]:
             driver = gdal.GetDriverByName('GTiff')
+            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
+                                       options=['COMPRESS=LZW','BIGTIFF=YES','TILED=YES'])
+        
         if '.bin' in output_filepaths[0]:
             driver = gdal.GetDriverByName('ENVI')
+            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
+                                       )
         
-        output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
-                                       options=['COMPRESS=LZW','BIGTIFF=YES','TILED=YES'])
+        
+        
         output_dataset.SetGeoTransform(geotransform)
         output_dataset.SetProjection(projection)
         output_band = output_dataset.GetRasterBand(1)

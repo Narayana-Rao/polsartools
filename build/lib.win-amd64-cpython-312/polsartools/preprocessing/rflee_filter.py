@@ -7,7 +7,19 @@ def process_chunk_refined_lee(chunks, window_size, *args ):
 
     Nlook = 1
     PolTypeOut = "C3"
+    print("before pad",np.shape(chunks[0]))
+    for i in range(len(chunks)):
+        pad_top_left = window_size // 2 
+        pad_bottom_right = window_size // 2 +1
+        
+        # Pad the array
+        chunks[i] = np.pad(chunks[i], 
+                            ((pad_top_left, pad_bottom_right), 
+                            (pad_top_left, pad_bottom_right)), 
+                            mode='constant', constant_values=0)
 
+
+    print("after pad",np.shape(chunks[0]))
     if len(chunks)==9:
         t11_T1 = np.array(chunks[0])
         t12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
@@ -36,7 +48,7 @@ def process_chunk_refined_lee(chunks, window_size, *args ):
     
 
     M_in = np.transpose(M_in,axes=[2,0,1])
-
+    print("M_in shape",M_in.shape)
     NpolarOut, Nlig_padded, Ncol_padded = M_in.shape
     Nlig = Nlig_padded - window_size
     Ncol = Ncol_padded - window_size
@@ -132,7 +144,10 @@ def process_chunk_refined_lee(chunks, window_size, *args ):
             filtered_chunks.append(np.real(M_out[3,:,:]))
 
     # M_out = np.transpose(M_out,axes=[1,2,0])
-
+    print("M_out shape:", np.shape(filtered_chunks))
+    
+    
+    
     return filtered_chunks
 
 
