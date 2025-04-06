@@ -6,12 +6,9 @@ pyproject.toml
 requirements.txt
 setup.py
 cpp/src/cprvicpp.cpp
-cpp/src/cprvicpp.cpp
-cpp/src/moving_average.cpp
-cpp/src/refined_lee.cpp
 cpp/src/rflee.cpp
-cpp/src/sum_arrays.cpp
-cpp/src/testcprvi.cpp
+cpp/src/cprvicpp.cpp
+cpp/src/rflee.cpp
 polsartools/__init__.py
 polsartools.egg-info/PKG-INFO
 polsartools.egg-info/SOURCES.txt

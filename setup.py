@@ -27,13 +27,13 @@ class BuildExt(build_ext):
         shutil.copy2(ext_path, dest_path)
 
 ext_modules = [
-    # Extension(
-    #     'polsartools.rflee',
-    #     ['cpp/src/rflee.cpp'],
-    #     include_dirs=[pybind11.get_include(), pybind11.get_include(user=True)],
-    #     language='c++',
-    #     extra_compile_args=['/std:c++17' if os.name == 'nt' else '-std=c++17'],
-    # ),
+    Extension(
+        'polsartools.rflee',
+        ['cpp/src/rflee.cpp'],
+        include_dirs=[pybind11.get_include(), pybind11.get_include(user=True)],
+        language='c++',
+        extra_compile_args=['/std:c++17' if os.name == 'nt' else '-std=c++17'],
+    ),
     # Extension(
     #     'polsartools.moving_average',
     #     ['cpp/src/moving_average.cpp'],

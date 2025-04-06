@@ -1,124 +1,101 @@
+#include <iostream>
 #include <vector>
 #include <complex>
 #include <cmath>
 #include <stdexcept>
-#include <cstring> // for memset
-
+#include <algorithm>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <pybind11/numpy.h>
 
-
-namespace py = pybind11;
 using namespace std;
+namespace py = pybind11;
 
-using cfloat = complex<float>;
+typedef complex<float> complexf;
+typedef vector<vector<float>> MatrixF;
+typedef vector<vector<complexf>> MatrixC;
+typedef vector<vector<vector<complexf>>> CubeC;
+typedef vector<vector<vector<float>>> CubeF;
 
-typedef std::complex<float> cpx;
-
-// Helper to access 2D array
-inline int idx(int row, int col, int width) {
-    return row * width + col;
+MatrixC pad_matrix_c(const MatrixC& mat, int pad_top, int pad_bottom, int pad_left, int pad_right) {
+    int rows = mat.size();
+    int cols = mat[0].size();
+    MatrixC padded(rows + pad_top + pad_bottom, vector<complexf>(cols + pad_left + pad_right, complexf(0.0f, 0.0f)));
+    for (int i = 0; i < rows; ++i)
+        for (int j = 0; j < cols; ++j)
+            padded[i + pad_top][j + pad_left] = mat[i][j];
+    return padded;
 }
-
 
 vector<vector<vector<float>>> make_Mask(int window_size) {
     vector<vector<vector<float>>> Mask(8, vector<vector<float>>(window_size, vector<float>(window_size, 0.0f)));
     int half = (window_size - 1) / 2;
 
-    for (int k = 0; k < window_size; ++k)
-        for (int l = half; l < window_size; ++l)
-            Mask[0][k][l] = 1.0f;
-
-    for (int k = 0; k < window_size; ++k)
-        for (int l = 0; l <= half; ++l)
-            Mask[4][k][l] = 1.0f;
-
-    for (int k = 0; k < window_size; ++k)
-        for (int l = k; l < window_size; ++l)
-            Mask[1][k][l] = 1.0f;
-
-    for (int k = 0; k < window_size; ++k)
-        for (int l = 0; l <= k; ++l)
-            Mask[5][k][l] = 1.0f;
-
-    for (int k = 0; k <= half; ++k)
-        for (int l = 0; l < window_size; ++l)
-            Mask[2][k][l] = 1.0f;
-
-    for (int k = half; k < window_size; ++k)
-        for (int l = 0; l < window_size; ++l)
-            Mask[6][k][l] = 1.0f;
-
-    for (int k = 0; k < window_size; ++k)
-        for (int l = 0; l < window_size - k; ++l)
-            Mask[3][k][l] = 1.0f;
-
-    for (int k = 0; k < window_size; ++k)
-        for (int l = window_size - 1 - k; l < window_size; ++l)
-            Mask[7][k][l] = 1.0f;
+    for (int i = 0; i < window_size; ++i) {
+        for (int j = half; j < window_size; ++j)
+            Mask[0][i][j] = 1.0f;
+        for (int j = 0; j <= half; ++j)
+            Mask[4][i][j] = 1.0f;
+        for (int j = i; j < window_size; ++j)
+            Mask[1][i][j] = 1.0f;
+        for (int j = 0; j <= i; ++j)
+            Mask[5][i][j] = 1.0f;
+    }
+    for (int i = 0; i <= half; ++i)
+        for (int j = 0; j < window_size; ++j)
+            Mask[2][i][j] = 1.0f;
+    for (int i = half; i < window_size; ++i)
+        for (int j = 0; j < window_size; ++j)
+            Mask[6][i][j] = 1.0f;
+    for (int i = 0; i < window_size; ++i)
+        for (int j = 0; j < window_size - i; ++j)
+            Mask[3][i][j] = 1.0f;
+    for (int i = 0; i < window_size; ++i)
+        for (int j = window_size - 1 - i; j < window_size; ++j)
+            Mask[7][i][j] = 1.0f;
 
     return Mask;
 }
 
-pair<py::array_t<cfloat>, py::array_t<int>> make_Coeff(
+pair<CubeF, vector<vector<int>>> make_Coeff(
     float sigma2, int Deplct, int Nwindow_size, int window_sizeM1S2,
-    int Sub_Nlig, int Sub_Ncol, py::array_t<float> span,
-    const vector<vector<vector<float>>> &Mask
-) {
-    auto buf_span = span.unchecked<2>();
-    py::array_t<cfloat> coeff({Sub_Nlig, Sub_Ncol});
-    py::array_t<int> Nmax({Sub_Nlig, Sub_Ncol});
-    auto buf_coeff = coeff.mutable_unchecked<2>();
-    // auto buf_Nmax = Nmax.mutable_unchecked<2>();
-    auto buf_Nmax = Nmax.unchecked<2>();
-    int mask_idx = buf_Nmax(lig, col);
+    int Sub_Nlig, int Sub_Ncol, const MatrixF& span,
+    const vector<vector<vector<float>>>& Mask) {
+
+    CubeF coeff(Sub_Nlig, vector<vector<float>>(Sub_Ncol, vector<float>(1, 0.0f)));
+    vector<vector<int>> Nmax(Sub_Nlig, vector<int>(Sub_Ncol, 0));
 
     for (int lig = 0; lig < Sub_Nlig; ++lig) {
         for (int col = 0; col < Sub_Ncol; ++col) {
-            float subwin[3][3] = {};
-            for (int k = 0; k < 3; ++k) {
-                for (int l = 0; l < 3; ++l) {
-                    float sum = 0.0f;
-                    for (int kk = 0; kk < Nwindow_size; ++kk) {
-                        for (int ll = 0; ll < Nwindow_size; ++ll) {
-                            int idx_k = k * Deplct + kk + lig;
-                            int idx_l = l * Deplct + ll + col;
-                            sum += buf_span(idx_k, idx_l) / (Nwindow_size * Nwindow_size);
-                        }
-                    }
-                    subwin[k][l] = sum;
-                }
-            }
+            float subwin[3][3] = {0};
+            for (int k = 0; k < 3; ++k)
+                for (int l = 0; l < 3; ++l)
+                    for (int kk = 0; kk < Nwindow_size; ++kk)
+                        for (int ll = 0; ll < Nwindow_size; ++ll)
+                            subwin[k][l] += span[lig + k * Deplct + kk][col + l * Deplct + ll] / (Nwindow_size * Nwindow_size);
 
-            float Dist[4] = {};
-            Dist[0] = -subwin[0][0] + subwin[0][2] - subwin[1][0] + subwin[1][2] - subwin[2][0] + subwin[2][2];
-            Dist[1] = subwin[0][1] + subwin[0][2] - subwin[1][0] + subwin[1][2] - subwin[2][0] - subwin[2][1];
-            Dist[2] = subwin[0][0] + subwin[0][1] + subwin[0][2] - subwin[2][0] - subwin[2][1] - subwin[2][2];
-            Dist[3] = subwin[0][0] + subwin[0][1] + subwin[1][0] - subwin[1][2] - subwin[2][1] - subwin[2][2];
+            float Dist[4] = {
+                -subwin[0][0] + subwin[0][2] - subwin[1][0] + subwin[1][2] - subwin[2][0] + subwin[2][2],
+                 subwin[0][1] + subwin[0][2] - subwin[1][0] + subwin[1][2] - subwin[2][0] - subwin[2][1],
+                 subwin[0][0] + subwin[0][1] + subwin[0][2] - subwin[2][0] - subwin[2][1] - subwin[2][2],
+                 subwin[0][0] + subwin[0][1] + subwin[1][0] - subwin[1][2] - subwin[2][1] - subwin[2][2]
+            };
 
-            float MaxDist = -1e10;
-            int Nmax_lig_col = 0;
-            for (int k = 0; k < 4; ++k) {
-                if (fabs(Dist[k]) > MaxDist) {
-                    MaxDist = fabs(Dist[k]);
-                    Nmax_lig_col = k;
-                }
-            }
-            if (Dist[Nmax_lig_col] > 0)
-                Nmax_lig_col += 4;
+            int Nmax_lig_col = distance(Dist, max_element(Dist, Dist + 4, [](float a, float b) { return abs(a) < abs(b); }));
+            if (Dist[Nmax_lig_col] > 0.0f) Nmax_lig_col += 4;
+            Nmax[lig][col] = Nmax_lig_col;
 
-            buf_Nmax(lig, col) = Nmax_lig_col;
-
-            float m_span = 0.0f, m_span2 = 0.0f, Npoints = 0.0f;
+            float m_span = 0.0f, m_span2 = 0.0f;
+            int Npoints = 0;
             for (int k = -window_sizeM1S2; k <= window_sizeM1S2; ++k) {
                 for (int l = -window_sizeM1S2; l <= window_sizeM1S2; ++l) {
-                    if (Mask[Nmax_lig_col][window_sizeM1S2 + k][window_sizeM1S2 + l] == 1.0f) {
-                        int idx_k = lig + window_sizeM1S2 + k;
-                        int idx_l = col + window_sizeM1S2 + l;
-                        float s = buf_span(idx_k, idx_l);
+                    int i = window_sizeM1S2 + k;
+                    int j = window_sizeM1S2 + l;
+                    if (Mask[Nmax_lig_col][i][j] == 1.0f) {
+                        float s = span[lig + i][col + j];
                         m_span += s;
                         m_span2 += s * s;
-                        Npoints += 1.0f;
+                        Npoints++;
                     }
                 }
             }
@@ -126,169 +103,89 @@ pair<py::array_t<cfloat>, py::array_t<int>> make_Coeff(
             m_span /= Npoints;
             m_span2 /= Npoints;
             float v_span = m_span2 - m_span * m_span;
-            float cv_span = sqrtf(fabs(v_span)) / (1e-8f + m_span);
+            float cv_span = sqrtf(fabsf(v_span)) / (1e-8f + m_span);
             float coeff_val = (cv_span * cv_span - sigma2) / (cv_span * cv_span * (1 + sigma2) + 1e-8f);
-            buf_coeff(lig, col) = coeff_val < 0.0f ? 0.0f : coeff_val;
+            coeff_val = max(coeff_val, 0.0f);
+            coeff[lig][col][0] = coeff_val;
         }
     }
 
     return {coeff, Nmax};
 }
 
-std::vector<std::vector<float>> process_chunk_refined_lee(
-    const std::vector<const float*>& chunks,
+std::vector<py::array_t<double>> process_chunk_rfleecpp(
+    const std::vector<py::array_t<double>>& chunks,
     int window_size,
-    int height,
-    int width
-) {
-    int Nlook = 1;
-    std::string PolTypeOut;
-    int NpolarOut;
+    const std::vector<std::string>& input_filepaths
+    ) {
+    int Deplct = 1;
+    float sigma2 = 0.25
+    if (window_size % 2 == 0) window_size += 1;
+    int window_sizeM1S2 = (window_size - 1) / 2;
+    int pad_top = window_sizeM1S2;
+    int pad_bottom = window_sizeM1S2 + 1;
+    int pad_left = window_sizeM1S2;
+    int pad_right = window_sizeM1S2 + 1;
 
-    // int padded_height = height + window_size;
-    // int padded_width = width + window_size;
-    int padded_height = height + window_size/2;
-    int padded_width = width + window_size/2;
-
-    int window_half = (window_size - 1) / 2;
-
-    std::vector<cpx*> M_in_vec;
-
-    if (chunks.size() == 9) {
-        // C3 case
-        PolTypeOut = "C3";
-        NpolarOut = 9;
-
-        M_in_vec.resize(9);
-        for (int i = 0; i < 9; ++i) {
-            M_in_vec[i] = new cpx[padded_height * padded_width];
-        }
-
-        for (int r = 0; r < padded_height; ++r) {
-            for (int c = 0; c < padded_width; ++c) {
-                int id = idx(r, c, padded_width);
-                M_in_vec[0][id] = chunks[0][id];
-                M_in_vec[1][id] = cpx(chunks[1][id], chunks[2][id]);
-                M_in_vec[2][id] = cpx(chunks[3][id], chunks[4][id]);
-                M_in_vec[3][id] = std::conj(M_in_vec[1][id]);
-                M_in_vec[4][id] = chunks[5][id];
-                M_in_vec[5][id] = cpx(chunks[6][id], chunks[7][id]);
-                M_in_vec[6][id] = std::conj(M_in_vec[2][id]);
-                M_in_vec[7][id] = std::conj(M_in_vec[5][id]);
-                M_in_vec[8][id] = chunks[8][id];
-            }
-        }
-
-    } else if (chunks.size() == 4) {
-        // C2 case
-        PolTypeOut = "C2";
-        NpolarOut = 4;
-
-        M_in_vec.resize(4);
-        for (int i = 0; i < 4; ++i) {
-            M_in_vec[i] = new cpx[padded_height * padded_width];
-        }
-
-        for (int r = 0; r < padded_height; ++r) {
-            for (int c = 0; c < padded_width; ++c) {
-                int id = idx(r, c, padded_width);
-                M_in_vec[0][id] = chunks[0][id];
-                M_in_vec[1][id] = cpx(chunks[1][id], chunks[2][id]);
-                M_in_vec[2][id] = std::conj(M_in_vec[1][id]);
-                M_in_vec[3][id] = chunks[3][id];
-            }
-        }
-    } else {
-        throw std::runtime_error("Invalid number of chunks. Must be 4 or 9.");
+    CubeC chunk;
+    for (const auto& arr : chunks) {
+        auto buf = arr.unchecked<2>();
+        MatrixC mat(buf.shape(0), vector<complexf>(buf.shape(1)));
+        for (ssize_t i = 0; i < buf.shape(0); ++i)
+            for (ssize_t j = 0; j < buf.shape(1); ++j)
+                mat[i][j] = complexf(buf(i, j), 0.0f);
+        chunk.push_back(pad_matrix_c(mat, pad_top, pad_bottom, pad_left, pad_right));
     }
 
-    float sigma2 = 1.0f / Nlook;
-    auto Mask = make_Mask(window_size); // returns 8 x window x window
-    float* span = new float[padded_height * padded_width];
+    int Nwindow_size = 3;
+    int nvec = chunk.size();
+    int rows = chunk[0].size();
+    int cols = chunk[0][0].size();
 
-    // Compute SPAN
-    // for (int r = 0; r < padded_height; ++r) {
-    //     for (int c = 0; c < padded_width; ++c) {
-    //         int id = idx(r, c, padded_width);
-    //         if (PolTypeOut == "C2") {
-    //             span[id] = std::real(M_in_vec[0][id]) + std::real(M_in_vec[3][id]);
-    //         } else {
-    //             span[id] = std::real(M_in_vec[0][id]) + std::real(M_in_vec[4][id]) + std::real(M_in_vec[8][id]);
-    //         }
-    //     }
-    // }
+    MatrixF span(rows, vector<float>(cols, 0.0f));
+    for (int i = 0; i < rows; ++i)
+        for (int j = 0; j < cols; ++j)
+            span[i][j] = real(chunk[0][i][j]) + real(chunk[2][i][j]);
 
-    py::array_t<float> span_arr({padded_height, padded_width});
-    auto buf_span = span_arr.mutable_unchecked<2>();
-    
-    for (int r = 0; r < padded_height; ++r) {
-        for (int c = 0; c < padded_width; ++c) {
-            int id = idx(r, c, padded_width);
-            buf_span(r, c) = (PolTypeOut == "C2")
-                             ? std::real(M_in_vec[0][id]) + std::real(M_in_vec[3][id])
-                             : std::real(M_in_vec[0][id]) + std::real(M_in_vec[4][id]) + std::real(M_in_vec[8][id]);
-        }
-    }
+    auto Mask = make_Mask(window_size);
+    int Sub_Nlig = rows - window_size + 1;
+    int Sub_Ncol = cols - window_size + 1;
 
-    // Coefficients
-    int output_height = padded_height - window_size;
-    int output_width = padded_width - window_size;
-    // auto [coeff, Nmax] = make_Coeff(sigma2, window_size == 3 ? 1 : 2, 3, window_half,
-    //                                 output_height, output_width, span, Mask);
-    auto [coeff, Nmax] = make_Coeff(sigma2, window_size == 3 ? 1 : 2, 3, window_half,
-        output_height, output_width, span_arr, Mask);
+    auto [coeff, Nmax] = make_Coeff(sigma2, Deplct, Nwindow_size, window_sizeM1S2, Sub_Nlig, Sub_Ncol, span, Mask);
 
-    // Filtered output
-    std::vector<std::vector<float>> filtered_chunks(NpolarOut);
-    for (int i = 0; i < NpolarOut; ++i) {
-        filtered_chunks[i].resize(output_height * output_width);
-    }
+    std::vector<py::array_t<double>> output_arrays;
 
-    // Main filtering loop
-    for (int lig = 0; lig < output_height; ++lig) {
-        for (int col = 0; col < output_width; ++col) {
-            int center_r = lig + window_half;
-            int center_c = col + window_half;
-            int id_center = idx(center_r, center_c, padded_width);
-            int id_out = idx(lig, col, output_width);
-            int mask_idx = Nmax[lig * output_width + col];
+    for (int v = 0; v < nvec; ++v) {
+        py::array_t<double> out_array({Sub_Nlig, Sub_Ncol, 2});
+        auto r = out_array.mutable_unchecked<3>();
 
-            for (int p = 0; p < NpolarOut; ++p) {
-                cpx mean = 0.0f;
-                float Npoints = 0.0f;
-
-                for (int k = -window_half; k <= window_half; ++k) {
-                    for (int l = -window_half; l <= window_half; ++l) {
-                        int mask_val = Mask[mask_idx][window_half + k][window_half + l];
-                        if (mask_val == 1.0f) {
-                            int r = center_r + k;
-                            int c = center_c + l;
-                            int id = idx(r, c, padded_width);
-                            mean += M_in_vec[p][id];
-                            Npoints += 1.0f;
+        for (int lig = 0; lig < Sub_Nlig; ++lig) {
+            for (int col = 0; col < Sub_Ncol; ++col) {
+                int nmax = Nmax[lig][col];
+                complexf moy(0.0f, 0.0f);
+                int N = 0;
+                for (int k = -window_sizeM1S2; k <= window_sizeM1S2; ++k) {
+                    for (int l = -window_sizeM1S2; l <= window_sizeM1S2; ++l) {
+                        int i = window_sizeM1S2 + k;
+                        int j = window_sizeM1S2 + l;
+                        if (Mask[nmax][i][j] == 1.0f) {
+                            moy += chunk[v][lig + i][col + j];
+                            N++;
                         }
                     }
                 }
-
-                mean /= Npoints;
-                cpx center_val = M_in_vec[p][id_center];
-                auto buf_coeff = coeff.unchecked<2>();
-                cpx filtered = mean + buf_coeff(lig, col) * (center_val - mean);
-                // cpx filtered = mean + coeff[lig * output_width + col] * (center_val - mean);
-
-                filtered_chunks[p][id_out] = (p == 1 || p == 2 || p == 5 || p == 7) ? filtered.imag() : filtered.real();
+                moy /= static_cast<float>(N);
+                complexf val = chunk[v][lig + window_sizeM1S2][col + window_sizeM1S2] * coeff[lig][col][0] + moy * (1.0f - coeff[lig][col][0]);
+                r(lig, col, 0) = real(val);
+                r(lig, col, 1) = imag(val);
             }
         }
+        output_arrays.push_back(out_array);
     }
 
-    // Cleanup
-    for (auto ptr : M_in_vec) delete[] ptr;
-    delete[] span;
-
-    return filtered_chunks;
+    return output_arrays;
 }
 
 PYBIND11_MODULE(rflee, m) {
-    m.doc() = "Refined Lee Filter module with pointer-based C++ implementation";
-    m.def("process_chunk_refined_lee", &process_chunk_refined_lee, "Apply refined Lee filter to SAR image chunk");
+    m.def("process_chunk_rfleecpp", &process_chunk_rfleecpp, "Apply refined Lee filter to complex chunk");
 }
