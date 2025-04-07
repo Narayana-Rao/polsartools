@@ -88,7 +88,7 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
         with tqdm(total=len(tasks), desc=f"Progress ", unit=" block") as pbar:
             temp_files = []
             for future in as_completed(tasks):
-                # try:
+                try:
                     result = future.result()
                     if result is None:
                         raise ValueError("Block processing returned None")
@@ -107,8 +107,8 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
                             os.remove(temp_paths[i])
                     
                     pbar.update(1)
-                # except Exception as e:
-                    # print(f"Error in processing task: {e}")
+                except Exception as e:
+                    print(f"Error in processing task: {e}")
 
 
     if write_flag:
@@ -281,9 +281,7 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
             driver = gdal.GetDriverByName('ENVI')
             output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
                                        )
-        
-        
-        
+
         output_dataset.SetGeoTransform(geotransform)
         output_dataset.SetProjection(projection)
         output_band = output_dataset.GetRasterBand(1)
@@ -306,25 +304,11 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
         output_dataset = None
         print(f"Saved file {output_filepaths[i]}")
 def process_and_write_chunk(args, processing_func, num_outputs):
-    # try:
+    try:
         (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in,psi_in) = args
 
         chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
-        
-        # for i, chunk in enumerate(chunks):
-        #     print(f"Chunk {i} shape: {chunk.shape}")
-            
         processed_chunks = processing_func(chunks, window_size, input_filepaths, chi_in,psi_in)
-
-        ###########################################
-        ### Ensure outputs are serialization-friendly for c++ codes
-        # if isinstance(processed_chunks, list):
-        #     processed_chunks = [np.array(chunk).tolist() for chunk in processed_chunks]
-        # elif isinstance(processed_chunks, np.ndarray):
-        #     processed_chunks = [processed_chunks.tolist()]
-        # else:
-        #     raise TypeError("Processed chunks must be serializable (e.g., lists or numpy arrays).")
-        ##################################
 
         if num_outputs == 1:
             processed_chunks = [processed_chunks]
@@ -335,6 +319,6 @@ def process_and_write_chunk(args, processing_func, num_outputs):
         )
 
         return temp_paths, temp_x_start, temp_y_start
-    # except Exception as e:
-    #     print(f"Error in processing chunk: {e}")
-    #     return None
+    except Exception as e:
+        print(f"Error in processing chunk: {e}")
+        return None

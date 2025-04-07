@@ -3,7 +3,7 @@ import numpy as np
 from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
 from polsartools.preprocessing.pre_utils import get_filter_io_paths
 
-# from polsartools.preprocessing.rflee_filter import process_chunk_refined_lee
+from polsartools.preprocessing.rflee_filter import process_chunk_refined_lee
 from polsartools.rflee import process_chunk_rfleecpp
 @time_it
 def boxcar(infolder, outname=None, chi_in=0, psi_in=0, window_size=3, write_flag=True, max_workers=None):
@@ -32,13 +32,16 @@ def rlee(infolder, outname=None, chi_in=0, psi_in=0, window_size=3, write_flag=T
 
     # Process chunks in parallel
     num_outputs = len(output_filepaths)
-    # process_chunks_parallel(input_filepaths, output_filepaths, window_size=window_size, write_flag=write_flag,
-    #                         processing_func=process_chunk_refined_lee, block_size=(512, 512), max_workers=max_workers,
-    #                         num_outputs=num_outputs)
-    
     process_chunks_parallel(input_filepaths, output_filepaths, window_size=window_size, write_flag=write_flag,
-                        processing_func=process_chunk_rfl, block_size=(512, 512), max_workers=max_workers,
-                        num_outputs=num_outputs)
+                            processing_func=process_chunk_refined_lee, block_size=(512, 512), max_workers=max_workers,
+                            num_outputs=num_outputs)
+    
+    #### Uncomment below to use C++ implementation 
+    ### Have to debug line by line in c++ code to make sure it is working correctly
+    ## As of now it is generating all zeros
+    # process_chunks_parallel(input_filepaths, output_filepaths, window_size=window_size, write_flag=write_flag,
+    #                     processing_func=process_chunk_rfl, block_size=(512, 512), max_workers=max_workers,
+    #                     num_outputs=num_outputs)
 
 def process_chunk_rfl(chunks, window_size,input_filepaths, *args):
 
