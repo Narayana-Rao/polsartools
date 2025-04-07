@@ -43,8 +43,16 @@ def rlee(infolder, outname=None, chi_in=0, psi_in=0, window_size=3, write_flag=T
 def process_chunk_rfl(chunks, window_size,input_filepaths, *args):
 
     chunk_arrays = [np.array(ch) for ch in chunks]  
-
-    vi_c_raw = process_chunk_rfleecpp(chunk_arrays, window_size, input_filepaths)
-
-    return vi_c_raw.copy()
+    print("chunk_arrays shape:", np.shape(chunk_arrays))
+    vi_c_raw = process_chunk_rfleecpp(chunk_arrays, window_size)
+    
+    proc_chunks=[]
+    for chunk in vi_c_raw:
+        proc_chunks.append(np.array(chunk))
+    print("vi_c_raw shape:", np.shape(vi_c_raw))
+    # print("vi_c_raw len:", type(vi_c_raw[0]))
+    # print("vi_c_raw len:", len(vi_c_raw[0]))
+    # print("vi_c_raw np.shape(:", np.shape(vi_c_raw[0]))
+    print(np.nanmean(proc_chunks[0]), np.nanstd(proc_chunks[0]), np.nanmin(proc_chunks[0]), np.nanmax(proc_chunks[0]))
+    return proc_chunks
     

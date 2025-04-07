@@ -88,7 +88,7 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
         with tqdm(total=len(tasks), desc=f"Progress ", unit=" block") as pbar:
             temp_files = []
             for future in as_completed(tasks):
-                try:
+                # try:
                     result = future.result()
                     if result is None:
                         raise ValueError("Block processing returned None")
@@ -100,15 +100,15 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
                             temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
                             temp_band = temp_dataset.GetRasterBand(1)
                             temp_chunk = temp_band.ReadAsArray()
-
+                            print(type(temp_chunk))
                             temp_height, temp_width = temp_chunk.shape
                             merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
                             temp_dataset = None
                             os.remove(temp_paths[i])
                     
                     pbar.update(1)
-                except Exception as e:
-                    print(f"Error in processing task: {e}")
+                # except Exception as e:
+                    # print(f"Error in processing task: {e}")
 
 
     if write_flag:
@@ -306,7 +306,7 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
         output_dataset = None
         print(f"Saved file {output_filepaths[i]}")
 def process_and_write_chunk(args, processing_func, num_outputs):
-    try:
+    # try:
         (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in,psi_in) = args
 
         chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
@@ -335,6 +335,6 @@ def process_and_write_chunk(args, processing_func, num_outputs):
         )
 
         return temp_paths, temp_x_start, temp_y_start
-    except Exception as e:
-        print(f"Error in processing chunk: {e}")
-        return None
+    # except Exception as e:
+    #     print(f"Error in processing chunk: {e}")
+    #     return None
