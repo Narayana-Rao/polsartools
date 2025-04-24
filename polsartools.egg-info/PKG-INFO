@@ -1,6 +1,6 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.2
 Name: polsartools
-Version: 0.5.1
+Version: 0.6
 Summary: A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
 Author: Narayanarao Bhogapurapu
 Author-email: bnarayanarao@iitb.ac.in
@@ -33,7 +33,6 @@ Dynamic: author-email
 Dynamic: classifier
 Dynamic: description
 Dynamic: description-content-type
-Dynamic: license-file
 Dynamic: provides-extra
 Dynamic: requires-dist
 Dynamic: requires-python
