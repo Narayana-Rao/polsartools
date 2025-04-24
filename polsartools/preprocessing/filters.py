@@ -64,6 +64,15 @@ def process_chunk_rfl(chunks, window_size,input_filepaths, *args):
         proc_chunks.append(np.array(chunk))
     del vi_c_raw
     
+    
+    for i in range(len(proc_chunks)):
+        # Calculate the padding size
+        pad_top_left = window_size // 2
+        pad_bottom_right = window_size // 2 + 1
+        
+        # Unpad the array by slicing it
+        proc_chunks[i] = proc_chunks[i][pad_top_left:-pad_bottom_right, pad_top_left:-pad_bottom_right]
+    
     # num_chunks = len(proc_chunks) // 2
     # out_chunks = []
     # for i in range(num_chunks):
