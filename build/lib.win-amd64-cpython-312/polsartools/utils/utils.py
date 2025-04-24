@@ -2,18 +2,9 @@ import os, tempfile
 from osgeo import gdal
 import numpy as np
 from functools import wraps
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor,as_completed
 from tqdm import tqdm
 import time
-
-import multiprocessing
-import sys
-
-# Set multiprocessing start method based on OS
-if sys.platform == "win32":
-    multiprocessing.set_start_method("spawn", force=True)  # Required for Windows
-else:
-    multiprocessing.set_start_method("fork", force=True)   # Preferred for Linux/macOS
 
 def time_it(func):
     @wraps(func)
@@ -50,6 +41,7 @@ def eig22(c2):
     lambda1 = -(trace + sqdiscr) * 0.5
     lambda2 = -(trace - sqdiscr) * 0.5
     return lambda1, lambda2
+ 
 
 def process_chunks_parallel(input_filepaths, output_filepaths, 
                             window_size, write_flag, processing_func, 
@@ -61,8 +53,8 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
         raise ValueError("This function only supports 2, 4, or 9 input rasters.")
 
     if max_workers is None:
-        max_workers = os.cpu_count()  # Use all available CPUs
-
+        max_workers = os.cpu_count()-1  # Use all available CPUs
+        # max_workers = 1
     input_datasets = [gdal.Open(fp, gdal.GA_ReadOnly) for fp in input_filepaths]
     if any(ds is None for ds in input_datasets):
         raise FileNotFoundError("One or more input files could not be opened.")
@@ -79,47 +71,17 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
     merged_arrays = [np.zeros((raster_height, raster_width), dtype=np.float32) for _ in range(num_outputs)] if not write_flag else None
 
     tasks = []
-    
-    """ without progress bar"""
-    # with ProcessPoolExecutor(max_workers=max_workers) as executor:
-    #     for y in range(0, raster_height, adjusted_block_size_y):
-    #         for x in range(0, raster_width, adjusted_block_size_x):
-    #             read_block_width = min(adjusted_block_size_x, raster_width - x)
-    #             read_block_height = min(adjusted_block_size_y, raster_height - y)
 
-    #             args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in)
-    #             tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
-
-    #     temp_files = []
-    #     for future in as_completed(tasks):
-    #         try:
-    #             result = future.result()
-    #             if result is None:
-    #                 raise ValueError("Chunk processing returned None")
-    #             temp_paths, x_start, y_start = result
-    #             if write_flag:
-    #                 temp_files.append((temp_paths, x_start, y_start))
-    #             else:
-    #                 for i in range(num_outputs):
-    #                     temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
-    #                     temp_band = temp_dataset.GetRasterBand(1)
-    #                     temp_chunk = temp_band.ReadAsArray()
-
-    #                     temp_height, temp_width = temp_chunk.shape
-    #                     merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
-    #                     temp_dataset = None
-    #                     os.remove(temp_paths[i])
-    #         except Exception as e:
-    #             print(f"Error in processing task: {e}")
     """ with progress bar"""
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
+    # with ThreadPoolExecutor(max_workers=max_workers) as executor:
         tasks = []
         for y in range(0, raster_height, adjusted_block_size_y):
             for x in range(0, raster_width, adjusted_block_size_x):
                 read_block_width = min(adjusted_block_size_x, raster_width - x)
                 read_block_height = min(adjusted_block_size_y, raster_height - y)
-
                 args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in)
+                # print(f"Submitting task for chunk at ({x}, {y})")
                 tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
 
         # Initialize tqdm progress bar with the total number of tasks
@@ -138,7 +100,7 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
                             temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
                             temp_band = temp_dataset.GetRasterBand(1)
                             temp_chunk = temp_band.ReadAsArray()
-
+                            print(type(temp_chunk))
                             temp_height, temp_width = temp_chunk.shape
                             merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
                             temp_dataset = None
@@ -230,7 +192,6 @@ def read_chunk_with_overlap(filepath, x_start, y_start, width, height, window_si
     dataset = None  # Close the dataset after reading
     return chunk
 
-
 def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, block_height, window_size, raster_width, raster_height, num_outputs):
     temp_paths = []
     
@@ -309,16 +270,18 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
     return temp_paths, x_start, y_start
 
-
 def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs):
     for i in range(num_outputs):
         if '.tif' in output_filepaths[0]:
             driver = gdal.GetDriverByName('GTiff')
+            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
+                                       options=['COMPRESS=LZW','BIGTIFF=YES','TILED=YES'])
+        
         if '.bin' in output_filepaths[0]:
             driver = gdal.GetDriverByName('ENVI')
-        
-        output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
-                                       options=['COMPRESS=LZW','BIGTIFF=YES','TILED=YES'])
+            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
+                                       )
+
         output_dataset.SetGeoTransform(geotransform)
         output_dataset.SetProjection(projection)
         output_band = output_dataset.GetRasterBand(1)
@@ -340,27 +303,12 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
         output_dataset.FlushCache()
         output_dataset = None
         print(f"Saved file {output_filepaths[i]}")
-
 def process_and_write_chunk(args, processing_func, num_outputs):
     try:
         (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in,psi_in) = args
 
         chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
-        
-        # for i, chunk in enumerate(chunks):
-        #     print(f"Chunk {i} shape: {chunk.shape}")
-            
         processed_chunks = processing_func(chunks, window_size, input_filepaths, chi_in,psi_in)
-
-        ###########################################
-        ### Ensure outputs are serialization-friendly for c++ codes
-        # if isinstance(processed_chunks, list):
-        #     processed_chunks = [np.array(chunk).tolist() for chunk in processed_chunks]
-        # elif isinstance(processed_chunks, np.ndarray):
-        #     processed_chunks = [processed_chunks.tolist()]
-        # else:
-        #     raise TypeError("Processed chunks must be serializable (e.g., lists or numpy arrays).")
-        ##################################
 
         if num_outputs == 1:
             processed_chunks = [processed_chunks]

@@ -11,9 +11,15 @@ import polsartools as pst
 
 #%%
 def main():
-    compact_c2 = r'./sample_data/compact_pol/C2_RHV'
+    compact_c2 = r'tests/sample_data/compact_pol/C2_RHV'
+    compact_c2 =r"C://Users/nbhogapurapu/Desktop/temp\ALOS2_read\data/C2"
 
-    cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=3,  write_flag=True)
+    cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
+    # cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
+    # cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
+    # cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
+    # cr = pst.polsar.cp.cprvi(compact_c2,chi_in=45,window_size=7,  write_flag=True)
+    
 # dcp = pst.polsar.cp.dopcp(compact_c2,chi_in=45,window_size=3,  write_flag=False)
 # ccp = pst.polsar.cp.mf3cc(compact_c2,chi_in=45,window_size=3,  write_flag=False)
 # socp = pst.polsar.cp.misomega(compact_c2,chi_in=45,psi_in=0,window_size=3,  write_flag=False)

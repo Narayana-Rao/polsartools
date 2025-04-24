@@ -1,13 +1,23 @@
-import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
-from polsartools.preprocessing.pre_utils import get_filter_io_paths
 
-def process_chunk_refined_lee(chunks, window_size, *args ):
+def process_chunk_refined_lee(chunks, window_size=3, *args ):
 
     Nlook = 1
-    PolTypeOut = "C3"
+    if window_size % 2 == 0:
+        window_size = window_size + 1
+    # print('before pad',np.shape(chunks[0]))
+    for i in range(len(chunks)):
+        pad_top_left = window_size // 2 
+        pad_bottom_right = window_size // 2 +1
+        
+        # Pad the array
+        chunks[i] = np.pad(chunks[i], 
+                            ((pad_top_left, pad_bottom_right), 
+                            (pad_top_left, pad_bottom_right)), 
+                            mode='constant', constant_values=0)
 
+
+    # print("after pad",np.shape(chunks[0]))
     if len(chunks)==9:
         t11_T1 = np.array(chunks[0])
         t12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
@@ -36,7 +46,7 @@ def process_chunk_refined_lee(chunks, window_size, *args ):
     
 
     M_in = np.transpose(M_in,axes=[2,0,1])
-
+    # print("M_in shape",M_in.shape)
     NpolarOut, Nlig_padded, Ncol_padded = M_in.shape
     Nlig = Nlig_padded - window_size
     Ncol = Ncol_padded - window_size
@@ -81,9 +91,9 @@ def process_chunk_refined_lee(chunks, window_size, *args ):
     if PolTypeOut in ["C2", "C2pp1", "C2pp2", "C2pp3", "T2", "T2pp1", "T2pp2", "T2pp3"]:
         span = M_in[0] + M_in[3]
     elif PolTypeOut in ["C3", "T3"]:
-        span = M_in[0] + M_in[5] + M_in[8]
+        span = M_in[0] + M_in[4] + M_in[8]
     elif PolTypeOut in ["C4", "T4"]:
-        span = M_in[0] + M_in[7] + M_in[12] + M_in[15]
+        span = M_in[0] + M_in[6] + M_in[11] + M_in[15]
     else:
         raise ValueError("Unsupported PolTypeOut")
 
@@ -125,6 +135,7 @@ def process_chunk_refined_lee(chunks, window_size, *args ):
             filtered_chunks.append(np.imag(M_out[5,:,:]))
             filtered_chunks.append(np.real(M_out[8,:,:]))
 
+
     if len(chunks)==4:
             filtered_chunks.append(np.real(M_out[0,:,:]))
             filtered_chunks.append(np.real(M_out[1,:,:]))
@@ -132,7 +143,10 @@ def process_chunk_refined_lee(chunks, window_size, *args ):
             filtered_chunks.append(np.real(M_out[3,:,:]))
 
     # M_out = np.transpose(M_out,axes=[1,2,0])
-
+    # print("M_out shape:", np.shape(filtered_chunks))
+    
+    
+    
     return filtered_chunks
 
 

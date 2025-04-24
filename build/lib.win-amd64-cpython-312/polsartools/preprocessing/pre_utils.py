@@ -47,7 +47,8 @@ def get_filter_io_paths(infolder, outname, window_size, filter_type=None):
     # Determine the output folder and filepaths
     output_filepaths = []
     if outname is None:
-        outFolder = os.path.join(os.path.dirname(infolder), os.path.basename(infolder) + f"_{window_size}x{window_size}")
+        # outFolder = os.path.join(os.path.dirname(infolder), os.path.basename(infolder) + f"_{window_size}x{window_size}")
+        outFolder = os.path.join(os.path.dirname(infolder)+ f"_rlee_{window_size}x{window_size}", os.path.basename(infolder) )
         os.makedirs(outFolder, exist_ok=True)
         
         # Only use the first letter of the matrix type (C for C3, T for T3)
