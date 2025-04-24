@@ -48,7 +48,18 @@ def write_bin_uav(file, wdata, lat, lon, dx, dy, sensor_type="UAVSAR"):
     #     # Write the projection information
     #     # header_file.write("projection = GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS_84\",6378137,298.257223563]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.017453292519943295],AUTHORITY[\"EPSG\",\"4326\"]]\n")
     #     header_file.write(f"band names = {{{os.path.basename(file)}}}\n")
+def update_hdr(hdrFile):
+    with open(hdrFile, 'r') as file:
+        content = file.read()
 
+    # Replace "Arbitrary" with "Geographic Lat/Lon" and "North" with "WGS-84"
+    content = content.replace('{Arbitrary', '{Geographic Lat/Lon')
+    content = content.replace('North}', 'WGS-84}')
+    content = content.replace('South}', 'WGS-84}')
+
+    # Write the modified content back to the file
+    with open(hdrFile, 'w') as file:
+        file.write(content)
 def create_kml_polygon(corner_coords, output_filename):
     
     kml = simplekml.Kml()
@@ -118,24 +129,33 @@ def uavsar_grd(annFile):
 
     hhhh = np.fromfile(glob.glob(inFolder+'/*HHHH*.grd')[0], dtype='<f',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C11.bin',hhhh,lat,lon,dx,dy)
+    update_hdr(outFolder+'/C11.hdr')
     del hhhh
     vvvv = np.fromfile(glob.glob(inFolder+'/*VVVV*.grd')[0], dtype='<f',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C33.bin',vvvv,lat,lon,dx,dy)
+    update_hdr(outFolder+'/C33.hdr')
     del vvvv
     hvhv = np.fromfile(glob.glob(inFolder+'/*HVHV*.grd')[0], dtype='<f',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C22.bin',2*hvhv,lat,lon,dx,dy)
+    update_hdr(outFolder+'/C22.hdr')
     del hvhv
     hhhv = np.fromfile(glob.glob(inFolder+'/*HHHV*.grd')[0], dtype='<F',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C12_real.bin',np.real(np.sqrt(2)*hhhv),lat,lon,dx,dy)
+    update_hdr(outFolder+'/C12_real.hdr')
     write_bin_uav(outFolder+'/C12_imag.bin',np.imag(np.sqrt(2)*hhhv),lat,lon,dx,dy)
+    update_hdr(outFolder+'/C12_imag.hdr')
     del hhhv
     hhvv = np.fromfile(glob.glob(inFolder+'/*HHVV*.grd')[0], dtype='<F',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C13_real.bin',np.real(hhvv),lat,lon,dx,dy)
+    update_hdr(outFolder+'/C13_real.hdr')
     write_bin_uav(outFolder+'/C13_imag.bin',np.imag(hhvv),lat,lon,dx,dy)
+    update_hdr(outFolder+'/C13_imag.hdr')
     del hhvv
     hvvv = np.fromfile(glob.glob(inFolder+'/*HVVV*.grd')[0], dtype='<F',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C23_real.bin',np.real(np.sqrt(2)*hvvv),lat,lon,dx,dy)
+    update_hdr(outFolder+'/C23_real.hdr')
     write_bin_uav(outFolder+'/C23_imag.bin',np.imag(np.sqrt(2)*hvvv),lat,lon,dx,dy)
+    update_hdr(outFolder+'/C23_imag.hdr')
     del hvvv
 
     file = open(outFolder +'/config.txt',"w+")
