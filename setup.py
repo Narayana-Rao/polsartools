@@ -86,7 +86,7 @@ ext_modules = [
 
 setup(
     name='polsartools',
-    version='0.6',
+    version='0.6.1',
     description='A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.',
     author='Narayanarao Bhogapurapu',
     author_email='bnarayanarao@iitb.ac.in',
