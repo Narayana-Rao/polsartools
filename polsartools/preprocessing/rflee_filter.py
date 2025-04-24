@@ -46,7 +46,7 @@ def process_chunk_refined_lee(chunks, window_size=3, *args ):
     
 
     M_in = np.transpose(M_in,axes=[2,0,1])
-    print("M_in shape",M_in.shape)
+    # print("M_in shape",M_in.shape)
     NpolarOut, Nlig_padded, Ncol_padded = M_in.shape
     Nlig = Nlig_padded - window_size
     Ncol = Ncol_padded - window_size
@@ -134,6 +134,7 @@ def process_chunk_refined_lee(chunks, window_size=3, *args ):
             filtered_chunks.append(np.real(M_out[5,:,:]))
             filtered_chunks.append(np.imag(M_out[5,:,:]))
             filtered_chunks.append(np.real(M_out[8,:,:]))
+
 
     if len(chunks)==4:
             filtered_chunks.append(np.real(M_out[0,:,:]))

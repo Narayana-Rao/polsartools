@@ -15,8 +15,6 @@
 #include <stdexcept>  // For std::invalid_argument
 
 
-
-
 namespace py = pybind11;
 using ComplexMatrix = std::vector<std::vector<std::complex<double>>>;
 using Matrix = std::vector<std::vector<float>>;
@@ -167,23 +165,6 @@ void transpose_M_in(std::vector<std::vector<std::vector<std::complex<double>>>>&
     M_in = std::move(transposed);
 }
 
-std::vector<std::vector<std::vector<double>>> extract_C3_filtered_chunks(
-    const std::vector<std::vector<std::vector<std::complex<double>>>>& M_out) {
-    // Implement extraction for C3 chunks here.
-    // Placeholder: just return an empty 3D vector of double.
-    return std::vector<std::vector<std::vector<double>>>(M_out.size(), 
-        std::vector<std::vector<double>>(M_out[0].size(), 
-        std::vector<double>(M_out[0][0].size(), 0.0)));
-}
-
-std::vector<std::vector<std::vector<double>>> extract_C2_filtered_chunks(
-    const std::vector<std::vector<std::vector<std::complex<double>>>>& M_out) {
-    // Implement extraction for C2 chunks here.
-    // Placeholder: just return an empty 3D vector of double.
-    return std::vector<std::vector<std::vector<double>>>(M_out.size(), 
-        std::vector<std::vector<double>>(M_out[0].size(), 
-        std::vector<double>(M_out[0][0].size(), 0.0)));
-}
 
 
 std::vector<std::vector<std::vector<float>>> make_Mask(int window_size) {
@@ -341,6 +322,86 @@ std::pair<std::vector<std::vector<std::complex<float>>>, std::vector<std::vector
     return {coeff, Nmax};
 }
 
+std::vector<std::vector<std::vector<std::complex<double>>>> padChunks(
+    const std::vector<std::vector<std::vector<std::complex<double>>>>& chunks,  // const input
+    int window_size
+) {
+    std::vector<std::vector<std::vector<std::complex<double>>>> padded_chunks = chunks;  // Create a copy to modify
+
+    for (int i = 0; i < padded_chunks.size(); ++i) {
+        int pad_top_left = window_size / 2;
+        int pad_bottom_right = window_size / 2 + 1;
+
+        // Get the dimensions of the current chunk
+        int original_rows = padded_chunks[i].size();
+        int original_cols = padded_chunks[i][0].size();
+
+        // Create a new padded chunk with additional space
+        std::vector<std::vector<std::complex<double>>> padded_chunk(
+            original_rows + pad_top_left + pad_bottom_right, 
+            std::vector<std::complex<double>>(original_cols + pad_top_left + pad_bottom_right)
+        );
+
+        // Fill the padded chunk with zeros (default complex value is {0.0, 0.0})
+        for (int r = 0; r < padded_chunk.size(); ++r) {
+            for (int c = 0; c < padded_chunk[r].size(); ++c) {
+                padded_chunk[r][c] = std::complex<double>(0.0, 0.0);
+            }
+        }
+
+        // Copy the original data into the center of the padded chunk
+        for (int r = 0; r < original_rows; ++r) {
+            for (int c = 0; c < original_cols; ++c) {
+                padded_chunk[r + pad_top_left][c + pad_top_left] = padded_chunks[i][r][c];
+            }
+        }
+
+        // Replace the original chunk with the padded chunk
+        padded_chunks[i] = padded_chunk;
+    }
+
+    return padded_chunks;  // Return the new padded vector
+}
+
+std::vector<std::vector<std::vector<std::complex<double>>>> removePadding(
+    const std::vector<std::vector<std::vector<std::complex<double>>>>& padded_chunks,  // const input
+    int window_size
+) {
+    std::vector<std::vector<std::vector<std::complex<double>>>> chunks = padded_chunks;  // Create a copy to modify
+
+    // Calculate the padding sizes
+    int pad_top_left = window_size / 2;
+    int pad_bottom_right = window_size / 2 + 1;
+
+    for (int i = 0; i < chunks.size(); ++i) {
+        // Get the dimensions of the padded chunk
+        int padded_rows = chunks[i].size();
+        int padded_cols = chunks[i][0].size();
+
+        // Calculate the new size for the chunk (removing the padding)
+        int original_rows = padded_rows - pad_top_left - pad_bottom_right;
+        int original_cols = padded_cols - pad_top_left - pad_bottom_right;
+
+        // Create a new chunk to store the data without padding
+        std::vector<std::vector<std::complex<double>>> original_chunk(
+            original_rows, 
+            std::vector<std::complex<double>>(original_cols)
+        );
+
+        // Copy the original data from the center of the padded chunk into the new chunk
+        for (int r = 0; r < original_rows; ++r) {
+            for (int c = 0; c < original_cols; ++c) {
+                original_chunk[r][c] = chunks[i][r + pad_top_left][c + pad_top_left];
+            }
+        }
+
+        // Replace the padded chunk with the original chunk
+        chunks[i] = original_chunk;
+    }
+
+    return chunks;  // Return the new vector without padding
+}
+
 std::vector<std::vector<std::vector<double>>> process_chunk_rfleecpp(
     const std::vector<std::vector<std::vector<std::complex<double>>>>& chunks,
     int window_size
@@ -376,6 +437,13 @@ std::vector<std::vector<std::vector<double>>> process_chunk_rfleecpp(
     } else {
         throw std::invalid_argument("Unsupported number of chunks");
     }
+
+
+    std::cout << "M_in size: " << M_in.size() << " chunks, " 
+    << M_in[0].size() << " rows, " 
+    << M_in[0][0].size() << " columns" << std::endl;
+
+
 
     // Transpose the input matrix (axes: [2,0,1])
     // transpose_M_in(M_in);
@@ -435,21 +503,132 @@ std::vector<std::vector<std::vector<double>>> process_chunk_rfleecpp(
 
                     std::complex<double> center_pixel = M_in[Np][window_sizeM1S2 + lig][window_sizeM1S2 + col];
                     // M_out[Np][lig][col] = mean + coeff[lig][col] * (center_pixel - mean);
+                    // std::cout<<Np<<" "<<lig<<" "<<col<<" "<<mean<<" "<<coeff[lig][col]<<" "<<center_pixel<<std::endl;
+                    
                     M_out[Np][lig][col] = mean + static_cast<std::complex<double>>(coeff[lig][col]) * (center_pixel - mean);
-
+                    // std::cout<<Np<<" "<<lig<<" "<<col<<" "<<M_out[Np][lig][col]<<std::endl;
                 }
+            // break;
             }
         }
     }
 
-    std::vector<std::vector<std::vector<double>>> filtered_chunks;
+    
 
     // Extract the filtered chunks based on the polarimetric type
-    if (PolTypeOut == "C3") {
-        filtered_chunks = extract_C3_filtered_chunks(M_out);
-    } else if (PolTypeOut == "C2") {
-        filtered_chunks = extract_C2_filtered_chunks(M_out);
+    // if (PolTypeOut == "C3") {
+    //     filtered_chunks = extract_C3_filtered_chunks(M_out);
+    // } else if (PolTypeOut == "C2") {
+    //     filtered_chunks = extract_C2_filtered_chunks(M_out);
+    // }
+
+    size_t num_rows = M_out[0].size();           // Number of rows (201)
+    size_t num_cols = M_out[0][0].size();
+
+
+
+    std::cout << "M_out size: " << M_out.size() << " chunks, " 
+    << M_out[0].size() << " rows, " 
+    << M_out[0][0].size() << " columns" << std::endl;
+
+    std::vector<std::vector<std::vector<double>>> filtered_chunks;
+    std::vector<std::vector<double>> outlayer(num_rows, std::vector<double>(num_cols, 0.0));
+
+    for (size_t i = 0; i < M_out[0].size(); ++i) {
+        for (size_t j = 0; j < M_out[0][i].size(); ++j) {
+            outlayer[i][j] = M_out[0][i][j].real();
+            // filtered_chunks.push_back(M_out[0][i][j].real());
+        }
     }
+    filtered_chunks.push_back(outlayer);
+
+    for (size_t i = 0; i < M_out[1].size(); ++i) {
+        for (size_t j = 0; j < M_out[1][i].size(); ++j) {
+            outlayer[i][j] = M_out[1][i][j].real();
+            // filtered_chunks.push_back(M_out[1][i][j].real());
+        }
+    }
+    filtered_chunks.push_back(outlayer);
+
+    for (size_t i = 0; i < M_out[1].size(); ++i) {
+        for (size_t j = 0; j < M_out[1][i].size(); ++j) {
+            outlayer[i][j] = M_out[1][i][j].imag();
+            // filtered_chunks.push_back(M_out[1][i][j].imag());
+        }
+    }
+    filtered_chunks.push_back(outlayer);
+
+    for (size_t i = 0; i < M_out[2].size(); ++i) {
+        for (size_t j = 0; j < M_out[2][i].size(); ++j) {
+            outlayer[i][j] = M_out[2][i][j].real();
+            // filtered_chunks.push_back(M_out[2][i][j].real());
+        }
+    }
+    filtered_chunks.push_back(outlayer);
+
+    for (size_t i = 0; i < M_out[2].size(); ++i) {
+        for (size_t j = 0; j < M_out[2][i].size(); ++j) {
+            outlayer[i][j] = M_out[2][i][j].imag();
+            // filtered_chunks.push_back(M_out[2][i][j].imag());
+        }
+    }
+    filtered_chunks.push_back(outlayer);
+
+    for (size_t i = 0; i < M_out[4].size(); ++i) {
+        for (size_t j = 0; j < M_out[4][i].size(); ++j) {
+            outlayer[i][j] = M_out[4][i][j].real();
+            // filtered_chunks.push_back(M_out[4][i][j].real());
+        }
+    }
+    filtered_chunks.push_back(outlayer);
+
+    for (size_t i = 0; i < M_out[5].size(); ++i) {
+        for (size_t j = 0; j < M_out[5][i].size(); ++j) {
+            outlayer[i][j] = M_out[5][i][j].real();
+            // filtered_chunks.push_back(M_out[5][i][j].real());
+        }
+    }
+    filtered_chunks.push_back(outlayer);
+
+    for (size_t i = 0; i < M_out[5].size(); ++i) {
+        for (size_t j = 0; j < M_out[5][i].size(); ++j) {
+            outlayer[i][j] = M_out[5][i][j].imag();
+            // filtered_chunks.push_back(M_out[5][i][j].imag());
+        }
+    }
+    filtered_chunks.push_back(outlayer);
+
+    for (size_t i = 0; i < M_out[8].size(); ++i) {
+        for (size_t j = 0; j < M_out[8][i].size(); ++j) {
+            outlayer[i][j] = M_out[8][i][j].real();
+            // filtered_chunks.push_back(M_out[8][i][j].real());
+        }
+    }
+    filtered_chunks.push_back(outlayer);
+
+
+    // // Iterate over M_in to separate the real and imaginary parts into filtered_chunks
+    // for (size_t i = 0; i < M_out.size(); ++i) {
+    //     // For each chunk, create 2 separate layers for real and imaginary parts
+    //     std::vector<std::vector<double>> real_layer(num_rows, std::vector<double>(num_cols, 0.0));
+    //     std::vector<std::vector<double>> imag_layer(num_rows, std::vector<double>(num_cols, 0.0));
+
+    //     for (size_t j = 0; j < M_out[i].size(); ++j) {
+    //         for (size_t k = 0; k < M_out[i][j].size(); ++k) {
+    //             // Assign the real and imaginary parts to their respective layers
+    //             real_layer[j][k] = M_out[i][j][k].real();
+    //             imag_layer[j][k] = M_out[i][j][k].imag();
+    //         }
+    //     }
+
+    //     // Add the real and imaginary layers to the filtered_chunks
+    //     filtered_chunks.push_back(real_layer);
+    //     filtered_chunks.push_back(imag_layer);
+    // }
+
+    // Check the size of filtered_chunks (should be 18, 201, 101)
+    // std::cout << "Size of filtered_chunks: " << filtered_chunks.size() << " x "
+    //           << filtered_chunks[0].size() << " x " << filtered_chunks[0][0].size() << "\n";
 
     return filtered_chunks;
 }

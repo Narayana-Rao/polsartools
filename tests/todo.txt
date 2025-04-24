@@ -1,5 +1,5 @@
 -fix small rasters shifting if window_size>1 (issue is only for filters, fixed for rflee by padding)
 -vectorize/cpp grvi
--rflee cpp implemented but have to debug
+-rflee cpp implemented but have to debug (while returning and rearranging the list)
 -correct boxcar elements 
 -split utils.py
