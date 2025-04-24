@@ -54,6 +54,10 @@ def main():
 	
 	ps,pd,pv,pc,tfp,taufp = pst.mf4cf(T3_folder,window_size=window_size,write_flag=False)
 	
+	#%% refined lee polarimetric Speckle filter
+	pst.rlee(T3_folder,window_size=5)
+
+
 	#%%
 	compact_c2 = r'./sample_data/compact_pol/C2_RHV'
 	
