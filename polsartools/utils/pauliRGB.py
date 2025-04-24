@@ -33,26 +33,31 @@ def pauliRGB(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_fla
         green_ = norm_data(read_bin(os.path.join(infolder,"T33.bin")))
 
         rgb_uint8 = (np.dstack((red_,green_,blue_)) * 255) .astype(np.uint8)
+        alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
+        rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
+        
 
-        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgb_uint8)
+        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgba_uint8)
         print(f"Pauli RGB image saved as {os.path.join(infolder,"PauliRGB.png")}PauliRGB.png")
         fig,ax = plt.subplots()
-        plt.imshow(rgb_uint8,vmin=0,vmax=255)
+        plt.imshow(rgba_uint8,vmin=0,vmax=255)
         ax.axis('off')
-        plt.savefig(os.path.join(infolder,"PauliRGB_thumb.png"), format='png', bbox_inches='tight', pad_inches=0)
+        plt.savefig(os.path.join(infolder,"PauliRGB_thumb.png"), format='png', bbox_inches='tight', pad_inches=0,transparent=True)
     elif os.path.isfile(os.path.join(infolder,"C11.bin")) and os.path.isfile(os.path.join(infolder,"C22.bin")) and os.path.isfile(os.path.join(infolder,"C33.bin")):
         blue_ = norm_data(0.5*(read_bin(os.path.join(infolder,'C11.bin'))+read_bin(os.path.join(infolder,'C33.bin'))+2*read_bin(os.path.join(infolder,'C13_real.bin'))))
         red_ = norm_data(0.5*(read_bin(os.path.join(infolder,'C11.bin'))+read_bin(os.path.join(infolder,'C33.bin'))-2*read_bin(os.path.join(infolder,'C13_real.bin'))))
         green_ = norm_data(read_bin(os.path.join(infolder,"C22.bin")))
 
         rgb_uint8 = (np.dstack((red_,green_,blue_)) * 255) .astype(np.uint8)
-
-        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgb_uint8)
+        alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
+        rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
+        
+        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgba_uint8)
         print(f"Pauli RGB image saved as {os.path.join(infolder,"PauliRGB.png")}PauliRGB.png")
         fig,ax = plt.subplots()
-        plt.imshow(rgb_uint8,vmin=0,vmax=255)
+        plt.imshow(rgba_uint8,vmin=0,vmax=255)
         ax.axis('off')
-        plt.savefig(os.path.join(infolder,"PauliRGB_thumb.png"), format='png', bbox_inches='tight', pad_inches=0)
+        plt.savefig(os.path.join(infolder,"PauliRGB_thumb.png"), format='png', bbox_inches='tight', pad_inches=0,transparent=True)
     else:
         raise ValueError("Invalid C3/T3 folder!!")
         
