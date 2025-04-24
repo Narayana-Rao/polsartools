@@ -100,13 +100,34 @@ def create_extent(annFile):
 
     output_file = os.path.join(inFolder,"scene_extent.kml")
     create_kml_polygon(corner_coordinates, output_file)
+
+def grdList(annFile):
+    grdkeys = {
+    'grdHHHH': None,
+    'grdHVHV': None,
+    'grdVVVV': None,
+    'grdHHHV': None,
+    'grdHHVV': None,
+    'grdHVVV': None
+    }
+
+    with open(annFile, 'r') as file:
+        for line in file:
+            for pattern in grdkeys:
+                if pattern in line:
+                    parts = line.split()
+                    # Find the .grd file associated with the pattern
+                    grdkeys[pattern] = next(part for part in parts if '.grd' in part)
     
+    return grdkeys                
+
 @time_it    
 def uavsar_grd(annFile):
     inFolder = os.path.dirname(annFile)
+    grdfiles = grdList(annFile)
     create_extent(annFile)
-    annFile = open(annFile, 'r')
-    for line in annFile:
+    ann_ = open(annFile, 'r')
+    for line in ann_:
         if "grd_mag.set_rows" in line:
             rows = int(line.split('=')[1].split(';')[0])
         if "grd_mag.set_cols" in line:
@@ -127,34 +148,43 @@ def uavsar_grd(annFile):
     else:
         print("C3 folder exists. \nReplacing C3 elements in folder {}".format(outFolder))
 
-    hhhh = np.fromfile(glob.glob(inFolder+'/*HHHH*.grd')[0], dtype='<f',).reshape(rows,cols)
+    hhhh = np.fromfile(os.path.join(inFolder,grdfiles['grdHHHH']), dtype='<f',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C11.bin',hhhh,lat,lon,dx,dy)
+    print(f"Saved file {outFolder}/C11.bin")
     update_hdr(outFolder+'/C11.hdr')
     del hhhh
-    vvvv = np.fromfile(glob.glob(inFolder+'/*VVVV*.grd')[0], dtype='<f',).reshape(rows,cols)
+    vvvv = np.fromfile(os.path.join(inFolder,grdfiles['grdVVVV']), dtype='<f',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C33.bin',vvvv,lat,lon,dx,dy)
+    print(f"Saved file {outFolder}/C33.bin")
     update_hdr(outFolder+'/C33.hdr')
     del vvvv
-    hvhv = np.fromfile(glob.glob(inFolder+'/*HVHV*.grd')[0], dtype='<f',).reshape(rows,cols)
+    hvhv = np.fromfile(os.path.join(inFolder,grdfiles['grdHVHV']), dtype='<f',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C22.bin',2*hvhv,lat,lon,dx,dy)
+    print(f"Saved file {outFolder}/C22.bin")
     update_hdr(outFolder+'/C22.hdr')
     del hvhv
-    hhhv = np.fromfile(glob.glob(inFolder+'/*HHHV*.grd')[0], dtype='<F',).reshape(rows,cols)
+    hhhv = np.fromfile(os.path.join(inFolder,grdfiles['grdHHHV']), dtype='<F',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C12_real.bin',np.real(np.sqrt(2)*hhhv),lat,lon,dx,dy)
+    print(f"Saved file {outFolder}/C12_real.bin")
     update_hdr(outFolder+'/C12_real.hdr')
     write_bin_uav(outFolder+'/C12_imag.bin',np.imag(np.sqrt(2)*hhhv),lat,lon,dx,dy)
+    print(f"Saved file {outFolder}/C12_imag.bin")
     update_hdr(outFolder+'/C12_imag.hdr')
     del hhhv
-    hhvv = np.fromfile(glob.glob(inFolder+'/*HHVV*.grd')[0], dtype='<F',).reshape(rows,cols)
+    hhvv = np.fromfile(os.path.join(inFolder,grdfiles['grdHHVV']), dtype='<F',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C13_real.bin',np.real(hhvv),lat,lon,dx,dy)
+    print(f"Saved file {outFolder}/C13_real.bin")
     update_hdr(outFolder+'/C13_real.hdr')
     write_bin_uav(outFolder+'/C13_imag.bin',np.imag(hhvv),lat,lon,dx,dy)
+    print(f"Saved file {outFolder}/C13_imag.bin")
     update_hdr(outFolder+'/C13_imag.hdr')
     del hhvv
-    hvvv = np.fromfile(glob.glob(inFolder+'/*HVVV*.grd')[0], dtype='<F',).reshape(rows,cols)
+    hvvv = np.fromfile(os.path.join(inFolder,grdfiles['grdHVVV']), dtype='<F',).reshape(rows,cols)
     write_bin_uav(outFolder+'/C23_real.bin',np.real(np.sqrt(2)*hvvv),lat,lon,dx,dy)
+    print(f"Saved file {outFolder}/C23_real.bin")
     update_hdr(outFolder+'/C23_real.hdr')
     write_bin_uav(outFolder+'/C23_imag.bin',np.imag(np.sqrt(2)*hvvv),lat,lon,dx,dy)
+    print(f"Saved file {outFolder}/C23_imag.bin")
     update_hdr(outFolder+'/C23_imag.hdr')
     del hvvv
 
