@@ -5,7 +5,7 @@ def process_chunk_refined_lee(chunks, window_size=3, *args ):
     Nlook = 1
     if window_size % 2 == 0:
         window_size = window_size + 1
-    
+    # print('before pad',np.shape(chunks[0]))
     for i in range(len(chunks)):
         pad_top_left = window_size // 2 
         pad_bottom_right = window_size // 2 +1
@@ -91,9 +91,9 @@ def process_chunk_refined_lee(chunks, window_size=3, *args ):
     if PolTypeOut in ["C2", "C2pp1", "C2pp2", "C2pp3", "T2", "T2pp1", "T2pp2", "T2pp3"]:
         span = M_in[0] + M_in[3]
     elif PolTypeOut in ["C3", "T3"]:
-        span = M_in[0] + M_in[5] + M_in[8]
+        span = M_in[0] + M_in[4] + M_in[8]
     elif PolTypeOut in ["C4", "T4"]:
-        span = M_in[0] + M_in[7] + M_in[12] + M_in[15]
+        span = M_in[0] + M_in[6] + M_in[11] + M_in[15]
     else:
         raise ValueError("Unsupported PolTypeOut")
 

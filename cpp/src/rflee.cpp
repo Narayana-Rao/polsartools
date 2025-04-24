@@ -40,14 +40,14 @@ Matrix compute_span(const std::string& PolTypeOut, const std::vector<ComplexMatr
         // Compute span for "C3" or "T3" - Add M_in[0], M_in[5], and M_in[8]
         for (int i = 0; i < Nlig_padded; ++i) {
             for (int j = 0; j < Ncol_padded; ++j) {
-                span[i][j] = std::real(M_in[0][i][j]) + std::real(M_in[5][i][j]) + std::real(M_in[8][i][j]);
+                span[i][j] = std::real(M_in[0][i][j]) + std::real(M_in[4][i][j]) + std::real(M_in[8][i][j]);
             }
         }
     } else if (PolTypeOut == "C4" || PolTypeOut == "T4") {
         // Compute span for "C4" or "T4" - Add M_in[0], M_in[7], M_in[12], and M_in[15]
         for (int i = 0; i < Nlig_padded; ++i) {
             for (int j = 0; j < Ncol_padded; ++j) {
-                span[i][j] = std::real(M_in[0][i][j]) + std::real(M_in[7][i][j]) + std::real(M_in[12][i][j]) + std::real(M_in[15][i][j]);
+                span[i][j] = std::real(M_in[0][i][j]) + std::real(M_in[6][i][j]) + std::real(M_in[11][i][j]) + std::real(M_in[15][i][j]);
             }
         }
     } else {
@@ -98,27 +98,34 @@ std::vector<std::vector<std::vector<std::complex<double>>>> compose_C3_chunks(
 
     for (int i = 0; i < nrows; ++i) {
         for (int j = 0; j < ncols; ++j) {
-            M_in[0][i][j] = chunks[0][i][j]; // t11_T1
-            M_in[1][i][j] = chunks[1][i][j]; // t12_T1 real part
-            M_in[2][i][j] = chunks[2][i][j]; // t12_T1 imaginary part
-            
-            // Extract real and imaginary parts to create a new complex number
-            double real_part1 = chunks[1][i][j].real();
-            double imag_part1 = chunks[2][i][j].real();
-            std::complex<double> complex_num1(real_part1, imag_part1);
-            M_in[3][i][j] = std::conj(complex_num1); // t21_T1
-            
-            M_in[4][i][j] = chunks[3][i][j]; // t22_T1
-            M_in[5][i][j] = chunks[4][i][j]; // t23_T1 real part
-            M_in[6][i][j] = chunks[5][i][j]; // t23_T1 imaginary part
-            
-            // Extract real and imaginary parts to create a new complex number
-            double real_part2 = chunks[4][i][j].real();
-            double imag_part2 = chunks[5][i][j].real();
-            std::complex<double> complex_num2(real_part2, imag_part2);
-            M_in[7][i][j] = std::conj(complex_num2); // t32_T1
-            
-            M_in[8][i][j] = chunks[6][i][j]; // t33_T1
+            M_in[0][i][j] = chunks[0][i][j];
+
+            std::complex<double> CT12(chunks[1][i][j].real(), chunks[2][i][j].real());
+            M_in[1][i][j] = CT12;
+            std::complex<double> CT13(chunks[3][i][j].real(), chunks[4][i][j].real());
+            M_in[2][i][j] = CT13;
+            M_in[3][i][j] = std::conj(CT12);
+
+            M_in[4][i][j] = chunks[5][i][j].real(); 
+            std::complex<double> CT23(chunks[6][i][j].real(), chunks[7][i][j].real());
+            M_in[5][i][j] = CT23;
+
+            M_in[6][i][j] = std::conj(CT13);
+            M_in[7][i][j] = std::conj(CT23);
+            M_in[8][i][j] = chunks[8][i][j].real(); 
+        
+            // M_in[0][i][j] = chunks[0][i][j];
+            // M_in[1][i][j] = chunks[1][i][j];
+            // M_in[2][i][j] = chunks[2][i][j];
+            // M_in[3][i][j] = chunks[3][i][j];
+            // M_in[4][i][j] = chunks[4][i][j]; 
+            // M_in[5][i][j] = chunks[5][i][j]; 
+            // M_in[6][i][j] = chunks[6][i][j]; 
+            // M_in[7][i][j] = chunks[7][i][j];
+            // M_in[8][i][j] = chunks[8][i][j]; 
+        
+        
+        
         }
     }
 
@@ -136,8 +143,9 @@ std::vector<std::vector<std::vector<std::complex<double>>>> compose_C2_chunks(
     for (int i = 0; i < nrows; ++i) {
         for (int j = 0; j < ncols; ++j) {
             M_in[0][i][j] = chunks[0][i][j]; // t11_T1
-            M_in[1][i][j] = chunks[1][i][j]; // t12_T1 real part
-            M_in[2][i][j] = chunks[2][i][j]; // t12_T1 imaginary part
+            std::complex<double> CT12(chunks[1][i][j].real(), chunks[2][i][j].real());
+            M_in[1][i][j] = CT12;
+            M_in[2][i][j] = std::conj(CT12);
             M_in[3][i][j] = chunks[3][i][j]; // t22_T1
         }
     }
@@ -439,9 +447,9 @@ std::vector<std::vector<std::vector<double>>> process_chunk_rfleecpp(
     }
 
 
-    std::cout << "M_in size: " << M_in.size() << " chunks, " 
-    << M_in[0].size() << " rows, " 
-    << M_in[0][0].size() << " columns" << std::endl;
+    // std::cout << "M_in size: " << M_in.size() << " chunks, " 
+    // << M_in[0].size() << " rows, " 
+    // << M_in[0][0].size() << " columns" << std::endl;
 
 
 
@@ -522,111 +530,111 @@ std::vector<std::vector<std::vector<double>>> process_chunk_rfleecpp(
     //     filtered_chunks = extract_C2_filtered_chunks(M_out);
     // }
 
-    size_t num_rows = M_out[0].size();           // Number of rows (201)
+    size_t num_rows = M_out[0].size();          
     size_t num_cols = M_out[0][0].size();
 
 
 
-    std::cout << "M_out size: " << M_out.size() << " chunks, " 
-    << M_out[0].size() << " rows, " 
-    << M_out[0][0].size() << " columns" << std::endl;
+    // std::cout << "M_out size: " << M_out.size() << " chunks, " 
+    // << M_out[0].size() << " rows, " 
+    // << M_out[0][0].size() << " columns" << std::endl;
 
     std::vector<std::vector<std::vector<double>>> filtered_chunks;
-    std::vector<std::vector<double>> outlayer(num_rows, std::vector<double>(num_cols, 0.0));
+    // std::vector<std::vector<double>> outlayer(num_rows, std::vector<double>(num_cols, 0.0));
 
-    for (size_t i = 0; i < M_out[0].size(); ++i) {
-        for (size_t j = 0; j < M_out[0][i].size(); ++j) {
-            outlayer[i][j] = M_out[0][i][j].real();
-            // filtered_chunks.push_back(M_out[0][i][j].real());
-        }
-    }
-    filtered_chunks.push_back(outlayer);
-
-    for (size_t i = 0; i < M_out[1].size(); ++i) {
-        for (size_t j = 0; j < M_out[1][i].size(); ++j) {
-            outlayer[i][j] = M_out[1][i][j].real();
-            // filtered_chunks.push_back(M_out[1][i][j].real());
-        }
-    }
-    filtered_chunks.push_back(outlayer);
-
-    for (size_t i = 0; i < M_out[1].size(); ++i) {
-        for (size_t j = 0; j < M_out[1][i].size(); ++j) {
-            outlayer[i][j] = M_out[1][i][j].imag();
-            // filtered_chunks.push_back(M_out[1][i][j].imag());
-        }
-    }
-    filtered_chunks.push_back(outlayer);
-
-    for (size_t i = 0; i < M_out[2].size(); ++i) {
-        for (size_t j = 0; j < M_out[2][i].size(); ++j) {
-            outlayer[i][j] = M_out[2][i][j].real();
-            // filtered_chunks.push_back(M_out[2][i][j].real());
-        }
-    }
-    filtered_chunks.push_back(outlayer);
-
-    for (size_t i = 0; i < M_out[2].size(); ++i) {
-        for (size_t j = 0; j < M_out[2][i].size(); ++j) {
-            outlayer[i][j] = M_out[2][i][j].imag();
-            // filtered_chunks.push_back(M_out[2][i][j].imag());
-        }
-    }
-    filtered_chunks.push_back(outlayer);
-
-    for (size_t i = 0; i < M_out[4].size(); ++i) {
-        for (size_t j = 0; j < M_out[4][i].size(); ++j) {
-            outlayer[i][j] = M_out[4][i][j].real();
-            // filtered_chunks.push_back(M_out[4][i][j].real());
-        }
-    }
-    filtered_chunks.push_back(outlayer);
-
-    for (size_t i = 0; i < M_out[5].size(); ++i) {
-        for (size_t j = 0; j < M_out[5][i].size(); ++j) {
-            outlayer[i][j] = M_out[5][i][j].real();
-            // filtered_chunks.push_back(M_out[5][i][j].real());
-        }
-    }
-    filtered_chunks.push_back(outlayer);
-
-    for (size_t i = 0; i < M_out[5].size(); ++i) {
-        for (size_t j = 0; j < M_out[5][i].size(); ++j) {
-            outlayer[i][j] = M_out[5][i][j].imag();
-            // filtered_chunks.push_back(M_out[5][i][j].imag());
-        }
-    }
-    filtered_chunks.push_back(outlayer);
-
-    for (size_t i = 0; i < M_out[8].size(); ++i) {
-        for (size_t j = 0; j < M_out[8][i].size(); ++j) {
-            outlayer[i][j] = M_out[8][i][j].real();
-            // filtered_chunks.push_back(M_out[8][i][j].real());
-        }
-    }
-    filtered_chunks.push_back(outlayer);
-
-
-    // // Iterate over M_in to separate the real and imaginary parts into filtered_chunks
-    // for (size_t i = 0; i < M_out.size(); ++i) {
-    //     // For each chunk, create 2 separate layers for real and imaginary parts
-    //     std::vector<std::vector<double>> real_layer(num_rows, std::vector<double>(num_cols, 0.0));
-    //     std::vector<std::vector<double>> imag_layer(num_rows, std::vector<double>(num_cols, 0.0));
-
-    //     for (size_t j = 0; j < M_out[i].size(); ++j) {
-    //         for (size_t k = 0; k < M_out[i][j].size(); ++k) {
-    //             // Assign the real and imaginary parts to their respective layers
-    //             real_layer[j][k] = M_out[i][j][k].real();
-    //             imag_layer[j][k] = M_out[i][j][k].imag();
-    //         }
+    // for (size_t i = 0; i < M_out[0].size(); ++i) {
+    //     for (size_t j = 0; j < M_out[0][i].size(); ++j) {
+    //         outlayer[i][j] = M_out[0][i][j].real();
+    //         // filtered_chunks.push_back(M_out[0][i][j].real());
     //     }
-
-    //     // Add the real and imaginary layers to the filtered_chunks
-    //     filtered_chunks.push_back(real_layer);
-    //     filtered_chunks.push_back(imag_layer);
     // }
+    // filtered_chunks.push_back(outlayer);
 
-    // Check the size of filtered_chunks (should be 18, 201, 101)
+    // for (size_t i = 0; i < M_out[1].size(); ++i) {
+    //     for (size_t j = 0; j < M_out[1][i].size(); ++j) {
+    //         outlayer[i][j] = M_out[1][i][j].real();
+    //         // filtered_chunks.push_back(M_out[1][i][j].real());
+    //     }
+    // }
+    // filtered_chunks.push_back(outlayer);
+
+    // for (size_t i = 0; i < M_out[1].size(); ++i) {
+    //     for (size_t j = 0; j < M_out[1][i].size(); ++j) {
+    //         outlayer[i][j] = M_out[2][i][j].real();
+    //         // filtered_chunks.push_back(M_out[1][i][j].imag());
+    //     }
+    // }
+    // filtered_chunks.push_back(outlayer);
+
+    // for (size_t i = 0; i < M_out[2].size(); ++i) {
+    //     for (size_t j = 0; j < M_out[2][i].size(); ++j) {
+    //         outlayer[i][j] = M_out[3][i][j].real();
+    //         // filtered_chunks.push_back(M_out[2][i][j].real());
+    //     }
+    // }
+    // filtered_chunks.push_back(outlayer);
+
+    // for (size_t i = 0; i < M_out[2].size(); ++i) {
+    //     for (size_t j = 0; j < M_out[2][i].size(); ++j) {
+    //         outlayer[i][j] = M_out[4][i][j].real();
+    //         // filtered_chunks.push_back(M_out[2][i][j].imag());
+    //     }
+    // }
+    // filtered_chunks.push_back(outlayer);
+
+    // for (size_t i = 0; i < M_out[4].size(); ++i) {
+    //     for (size_t j = 0; j < M_out[4][i].size(); ++j) {
+    //         outlayer[i][j] = M_out[5][i][j].real();
+    //         // filtered_chunks.push_back(M_out[4][i][j].real());
+    //     }
+    // }
+    // filtered_chunks.push_back(outlayer);
+
+    // for (size_t i = 0; i < M_out[5].size(); ++i) {
+    //     for (size_t j = 0; j < M_out[5][i].size(); ++j) {
+    //         outlayer[i][j] = M_out[6][i][j].real();
+    //         // filtered_chunks.push_back(M_out[5][i][j].real());
+    //     }
+    // }
+    // filtered_chunks.push_back(outlayer);
+
+    // for (size_t i = 0; i < M_out[5].size(); ++i) {
+    //     for (size_t j = 0; j < M_out[5][i].size(); ++j) {
+    //         outlayer[i][j] = M_out[7][i][j].real();
+    //         // filtered_chunks.push_back(M_out[5][i][j].imag());
+    //     }
+    // }
+    // filtered_chunks.push_back(outlayer);
+
+    // for (size_t i = 0; i < M_out[8].size(); ++i) {
+    //     for (size_t j = 0; j < M_out[8][i].size(); ++j) {
+    //         outlayer[i][j] = M_out[8][i][j].real();
+    //         // filtered_chunks.push_back(M_out[8][i][j].real());
+    //     }
+    // }
+    // filtered_chunks.push_back(outlayer);
+
+
+
+    // Iterate over M_in to separate the real and imaginary parts into filtered_chunks
+    for (size_t i = 0; i < M_out.size(); ++i) {
+        // For each chunk, create 2 separate layers for real and imaginary parts
+        std::vector<std::vector<double>> real_layer(num_rows, std::vector<double>(num_cols, 0.0));
+        std::vector<std::vector<double>> imag_layer(num_rows, std::vector<double>(num_cols, 0.0));
+
+        for (size_t j = 0; j < M_out[i].size(); ++j) {
+            for (size_t k = 0; k < M_out[i][j].size(); ++k) {
+                // Assign the real and imaginary parts to their respective layers
+                real_layer[j][k] = M_out[i][j][k].real();
+                imag_layer[j][k] = M_out[i][j][k].imag();
+            }
+        }
+
+        // Add the real and imaginary layers to the filtered_chunks
+        filtered_chunks.push_back(real_layer);
+        filtered_chunks.push_back(imag_layer);
+    }
+
     // std::cout << "Size of filtered_chunks: " << filtered_chunks.size() << " x "
     //           << filtered_chunks[0].size() << " x " << filtered_chunks[0][0].size() << "\n";
 
