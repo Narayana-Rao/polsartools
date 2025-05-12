@@ -30,7 +30,7 @@ def prvifp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=
 
     output_filepaths = []
     if outname is None:
-        output_filepaths.append(os.path.join(infolder, "dop_fp.tif"))
+        output_filepaths.append(os.path.join(infolder, "prvi_fp.tif"))
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
             processing_func=process_chunk_prvifp,

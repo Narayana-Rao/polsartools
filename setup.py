@@ -29,7 +29,7 @@ class BuildExt(build_ext):
 ext_modules = [
     Extension(
         'polsartools.rflee',
-        ['cpp/src/rflee.cpp'],
+        ['polsartools/cpp/src/rflee.cpp'],
         include_dirs=[pybind11.get_include(), pybind11.get_include(user=True)],
         language='c++',
         extra_compile_args=['/std:c++17' if os.name == 'nt' else '-std=c++17'],
@@ -50,7 +50,7 @@ ext_modules = [
     # ),
     Extension(
         'polsartools.cprvicpp',
-        ['cpp/src/cprvicpp.cpp'],
+        ['polsartools/cpp/src/cprvicpp.cpp'],
         include_dirs=[pybind11.get_include(), pybind11.get_include(user=True)],
         language='c++',
         extra_compile_args=['/std:c++17' if os.name == 'nt' else '-std=c++17'],
