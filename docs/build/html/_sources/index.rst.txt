@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to PolSAR tools's documentation!
-=========================================
+========================================
 PolSARtools is a Python (PyPI) package, which generates derived SAR parameters (polarimetric decomposition parameters and descriptors) from input polarimetric matrix (C3, T3, C2, T2).
 
 .. toctree::

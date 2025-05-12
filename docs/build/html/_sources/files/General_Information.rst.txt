@@ -3,8 +3,16 @@ General Information
 
 This package generates derived SAR parameters  (polarimetric decomposition parameters and descriptors)  from input polarimetric matrix (C3, T3, C2, T2). The input data needs to be in `PolSARpro`_/`ENVI`_ format (\*.bin and \*.hdr). It requires `gdal`_, `numpy`_, `scipy`_, `matplotlib`_ python libraries pre-installed.
 
+
+.. toctree::
+    :maxdepth: 1
+
+    install
+    example
+    functions
+
 Installation
--------------------
+-------------
 
 To install **polsartools**, use the following command:
 
@@ -14,7 +22,7 @@ To install **polsartools**, use the following command:
 
 .. note::
 
-    polsartools tools requires python >=3.6.
+    polsartools requires python >=3.6.
 
 
 Prerequisites
@@ -25,10 +33,12 @@ Ensure that the required dependencies are installed:
 
     conda install gdal simplekml numpy scipy 
 
+
+
 Example Usage
 --------------
 
-More sample use cases are provided in the `examples`_ folder.
+More sample use cases are provided in the `examples`_ folder. Detailed documentation is available at `polsartools.readthedocs.io <https://polsartools.readthedocs.io/en/latest/>`_ 
 
 .. _examples: https://github.com/Narayana-Rao/polsartools/tree/main/examples
 

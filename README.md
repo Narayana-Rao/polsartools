@@ -43,7 +43,7 @@ pip install polsartools
  
 ## Example Usage
 
-#### More sample use cases are provided in [examples](https://github.com/Narayana-Rao/polsartools/tree/main/examples) folder
+#### More sample use cases are provided in [examples](https://github.com/Narayana-Rao/polsartools/tree/main/examples) folder. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
 
 ```python
 import polsartools as pst

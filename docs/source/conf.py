@@ -21,31 +21,12 @@ project = 'PolSARtools'
 copyright = '2025, Narayanarao Bhogapurapu'
 author = 'Narayanarao Bhogapurapu'
 
-# The full version, including alpha/beta/rc tags
-release = '0.4 (beta)'
+
+release = '0.6.1'
 
 
 # -- General configuration ---------------------------------------------------
 
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
-extensions = [
-	'sphinx_rtd_theme',
-	# 'rinoh.frontend.sphinx',
-    # 'sphinx.ext.mathjax',
-    # 'sphinx.ext.ifconfig',
-    # 'sphinx.ext.viewcode',
-    # 'sphinx.ext.autodoc',
-    # 'sphinx.ext.doctest',
-    # 'sphinx.ext.intersphinx',
-    # 'sphinx.ext.todo',
-    # 'sphinx.ext.coverage',
-    # #    'nbsphinx',
-    # 'sphinx.ext.napoleon',
-    # 'sphinx.ext.autosectionlabel',
-    #'sphinxcontrib.bibtex'
-]
 
 latex_elements = {
 	'papersize':'letterpaper',
@@ -69,7 +50,42 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme'
+
+
+# https://sphinxawesome.xyz/ 
+from sphinxawesome_theme.postprocess import Icons
+
+html_permalinks_icon = Icons.permalinks_icon
+html_theme = "sphinxawesome_theme"
+html_theme_options = {
+    "logo_light": 'files/figures/icon.png',
+    "logo_dark":  'files/figures/icon.png',
+}
+
+
+# Add any Sphinx extension module names here, as strings. They can be
+# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+# ones.
+extensions = [
+	# 'sphinx_rtd_theme',
+ "sphinxawesome_theme",
+ "sphinxcontrib.bibtex",
+	# 'rinoh.frontend.sphinx',
+    # 'sphinx.ext.mathjax',
+    # 'sphinx.ext.ifconfig',
+    # 'sphinx.ext.viewcode',
+    # 'sphinx.ext.autodoc',
+    # 'sphinx.ext.doctest',
+    # 'sphinx.ext.intersphinx',
+    # 'sphinx.ext.todo',
+    # 'sphinx.ext.coverage',
+    # #    'nbsphinx',
+    # 'sphinx.ext.napoleon',
+    # 'sphinx.ext.autosectionlabel',
+    #'sphinxcontrib.bibtex'
+]
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -92,4 +108,4 @@ html_static_path = ['_static']
 #     'includehidden': True,
 #     'titles_only': False
 # }
-bibtex_bibfiles = ['../../files/ref.bib']
+bibtex_bibfiles = ['files/ref.bib']

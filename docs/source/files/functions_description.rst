@@ -40,7 +40,6 @@ Following are the avaialble functions for full-pol data:
     functions/full_pol/DOP_fp
  
 
-
 **Compact-pol functions**
 -------------------------
 Compact-pol functionalities require the SAR data in the form of 2x2 covariance matrix (C2). A typical file structures of C2 matrix is as follows:
