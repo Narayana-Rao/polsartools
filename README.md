@@ -6,9 +6,10 @@
 [![image](https://img.shields.io/pypi/v/polsartools.svg)](https://pypi.python.org/pypi/polsartools)
 [![Downloads](https://static.pepy.tech/badge/polsartools)](https://pepy.tech/project/polsartools)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FNarayana-Rao%2Fpolsartools&count_bg=%2379C83D&title_bg=%23555555&icon=cliqz.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
 
+
+<!-- [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FNarayana-Rao%2Fpolsartools&count_bg=%2379C83D&title_bg=%23555555&icon=cliqz.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com) -->
 
 > **Cite:** Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi:  [10.21105/joss.02970](https://doi.org/10.21105/joss.02970)  
 ```bibtex
@@ -34,15 +35,16 @@ This package generates derived SAR parameters (viz. vegetation indices, polarime
 pip install polsartools
 ```
  
-### Prerequesites 
+#### Prerequesites  ```gdal, Numpy```
  
- ```gdal, Numpy```
- 
-### gdal installation error fix
- 
- ```conda install gdal```
 
-## Example
+ 
+#### gdal installation error fix ```conda install gdal```
+ 
+## Example Usage
+
+#### More sample use cases are provided in [examples](https://github.com/Narayana-Rao/polsartools/tree/main/examples) folder
+
 ```python
 import polsartools as pst
 
@@ -118,12 +120,13 @@ if __name__ == "__main__":
 
 ```
 
-#### sample use case is provided in [tests](https://github.com/Narayana-Rao/polsartools/tree/main/tests)
-
 
 ## Available functionalities:
 -----------------------------
  * Full-pol :
+	* H-Alpha decomposition
+	* Non-negative Eigen value decomposition
+	* Neumann Decomposition 
     * Model free 4-Component decomposition for full-pol data (MF4CF)[[11]](#11)
     * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]](#4)
 	* Radar Vegetation Index (RVI) [[8]](#8) 
@@ -138,9 +141,9 @@ if __name__ == "__main__":
     * Degree of Polarization (DOP)  [[10]](#10) 
 
   * Dual-pol:
-	   * Dual-pol Radar Vegetation Index (DpRVI) [[5]](#5)
+	* Dual-pol Radar Vegetation Index (DpRVI) [[5]](#5)
     * Dual-pol Radar Vegetation Index for GRD data (DpRVIc) [[12]](#12)
-	   * Radar Vegetation Index (RVI) [[9]](#9)
+	* Radar Vegetation Index (RVI) [[9]](#9)
     * Degree of Polarization (DOP) [[10]](#10) 
     * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
     * Dual-pol descriptors [[13]](#13)
@@ -152,13 +155,13 @@ if __name__ == "__main__":
     [Contribution guidelines for this project](help/CONTRIBUTING.md)
 
 
-2) Report issues or problems with the software
+2) Report issues or problems with the package
 	
 	Please raise your issues here : <https://github.com/Narayana-Rao/polsartools/issues>
 
-3) Seek support
+<!-- 3) Seek support
 
-	Please write to us: <bnarayanarao@iitb.ac.in> 
+	Please write to us: <bnarayanarao@iitb.ac.in>  -->
 
 ## References
 -------------
