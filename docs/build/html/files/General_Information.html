@@ -7,14 +7,14 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>General Information &mdash; PolSARtools 0.4 (beta) documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=a2460423"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -46,6 +46,8 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">General Information</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-usage">Example Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#available-functionalities">Available functionalities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#functions-description">Functions description</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#contributions">Contributions</a></li>
@@ -81,14 +83,78 @@
              
   <section id="general-information">
 <h1>General Information<a class="headerlink" href="#general-information" title="Link to this heading"></a></h1>
-<p>This package generates derived SAR parameters (viz. vegetation indices, polarimetric decomposition parameters) from input polarimetric matrix (C3, T3, C2, T2). The input data needs to be in <a class="reference external" href="https://earth.esa.int/web/polsarpro/home">PolSARpro</a>/<a class="reference external" href="https://www.l3harrisgeospatial.com/Software-Technology/ENVI">ENVI</a> format (*.bin and *.hdr). It requires <a class="reference external" href="https://gdal.org/en/latest/">gdal</a>, <a class="reference external" href="https://numpy.org/">numpy</a>, <a class="reference external" href="https://scipy.org/">scipy</a>, <a class="reference external" href="https://matplotlib.org/">matplotlib</a> python libraries pre-installed.</p>
+<p>This package generates derived SAR parameters  (polarimetric decomposition parameters and descriptors)  from input polarimetric matrix (C3, T3, C2, T2). The input data needs to be in <a class="reference external" href="https://earth.esa.int/web/polsarpro/home">PolSARpro</a>/<a class="reference external" href="https://www.l3harrisgeospatial.com/Software-Technology/ENVI">ENVI</a> format (*.bin and *.hdr). It requires <a class="reference external" href="https://gdal.org/en/latest/">gdal</a>, <a class="reference external" href="https://numpy.org/">numpy</a>, <a class="reference external" href="https://scipy.org/">scipy</a>, <a class="reference external" href="https://matplotlib.org/">matplotlib</a> python libraries pre-installed.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>To install <strong>polsartools</strong>, use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>polsartools
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>polsartools tools requires python &gt;=3.6.</p>
 </div>
-<p>pip install polsartools</p>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Ensure that the required dependencies are installed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>gdal<span class="w"> </span>simplekml<span class="w"> </span>numpy<span class="w"> </span>scipy
+</pre></div>
+</div>
+</section>
+<section id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h2>
+<p>More sample use cases are provided in the <a class="reference external" href="https://github.com/Narayana-Rao/polsartools/tree/main/examples">examples</a> folder.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">polsartools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pst</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Define the file paths for compact-pol covariance matrix</span>
+    <span class="n">compact_c2</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;./sample_data/compact_pol/C2_RHV&#39;</span>
+    <span class="n">chi_in</span> <span class="o">=</span> <span class="mi">45</span>
+    <span class="n">window_size</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Window size for processing</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Decompositions for Compact Polarimetric Data &quot;&quot;&quot;</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">mf3cc</span><span class="p">(</span><span class="n">compact_c2</span><span class="p">,</span> <span class="n">chi_in</span><span class="o">=</span><span class="n">chi_in</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">misomega</span><span class="p">(</span><span class="n">compact_c2</span><span class="p">,</span> <span class="n">chi_in</span><span class="o">=</span><span class="n">chi_in</span><span class="p">,</span> <span class="n">psi_in</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Descriptors for Compact Polarimetric Data &quot;&quot;&quot;</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">cprvi</span><span class="p">(</span><span class="n">compact_c2</span><span class="p">,</span> <span class="n">chi_in</span><span class="o">=</span><span class="n">chi_in</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">dopcp</span><span class="p">(</span><span class="n">compact_c2</span><span class="p">,</span> <span class="n">chi_in</span><span class="o">=</span><span class="n">chi_in</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+
+    <span class="n">full_T3</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;./sample_data/full_pol/T3&#39;</span>
+    <span class="n">window_size</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Decompositions for Full Polarimetric Data &quot;&quot;&quot;</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">halphafp</span><span class="p">(</span><span class="n">full_T3</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">neufp</span><span class="p">(</span><span class="n">full_T3</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">nnedfp</span><span class="p">(</span><span class="n">full_T3</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">mf3cf</span><span class="p">(</span><span class="n">full_T3</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">mf4cf</span><span class="p">(</span><span class="n">full_T3</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Descriptors for Full Polarimetric Data &quot;&quot;&quot;</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">dopfp</span><span class="p">(</span><span class="n">full_T3</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">grvi</span><span class="p">(</span><span class="n">full_T3</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">rvifp</span><span class="p">(</span><span class="n">full_T3</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">prvifp</span><span class="p">(</span><span class="n">full_T3</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+
+    <span class="n">dxp_C2</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;./sample_data/dual_pol/C2_VVVH&#39;</span>
+    <span class="n">window_size</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Descriptors for Dual-Polarimetric Data &quot;&quot;&quot;</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">dprvi</span><span class="p">(</span><span class="n">dxp_C2</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">rvidp</span><span class="p">(</span><span class="n">dxp_C2</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">prvidp</span><span class="p">(</span><span class="n">dxp_C2</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">dopdp</span><span class="p">(</span><span class="n">dxp_C2</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Refined Lee Polarimetric Speckle Filter &quot;&quot;&quot;</span>
+    <span class="n">T3_folder</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;./sample_data/full_pol/T3&#39;</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">rlee</span><span class="p">(</span><span class="n">T3_folder</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">pst</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">pauliRGB</span><span class="p">(</span><span class="n">T3_folder</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 <section id="available-functionalities">
 <h2>Available functionalities<a class="headerlink" href="#available-functionalities" title="Link to this heading"></a></h2>
@@ -98,11 +164,14 @@
 </ol>
 <blockquote>
 <div><ul class="simple">
-<li><p>Model free 3-Component decomposition for full-pol data (MF3CF)</p></li>
-<li><p>Radar Vegetation Index (RVI)</p></li>
-<li><p>Generalized volume Radar Vegetation Index (GRVI)</p></li>
-<li><p>Polarimetric Radar Vegetation Index (PRVI)</p></li>
-<li><p>Degree of Polarization (DOP)</p></li>
+<li><p>H-Alpha decomposition</p></li>
+<li><p>Non-negative Eigen value decomposition</p></li>
+<li><p>Neumann Decomposition</p></li>
+<li><p>Model free 3-Component decomposition for full-pol data (<a class="reference external" href="functions/full_pol/MF3CF.html">MF3CF</a>)</p></li>
+<li><p>Radar Vegetation Index (<a class="reference external" href="functions/full_pol/RVI_fp.html">RVIfp</a>)</p></li>
+<li><p>Generalized volume Radar Vegetation Index (<a class="reference external" href="functions/full_pol/GRVI.html">GRVI</a>)</p></li>
+<li><p>Polarimetric Radar Vegetation Index (<a class="reference external" href="functions/full_pol/PRVI_fp.html">PRVIfp</a>)</p></li>
+<li><p>Degree of Polarization (<a class="reference external" href="functions/full_pol/DOP_fp.html">DOPfp</a>)</p></li>
 </ul>
 </div></blockquote>
 <ol class="arabic simple" start="2">
@@ -122,36 +191,27 @@
 <blockquote>
 <div><ul class="simple">
 <li><p>Dual-pol Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/DpRVI.html">DpRVI</a>)</p></li>
-<li><p>Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/RVI_dp.html">RVI</a>)</p></li>
-<li><p>Degree of Polarization (<a class="reference external" href="functions/dual_pol/DOP_dp.html">DOP</a>)</p></li>
-<li><p>Polarimetric Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/PRVI_dp.html">PRVI</a>)</p></li>
+<li><p>Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/RVI_dp.html">RVIdp</a>)</p></li>
+<li><p>Degree of Polarization (<a class="reference external" href="functions/dual_pol/DOP_dp.html">DOPdp</a>)</p></li>
+<li><p>Polarimetric Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/PRVI_dp.html">PRVIdp</a>)</p></li>
 </ul>
 </div></blockquote>
 </div></blockquote>
 </section>
 <section id="functions-description">
 <h2>Functions description<a class="headerlink" href="#functions-description" title="Link to this heading"></a></h2>
-<p>Description and the details of all the core functions of this plugin are available here: (<a class="reference external" href="functions_description.html">Functions description</a>)</p>
+<p>Description and the details of all the core functions of this package are available here: (<a class="reference external" href="functions_description.html">Functions description</a>)</p>
 </section>
 <section id="contributions">
 <h2>Contributions<a class="headerlink" href="#contributions" title="Link to this heading"></a></h2>
-<ol class="arabic">
-<li><p>Contribute to the software</p>
-<blockquote>
-<div><p><a class="reference external" href="https://github.com/Narayana-Rao/polsartools/tree/main/docs/CONTRIBUTING.md">Contribution guidelines for this project</a></p>
-</div></blockquote>
-</li>
-<li><p>Report issues or problems with the software</p></li>
+<ol class="arabic simple">
+<li><p><strong>Contribute to the software</strong>:
+See the <a class="reference external" href="help/CONTRIBUTING.md">Contribution guidelines</a> for this project.</p></li>
 </ol>
-<blockquote>
-<div><p>Please raise your issues here : <a class="reference external" href="https://github.com/Narayana-Rao/polsartools/issues">https://github.com/Narayana-Rao/polsartools/issues</a></p>
-</div></blockquote>
-<ol class="arabic simple" start="3">
-<li><p>Seek support</p></li>
+<ol class="arabic simple" start="2">
+<li><p><strong>Report issues</strong>:
+Please raise your issues here: <a class="reference external" href="https://github.com/Narayana-Rao/polsartools/issues">https://github.com/Narayana-Rao/polsartools/issues</a></p></li>
 </ol>
-<blockquote>
-<div><p>Please write to us: <a class="reference external" href="mailto:bnarayanarao&#37;&#52;&#48;iitb&#46;ac&#46;in">bnarayanarao<span>&#64;</span>iitb<span>&#46;</span>ac<span>&#46;</span>in</a></p>
-</div></blockquote>
 </section>
 </section>
 
@@ -166,7 +226,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Narayanarao Bhogapurapu.</p>
+    <p>&#169; Copyright 2025, Narayanarao Bhogapurapu.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

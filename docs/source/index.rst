@@ -5,7 +5,7 @@
 
 Welcome to PolSAR tools's documentation!
 =========================================
-PolSAR tools is a QGIS plugin, which generates derived SAR parameters ( vegetation indices, polarimetric decomposition parameters) from input polarimetric matrix (C3, T3, C2, T2).
+PolSARtools is a Python (PyPI) package, which generates derived SAR parameters (polarimetric decomposition parameters and descriptors) from input polarimetric matrix (C3, T3, C2, T2).
 
 .. toctree::
    :maxdepth: 3
@@ -26,5 +26,5 @@ PolSAR tools is a QGIS plugin, which generates derived SAR parameters ( vegetati
 
 About
 =====
-The current version of PolSAR tools is v0.6.3 and is licensed under the GPL-3.0 license. 
+The current version of PolSAR tools is v0.6.1 and is licensed under the GPL-3.0 license. 
 
