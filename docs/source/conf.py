@@ -64,13 +64,24 @@ exclude_patterns = []
 # }
 
 
-# https://sphinx-themes.org/sample-sites/sphinx-pdj-theme/
-import sphinx_pdj_theme
-html_theme = 'sphinx_pdj_theme'
-html_favicon =  'files/figures/icon.png'
-# html_title ="PolSARtools 0.6.1"
-html_theme_path = [sphinx_pdj_theme.get_html_theme_path()]
+# # https://sphinx-themes.org/sample-sites/sphinx-pdj-theme/
+# import sphinx_pdj_theme
+# html_theme = 'sphinx_pdj_theme'
+# html_favicon =  'files/figures/icon.png'
+# # html_title ="PolSARtools 0.6.1"
+# html_theme_path = [sphinx_pdj_theme.get_html_theme_path()]
 
+# https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html
+html_theme = "pydata_sphinx_theme"
+html_favicon =  'files/figures/icon.png'
+
+html_theme_options = {
+   "logo": {
+       "text": "PolSARtools",
+      "image_light": "files/figures/icon.png",
+      "image_dark": "files/figures/icon.png",
+   }
+}
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom

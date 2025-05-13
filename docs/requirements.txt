@@ -2,3 +2,4 @@ sphinx_rtd_theme
 sphinxcontrib.bibtex
 sphinxawesome-theme
 sphinx-pdj-theme
+pydata-sphinx-theme
