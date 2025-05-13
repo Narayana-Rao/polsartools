@@ -53,15 +53,23 @@ exclude_patterns = []
 # html_theme = 'sphinx_rtd_theme'
 
 
-# https://sphinxawesome.xyz/ 
-from sphinxawesome_theme.postprocess import Icons
+# # https://sphinxawesome.xyz/ 
+# from sphinxawesome_theme.postprocess import Icons
 
-html_permalinks_icon = Icons.permalinks_icon
-html_theme = "sphinxawesome_theme"
-html_theme_options = {
-    "logo_light": 'files/figures/icon.png',
-    "logo_dark":  'files/figures/icon.png',
-}
+# html_permalinks_icon = Icons.permalinks_icon
+# html_theme = "sphinxawesome_theme"
+# html_theme_options = {
+#     "logo_light": 'files/figures/icon.png',
+#     "logo_dark":  'files/figures/icon.png',
+# }
+
+
+# https://sphinx-themes.org/sample-sites/sphinx-pdj-theme/
+import sphinx_pdj_theme
+html_theme = 'sphinx_pdj_theme'
+html_favicon =  'files/figures/icon.png'
+# html_title ="PolSARtools 0.6.1"
+html_theme_path = [sphinx_pdj_theme.get_html_theme_path()]
 
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -69,7 +77,7 @@ html_theme_options = {
 # ones.
 extensions = [
 	# 'sphinx_rtd_theme',
- "sphinxawesome_theme",
+#  "sphinxawesome_theme",
  "sphinxcontrib.bibtex",
 	# 'rinoh.frontend.sphinx',
     # 'sphinx.ext.mathjax',
