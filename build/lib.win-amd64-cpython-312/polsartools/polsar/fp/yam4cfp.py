@@ -4,7 +4,7 @@ from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
 from polsartools.utils.convert_matrices import T3_C3_mat, C3_T3_mat
 
 @time_it
-def yam4cfp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
+def yam4cfp(infolder, outname=None, model="",window_size=1,write_flag=True,max_workers=None):
 
     if os.path.isfile(os.path.join(infolder,"T11.bin")):
         input_filepaths = [
@@ -30,13 +30,27 @@ def yam4cfp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag
 
     output_filepaths = []
     if outname is None:
-        output_filepaths.append(os.path.join(infolder, "Yam4co_odd.tif"))
-        output_filepaths.append(os.path.join(infolder, "Yam4co_dbl.tif"))
-        output_filepaths.append(os.path.join(infolder, "Yam4co_vol.tif"))
-        output_filepaths.append(os.path.join(infolder, "Yam4co_hlx.tif"))
-        
+        # print(model)
+        if not model:
+            output_filepaths.append(os.path.join(infolder, "Yam4co_odd.tif"))
+            output_filepaths.append(os.path.join(infolder, "Yam4co_dbl.tif"))
+            output_filepaths.append(os.path.join(infolder, "Yam4co_vol.tif"))
+            output_filepaths.append(os.path.join(infolder, "Yam4co_hlx.tif"))
+        elif model=="Y4R":
+            output_filepaths.append(os.path.join(infolder, "Yam4cr_odd.tif"))
+            output_filepaths.append(os.path.join(infolder, "Yam4cr_dbl.tif"))
+            output_filepaths.append(os.path.join(infolder, "Yam4cr_vol.tif"))
+            output_filepaths.append(os.path.join(infolder, "Yam4cr_hlx.tif"))
+        elif model=="S4R":
+            output_filepaths.append(os.path.join(infolder, "Yam4csr_odd.tif"))
+            output_filepaths.append(os.path.join(infolder, "Yam4csr_dbl.tif"))
+            output_filepaths.append(os.path.join(infolder, "Yam4csr_vol.tif"))
+            output_filepaths.append(os.path.join(infolder, "Yam4csr_hlx.tif"))
+        else:
+            raise(f"Invalid model!! \n model type argument must be either '' for default or Y4R or S4R")
+            
     
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, model=model,write_flag=write_flag,
             processing_func=process_chunk_yam4cfp,
             block_size=(512, 512), max_workers=max_workers, 
             num_outputs=4)
@@ -64,7 +78,7 @@ def unitary_rotation(T3, teta):
 
     return T3
 
-def process_chunk_yam4cfp(chunks, window_size, input_filepaths, *args):
+def process_chunk_yam4cfp(chunks, window_size, input_filepaths, model,*args):
 
     # additional_arg1 = args[0] if len(args) > 0 else None
     # additional_arg2 = args[1] if len(args) > 1 else None
@@ -83,7 +97,9 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths, *args):
         T_T1 = np.array([[t11_T1, t12_T1, t13_T1], 
                      [t21_T1, t22_T1, t23_T1], 
                      [t31_T1, t32_T1, t33_T1]])
-        # T_T1 = T3_C3_mat(T3)
+        C3 = T3_C3_mat(T_T1)
+        span = C3[0,0].real+C3[1,1].real+C3[2,2].real
+        del C3
 
 
     if 'C11' in input_filepaths[0] and 'C22' in input_filepaths[5] and 'C33' in input_filepaths[8]:
@@ -99,7 +115,9 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths, *args):
         C3 = np.array([[C11, C12, C13], 
                          [C21, C22, C23], 
                          [C31, C32, C33]])
+        span = C3[0,0].real+C3[1,1].real+C3[2,2].real
         T_T1 = C3_T3_mat(C3)
+        del C3
 
 
     if window_size>1:
@@ -120,30 +138,19 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths, *args):
         T_T1 = np.array([[t11f, t12f, t13f], [t21f, t22f, t23f], [t31f, t32f, t33f]])
 
     
-    print(np.shape(T_T1))
+
     _,_,rows,cols = np.shape(T_T1)
     
-    # T_T1 = T_T1.reshape(9, rows, cols)
+    SpanMax = np.nanmax(span)
+    SpanMin = np.nanmin(span)
+    eps = 1e-6
+    SpanMin = np.nanmax([SpanMin, eps])
 
-
-    # Span_data = np.real(T_T1[:,:,0]) + np.real(T_T1[:,:,4]) + np.real(T_T1[:,:,8])
-
-    # Find the maximum and minimum values in one step
-    # SpanMax = np.nanmax(Span_data)
-    # SpanMin = np.nanmin(Span_data)
-    
-    SpanMax = 1
-    SpanMin = 0
-    YamMode=''
     
     T_T1 = T_T1.reshape(9, rows, cols)
     T_T1 = np.dstack((T_T1[0,:,:],T_T1[1,:,:],T_T1[2,:,:],
                     T_T1[3,:,:],T_T1[4,:,:],T_T1[5,:,:],T_T1[6,:,:],T_T1[7,:,:],T_T1[8,:,:]))
-    print(rows,cols)
-    print(np.shape(T_T1))
-    eps = 1e-6  
-    # Ensure SpanMin does not go below eps
-    SpanMin = np.nanmax([SpanMin, 1e-6])
+
 
     M_odd = np.zeros((rows,cols))
     M_dbl = np.zeros((rows,cols))
@@ -151,7 +158,7 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths, *args):
     M_hlx =  np.zeros((rows,cols))
 
     
-
+    print(model)
     for ii in range(rows):
         for jj in range(cols):
             T3 = np.array((
@@ -159,14 +166,16 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths, *args):
                     T_T1[ii,jj,3],T_T1[ii,jj,4],T_T1[ii,jj,5],
                     T_T1[ii,jj,6],T_T1[ii,jj,7],T_T1[ii,jj,8],
                         ))        
-            if YamMode in ["Y4R", "S4R"]:
+            if model in ["Y4R", "S4R"]:
+                print(model)
                 teta = 0.5 * np.arctan(2 * T3[5].real / (T3[4].real - T3[8].real))
                 T3 = unitary_rotation(T3, teta)
 
             Pc = 2.0 * np.abs(T3[5].imag)
             HV_type = 1
             
-            if YamMode == "S4R":
+            if model=="S4R":
+                print(model)
                 C1 = T3[0] - T3[4] + (7.0 / 8.0) * T3[8] + (Pc / 16.0)
                 if C1 > 0.0:
                     HV_type = 1  # Surface scattering
@@ -344,5 +353,5 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths, *args):
                 M_dbl[ii, jj] = Pd
                 M_vol[ii, jj] = Pv
                 M_hlx[ii, jj] = Pc
-    print(np.nanmean(M_odd),np.nanmean(M_dbl),np.nanmean(M_vol),np.nanmean(M_hlx))
+    # print(np.nanmean(M_odd),np.nanmean(M_dbl),np.nanmean(M_vol),np.nanmean(M_hlx))
     return M_odd, M_dbl, M_vol, M_hlx
