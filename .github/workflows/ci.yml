@@ -45,7 +45,7 @@ jobs:
     - name: Create conda environment and install GDAL/h5py
       run: |
         conda create -n myenv -c conda-forge python=${{ matrix.python-version }} gdal h5py
-        echo "conda activate myenv" >> $GITHUB_ENV
+        echo "CONDA_PREFIX=$HOME/miniconda/envs/myenv" >> $GITHUB_ENV
 
     - name: Install dependencies from requirements.txt
       run: |
