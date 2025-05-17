@@ -51,7 +51,7 @@ jobs:
     - name: Install GDAL with Conda (Windows)
       if: runner.os == 'Windows'
       run: |
-        conda install -c conda-forge gdal pytest
+        conda install -c conda-forge gdal pytest h5py
 
     - name: Install dependencies and polsartools pip package
       run: |
