@@ -31,16 +31,16 @@ jobs:
     #     python-version: ${{ matrix.python-version }}
     #     miniconda-version: "latest"
 
-    # - name: Install GDAL system dependencies (Ubuntu)
-    #   if: runner.os == 'Linux'
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get install -y gdal-bin libgdal-dev
+    - name: Install GDAL system dependencies (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gdal-bin libgdal-dev
 
-    # - name: Install GDAL system dependencies (macOS)
-    #   if: runner.os == 'macOS'
-    #   run: |
-    #     brew install gdal
+    - name: Install GDAL system dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew install gdal
 
     # - name: Create conda environment and install GDAL/h5py
     #   run: |
