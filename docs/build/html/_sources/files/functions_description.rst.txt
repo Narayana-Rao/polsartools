@@ -89,5 +89,6 @@ Dual-pol functionalities require the SAR data in the form of 2x2 covariance matr
     functions/dual_pol/DpRVI
     functions/dual_pol/PRVI_dp
     functions/dual_pol/DOP_dp
+    functions/dual_pol/halphadxp
     
 

@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="en" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Available functionalities &#8212; PolSARtools 0.6.1 documentation</title>
+    <title>halpadp (Entropy-Alpha decomposition for dual-cross-pol) &#8212; PolSARtools 0.6.1 documentation</title>
   
   
   
@@ -27,26 +27,24 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=2bd037f0"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions';</script>
-    <link rel="icon" href="../_static/icon.png"/>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Functions Description" href="functions_description.html" />
-    <link rel="prev" title="Example Usage" href="example.html" />
+    <script src="../../../_static/documentation_options.js?v=2bd037f0"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/dual_pol/halphadxp';</script>
+    <link rel="icon" href="../../../_static/icon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -68,7 +66,7 @@
   <dialog id="pst-search-dialog">
     
 <form class="bd-search d-flex align-items-center"
-      action="../search.html"
+      action="../../../search.html"
       method="get">
   <i class="fa-solid fa-magnifying-glass"></i>
   <input type="search"
@@ -104,7 +102,7 @@
     
   
 
-<a class="navbar-brand logo" href="../index.html">
+<a class="navbar-brand logo" href="../../../index.html">
   
   
   
@@ -115,8 +113,8 @@
       
     
     
-    <img src="../_static/icon.png" class="logo__image only-light" alt=""/>
-    <img src="../_static/icon.png" class="logo__image only-dark pst-js-only" alt=""/>
+    <img src="../../../_static/icon.png" class="logo__image only-light" alt=""/>
+    <img src="../../../_static/icon.png" class="logo__image only-dark pst-js-only" alt=""/>
   
   
     <p class="title logo__title">PolSARtools</p>
@@ -133,22 +131,22 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="General_Information.html">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../General_Information.html">
     General Information
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="functions_description.html">
+  <a class="nav-link nav-internal" href="../../functions_description.html">
     Functions Description
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="References.html">
+  <a class="nav-link nav-internal" href="../../References.html">
     References
   </a>
 </li>
@@ -210,8 +208,10 @@
       
       
       
+        
+      
       <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
         
 
   
@@ -226,22 +226,22 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item current active">
-  <a class="nav-link nav-internal" href="General_Information.html">
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../General_Information.html">
     General Information
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="functions_description.html">
+  <a class="nav-link nav-internal" href="../../functions_description.html">
     Functions Description
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="References.html">
+  <a class="nav-link nav-internal" href="../../References.html">
     References
   </a>
 </li>
@@ -267,20 +267,6 @@
       </div>
     
   </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-<nav class="bd-docs-nav bd-links"
-     aria-label="Section Navigation">
-  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="example.html">Example Usage</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Available functionalities</a></li>
-</ul>
-</div>
-</nav></div>
-    </div>
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
@@ -313,14 +299,11 @@
   <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
-      <a href="../index.html" class="nav-link" aria-label="Home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    
-    <li class="breadcrumb-item"><a href="General_Information.html" class="nav-link">General Information</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Available functionalities</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><code class="docutils literal notranslate"><span class="pre">halpadp</span></code> (Entropy-Alpha decomposition for dual-cross-pol)</span></li>
   </ul>
 </nav>
 </div>
@@ -337,50 +320,13 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="available-functionalities">
-<h1>Available functionalities<a class="headerlink" href="#available-functionalities" title="Link to this heading">#</a></h1>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p><strong>Full-pol</strong></p></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li><p>H-Alpha decomposition</p></li>
-<li><p>Non-negative Eigen value decomposition</p></li>
-<li><p>Neumann Decomposition</p></li>
-<li><p>Yamaguchi 4-component decomposition</p></li>
-<li><p>Model free 3-Component decomposition for full-pol data (<a class="reference external" href="functions/full_pol/MF3CF.html">MF3CF</a>)</p></li>
-<li><p>Radar Vegetation Index (<a class="reference external" href="functions/full_pol/RVI_fp.html">RVIfp</a>)</p></li>
-<li><p>Generalized volume Radar Vegetation Index (<a class="reference external" href="functions/full_pol/GRVI.html">GRVI</a>)</p></li>
-<li><p>Polarimetric Radar Vegetation Index (<a class="reference external" href="functions/full_pol/PRVI_fp.html">PRVIfp</a>)</p></li>
-<li><p>Degree of Polarization (<a class="reference external" href="functions/full_pol/DOP_fp.html">DOPfp</a>)</p></li>
-</ul>
-</div></blockquote>
-<ol class="arabic simple" start="2">
-<li><p><strong>Compact-pol</strong></p></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li><p>Model free 3-Component decomposition for compact-pol data (<a class="reference external" href="functions/compact_pol/MF3CC.html">MF3CC</a>)</p></li>
-<li><p>Improved S-Omega decomposition for compact-pol data (<a class="reference external" href="functions/compact_pol/iS_Omega.html">iS-Omega</a>)</p></li>
-<li><p>Compact-pol Radar Vegetation Index (<a class="reference external" href="functions/compact_pol/cprvi.html">CpRVI</a>)</p></li>
-<li><p>Degree of Polarization (<a class="reference external" href="functions/compact_pol/DOP_cp.html">DoP</a>)</p></li>
-</ul>
-</div></blockquote>
-<ol class="arabic simple" start="3">
-<li><p><strong>Dual-pol</strong></p></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li><p>Dual-pol Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/DpRVI.html">DpRVI</a>)</p></li>
-<li><p>Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/RVI_dp.html">RVIdp</a>)</p></li>
-<li><p>Degree of Polarization (<a class="reference external" href="functions/dual_pol/DOP_dp.html">DOPdp</a>)</p></li>
-<li><p>Polarimetric Radar Vegetation Index (<a class="reference external" href="functions/dual_pol/PRVI_dp.html">PRVIdp</a>)</p></li>
-<li><p>H-alpha decomposition for dual-pol (halphadp)</p></li>
-<li><p>Model free 3-Component decomposition for dual-co-pol data (MF3CD)</p></li>
-</ul>
-</div></blockquote>
-</div></blockquote>
+  <section id="halpadp-entropy-alpha-decomposition-for-dual-cross-pol">
+<h1><code class="docutils literal notranslate"><span class="pre">halpadp</span></code> (Entropy-Alpha decomposition for dual-cross-pol)<a class="headerlink" href="#halpadp-entropy-alpha-decomposition-for-dual-cross-pol" title="Link to this heading">#</a></h1>
+<p>This functionality computes the Entropy (H) and Alpha (α) for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="p">:</span> <span class="n">input_C2_folder</span><span class="p">,</span> <span class="n">window_size</span>
+<span class="n">output</span><span class="p">:</span> <span class="n">Hdp</span><span class="o">.</span><span class="n">tif</span><span class="p">,</span> <span class="n">alphadp</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
 </section>
 
 
@@ -393,24 +339,6 @@
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="example.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Example Usage</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="functions_description.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Functions Description</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -426,7 +354,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/files/functions.rst.txt"
+      <li><a href="../../../_sources/files/functions/dual_pol/halphadxp.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>
@@ -444,8 +372,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
