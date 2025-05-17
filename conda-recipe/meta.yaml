@@ -1,4 +1,4 @@
-{% set version = load_file_data("polsartools/__version__.py")["__version__"] %}
+{% set version = load_file_data("polsartools/version.json")["version"] %}
 
 package:
   name: polsartools

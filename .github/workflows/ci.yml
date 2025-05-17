@@ -52,7 +52,7 @@ jobs:
     - name: Install GDAL system dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
-        pip install GDAL
+        pip install GDAL==3.9.0
 
     - name: Install dependencies and polsartools pip package
       run: |
@@ -63,7 +63,7 @@ jobs:
     - name: Build Conda package
       run: |
         conda build ./conda-recipe  
-        
+
     - name: Test with pytest
       run: |
         cd tests
