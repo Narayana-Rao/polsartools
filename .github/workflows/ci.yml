@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [windows-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
     
@@ -50,10 +50,10 @@ jobs:
         brew install gdal
         brew upgrade gdal
 
-    - name: Install GDAL system dependencies (Windows)
+    - name: Install GDAL with Conda (Windows)
       if: runner.os == 'Windows'
       run: |
-        pip install GDAL==3.9.0
+        conda install -c conda-forge gdal
 
     - name: Install dependencies and polsartools pip package
       run: |

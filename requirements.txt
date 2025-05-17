@@ -2,7 +2,6 @@ numpy==1.26.4
 gdal==3.9.0
 scipy
 click
-simplekml
 tqdm
 matplotlib
 pybind11
