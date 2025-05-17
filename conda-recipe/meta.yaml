@@ -1,6 +1,8 @@
+{% set version = load_file_data("polsartools/__version__.py")["__version__"] %}
+
 package:
   name: polsartools
-  version: "0.6.1"
+  version: "{{ version }}"
 
 source:
   path: ..  

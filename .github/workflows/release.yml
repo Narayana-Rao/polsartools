@@ -1,18 +1,18 @@
-name: Build
+name: Release Build & Publish
 
-on: 
-  push:
-  pull_request:
+on:
+  release:
+    types: [published]
 
 jobs:
-  build:
-    name: Build ${{ matrix.os }} ${{ matrix.python-version }}
+  release:
+    name: Release on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -22,7 +22,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    # Set up Miniconda for Conda build
     - name: Set up Miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
@@ -32,9 +31,9 @@ jobs:
 
     - name: Install Conda dependencies
       run: |
-        conda install -y conda-build anaconda-client  # Install Conda build tools
+        conda install -y conda-build anaconda-client twine setuptools wheel
 
-    # Install GDAL system dependencies based on the OS
+    # OS-specific GDAL setup
     - name: Install GDAL system dependencies (Ubuntu)
       if: runner.os == 'Linux'
       run: |
@@ -54,17 +53,29 @@ jobs:
       run: |
         pip install GDAL
 
-    - name: Install dependencies and polsartools pip package
+    - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r requirements.txt
-        python -m pip install .  
+
+    - name: Build pip package
+      run: |
+        python setup.py sdist bdist_wheel
 
     - name: Build Conda package
       run: |
-        conda build ./conda-recipe  
-        
-    - name: Test with pytest
+        conda build ./conda-recipe
+
+    - name: Upload to PyPI
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        cd tests
-        python -m pytest -v tests.py
+        python -m pip install twine
+        twine upload dist/*
+
+    - name: Upload to Anaconda
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
+      run: |
+        anaconda upload --skip-existing $(conda build ./conda-recipe --output)

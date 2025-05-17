@@ -8,7 +8,7 @@ A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) d
 import warnings
 warnings.filterwarnings("ignore")
 
-__version__ = '0.6.1'  
+__version__ = "0.6.1"  
 
 # Import submodules
 from . import polsar

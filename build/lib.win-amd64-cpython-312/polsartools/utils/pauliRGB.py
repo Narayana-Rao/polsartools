@@ -37,8 +37,9 @@ def pauliRGB(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_fla
         rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
         
 
-        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgba_uint8)
-        print(f"Pauli RGB image saved as {os.path.join(infolder,"PauliRGB.png")}PauliRGB.png")
+        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgba_uint8)       
+        print(f"Pauli RGB image saved as {os.path.join(infolder, 'PauliRGB.png')}")
+        
         fig,ax = plt.subplots()
         plt.imshow(rgba_uint8,vmin=0,vmax=255)
         ax.axis('off')
@@ -53,7 +54,7 @@ def pauliRGB(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_fla
         rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
         
         plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgba_uint8)
-        print(f"Pauli RGB image saved as {os.path.join(infolder,"PauliRGB.png")}PauliRGB.png")
+        print(f"Pauli RGB image saved as {os.path.join(infolder, 'PauliRGB.png')}")
         fig,ax = plt.subplots()
         plt.imshow(rgba_uint8,vmin=0,vmax=255)
         ax.axis('off')

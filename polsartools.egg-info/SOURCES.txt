@@ -13,7 +13,9 @@ polsartools-env.yml
 pyproject.toml
 requirements.txt
 setup.py
+.github/workflows/ci.yml
 .vscode/settings.json
+conda-recipe/meta.yaml
 dist/polsartools-0.4.2-py3-none-any.whl
 dist/polsartools-0.4.2.tar.gz
 dist/polsartools-0.5-py3-none-any.whl
@@ -176,6 +178,7 @@ examples/UAVSAR_Pol_decompositions_GRD.ipynb
 examples/example_usage.py
 polsartools/.gitignore
 polsartools/__init__.py
+polsartools/__version__.py
 polsartools/cprvicpp.cp312-win_amd64.pyd
 polsartools/rflee.cp312-win_amd64.pyd
 polsartools.egg-info/PKG-INFO
