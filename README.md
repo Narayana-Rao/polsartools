@@ -3,6 +3,7 @@
 </p>
 
 # PolSARtools PyPI package
+[![Build](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml/badge.svg)](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml)
 [![image](https://img.shields.io/pypi/v/polsartools.svg)](https://pypi.python.org/pypi/polsartools)
 [![Downloads](https://static.pepy.tech/badge/polsartools)](https://pepy.tech/project/polsartools)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)

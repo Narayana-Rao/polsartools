@@ -1,0 +1,36 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }} ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        include:
+        - os: windows-latest
+          python-version: "3.12"
+        - os: macos-latest
+          python-version: "3.12"
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install GDAL and h5py
+      run: |
+        conda install -c conda-forge gdal h5py
+    - name: Install dependencies from requirements.txt
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+        python -m pip install .    
+    - name: Test with pytest
+      run: |
+        cd tests
+        python -m pytest -v tests.py
