@@ -50,7 +50,7 @@ def yam4cfp(infolder, outname=None, model="",window_size=1,write_flag=True,max_w
             raise(f"Invalid model!! \n model type argument must be either '' for default or Y4R or S4R")
             
     
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, model=model,write_flag=write_flag,
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, model=model, write_flag=write_flag,
             processing_func=process_chunk_yam4cfp,
             block_size=(512, 512), max_workers=max_workers, 
             num_outputs=4)

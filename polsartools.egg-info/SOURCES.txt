@@ -217,6 +217,7 @@ polsartools/polsar/cp/__pycache__/misomega.cpython-310.pyc
 polsartools/polsar/cp/__pycache__/misomega.cpython-312.pyc
 polsartools/polsar/cp/__pycache__/misomega.cpython-313.pyc
 polsartools/polsar/dcp/__init__.py
+polsartools/polsar/dcp/mf3cd.py
 polsartools/polsar/dcp/__pycache__/__init__.cpython-310.pyc
 polsartools/polsar/dcp/__pycache__/__init__.cpython-312.pyc
 polsartools/polsar/dcp/__pycache__/__init__.cpython-313.pyc
