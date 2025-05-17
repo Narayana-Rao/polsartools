@@ -15,30 +15,45 @@ jobs:
           python-version: "3.12"
         - os: macos-latest
           python-version: "3.12"
+
     steps:
     - uses: actions/checkout@v2
+    
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    
     - name: Set up Miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
         auto-update-conda: true
         python-version: ${{ matrix.python-version }}
-        miniconda-version: "latest"  # Ensures Miniconda is installed
+        miniconda-version: "latest"
 
-    - name: Install GDAL and h5py
+    - name: Install GDAL system dependencies (Ubuntu)
+      if: runner.os == 'Linux'
       run: |
-        source $CONDA/bin/activate
-        conda install -c conda-forge gdal h5py
+        sudo apt-get update
+        sudo apt-get install -y gdal-bin libgdal-dev
+
+    - name: Install GDAL system dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew install gdal
+
+    - name: Create conda environment and install GDAL/h5py
+      run: |
+        conda create -n myenv -c conda-forge python=${{ matrix.python-version }} gdal h5py
+        echo "conda activate myenv" >> $GITHUB_ENV
 
     - name: Install dependencies from requirements.txt
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r requirements.txt
-        python -m pip install .    
+        conda run -n myenv python -m pip install --upgrade pip
+        conda run -n myenv python -m pip install -r requirements.txt
+        conda run -n myenv python -m pip install .
+
     - name: Test with pytest
       run: |
         cd tests
-        python -m pytest -v tests.py
+        conda run -n myenv python -m pytest -v tests.py
