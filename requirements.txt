@@ -1,5 +1,4 @@
 numpy==1.26.4
-gdal==3.9.0
 scipy
 click
 tqdm
@@ -8,3 +7,4 @@ pybind11
 h5py
 scikit-image
 pytest
+gdal

@@ -48,12 +48,12 @@ jobs:
         brew install gdal
         brew upgrade gdal
 
-    - name: Install GDAL system dependencies (Windows)
+    - name: Install GDAL with Conda (Windows)
       if: runner.os == 'Windows'
       run: |
-        pip install GDAL==3.9.0
+        conda install -c conda-forge gdal pytest
 
-    - name: Install Python dependencies
+    - name: Install dependencies and polsartools pip package
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r requirements.txt
