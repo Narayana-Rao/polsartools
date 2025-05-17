@@ -26,6 +26,7 @@ jobs:
       with:
         auto-update-conda: true
         python-version: ${{ matrix.python-version }}
+        miniconda-version: "latest"  # Ensures Miniconda is installed
 
     - name: Install GDAL and h5py
       run: |
