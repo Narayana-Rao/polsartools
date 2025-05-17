@@ -1,0 +1,44 @@
+package:
+  name: polsartools
+  version: "0.6.1"
+
+source:
+  path: ..  
+
+build:
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+
+requirements:
+  host:
+    - python
+    - pip
+    - pybind11
+    - setuptools
+    - wheel
+  run:
+    - python
+    - pip
+    - numpy
+    - scipy
+    - click
+    - tqdm
+    - matplotlib
+    - pybind11
+    - h5py
+    - scikit-image
+    - gdal
+
+test:
+  # Include tests to validate the build
+  commands:
+    - python -c "import polsartools"
+
+about:
+  home: https://github.com/Narayana-Rao/polsartools
+  license: GPL-3.0
+  summary: "A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data."
+
+# platforms:
+#   - linux
+#   - osx
+#   - win

@@ -3,7 +3,7 @@ import glob
 from osgeo import gdal,osr
 import os
 import sys
-import simplekml
+# import simplekml
 from polsartools.utils.utils import time_it
 def write_bin_uav_old(file,wdata,lat,lon,dx,dy):
     
@@ -60,14 +60,14 @@ def update_hdr(hdrFile):
     # Write the modified content back to the file
     with open(hdrFile, 'w') as file:
         file.write(content)
-def create_kml_polygon(corner_coords, output_filename):
+# def create_kml_polygon(corner_coords, output_filename):
     
-    kml = simplekml.Kml()
-    pol = kml.newpolygon(name="Polygon")
-    polygon_coords = corner_coords + [corner_coords[0]]
-    pol.outerboundaryis.coords = polygon_coords
-    pol.style.polystyle.color = simplekml.Color.changealphaint(150, simplekml.Color.red)  
-    kml.save(output_filename)
+#     kml = simplekml.Kml()
+#     pol = kml.newpolygon(name="Polygon")
+#     polygon_coords = corner_coords + [corner_coords[0]]
+#     pol.outerboundaryis.coords = polygon_coords
+#     pol.style.polystyle.color = simplekml.Color.changealphaint(150, simplekml.Color.red)  
+#     kml.save(output_filename)
 
 def create_extent(annFile):
     inFolder = os.path.dirname(annFile)
@@ -99,7 +99,7 @@ def create_extent(annFile):
     # print(corner_coordinates)
 
     output_file = os.path.join(inFolder,"scene_extent.kml")
-    create_kml_polygon(corner_coordinates, output_file)
+    # create_kml_polygon(corner_coordinates, output_file)
 
 def grdList(annFile):
     grdkeys = {
