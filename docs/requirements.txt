@@ -1,5 +1,5 @@
-sphinx_rtd_theme
+# sphinx_rtd_theme
 sphinxcontrib.bibtex
-sphinxawesome-theme
-sphinx-pdj-theme
+# sphinxawesome-theme
+# sphinx-pdj-theme
 pydata-sphinx-theme
