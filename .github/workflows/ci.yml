@@ -47,13 +47,23 @@ jobs:
     #     conda create -n myenv -c conda-forge python=${{ matrix.python-version }} gdal h5py
     #     echo "CONDA_PREFIX=$HOME/miniconda/envs/myenv" >> $GITHUB_ENV
 
+    # - name: Install dependencies from requirements.txt
+    #   run: |
+    #     conda run -n myenv python -m pip install --upgrade pip
+    #     conda run -n myenv python -m pip install -r requirements.txt
+    #     conda run -n myenv python -m pip install .
+
+    # - name: Test with pytest
+    #   run: |
+    #     cd tests
+    #     conda run -n myenv python -m pytest -v tests.py
+
     - name: Install dependencies from requirements.txt
       run: |
-        conda run -n myenv python -m pip install --upgrade pip
-        conda run -n myenv python -m pip install -r requirements.txt
-        conda run -n myenv python -m pip install .
-
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+        python -m pip install .    
     - name: Test with pytest
       run: |
         cd tests
-        conda run -n myenv python -m pytest -v tests.py
+        python -m pytest -v tests.py
