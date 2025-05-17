@@ -48,7 +48,7 @@ jobs:
     - name: Install GDAL system dependencies (Windows)
       if: runner.os == 'Windows'
       run: |
-        pip install GDAL==3.11.0
+        pip install GDAL
         
     - name: Install dependencies from requirements.txt
       run: |

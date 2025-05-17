@@ -1,7 +1,6 @@
 numpy==1.26.4
-gdal
+gdal==3.9.0
 scipy
-functools
 click
 simplekml
 tqdm
