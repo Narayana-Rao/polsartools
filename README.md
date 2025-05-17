@@ -135,36 +135,44 @@ def main():
 if __name__ == "__main__":
     main()
 
-
 ```
 
 
 ## Available functionalities:
 -----------------------------
+* Sensors
+  * UAVSAR (GRD, MLC)
+  * NISAR (GSLC)
+
  * Full-pol :
 	* H-Alpha decomposition
 	* Non-negative Eigen value decomposition
 	* Neumann Decomposition 
-    * Model free 4-Component decomposition for full-pol data (MF4CF)[[11]](#11)
-    * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]](#4)
+   * Model free 4-Component decomposition for full-pol data (MF4CF)[[11]](#11)
+   * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]](#4)
 	* Radar Vegetation Index (RVI) [[8]](#8) 
-    * Generalized volume Radar Vegetation Index (GRVI) [[2]](#2)
-    * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
-    * Degree of Polarization (DOP) [[10]](#10) 
+   * Generalized volume Radar Vegetation Index (GRVI) [[2]](#2)
+   * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
+   * Degree of Polarization (DOP) [[10]](#10) 
 
-  * Compact-pol : 
-    * Model free 3-Component decomposition for compact-pol data (MF3CC) [[4]](#4)
-    * Improved S-Omega decomposition for compact-pol data (iS-Omega) [[7]](#7)
-    * Compact-pol Radar Vegetation Index (CpRVI)  [[6]](#6)
-    * Degree of Polarization (DOP)  [[10]](#10) 
+* Compact-pol : 
+  * Model free 3-Component decomposition for compact-pol data (MF3CC) [[4]](#4)
+  * Improved S-Omega decomposition for compact-pol data (iS-Omega) [[7]](#7)
+  * Compact-pol Radar Vegetation Index (CpRVI)  [[6]](#6)
+  * Degree of Polarization (DOP)  [[10]](#10) 
 
-  * Dual-pol:
+* Dual-pol:
 	* Dual-pol Radar Vegetation Index (DpRVI) [[5]](#5)
-    * Dual-pol Radar Vegetation Index for GRD data (DpRVIc) [[12]](#12)
-	* Radar Vegetation Index (RVI) [[9]](#9)
-    * Degree of Polarization (DOP) [[10]](#10) 
-    * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
-    * Dual-pol descriptors [[13]](#13)
+  * Dual-pol Radar Vegetation Index for GRD data (DpRVIc) [[12]](#12)
+  * Radar Vegetation Index (RVI) [[9]](#9)
+  * Degree of Polarization (DOP) [[10]](#10) 
+  * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
+  * Dual-pol descriptors [[13]](#13)
+  * Model free 3-Component decomposition for dual-copol data (MF3CD)
+
+* polarimetric speckle filters:
+  * boxcar
+  * refine lee
 
 
 ## Contributions
