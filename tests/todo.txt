@@ -5,7 +5,7 @@
 
 -sesors
     -UAVSAR
-    -
+    -NISAR
 
 -Speckle filters
     -refined lee
@@ -19,3 +19,7 @@
 -compact pol
     -
     -
+
+# proj.db error fix: 
+        copy proj.db from any installed QGIS polder to conda folder 
+        "C:\Users\user_name\AppData\Local\anaconda3\envs\cms\Library\share\proj\"

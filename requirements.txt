@@ -7,3 +7,5 @@ simplekml
 tqdm
 matplotlib
 pybind11
+h5py
+scikit-image

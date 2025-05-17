@@ -65,13 +65,13 @@ docs/build/doctrees/files/functions/dual_pol/DOP_dp.doctree
 docs/build/doctrees/files/functions/dual_pol/DpRVI.doctree
 docs/build/doctrees/files/functions/dual_pol/PRVI_dp.doctree
 docs/build/doctrees/files/functions/dual_pol/RVI_dp.doctree
+docs/build/doctrees/files/functions/dual_pol/halphadxp.doctree
 docs/build/doctrees/files/functions/full_pol/DOP_fp.doctree
 docs/build/doctrees/files/functions/full_pol/GRVI.doctree
 docs/build/doctrees/files/functions/full_pol/MF3CF.doctree
 docs/build/doctrees/files/functions/full_pol/PRVI_fp.doctree
 docs/build/doctrees/files/functions/full_pol/RVI_fp.doctree
 docs/build/html/.buildinfo
-docs/build/html/.buildinfo.bak
 docs/build/html/genindex.html
 docs/build/html/index.html
 docs/build/html/objects.inv
@@ -92,6 +92,7 @@ docs/build/html/_sources/files/functions/dual_pol/DOP_dp.rst.txt
 docs/build/html/_sources/files/functions/dual_pol/DpRVI.rst.txt
 docs/build/html/_sources/files/functions/dual_pol/PRVI_dp.rst.txt
 docs/build/html/_sources/files/functions/dual_pol/RVI_dp.rst.txt
+docs/build/html/_sources/files/functions/dual_pol/halphadxp.rst.txt
 docs/build/html/_sources/files/functions/full_pol/DOP_fp.rst.txt
 docs/build/html/_sources/files/functions/full_pol/GRVI.rst.txt
 docs/build/html/_sources/files/functions/full_pol/MF3CF.rst.txt
@@ -140,6 +141,7 @@ docs/build/html/files/functions/dual_pol/DOP_dp.html
 docs/build/html/files/functions/dual_pol/DpRVI.html
 docs/build/html/files/functions/dual_pol/PRVI_dp.html
 docs/build/html/files/functions/dual_pol/RVI_dp.html
+docs/build/html/files/functions/dual_pol/halphadxp.html
 docs/build/html/files/functions/full_pol/DOP_fp.html
 docs/build/html/files/functions/full_pol/GRVI.html
 docs/build/html/files/functions/full_pol/MF3CF.html
@@ -164,6 +166,7 @@ docs/source/files/functions/dual_pol/DOP_dp.rst
 docs/source/files/functions/dual_pol/DpRVI.rst
 docs/source/files/functions/dual_pol/PRVI_dp.rst
 docs/source/files/functions/dual_pol/RVI_dp.rst
+docs/source/files/functions/dual_pol/halphadxp.rst
 docs/source/files/functions/full_pol/DOP_fp.rst
 docs/source/files/functions/full_pol/GRVI.rst
 docs/source/files/functions/full_pol/MF3CF.rst
@@ -275,6 +278,7 @@ polsartools/sensors/.gitignore
 polsartools/sensors/__init__.py
 polsartools/sensors/basic_func.py
 polsartools/sensors/import_s1grd.py
+polsartools/sensors/nisar.py
 polsartools/sensors/uavsar.py
 polsartools/sensors/__pycache__/__init__.cpython-310.pyc
 polsartools/sensors/__pycache__/__init__.cpython-313.pyc
