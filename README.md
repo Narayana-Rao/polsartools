@@ -54,14 +54,18 @@ def main():
     #Extract data 
     # Extract C2 data from NISAR GSLC data
     pst.nisar_gslc(r"NISAR_L2_PR_GSLC_001_030_A_019_2800_SHNA_A_20081012T060911_20081012T060925_D00404_N_F_J_001.h5")
+    pst.nisar_rslc(r"NISAR_L1_PR_RSLC_001_030_A_019_2000_SHNA_A_20081012T060910_20081012T060926_D00402_N_F_J_001.h5")
     
     annFile = r"./winnip_31606_12049_004_120627_L090_CX_03_grd/winnip_31606_12049_004_120627_L090_CX_03.ann"
-    #The follwoing function extracts C3 matrix from UAVSAR GRD data
+    #The following function extracts C3 matrix from UAVSAR GRD data
     pst.uavsar_grd(annFile)
     
-    #The follwoing function extracts C3 matrix from UAVSAR MLC data
+    #The following function extracts C3 matrix from UAVSAR MLC data
     pst.uavsar_mlc(annFile)
     
+    Extracted_fbd_path = r""
+    #The following function extracts C2 matrix from ALOS-2 FBD level 1.1 CEOS data
+    pst.alos2_fbd_l11(Extracted_fbd_path)
     
     # Define the file paths for compact-pol covariance matrix 
     compact_c2 = r'./sample_data/compact_pol/C2_RHV'
@@ -143,7 +147,8 @@ if __name__ == "__main__":
 -----------------------------
 * Sensors
   * UAVSAR (GRD, MLC)
-  * NISAR (GSLC)
+  * NISAR (RSLC, GSLC)
+  * ALOS-2 (Fine Beam Dual-pol (FBD) Level 1.1 CEOS)
 
  * Full-pol :
 	* H-Alpha decomposition

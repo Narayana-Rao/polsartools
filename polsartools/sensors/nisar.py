@@ -10,7 +10,20 @@ def read_bin(file):
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
     return arr
+def write_rslc_bin(file,wdata):
+    
+    # ds = gdal.Open(refData)
+    [cols, rows] = wdata.shape
 
+    driver = gdal.GetDriverByName("ENVI")
+    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_Float32)
+    # outdata.SetGeoTransform(ds.GetGeoTransform())##sets same geotransform as input
+    # outdata.SetProjection(ds.GetProjection())##sets same projection as input
+    
+    outdata.SetDescription(file)
+    outdata.GetRasterBand(1).WriteArray(wdata)
+    # outdata.GetRasterBand(1).SetNoDataValue(0)##if you want these values transparent
+    outdata.FlushCache() ##saves to disk!!
 def mlook(data,az,rg):
     temp = data[0:data.shape[0]-data.shape[0]%az,0:data.shape[1]-data.shape[1]%rg]
     blocks = view_as_blocks(temp, block_shape=(az, rg))
@@ -87,8 +100,8 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
     S11 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
     S12 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
     
-    C11 = np.abs(S11**2)
-    C22 = np.abs(S12**2)
+    C11 = np.abs(S11)**2
+    C22 = np.abs(S12)**2
     C12 = S11*np.conjugate(S12)
     
     del S11,S12
@@ -134,6 +147,68 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
     file.close()  
     
     os.remove(tempFilePath)
+    h5File.close()
+    
+@time_it  
+def nisar_rslc(inFile,azlks=20,rglks=10):
+    
+    inFolder = os.path.dirname(inFile)   
+    C2Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2')
+
+    try:
+        h5File = h5py.File(inFile,"r")
+        sceneCenterAlongTrackSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/sceneCenterAlongTrackSpacing' ])
+        sceneCenterGroundRangeSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/sceneCenterGroundRangeSpacing'])
+        slantRange = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/slantRange'])
+        slantRangeSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/slantRangeSpacing'])
+
+
+        alongTrackUnitVectorX = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorX' ])
+        alongTrackUnitVectorY = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorY' ])
+        coordinateX = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/coordinateX' ])
+        coordinateY = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/coordinateY'])
+        elevationAngle = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/elevationAngle'])
+        epsg = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/epsg'])
+        
+    except:
+        raise('Invalid GSLC file !!')
+
+    S11 = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/HH'])
+    S12 = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/HV'])
+    
+    C11 = np.abs(S11)**2
+    C22 = np.abs(S12)**2
+    C12 = S11*np.conjugate(S12)
+    
+    del S11,S12
+
+    os.makedirs(C2Folder,exist_ok=True)
+    C11 = mlook(C11,azlks,rglks)
+    rows,cols = C11.shape
+    write_rslc_bin( os.path.join(C2Folder,'C11.bin'), C11)
+    print(f"Saved file {C2Folder}/C11.bin")
+    del C11
+    
+    C22 = mlook(C22,azlks,rglks)   
+    write_rslc_bin( os.path.join(C2Folder,'C22.bin'), C22)
+    print(f"Saved file {C2Folder}/C22.bin")
+    del C22
+    
+    C12 = mlook(C12,azlks,rglks)   
+    write_rslc_bin( os.path.join(C2Folder,'C12_real.bin'), np.real(C12))
+    print(f"Saved file {C2Folder}/C12_real.bin")
+    write_rslc_bin( os.path.join(C2Folder,'C12_imag.bin'), np.imag(C12))
+    print(f"Saved file {C2Folder}/C12_imag.bin")
+    del C12
+    
+    
+    file = open(C2Folder +'/config.txt',"w+")
+    file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1'%(rows,cols))
+    file.close()  
+    
+    h5File.close()
+    
+    
 #%%
 
 

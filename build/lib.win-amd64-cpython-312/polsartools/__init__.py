@@ -1,8 +1,3 @@
-"""
-
-A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
-
-"""
 # polsartools/__init__.py
 
 import warnings
@@ -21,7 +16,8 @@ from .polsar.cp import cprvi, dopcp, misomega, mf3cc
 from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp
 from .polsar.dcp import mf3cd
 from .sensors.uavsar import uavsar_grd,uavsar_mlc
-from .sensors.nisar import nisar_gslc
+from .sensors.nisar import nisar_gslc,nisar_rslc
+from .sensors.alos2 import alos2_fbd_l11
 from .utils import convert_T3_C3,convert_C3_T3
 from .preprocessing.filters import boxcar,rlee
 
@@ -31,7 +27,7 @@ from .preprocessing.filters import boxcar,rlee
 # import polsartools.sum_arrays
 # import polsartools.cprvicpp #process_chunk_cprvicpp
 __all__ = [
-    'uavsar_grd', 'uavsar_mlc', 'nisar_gslc', #import data from sensors
+    'uavsar_grd', 'uavsar_mlc', 'nisar_gslc', 'nisar_rslc', 'alos2_fbd_l11',#import data from sensors
     # 'rl', 'boxcar', #import filters
     'convert_T3_C3', 'convert_C3_T3', 'pauliRGB',#import utils
     'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 'halphafp', 'yam4cfp', # Full-pol

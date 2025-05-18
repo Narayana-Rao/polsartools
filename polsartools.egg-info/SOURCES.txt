@@ -14,6 +14,7 @@ pyproject.toml
 requirements.txt
 setup.py
 .github/workflows/ci.yml
+.github/workflows/release.yml
 .vscode/settings.json
 conda-recipe/meta.yaml
 dist/polsartools-0.4.2-py3-none-any.whl
@@ -181,6 +182,7 @@ polsartools/__init__.py
 polsartools/__version__.py
 polsartools/cprvicpp.cp312-win_amd64.pyd
 polsartools/rflee.cp312-win_amd64.pyd
+polsartools/version.json
 polsartools.egg-info/PKG-INFO
 polsartools.egg-info/SOURCES.txt
 polsartools.egg-info/dependency_links.txt
@@ -279,6 +281,7 @@ polsartools/preprocessing/sensors/sentinel1.py
 polsartools/python_bindings/__init__.py
 polsartools/sensors/.gitignore
 polsartools/sensors/__init__.py
+polsartools/sensors/alos2.py
 polsartools/sensors/basic_func.py
 polsartools/sensors/import_s1grd.py
 polsartools/sensors/nisar.py
