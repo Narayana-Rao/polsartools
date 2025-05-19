@@ -8,3 +8,4 @@ h5py
 scikit-image
 pytest
 gdal==3.9.0
+scikit-image

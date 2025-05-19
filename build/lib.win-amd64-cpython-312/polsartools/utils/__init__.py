@@ -3,4 +3,5 @@
 # This file makes the directory a Python package
 from .convert_T3_C3 import convert_T3_C3
 from .convert_C3_T3 import convert_C3_T3
-from .pauliRGB import pauliRGB
+from .pauliRGB import pauliRGB, read_bin
+from .dxpRGB import dxpRGB
