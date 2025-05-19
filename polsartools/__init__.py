@@ -18,6 +18,7 @@ from .polsar.dcp import mf3cd
 from .sensors.uavsar import uavsar_grd,uavsar_mlc
 from .sensors.nisar import nisar_gslc,nisar_rslc
 from .sensors.alos2 import alos2_fbd_l11
+from .sensors.chyaan2 import chyan2_fp
 from .utils import convert_T3_C3,convert_C3_T3
 from .preprocessing.filters import boxcar,rlee
 

@@ -66,6 +66,12 @@ def main():
     Extracted_fbd_path = r""
     #The following function extracts C2 matrix from ALOS-2 FBD level 1.1 CEOS data
     pst.alos2_fbd_l11(Extracted_fbd_path)
+
+    Extracted_cy2_path = r""
+    #The following function extracts T3/C3 matrix from Chandrayaan-2 DFSAR data
+    pst.chyaan2_fp(Extracted_cy2_path,matrix='T3')
+
+
     
     # Define the file paths for compact-pol covariance matrix 
     compact_c2 = r'./sample_data/compact_pol/C2_RHV'
@@ -149,6 +155,7 @@ if __name__ == "__main__":
   * UAVSAR (GRD, MLC)
   * NISAR (RSLC, GSLC)
   * ALOS-2 (Fine Beam Dual-pol (FBD) Level 1.1 CEOS)
+  * Chandrayaan-II DFSAR (Full-pol)
 
  * Full-pol :
 	* H-Alpha decomposition

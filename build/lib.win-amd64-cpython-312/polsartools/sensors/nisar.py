@@ -100,8 +100,8 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
     S11 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
     S12 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
     
-    C11 = np.abs(S11**2)
-    C22 = np.abs(S12**2)
+    C11 = np.abs(S11)**2
+    C22 = np.abs(S12)**2
     C12 = S11*np.conjugate(S12)
     
     del S11,S12
@@ -176,8 +176,8 @@ def nisar_rslc(inFile,azlks=20,rglks=10):
     S11 = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/HH'])
     S12 = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/HV'])
     
-    C11 = np.abs(S11**2)
-    C22 = np.abs(S12**2)
+    C11 = np.abs(S11)**2
+    C22 = np.abs(S12)**2
     C12 = S11*np.conjugate(S12)
     
     del S11,S12

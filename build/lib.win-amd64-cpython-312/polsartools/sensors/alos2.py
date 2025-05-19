@@ -4,6 +4,7 @@ from osgeo import gdal
 import os, glob
 import matplotlib.pyplot as plt
 from skimage.util.shape import view_as_blocks
+from polsartools.utils.utils import time_it
 def read_bin(file):
     ds = gdal.Open(file)
     band = ds.GetRasterBand(1)
@@ -58,7 +59,8 @@ def write_a2_bin(file,wdata):
     outdata.GetRasterBand(1).WriteArray(wdata)
     # outdata.GetRasterBand(1).SetNoDataValue(0)##if you want these values transparent
     outdata.FlushCache() ##saves to disk!!
-    
+
+@time_it    
 def alos2_fbd_l11(inFolder,azlks=3,rglks=2,calfac_dB=-83):
     
     hh_file = list(glob.glob(os.path.join(inFolder,'IMG-HH-*-FBDR1.1__A')) + \
