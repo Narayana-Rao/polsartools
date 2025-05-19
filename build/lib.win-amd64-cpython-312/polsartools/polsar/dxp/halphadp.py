@@ -70,6 +70,6 @@ def process_chunk_halphadp(chunks, window_size,*args):
     # alpha1 = alpha1.reshape(C2_stack.shape[0],C2_stack.shape[1])
     # alpha2 = alpha2.reshape(C2_stack.shape[0],C2_stack.shape[1])
 
-    print(np.nanmean(H),np.nanmean(alpha_))
+    # print(np.nanmean(H),np.nanmean(alpha_))
 
     return np.real(H),np.real(alpha_)

@@ -157,21 +157,21 @@ def nisar_rslc(inFile,azlks=20,rglks=10):
 
     try:
         h5File = h5py.File(inFile,"r")
-        sceneCenterAlongTrackSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/sceneCenterAlongTrackSpacing' ])
-        sceneCenterGroundRangeSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/sceneCenterGroundRangeSpacing'])
-        slantRange = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/slantRange'])
-        slantRangeSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/slantRangeSpacing'])
+        # sceneCenterAlongTrackSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/sceneCenterAlongTrackSpacing' ])
+        # sceneCenterGroundRangeSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/sceneCenterGroundRangeSpacing'])
+        # slantRange = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/slantRange'])
+        # slantRangeSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/slantRangeSpacing'])
 
 
-        alongTrackUnitVectorX = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorX' ])
-        alongTrackUnitVectorY = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorY' ])
-        coordinateX = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/coordinateX' ])
-        coordinateY = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/coordinateY'])
-        elevationAngle = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/elevationAngle'])
-        epsg = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/epsg'])
+        # alongTrackUnitVectorX = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorX' ])
+        # alongTrackUnitVectorY = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorY' ])
+        # coordinateX = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/coordinateX' ])
+        # coordinateY = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/coordinateY'])
+        # elevationAngle = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/elevationAngle'])
+        # epsg = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/epsg'])
         
     except:
-        raise('Invalid GSLC file !!')
+        raise('Invalid RSLC file !!')
 
     S11 = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/HH'])
     S12 = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/HV'])
