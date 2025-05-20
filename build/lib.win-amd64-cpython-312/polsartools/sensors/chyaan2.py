@@ -137,7 +137,7 @@ def write_bin(file,wdata):
     outdata.FlushCache() ##saves to disk!! 
 
 @time_it
-def chyaan2_fp(inFolder,matrix='T3'):
+def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
     
     S2Folder = os.path.join(inFolder,'S2')
 
@@ -201,10 +201,7 @@ def chyaan2_fp(inFolder,matrix='T3'):
             
             ]
 
-    mlFile = S2Folder+'/ml_Info.txt'
-    with open(mlFile, 'w+') as f:
-        f.writelines(lines)
-    f.close()
+
 
 
     calFactor = 1/np.sqrt(10**(cc/10))
@@ -236,8 +233,16 @@ def chyaan2_fp(inFolder,matrix='T3'):
     VHi_ds = None
     VVr_ds = None
     VVi_ds = None
-    az = mlf
-    rg = 1    
+    
+    if azlks != None and rglks != None:
+        az = azlks
+        rg = rglks
+        
+    else:
+        az = mlf
+        rg = 1
+            
+    print(f'Using multi-look factor: azlks = {az}, rglks = {rg}')
     
     if matrix == 'T3':
         # Kp- 3-D Pauli feature vector
@@ -246,7 +251,6 @@ def chyaan2_fp(inFolder,matrix='T3'):
         # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], (S2[1,0]+S2[0,1])/2])
 
         del S2
-
 
         # 3x3 Pauli Coherency Matrix elements
 
@@ -261,14 +265,21 @@ def chyaan2_fp(inFolder,matrix='T3'):
         T3Folder = os.path.join(inFolder,'T3')
 
         if not os.path.isdir(T3Folder):
+            print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
             os.mkdir(T3Folder)
             
         write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)
+        
+        mlFile = T3Folder+'/ml_Info.txt'
+        with open(mlFile, 'w+') as f:
+            f.writelines(lines)
+        f.close()
+        
+        
     elif matrix == 'C3':
         # Kl- 3-D Lexicographic feature vector
         Kl = np.array([S2[0,0], np.sqrt(2)*S2[1,0], S2[1,1]])
         del S2
-
 
         # 3x3 COVARIANCE Matrix elements
 
@@ -283,9 +294,15 @@ def chyaan2_fp(inFolder,matrix='T3'):
         C3Folder = os.path.join(inFolder,'C3')
 
         if not os.path.isdir(C3Folder):
+            print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
             os.mkdir(C3Folder)
         
         write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)
+        
+        mlFile = C3Folder+'/ml_Info.txt'
+        with open(mlFile, 'w+') as f:
+            f.writelines(lines)
+        f.close()
         
     else:
         raise ValueError('matrix must be either T3 or C3')
