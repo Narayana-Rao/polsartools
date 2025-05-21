@@ -175,6 +175,7 @@ docs/source/files/functions/full_pol/GRVI.rst
 docs/source/files/functions/full_pol/MF3CF.rst
 docs/source/files/functions/full_pol/PRVI_fp.rst
 docs/source/files/functions/full_pol/RVI_fp.rst
+examples/Chandrayaan_II_DFSAR_FP.ipynb
 examples/NISAR_RSLC_C2.ipynb
 examples/UAVSAR_Pol_decompositions_GRD.ipynb
 examples/example_usage.py
@@ -246,6 +247,7 @@ polsartools/polsar/dxp/dprvi.py
 polsartools/polsar/dxp/halphadp.py
 polsartools/polsar/dxp/prvidp.py
 polsartools/polsar/dxp/rvidp.py
+polsartools/polsar/dxp/shannondp.py
 polsartools/polsar/dxp/__pycache__/__init__.cpython-310.pyc
 polsartools/polsar/dxp/__pycache__/dopdp.cpython-310.pyc
 polsartools/polsar/dxp/__pycache__/dprvi.cpython-310.pyc

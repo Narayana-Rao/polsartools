@@ -13,7 +13,7 @@ from . import sensors
 # Import functions from the submodules for direct access
 from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,halphafp,yam4cfp
 from .polsar.cp import cprvi, dopcp, misomega, mf3cc
-from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp
+from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp, shannondp
 from .polsar.dcp import mf3cd
 from .sensors.uavsar import uavsar_grd,uavsar_mlc
 from .sensors.nisar import nisar_gslc,nisar_rslc
@@ -33,7 +33,7 @@ __all__ = [
     'convert_T3_C3', 'convert_C3_T3', 'pauliRGB',#import utils
     'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 'halphafp', 'yam4cfp', # Full-pol
     'cprvi', 'dopcp', 'misomega', 'mf3cc',                 # Compact-pol
-    'dprvi', 'dopdp', 'prvidp', 'rvidp', 'halphadp'        # Dual-cross-pol
+    'dprvi', 'dopdp', 'prvidp', 'rvidp', 'halphadp', 'shannondp',       # Dual-cross-pol
     'mf3cd'                                         # Dual-co-pol
     
 ]
