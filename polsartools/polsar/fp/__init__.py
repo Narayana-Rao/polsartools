@@ -10,3 +10,4 @@ from .neufp import neufp
 from .nnedfp import nnedfp
 from .halphafp import halphafp
 from .yam4cfp import yam4cfp
+from .shannon_h_fp import shannon_h_fp

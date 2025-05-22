@@ -9,7 +9,7 @@ others are fine
 
 """
 @time_it
-def shannondp(infolder, outname=None,  chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
+def shannon_h_dp(infolder, outname=None,  chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
     input_filepaths = [
         os.path.join(infolder, "C11.bin"), 
         os.path.join(infolder, "C12_real.bin"),

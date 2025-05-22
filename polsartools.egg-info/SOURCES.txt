@@ -247,7 +247,7 @@ polsartools/polsar/dxp/dprvi.py
 polsartools/polsar/dxp/halphadp.py
 polsartools/polsar/dxp/prvidp.py
 polsartools/polsar/dxp/rvidp.py
-polsartools/polsar/dxp/shannondp.py
+polsartools/polsar/dxp/shannon_h_dp.py
 polsartools/polsar/dxp/__pycache__/__init__.cpython-310.pyc
 polsartools/polsar/dxp/__pycache__/dopdp.cpython-310.pyc
 polsartools/polsar/dxp/__pycache__/dprvi.cpython-310.pyc
@@ -263,6 +263,7 @@ polsartools/polsar/fp/neufp.py
 polsartools/polsar/fp/nnedfp.py
 polsartools/polsar/fp/prvifp.py
 polsartools/polsar/fp/rvifp.py
+polsartools/polsar/fp/shannon_h_fp.py
 polsartools/polsar/fp/yam4cfp.py
 polsartools/polsar/fp/__pycache__/__init__.cpython-310.pyc
 polsartools/polsar/fp/__pycache__/dopfp.cpython-310.pyc
