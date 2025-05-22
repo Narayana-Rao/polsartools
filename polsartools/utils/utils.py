@@ -6,17 +6,42 @@ from concurrent.futures import ProcessPoolExecutor,as_completed
 from tqdm import tqdm
 import time
 
+# def time_it(func):
+#     @wraps(func)
+#     def wrapper(*args, **kwargs):
+#         start_time = time.time()
+#         try:
+#             result = func(*args, **kwargs)  # Call the original function
+#             end_time = time.time()
+#             print(f"Execution time for {func.__name__}: {end_time - start_time:.2f} seconds")
+#             return result
+#         except Exception as e:
+#             # If an exception occurs, re-raise it but don't print the execution time
+#             raise e
+#     return wrapper
+
+
 def time_it(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         start_time = time.time()
         try:
-            result = func(*args, **kwargs)  # Call the original function
+            result = func(*args, **kwargs)
             end_time = time.time()
-            print(f"Execution time for {func.__name__}: {end_time - start_time:.2f} seconds")
+            duration = int(end_time - start_time)
+
+            if duration < 60:
+                print(f"Execution time for {func.__name__}: {duration:.2f} seconds")
+            elif duration < 3600:
+                minutes, seconds = divmod(duration, 60)
+                print(f"Execution time for {func.__name__}: {minutes:02}:{seconds:02} (MM:SS)")
+            else:
+                hours, remainder = divmod(duration, 3600)
+                minutes, seconds = divmod(remainder, 60)
+                print(f"Execution time for {func.__name__}: {hours:02}:{minutes:02}:{seconds:02} (HH:MM:SS)")
+                
             return result
         except Exception as e:
-            # If an exception occurs, re-raise it but don't print the execution time
             raise e
     return wrapper
 

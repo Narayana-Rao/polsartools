@@ -41,7 +41,49 @@ pip install polsartools
 
  
 #### gdal installation error fix ```conda install gdal```
- 
+
+
+## Available functionalities:
+-----------------------------
+* Supported sensors
+  * UAVSAR (GRD, MLC)
+  * NISAR (RSLC, GSLC)
+  * ALOS-2 (Fine Beam Dual-pol (FBD) Level 1.1 CEOS)
+  * Chandrayaan-II DFSAR (Full-pol)
+
+ * Full-pol :
+	* H-Alpha decomposition
+    * Shannon Entropy parameters
+	* Non-negative Eigen value decomposition
+	* Neumann Decomposition 
+   * Model free 4-Component decomposition for full-pol data (MF4CF)[[11]](#11)
+   * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]](#4)
+	* Radar Vegetation Index (RVI) [[8]](#8) 
+   * Generalized volume Radar Vegetation Index (GRVI) [[2]](#2)
+   * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
+   * Degree of Polarization (DOP) [[10]](#10) 
+
+* Compact-pol : 
+  * Model free 3-Component decomposition for compact-pol data (MF3CC) [[4]](#4)
+  * Improved S-Omega decomposition for compact-pol data (iS-Omega) [[7]](#7)
+  * Compact-pol Radar Vegetation Index (CpRVI)  [[6]](#6)
+  * Degree of Polarization (DOP)  [[10]](#10) 
+
+* Dual-pol:
+  * H-Alpha parameters
+  * Shannon Entropy parameters
+  * Dual-pol Radar Vegetation Index (DpRVI) [[5]](#5)
+  * Dual-pol Radar Vegetation Index for GRD data (DpRVIc) [[12]](#12)
+  * Radar Vegetation Index (RVI) [[9]](#9)
+  * Degree of Polarization (DOP) [[10]](#10) 
+  * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
+  * Dual-pol descriptors [[13]](#13)
+  * Model free 3-Component decomposition for dual-copol data (MF3CD)
+
+* polarimetric speckle filters:
+  * boxcar
+  * refine lee
+
 ## Example Usage
 
 #### More sample use cases are provided in [examples](https://github.com/Narayana-Rao/polsartools/tree/main/examples) folder. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
@@ -149,44 +191,6 @@ if __name__ == "__main__":
 ```
 
 
-## Available functionalities:
------------------------------
-* Sensors
-  * UAVSAR (GRD, MLC)
-  * NISAR (RSLC, GSLC)
-  * ALOS-2 (Fine Beam Dual-pol (FBD) Level 1.1 CEOS)
-  * Chandrayaan-II DFSAR (Full-pol)
-
- * Full-pol :
-	* H-Alpha decomposition
-	* Non-negative Eigen value decomposition
-	* Neumann Decomposition 
-   * Model free 4-Component decomposition for full-pol data (MF4CF)[[11]](#11)
-   * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]](#4)
-	* Radar Vegetation Index (RVI) [[8]](#8) 
-   * Generalized volume Radar Vegetation Index (GRVI) [[2]](#2)
-   * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
-   * Degree of Polarization (DOP) [[10]](#10) 
-
-* Compact-pol : 
-  * Model free 3-Component decomposition for compact-pol data (MF3CC) [[4]](#4)
-  * Improved S-Omega decomposition for compact-pol data (iS-Omega) [[7]](#7)
-  * Compact-pol Radar Vegetation Index (CpRVI)  [[6]](#6)
-  * Degree of Polarization (DOP)  [[10]](#10) 
-
-* Dual-pol:
-	* Dual-pol Radar Vegetation Index (DpRVI) [[5]](#5)
-  * Dual-pol Radar Vegetation Index for GRD data (DpRVIc) [[12]](#12)
-  * Radar Vegetation Index (RVI) [[9]](#9)
-  * Degree of Polarization (DOP) [[10]](#10) 
-  * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
-  * Dual-pol descriptors [[13]](#13)
-  * Model free 3-Component decomposition for dual-copol data (MF3CD)
-
-* polarimetric speckle filters:
-  * boxcar
-  * refine lee
-
 
 ## Contributions
 1) Contribute to the software
@@ -239,5 +243,4 @@ Barakat, R., 1977. Degree of polarization and the principal idempotents of the c
 <a id="12">[12]</a> Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A., Karthikeyan, L., McNairn, H. and Rao, Y.S., 2022. Soil moisture retrieval over croplands using dual-pol L-band GRD SAR data. Remote Sensing of Environment, 271, p.112900. 
 
 <a id="13">[13]</a>Bhogapurapu, N., Dey, S., Bhattacharya, A., Mandal, D., Lopez-Sanchez, J.M., McNairn, H., López-Martínez, C. and Rao, Y.S., 2021. Dual-polarimetric descriptors from Sentinel-1 GRD SAR data for crop growth assessment. ISPRS Journal of Photogrammetry and Remote Sensing, 178, pp.20-35.
-
 

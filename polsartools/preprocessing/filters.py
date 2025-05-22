@@ -61,11 +61,13 @@ def process_chunk_rfl(chunks, window_size,input_filepaths, *args):
     
     proc_chunks=[]
     for chunk in vi_c_raw:
-        proc_chunks.append(np.array(chunk))
+        filt_data = np.array(chunk)
+        # filt_data[filt_data == 0] = np.nan
+        proc_chunks.append(filt_data)
         # print('mean %0.3f'%np.nanmean(np.array(chunk)),'std %0.3f'%np.nanstd(np.array(chunk)))
         
         
-    del vi_c_raw
+    del vi_c_raw,filt_data,chunk
     
     # print("proc_chunks pad",np.shape(proc_chunks[0]))
     for i in range(len(proc_chunks)):
@@ -107,8 +109,11 @@ def process_chunk_rfl(chunks, window_size,input_filepaths, *args):
 
     for i in range(num_chunks):
         real_part = proc_chunks[2 * i]       # Get the real part from the even indices
+        # real_part[real_part == 0] = np.nan
         imag_part = proc_chunks[2 * i + 1]   # Get the imaginary part from the odd indices
+        # imag_part[imag_part == 0] = np.nan
         complex_array = real_part + 1j * imag_part  # Create a complex number
+        
         out_chunks.append(complex_array)
         # print(np.nanmean(real_part),' ' ,np.nanmean(imag_part))
     filtered_chunks = []
@@ -129,6 +134,26 @@ def process_chunk_rfl(chunks, window_size,input_filepaths, *args):
         filtered_chunks.append(np.real(out_chunks[1]))
         filtered_chunks.append(np.imag(out_chunks[1]))
         filtered_chunks.append(np.real(out_chunks[3]))
+   
+   
+   
+    # if len(chunks) == 9:
+    #     filtered_chunks.append(np.where(np.real(out_chunks[0]) == 0, np.nan, np.real(out_chunks[0])))
+    #     filtered_chunks.append(np.where(np.real(out_chunks[1]) == 0, np.nan, np.real(out_chunks[1])))
+    #     filtered_chunks.append(np.where(np.imag(out_chunks[1]) == 0, np.nan, np.imag(out_chunks[1])))
+    #     filtered_chunks.append(np.where(np.real(out_chunks[2]) == 0, np.nan, np.real(out_chunks[2])))
+    #     filtered_chunks.append(np.where(np.imag(out_chunks[2]) == 0, np.nan, np.imag(out_chunks[2])))
+    #     filtered_chunks.append(np.where(np.real(out_chunks[4]) == 0, np.nan, np.real(out_chunks[4])))
+    #     filtered_chunks.append(np.where(np.real(out_chunks[5]) == 0, np.nan, np.real(out_chunks[5])))
+    #     filtered_chunks.append(np.where(np.imag(out_chunks[5]) == 0, np.nan, np.imag(out_chunks[5])))
+    #     filtered_chunks.append(np.where(np.real(out_chunks[8]) == 0, np.nan, np.real(out_chunks[8])))
+
+    # if len(chunks) == 4:
+    #     filtered_chunks.append(np.where(np.real(out_chunks[0]) == 0, np.nan, np.real(out_chunks[0])))
+    #     filtered_chunks.append(np.where(np.real(out_chunks[1]) == 0, np.nan, np.real(out_chunks[1])))
+    #     filtered_chunks.append(np.where(np.imag(out_chunks[1]) == 0, np.nan, np.imag(out_chunks[1])))
+    #     filtered_chunks.append(np.where(np.real(out_chunks[3]) == 0, np.nan, np.real(out_chunks[3])))
+   
    
     return filtered_chunks
     

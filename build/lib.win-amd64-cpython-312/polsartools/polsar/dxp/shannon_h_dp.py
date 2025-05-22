@@ -18,16 +18,16 @@ def shannon_h_dp(infolder, outname=None,  chi_in=0, psi_in=0, window_size=1,writ
     ]
     output_filepaths = []
     if outname is None:
-        output_filepaths.append(os.path.join(infolder, "HS.tif"))
-        output_filepaths.append(os.path.join(infolder, "HSI.tif"))
-        output_filepaths.append(os.path.join(infolder, "HSP.tif"))
+        output_filepaths.append(os.path.join(infolder, "H_Shannon.tif"))
+        output_filepaths.append(os.path.join(infolder, "HI_Shannon.tif"))
+        output_filepaths.append(os.path.join(infolder, "HP_Shannon.tif"))
         
-        output_filepaths.append(os.path.join(infolder, "HS_norm.tif"))
-        output_filepaths.append(os.path.join(infolder, "HSI_norm.tif"))
-        output_filepaths.append(os.path.join(infolder, "HSP_norm.tif"))
+        # output_filepaths.append(os.path.join(infolder, "HS_norm.tif"))
+        # output_filepaths.append(os.path.join(infolder, "HSI_norm.tif"))
+        # output_filepaths.append(os.path.join(infolder, "HSP_norm.tif"))
         
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,processing_func=process_chunk_shannondp,block_size=(512, 512), max_workers=max_workers,  num_outputs=6)
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,processing_func=process_chunk_shannondp,block_size=(512, 512), max_workers=max_workers,  num_outputs=3)
 
 def process_chunk_shannondp(chunks, window_size,*args):
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
@@ -54,60 +54,36 @@ def process_chunk_shannondp(chunks, window_size,*args):
     
     evals[:,0][evals[:,0] <0] = 0
     evals[:,1][evals[:,1] >1] = 1
-    
-    eval_norm1 = (evals[:,0])/(evals[:,0] + evals[:,1])
-    # eval_norm1[eval_norm1<0]=0
-    # eval_norm1[eval_norm1>1]=1
-    # eval_norm1 = (evals[:,0])/(evals[:,0] + evals[:,1])
-    
-    eval_norm2 = (evals[:,1])/(evals[:,0] + evals[:,1])
-    
-    # eval_norm2[eval_norm2<0]=0
-    # eval_norm2[eval_norm2>1]=1
-    
-    # # %Alpha 1
-    eig_vec_r1 = np.real(evecs[:,0,0])
-    eig_vec_c1 = np.imag(evecs[:,0,0])
-    # alpha1 = np.arccos(np.sqrt(eig_vec_r1*eig_vec_r1 + eig_vec_c1*eig_vec_c1))*180/np.pi
-    
-    # # %Alpha 2
-    eig_vec_r2 = np.real(evecs[:,0,1])
-    eig_vec_c2 = np.imag(evecs[:,0,1])
-    # alpha2 = np.arccos(np.sqrt(eig_vec_r2*eig_vec_r2 + eig_vec_c2*eig_vec_c2))*180/np.pi
+  
     eps  = 1e-8
     D = evals[:,0]*evals[:,1]
     I = evals[:,0]+evals[:,1]
-    DegPol = np.ones(rows*cols).astype(np.float32) - 4* D / (I*I + eps)
+    
+    # Barakat degree of polarization
+    DoP = np.ones(rows*cols).astype(np.float32) - 4* D / (I*I + eps)
 
     HSP = np.zeros(rows*cols).astype(np.float32)
-    HSI = np.zeros(rows*cols).astype(np.float32)
-    HS = np.zeros(rows*cols).astype(np.float32)
+    # HSI = np.zeros(rows*cols).astype(np.float32)
+    # HS = np.zeros(rows*cols).astype(np.float32)
 
-    condition = (np.ones(rows*cols) - DegPol) < eps
-    HSP = np.where(condition, 0, np.log(np.abs(np.ones(rows*cols) - DegPol)))
+    condition = (np.ones(rows*cols) - DoP) < eps
+    HSP = np.where(condition, 0, np.log(np.abs(np.ones(rows*cols) - DoP)))
+    HSP[np.isinf(HSP)] = np.nan
+    HSP[HSP==0] = np.nan
     
-    HSI= 2 * np.log(np.exp(1)*np.pi*I/2)
-    HS = HSP + HSI
+    with np.errstate(divide='ignore', invalid='ignore'):
+        HSI = 2 * np.log(np.exp(1) * np.pi * I / 2)
+        HSI[np.isinf(HSI)] = np.nan
     
+    HS = np.nansum(np.dstack((HSP, HSI)), 2)
 
-    D_norm = eval_norm1*eval_norm2
-    I_norm = eval_norm1+eval_norm2
-    DegPol_norm = np.ones(rows*cols).astype(np.float32) - 4* D_norm / (I_norm*I_norm + eps)
-    HSP_norm = np.zeros(rows*cols).astype(np.float32)
-    HSI_norm = np.zeros(rows*cols).astype(np.float32)
-    HS_norm = np.zeros(rows*cols).astype(np.float32)
-    
-    
-    condition = (np.ones(rows*cols) - DegPol_norm) < eps
-    HSP_norm = np.where(condition, 0, np.log(np.abs(np.ones(rows*cols) - DegPol_norm)))
-    HSI_norm= 2 * np.log(np.exp(1)*np.pi*I_norm/2)
-    
-    
-    # HSP_norm = (HSP_norm - np.nanmin(HSP_norm)) / (np.nanmax(HSP_norm) - np.nanmin(HSP_norm))
-    
-    HS_norm = HSP_norm + HSI_norm
-    
-    
+    """ Normalization will not not work as expected if we are processing individual blocks of data. 
+    Therefore we will normalize the whole image at the end.
+    """
+    # HSP_norm = (HSP - np.nanmin(HSP)) / (np.nanmax(HSP) - np.nanmin(HSP))
+    # HSI_norm = (HSI - np.nanmin(HSI)) / (np.nanmax(HSI) - np.nanmin(HSI))
+    # HS_norm = (HS - np.nanmin(HS)) / (np.nanmax(HS) - np.nanmin(HS))
+
     
 
-    return np.real(HS).reshape(rows,cols),np.real(HSI).reshape(rows,cols),np.real(HSP).reshape(rows,cols),np.real(HS_norm).reshape(rows,cols),np.real(HSI_norm).reshape(rows,cols),np.real(HSP_norm).reshape(rows,cols) 
+    return np.real(HS).reshape(rows,cols),np.real(HSI).reshape(rows,cols),np.real(HSP).reshape(rows,cols) #np.real(HS_norm).reshape(rows,cols),np.real(HSI_norm).reshape(rows,cols),np.real(HSP_norm).reshape(rows,cols) 

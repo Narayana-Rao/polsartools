@@ -30,14 +30,14 @@ def shannon_h_fp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write
 
     output_filepaths = []
     if outname is None:
-        output_filepaths.append(os.path.join(infolder, "HS.tif"))
-        output_filepaths.append(os.path.join(infolder, "HSI.tif"))
-        output_filepaths.append(os.path.join(infolder, "HSP.tif"))
+        output_filepaths.append(os.path.join(infolder, "H_Shannon.tif"))
+        output_filepaths.append(os.path.join(infolder, "HI_Shannon.tif"))
+        output_filepaths.append(os.path.join(infolder, "HP_Shannon.tif"))
         
         # output_filepaths.append(os.path.join(infolder, "HS_norm.tif"))
         # output_filepaths.append(os.path.join(infolder, "HSI_norm.tif"))
         # output_filepaths.append(os.path.join(infolder, "HSP_norm.tif"))
-    
+        
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
             processing_func=proc_shannon_h_fp,
             block_size=(512, 512), max_workers=max_workers, 
@@ -119,48 +119,27 @@ def proc_shannon_h_fp(chunks, window_size, input_filepaths, *args):
     # Reorder eigenvalues and eigenvectors based on sorted indices
     evals = np.take_along_axis(evals_, sorted_indices, axis=-1)  # Reorder eigenvalues
     
-    # To reorder the eigenvectors, we use  indexing
-    # Use `sorted_indices` to index along the second axis (the 3 components of the eigenvector)
-    evecs = np.array([evecs_[i, :, sorted_indices[i]] for i in range(evecs_.shape[0])])
-    
-    # print('Eigen!')
-    # Not sure if this is required; if enabled entropy values are different between polsarpro and this code
-    # evals[:,0][evals[:,0] <0] = 0
-    # evals[:,1][evals[:,1] <0] = 0
-    # evals[:,2][evals[:,2] <0] = 0
-    # evals[:,0][evals[:,0] >1] = 1
-    # evals[:,1][evals[:,1] >1] = 1
-    # evals[:,2][evals[:,2] >1] = 1
-    
-    eval_norm1 = (evals[:,0])/(evals[:,0] + evals[:,1]+ evals[:,2])
-    eval_norm1[eval_norm1<0]=0
-    # eval_norm1[eval_norm1>1]=1
-    
-    
-    eval_norm2 = (evals[:,1])/(evals[:,0] + evals[:,1]+ evals[:,2])
-    eval_norm2[eval_norm2<0]=0
-    # eval_norm2[eval_norm2>1]=1
-    
-    
-    eval_norm3 = (evals[:,2])/(evals[:,0] + evals[:,1]+evals[:,2])
-    eval_norm3[eval_norm3<0]=0
-    # eval_norm3[eval_norm3>1]=1
-
 
     eps  = 1e-8
     D = evals[:,0]*evals[:,1]*evals[:,2]
     I = evals[:,0]+evals[:,1]+evals[:,2]
-    DegPol = np.ones(rows*cols).astype(np.float32) - 27* D / (I*I*I + eps)
+    #Barakat Degree of Polarization
+    DoP = np.ones(rows*cols).astype(np.float32) - 27* D / (I*I*I + eps)
 
     HSP = np.zeros(rows*cols).astype(np.float32)
-    HSI = np.zeros(rows*cols).astype(np.float32)
-    HS = np.zeros(rows*cols).astype(np.float32)
+    # HSI = np.zeros(rows*cols).astype(np.float32)
+    # HS = np.zeros(rows*cols).astype(np.float32)
 
-    condition = (np.ones(rows*cols) - DegPol) < eps
-    HSP = np.where(condition, 0, np.log(np.abs(np.ones(rows*cols) - DegPol)))
+    condition = (np.ones(rows*cols) - DoP) < eps
+    HSP = np.where(condition, 0, np.log(np.abs(np.ones(rows*cols) - DoP)))
+    HSP[np.isinf(HSP)] = np.nan
+    HSP[HSP==0] = np.nan
     
-    HSI= 3 * np.log(np.exp(1)*np.pi*I/3)
-    HS = HSP + HSI
+    with np.errstate(divide='ignore', invalid='ignore'):
+        HSI = 3 * np.log(np.exp(1) * np.pi * I / 3)
+        HSI[np.isinf(HSI)] = np.nan
+    
+    HS = np.nansum(np.dstack((HSP, HSI)), 2)
 
 
     
