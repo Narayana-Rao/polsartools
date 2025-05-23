@@ -4,9 +4,10 @@
 
 # PolSARtools PyPI package
 [![Build](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml/badge.svg)](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml)
-[![image](https://img.shields.io/pypi/v/polsartools.svg)](https://pypi.python.org/pypi/polsartools)
-[![Downloads](https://static.pepy.tech/badge/polsartools)](https://pepy.tech/project/polsartools)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
+[![image](https://img.shields.io/pypi/v/polsartools.svg)](https://pypi.python.org/pypi/polsartools)
+[![GitHub commits](https://img.shields.io/github/commits-since/Narayana-Rao/polsartools/0.6.1.svg)](https://GitHub.com/Narayana-Rao/polsartools/commit/)
+[![Downloads](https://static.pepy.tech/badge/polsartools)](https://pepy.tech/project/polsartools)
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
 
 
