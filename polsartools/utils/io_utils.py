@@ -17,27 +17,35 @@ def write_T3(T3_stack,folder):
     
     out_file = folder +'/T11.bin'
     write_bin(out_file,np.real(T3_stack[:,:,0]))
+    print("Saved file "+out_file)
     
     out_file = folder +'/T12_real.bin'
     write_bin(out_file,np.real(T3_stack[:,:,1]))
+    print("Saved file "+out_file)
     out_file = folder +'/T12_imag.bin'
     write_bin(out_file,np.imag(T3_stack[:,:,1]))
+    print("Saved file "+out_file)
     
     out_file = folder +'/T13_real.bin'
     write_bin(out_file,np.real(T3_stack[:,:,2]))
+    print("Saved file "+out_file)
     out_file = folder +'/T13_imag.bin'
     write_bin(out_file,np.imag(T3_stack[:,:,2]))
+    print("Saved file "+out_file)
     
     out_file = folder +'/T22.bin'
     write_bin(out_file,np.real(T3_stack[:,:,4]))
+    print("Saved file "+out_file)
     
     out_file = folder +'/T23_real.bin'
     write_bin(out_file,np.real(T3_stack[:,:,5]))
+    print("Saved file "+out_file)
     out_file = folder +'/T23_imag.bin'
     write_bin(out_file,np.imag(T3_stack[:,:,5]))
-    
+    print("Saved file "+out_file)
     out_file = folder +'/T33.bin'
     write_bin(out_file,np.real(T3_stack[:,:,8]))
+    print("Saved file "+out_file)
     
     rows, cols = np.shape(T3_stack[:,:,8])
     file = folder +'/config.txt'
@@ -49,30 +57,34 @@ def write_C3(C3_stack,folder):
     
     out_file = folder +'/C11.bin'
     write_bin(out_file,np.real(C3_stack[:,:,0]))
-    
+    print("Saved file "+out_file)
     out_file = folder +'/C12_real.bin'
     write_bin(out_file,np.real(C3_stack[:,:,1]))
+    print("Saved file "+out_file)
     out_file = folder +'/C12_imag.bin'
     write_bin(out_file,np.imag(C3_stack[:,:,1]))
+    print("Saved file "+out_file)
     
     out_file = folder +'/C13_real.bin'
     write_bin(out_file,np.real(C3_stack[:,:,2]))
+    print("Saved file "+out_file)
     out_file = folder +'/C13_imag.bin'
     write_bin(out_file,np.imag(C3_stack[:,:,2]))
-    
+    print("Saved file "+out_file)
     
     
     out_file = folder +'/C22.bin'
     write_bin(out_file,np.real(C3_stack[:,:,4]))
-    
+    print("Saved file "+out_file)
     out_file = folder +'/C23_real.bin'
     write_bin(out_file,np.real(C3_stack[:,:,5]))
+    print("Saved file "+out_file)
     out_file = folder +'/C23_imag.bin'
     write_bin(out_file,np.imag(C3_stack[:,:,5]))
-    
+    print("Saved file "+out_file)
     out_file = folder +'/C33.bin'
     write_bin(out_file,np.real(C3_stack[:,:,8]))
-    
+    print("Saved file "+out_file)
     
     rows, cols = np.shape(C3_stack[:,:,8])
     file = folder +'/config.txt'

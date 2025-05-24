@@ -1,24 +1,27 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun May 18 17:40:11 2023
-
-@author: nbhogapurapu
-
-mismatch in corss-pol T33 etc between MIDAS and this have to cross-verify with polsarpro
-other elements are fine 
-calibration fine
-
-
-"""
-
-
-import glob,shutil,os
+import glob,os
 import numpy as np
 from osgeo import gdal 
 
-from skimage.util.shape import view_as_blocks
 from polsartools.utils.utils import time_it
 from polsartools.utils.io_utils import mlook, write_T3, write_C3
+
+
+def read_rs2_tif(file):
+    ds = gdal.Open(file)
+    band1 = ds.GetRasterBand(1).ReadAsArray()
+    band2 = ds.GetRasterBand(2).ReadAsArray()
+    ds=None
+    return np.dstack((band1,band2))
+
+def write_s2_bin(file,wdata):
+    [cols, rows] = wdata.shape
+    driver = gdal.GetDriverByName("ENVI")
+    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_CFloat32)
+    outdata.SetDescription(file)
+    outdata.GetRasterBand(1).WriteArray(wdata)
+    outdata.FlushCache()
+
+
 def read_bin(file):
     ds = gdal.Open(file,gdal.GA_ReadOnly)
     band = ds.GetRasterBand(1)
@@ -59,36 +62,6 @@ def write_bin(file,wdata):
 
 @time_it
 def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
-    
-    S2Folder = os.path.join(inFolder,'S2')
-
-    if not os.path.isdir(S2Folder):
-        os.mkdir(S2Folder)
-
-    ds = gdal.Open(glob.glob(inFolder+'/data/calibrated/*/*sli*_hh_*.tif')[0])
-    cols = ds.RasterXSize  
-    rows = ds.RasterYSize 
-
-    # %%
-
-    # Define band mappings and suffixes
-    polarizations = ['hh', 'hv', 'vh', 'vv']
-    el = ['s11','s12','s21','s22']
-    suffixes = ['Real', 'Imag']
-
-
-    # Function to process a band
-    def convert_band(input_file, band_number, output_file):
-        gdal.Translate(output_file, gdal.Open(input_file), format='ENVI', bandList=[band_number], outputType=gdal.GDT_Float32)
-
-    # Loop over polarizations and element identifiers
-    for pol, el_id in zip(polarizations, el):
-        input_file = glob.glob(os.path.join(inFolder, f'data/calibrated/*/*sli*_{pol}_*.tif'))[0]
-        for i, suffix in enumerate(suffixes, 1):  # Band 1 for 'Real', Band 2 for 'Imag'
-            output_file = os.path.join(S2Folder, f"{el_id}_{suffix}.bin")
-            convert_band(input_file, i, output_file)
-
-
     #%%
     xmlFile = glob.glob(inFolder+'/data/calibrated/*/*sli*.xml')[0]
     fxml = open(xmlFile, 'r')
@@ -108,7 +81,13 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
             bw = float( line.split('>')[1].split('<')[0])/1000000
     fxml.close() 
     gRange = ops/np.sin(inc*np.pi/180)
+    # multi-llok factor 
     mlf = int(np.round(gRange/ols,0))
+
+    ds = gdal.Open(glob.glob(inFolder+'/data/calibrated/*/*sli*_hh_*.tif')[0])
+    cols = ds.RasterXSize  
+    rows = ds.RasterYSize 
+
 
     lines = ['output_line_spacing '+ str(ols)+'\n',
             'output_pixel_spacing '+ str(ops)+'\n',
@@ -122,68 +101,95 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
             
             ]
 
-
-
-
     calFactor = 1/np.sqrt(10**(cc/10))
 
-    for file in glob.glob(S2Folder+"/*.bin"):
-        write_bin_s2(file,read_bin(file)*calFactor,file)
+    if matrix == 'S2':
 
-    S2Folder = S2Folder
+        out_dir = os.path.join(inFolder,"S2")
+        os.makedirs(out_dir,exist_ok=True)
 
-    HHi_ds  = gdal.Open(S2Folder+'/s11_Imag.bin')
-    HHr_ds  = gdal.Open(S2Folder+'/s11_Real.bin')
-    HVr_ds  = gdal.Open(S2Folder+'/s12_Real.bin')
-    HVi_ds  = gdal.Open(S2Folder+'/s12_Imag.bin')
-    VHr_ds  = gdal.Open(S2Folder+'/s21_Real.bin')
-    VHi_ds  = gdal.Open(S2Folder+'/s21_Imag.bin')
-    VVr_ds  = gdal.Open(S2Folder+'/s22_Real.bin')
-    VVi_ds  = gdal.Open(S2Folder+'/s22_Imag.bin')
+        print("Considering S12 = S21")
 
-
-    S2 = np.array([
-                [HHr_ds.GetRasterBand(1).ReadAsArray() + 1j*(HHi_ds.GetRasterBand(1).ReadAsArray()), HVr_ds.GetRasterBand(1).ReadAsArray()+ 1j*(HVi_ds.GetRasterBand(1).ReadAsArray()) ],
-                [VHr_ds.GetRasterBand(1).ReadAsArray() + 1j*(VHi_ds.GetRasterBand(1).ReadAsArray()), VVr_ds.GetRasterBand(1).ReadAsArray()+ 1j*(VVi_ds.GetRasterBand(1).ReadAsArray()) ]
-                ])
-    HHi_ds = None
-    HHr_ds = None
-    HVr_ds = None
-    HVi_ds = None
-    VHr_ds = None
-    VHi_ds = None
-    VVr_ds = None
-    VVi_ds = None
-    
-    if azlks != None and rglks != None:
-        az = azlks
-        rg = rglks
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
+        data = read_rs2_tif(inFile)
+        out_file = os.path.join(out_dir,'s11.bin')
+        write_s2_bin(out_file,data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor))
+        print("Saved file "+out_file)
         
-    else:
-        az = mlf
-        rg = 1
-            
-    print(f'Using multi-look factor: azlks = {az}, rglks = {rg}')
-    
-    if matrix == 'T3':
-        # Kp- 3-D Pauli feature vector
-        # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[1,0]])
-        # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[0,1]])
-        # Symmetry assumption
-        Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], (S2[1,0]+S2[0,1])])
+        rows, cols, _ = data.shape
 
-        del S2
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
+        data_xy = read_rs2_tif(inFile)
+
+
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
+        data_yx = read_rs2_tif(inFile)
+
+        data = (data_xy+data_yx)*0.5
+        del data_xy,data_yx
+
+        out_file = os.path.join(out_dir,'s12.bin')
+        
+        write_s2_bin(out_file,data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor))
+        print("Saved file "+out_file)
+        out_file = os.path.join(out_dir,'s21.bin')
+        write_s2_bin(out_file,data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor))
+        print("Saved file "+out_file)
+
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
+        data = read_rs2_tif(inFile)
+        out_file = os.path.join(out_dir,'s22.bin')
+        write_s2_bin(out_file,data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor))
+        print("Saved file "+out_file)
+        
+        file = open(out_dir +'/config.txt',"w+")
+        file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
+        file.close() 
+        
+    elif matrix == 'T3':
+        print("Considering S12 = S21")
+        
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
+        data = read_rs2_tif(inFile)
+        s11 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
+
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
+        data_xy = read_rs2_tif(inFile)
+
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
+        data_yx = read_rs2_tif(inFile)
+        
+        # Symmetry assumption
+        data = (data_xy+data_yx)*0.5
+        del data_xy,data_yx
+        s12 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
+
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
+        data = read_rs2_tif(inFile)
+        s22 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
+        
+        # Kp- 3-D Pauli feature vector
+        Kp = (1/np.sqrt(2))*np.array([s11+s22, s11-s22, 2*s12])
+
+        del s11,s12,s22
+
+
+        if azlks == None and rglks == None:
+            azlks = mlf
+            rglks = 1
+                
+        print(f'Using multi-look factor: azlks = {azlks}, rglks = {rglks}')
 
         # 3x3 Pauli Coherency Matrix elements
+        T11 = mlook(np.abs(Kp[0])**2,azlks,rglks)
+        T22 = mlook(np.abs(Kp[1])**2,azlks,rglks)
+        T33 = mlook(np.abs(Kp[2])**2,azlks,rglks)
 
-        T11 = mlook(np.abs(Kp[0])**2,az,rg)
-        T22 = mlook(np.abs(Kp[1])**2,az,rg)
-        T33 = mlook(np.abs(Kp[2])**2,az,rg)
+        T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks)
+        T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks)
+        T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks)
 
-        T12 = mlook(Kp[0]*np.conj(Kp[1]),az,rg)
-        T13 = mlook(Kp[0]*np.conj(Kp[2]),az,rg)
-        T23 = mlook(Kp[1]*np.conj(Kp[2]),az,rg)
-
+        del Kp
         T3Folder = os.path.join(inFolder,'T3')
 
         if not os.path.isdir(T3Folder):
@@ -192,26 +198,49 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
             
         write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)
         
-        mlFile = T3Folder+'/ml_Info.txt'
-        with open(mlFile, 'w+') as f:
-            f.writelines(lines)
-        f.close()
-        
         
     elif matrix == 'C3':
+        print("Considering S12 = S21")
+
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
+        data = read_rs2_tif(inFile)
+        s11 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
+
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
+        data_xy = read_rs2_tif(inFile)
+
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
+        data_yx = read_rs2_tif(inFile)
+        
+        # Symmetry assumption
+        data = (data_xy+data_yx)*0.5
+        del data_xy,data_yx
+        s12 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
+
+        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
+        data = read_rs2_tif(inFile)
+        s22 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
+
         # Kl- 3-D Lexicographic feature vector
-        Kl = np.array([S2[0,0], np.sqrt(2)*0.5*(S2[0,1]+S2[1,0]), S2[1,1]])
-        del S2
+        Kl = np.array([s11, np.sqrt(2)*s12, s22])
+        del s11,s12,s22
+
+
+        if azlks == None and rglks == None:
+            azlks = mlf
+            rglks = 1
+                
+        print(f'Using multi-look factor: azlks = {azlks}, rglks = {rglks}')
 
         # 3x3 COVARIANCE Matrix elements
 
-        C11 = mlook(np.abs(Kl[0])**2,az,rg)
-        C22 = mlook(np.abs(Kl[1])**2,az,rg)
-        C33 = mlook(np.abs(Kl[2])**2,az,rg)
+        C11 = mlook(np.abs(Kl[0])**2,azlks,rglks)
+        C22 = mlook(np.abs(Kl[1])**2,azlks,rglks)
+        C33 = mlook(np.abs(Kl[2])**2,azlks,rglks)
 
-        C12 = mlook(Kl[0]*np.conj(Kl[1]),az,rg)
-        C13 = mlook(Kl[0]*np.conj(Kl[2]),az,rg)
-        C23 = mlook(Kl[1]*np.conj(Kl[2]),az,rg)
+        C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks)
+        C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks)
+        C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks)
 
         C3Folder = os.path.join(inFolder,'C3')
 
@@ -219,16 +248,7 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
             print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
             os.mkdir(C3Folder)
         
-        write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)
-        
-        mlFile = C3Folder+'/ml_Info.txt'
-        with open(mlFile, 'w+') as f:
-            f.writelines(lines)
-        f.close()
-        
+        write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder) 
     else:
-        raise ValueError('matrix must be either T3 or C3')
-        
+        raise ValueError('Invalid matrix type. Valid types are "S2", "T3" and "C3"')
 
-    shutil.rmtree(S2Folder)
-    

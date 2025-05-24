@@ -21,7 +21,7 @@ def write_s2_bin(file,wdata):
     outdata.FlushCache()
 
 @time_it
-def rs2_fp(inFolder,matrix='S2',type='sigma0',azlks=8,rglks=2):
+def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
     
     if type == 'sigma0':
         tree = ET.parse(os.path.join(inFolder,"lutSigma.xml"))
@@ -173,4 +173,4 @@ def rs2_fp(inFolder,matrix='S2',type='sigma0',azlks=8,rglks=2):
         
         
     else:
-        raise ValueError('matrix must be either T3 or C3')
+        raise ValueError('Invalid matrix type. Valid types are "S2", "T3" and "C3"')

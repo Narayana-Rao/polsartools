@@ -85,6 +85,7 @@ pip install polsartools
 * Supported sensors
   * UAVSAR (GRD, MLC)
   * NISAR (RSLC, GSLC)
+  * RADARSAT-2 (Full-pol)
   * ALOS-2 (Fine Beam Dual-pol (FBD) Level 1.1 CEOS)
   * Chandrayaan-II DFSAR (Full-pol)
 

@@ -1,4 +1,3 @@
-
 import numpy as np
 from osgeo import gdal
 import os
@@ -106,9 +105,7 @@ def rs2_fp(inFolder,matrix='S2',type='sigma0',azlks=8,rglks=2):
         inFile = os.path.join(inFolder,"imagery_VV.tif")
         data = read_rs2_tif(inFile)
         s22 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)
-                
-        
-        
+
         Kp = (1/np.sqrt(2))*np.array([s11+s22, s11-s22, 2*s12])
 
         del s11,s12,s22
@@ -176,4 +173,4 @@ def rs2_fp(inFolder,matrix='S2',type='sigma0',azlks=8,rglks=2):
         
         
     else:
-        raise ValueError('matrix must be either T3 or C3')
+        raise ValueError('Invalid matrix type. Valid types are "S2", "T3" and "C3"')
