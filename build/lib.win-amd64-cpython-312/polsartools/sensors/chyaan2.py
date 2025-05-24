@@ -1,18 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun May 18 17:40:11 2023
-
-@author: nbhogapurapu
-
-mismatch in corss-pol T33 etc between MIDAS and this have to cross-verify with polsarpro
-other elements are fine 
-calibration fine
-
-
-"""
-
-
-import glob,shutil,os
+import glob,os
 import numpy as np
 from osgeo import gdal 
 
@@ -162,8 +148,6 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
         
     elif matrix == 'T3':
         print("Considering S12 = S21")
-        
-
         
         inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
         data = read_rs2_tif(inFile)

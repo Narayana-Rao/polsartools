@@ -21,7 +21,7 @@ def write_s2_bin(file,wdata):
     outdata.FlushCache()
 
 @time_it
-def rs2_fp(inFolder,matrix='S2',type='sigma0',azlks=8,rglks=2):
+def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
     
     if type == 'sigma0':
         tree = ET.parse(os.path.join(inFolder,"lutSigma.xml"))
