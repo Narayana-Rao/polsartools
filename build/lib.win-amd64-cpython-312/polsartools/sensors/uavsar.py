@@ -4,7 +4,10 @@ from osgeo import gdal,osr
 import os
 import sys
 # import simplekml
+import json
 from polsartools.utils.utils import time_it
+from polsartools.utils.convert_C3_T3 import convert_C3_T3
+
 def write_bin_uav_old(file,wdata,lat,lon,dx,dy):
     
     [cols, rows] = wdata.shape
@@ -90,16 +93,38 @@ def create_extent(annFile):
         if "Approximate Upper Right Latitude" in line:
             ury = float(line.split('=')[1].split(';')[0]) 
 
+    # Define polygon coordinates in (longitude, latitude) order
     corner_coordinates = [
-        (ulx, uly),  # (longitude, latitude) coordinate 1
-        (urx, ury),  # coordinate 2
-        (lrx, lry),  # coordinate 3
-        (llx, lly),  # coordinate 4
+        (ulx, uly),
+        (urx, ury),
+        (lrx, lry),
+        (llx, lly),
+        (ulx, uly)  # Closing the polygon
     ]
-    # print(corner_coordinates)
 
-    output_file = os.path.join(inFolder,"scene_extent.kml")
-    # create_kml_polygon(corner_coordinates, output_file)
+    geojson_polygon = {
+        "type": "FeatureCollection",
+        "crs": {
+            "type": "name",
+            "properties": {
+                "name": "EPSG:4326"
+            }
+        },
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [corner_coordinates]
+                }
+            }
+        ]
+    }
+    output_file = os.path.join(inFolder, "scene_extent.geojson")
+    with open(output_file, 'w') as out_file:
+        json.dump(geojson_polygon, out_file, indent=4)
+
 
 def grdList(annFile):
     grdkeys = {
@@ -145,7 +170,7 @@ def mlcList(annFile):
 
 
 @time_it    
-def uavsar_grd(annFile):
+def uavsar_grd(annFile,matrix='C3'):
     inFolder = os.path.dirname(annFile)
     grdfiles = grdList(annFile)
     create_extent(annFile)
@@ -216,11 +241,15 @@ def uavsar_grd(annFile):
     file.close()  
     print("Extracted C3 files to %s"%outFolder)
     
+    if matrix=='T3':
+        print("Converting C3 to T3")
+        convert_C3_T3(outFolder)
+    
     
     
     
 @time_it  
-def uavsar_mlc(annFile):
+def uavsar_mlc(annFile,matrix='C3'):
     create_extent(annFile)
     mlcfiles = mlcList(annFile)
     inFolder = os.path.dirname(annFile)
@@ -300,3 +329,7 @@ def uavsar_mlc(annFile):
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
     file.close()  
     print("Extracted C3 files to %s"%outFolder)
+
+    if matrix=='T3':
+        print("Converting C3 to T3")
+        convert_C3_T3(outFolder)

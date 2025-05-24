@@ -181,13 +181,13 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
         print(f'Using multi-look factor: azlks = {azlks}, rglks = {rglks}')
 
         # 3x3 Pauli Coherency Matrix elements
-        T11 = mlook(np.abs(Kp[0])**2,azlks,rglks)
-        T22 = mlook(np.abs(Kp[1])**2,azlks,rglks)
-        T33 = mlook(np.abs(Kp[2])**2,azlks,rglks)
+        T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
+        T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
+        T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
 
-        T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks)
-        T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks)
-        T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks)
+        T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
+        T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
 
         del Kp
         T3Folder = os.path.join(inFolder,'T3')
@@ -196,7 +196,10 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
             print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
             os.mkdir(T3Folder)
             
-        write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)
+        # write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)
+        write_T3([np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13),
+                  np.real(T22),np.real(T23),np.imag(T23),
+                  np.real(T33)],T3Folder)
         
         
     elif matrix == 'C3':
@@ -234,13 +237,13 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
 
         # 3x3 COVARIANCE Matrix elements
 
-        C11 = mlook(np.abs(Kl[0])**2,azlks,rglks)
-        C22 = mlook(np.abs(Kl[1])**2,azlks,rglks)
-        C33 = mlook(np.abs(Kl[2])**2,azlks,rglks)
+        C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+        C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+        C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
 
-        C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks)
-        C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks)
-        C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks)
+        C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+        C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
 
         C3Folder = os.path.join(inFolder,'C3')
 
@@ -248,7 +251,10 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
             print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
             os.mkdir(C3Folder)
         
-        write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder) 
+        # write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)
+        write_C3([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),
+                  np.real(C22),np.real(C23),np.imag(C23),
+                  np.real(C33)],C3Folder) 
     else:
         raise ValueError('Invalid matrix type. Valid types are "S2", "T3" and "C3"')
 

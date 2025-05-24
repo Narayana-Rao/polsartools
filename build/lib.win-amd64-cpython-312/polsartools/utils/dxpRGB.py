@@ -28,9 +28,6 @@ def norm_data(data):
 def dxpRGB(infolder, type = 1,outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
     if os.path.isfile(os.path.join(infolder,"C11.bin")) and os.path.isfile(os.path.join(infolder,"C22.bin")):
         
-        # blue_ = norm_data(C11_m)
-        # red_ = norm_data(C22_m)
-        # green_ = norm_data(np.abs(C11_m+C22_m-2*C12_m.real))
         if type == 1:
             blue_ = norm_data(read_bin(os.path.join(infolder,"C11.bin")))
             red_ = norm_data(read_bin(os.path.join(infolder,"C22.bin")))
@@ -57,9 +54,10 @@ def dxpRGB(infolder, type = 1,outname=None, chi_in=0, psi_in=0, window_size=1,wr
 
 
         rgb_uint8 = (np.dstack((red_,green_,blue_)) * 255) .astype(np.uint8)
+        del blue_, red_, green_
         alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
         rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
-        
+        del rgb_uint8, alpha_channel
 
         plt.imsave(os.path.join(infolder,f"RGB{type}.png"),rgba_uint8)       
         print(f"RGB image saved as {os.path.join(infolder, f'RGB{type}.png')}")

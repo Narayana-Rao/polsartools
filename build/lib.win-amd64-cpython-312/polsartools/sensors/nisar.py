@@ -204,13 +204,3 @@ def nisar_rslc(inFile,azlks=20,rglks=10):
     
     h5File.close()
     
-    
-#%%
-
-
-
-# inFile = "NISAR_L2_PR_GSLC_002_030_A_019_2800_SHNA_A_20081127T061000_20081127T061014_D00404_N_F_J_001.h5"
-# # inFile = "NISAR_L1_PR_RSLC_001_001_A_001_2000_SHNA_A_20100612T062402_20100612T062416_T00888_M_F_J_888.h5"
-
-# nisar_gslc(inFile,azlks=20,rglks=10,C2Folder = 'C2')
-

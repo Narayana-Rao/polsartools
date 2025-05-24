@@ -13,80 +13,80 @@ def mlook(data,az,rg):
     mean = np.nanmean(flatten, axis=2)
     return mean
  
-def write_T3(T3_stack,folder):
+def write_T3(T3_list,folder):
     
     out_file = folder +'/T11.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,0]))
+    write_bin(out_file,T3_list[0])
     print("Saved file "+out_file)
     
     out_file = folder +'/T12_real.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,1]))
+    write_bin(out_file,T3_list[1])
     print("Saved file "+out_file)
     out_file = folder +'/T12_imag.bin'
-    write_bin(out_file,np.imag(T3_stack[:,:,1]))
+    write_bin(out_file,T3_list[2])
     print("Saved file "+out_file)
     
     out_file = folder +'/T13_real.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,2]))
+    write_bin(out_file,T3_list[3])
     print("Saved file "+out_file)
     out_file = folder +'/T13_imag.bin'
-    write_bin(out_file,np.imag(T3_stack[:,:,2]))
+    write_bin(out_file,T3_list[4])
     print("Saved file "+out_file)
     
     out_file = folder +'/T22.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,4]))
+    write_bin(out_file,T3_list[5])
     print("Saved file "+out_file)
     
     out_file = folder +'/T23_real.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,5]))
+    write_bin(out_file,T3_list[6])
     print("Saved file "+out_file)
     out_file = folder +'/T23_imag.bin'
-    write_bin(out_file,np.imag(T3_stack[:,:,5]))
+    write_bin(out_file,T3_list[7])
     print("Saved file "+out_file)
     out_file = folder +'/T33.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,8]))
+    write_bin(out_file,T3_list[8])
     print("Saved file "+out_file)
     
-    rows, cols = np.shape(T3_stack[:,:,8])
+    rows, cols = np.shape(T3_list[0])
     file = folder +'/config.txt'
     file = open(file,"w+")
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
     file.close()   
 
-def write_C3(C3_stack,folder):
+def write_C3(C3_list,folder):
     
     out_file = folder +'/C11.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,0]))
+    write_bin(out_file,C3_list[0])
     print("Saved file "+out_file)
     out_file = folder +'/C12_real.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,1]))
+    write_bin(out_file,C3_list[1])
     print("Saved file "+out_file)
     out_file = folder +'/C12_imag.bin'
-    write_bin(out_file,np.imag(C3_stack[:,:,1]))
+    write_bin(out_file,C3_list[2])
     print("Saved file "+out_file)
     
     out_file = folder +'/C13_real.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,2]))
+    write_bin(out_file,C3_list[3])
     print("Saved file "+out_file)
     out_file = folder +'/C13_imag.bin'
-    write_bin(out_file,np.imag(C3_stack[:,:,2]))
+    write_bin(out_file,C3_list[4])
     print("Saved file "+out_file)
     
     
     out_file = folder +'/C22.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,4]))
+    write_bin(out_file,C3_list[5])
     print("Saved file "+out_file)
     out_file = folder +'/C23_real.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,5]))
+    write_bin(out_file,C3_list[6])
     print("Saved file "+out_file)
     out_file = folder +'/C23_imag.bin'
-    write_bin(out_file,np.imag(C3_stack[:,:,5]))
+    write_bin(out_file,C3_list[7])
     print("Saved file "+out_file)
     out_file = folder +'/C33.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,8]))
+    write_bin(out_file,C3_list[8])
     print("Saved file "+out_file)
     
-    rows, cols = np.shape(C3_stack[:,:,8])
+    rows, cols = np.shape(C3_list[0])
     file = folder +'/config.txt'
     file = open(file,"w+")
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
