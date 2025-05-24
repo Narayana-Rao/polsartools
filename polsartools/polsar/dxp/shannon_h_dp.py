@@ -1,6 +1,7 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d, eig22
+from polsartools.utils.proc_utils import process_chunks_parallel
+from polsartools.utils.utils import conv2d,time_it
 
 
 """

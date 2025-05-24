@@ -1,6 +1,7 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel,conv2d,eig22, time_it
+from polsartools.utils.proc_utils import process_chunks_parallel
+from polsartools.utils.utils import conv2d,time_it
 
 @time_it
 def dopcp(infolder, outname=None, chi_in=45, psi_in=0, window_size=1,write_flag=True,max_workers=None):

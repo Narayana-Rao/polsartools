@@ -1,10 +1,8 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
-from polsartools.utils.convert_matrices import C3_T3_mat
 from osgeo import gdal
 import matplotlib.pyplot as plt
-
+from polsartools.utils.utils import conv2d,time_it
 def read_bin(file):
     ds = gdal.Open(file)
     band = ds.GetRasterBand(1)

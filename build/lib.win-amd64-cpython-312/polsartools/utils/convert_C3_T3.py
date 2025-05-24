@@ -1,7 +1,9 @@
 import os
 import numpy as np
 from osgeo import gdal
-from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
+from polsartools.utils.proc_utils import process_chunks_parallel
+from polsartools.utils.utils import conv2d,time_it
+
 from polsartools.utils.convert_matrices import C3_T3_mat
 
 @time_it

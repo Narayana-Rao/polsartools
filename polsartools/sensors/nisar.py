@@ -4,6 +4,8 @@ from osgeo import gdal,osr
 import h5py,os,tempfile
 from skimage.util.shape import view_as_blocks
 from polsartools.utils.utils import time_it
+from polsartools.utils.io_utils import mlook
+
 #%%
 def read_bin(file):
     ds = gdal.Open(file)
@@ -24,12 +26,6 @@ def write_rslc_bin(file,wdata):
     outdata.GetRasterBand(1).WriteArray(wdata)
     # outdata.GetRasterBand(1).SetNoDataValue(0)##if you want these values transparent
     outdata.FlushCache() ##saves to disk!!
-def mlook(data,az,rg):
-    temp = data[0:data.shape[0]-data.shape[0]%az,0:data.shape[1]-data.shape[1]%rg]
-    blocks = view_as_blocks(temp, block_shape=(az, rg))
-    flatten = blocks.reshape(blocks.shape[0], blocks.shape[1], -1)
-    mean = np.nanmean(flatten, axis=2)
-    return mean
 
 def gslc_gtif(data,x_coords,y_coords,projection_epsg,x_res,y_res,output_file,gdal_driver='GTiff'):
 

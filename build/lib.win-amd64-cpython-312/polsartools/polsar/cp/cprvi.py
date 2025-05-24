@@ -1,6 +1,7 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel, time_it
+from polsartools.utils.proc_utils import process_chunks_parallel
+from polsartools.utils.utils import time_it
 from polsartools.cprvicpp import process_chunk_cprvicpp
 
 @time_it

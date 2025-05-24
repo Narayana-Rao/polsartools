@@ -18,91 +18,12 @@ from osgeo import gdal
 
 from skimage.util.shape import view_as_blocks
 from polsartools.utils.utils import time_it
+from polsartools.utils.io_utils import mlook, write_T3, write_C3
 def read_bin(file):
     ds = gdal.Open(file,gdal.GA_ReadOnly)
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
     return arr
-def mlook(data,az,rg):
-    
-    temp = data[0:data.shape[0]-data.shape[0]%az,0:data.shape[1]-data.shape[1]%rg]
-
-    blocks = view_as_blocks(temp, block_shape=(az, rg))
-    # collapse the last two dimensions in one
-    flatten = blocks.reshape(blocks.shape[0], blocks.shape[1], -1)
-    # resampling the image by taking either the `mean`,
-    # the `max` or the `median` value of each blocks.
-    mean = np.nanmean(flatten, axis=2)
-    return mean
- 
-def write_T3(T3_stack,folder):
-    
-    out_file = folder +'/T11.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,0]))
-    
-    out_file = folder +'/T12_real.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,1]))
-    out_file = folder +'/T12_imag.bin'
-    write_bin(out_file,np.imag(T3_stack[:,:,1]))
-    
-    out_file = folder +'/T13_real.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,2]))
-    out_file = folder +'/T13_imag.bin'
-    write_bin(out_file,np.imag(T3_stack[:,:,2]))
-    
-    out_file = folder +'/T22.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,4]))
-    
-    out_file = folder +'/T23_real.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,5]))
-    out_file = folder +'/T23_imag.bin'
-    write_bin(out_file,np.imag(T3_stack[:,:,5]))
-    
-    out_file = folder +'/T33.bin'
-    write_bin(out_file,np.real(T3_stack[:,:,8]))
-    
-    rows, cols = np.shape(T3_stack[:,:,8])
-    file = folder +'/config.txt'
-    file = open(file,"w+")
-    file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
-    file.close()   
-
-def write_C3(C3_stack,folder):
-    
-    out_file = folder +'/C11.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,0]))
-    
-    out_file = folder +'/C12_real.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,1]))
-    out_file = folder +'/C12_imag.bin'
-    write_bin(out_file,np.imag(C3_stack[:,:,1]))
-    
-    out_file = folder +'/C13_real.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,2]))
-    out_file = folder +'/C13_imag.bin'
-    write_bin(out_file,np.imag(C3_stack[:,:,2]))
-    
-    
-    
-    out_file = folder +'/C22.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,4]))
-    
-    out_file = folder +'/C23_real.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,5]))
-    out_file = folder +'/C23_imag.bin'
-    write_bin(out_file,np.imag(C3_stack[:,:,5]))
-    
-    out_file = folder +'/C33.bin'
-    write_bin(out_file,np.real(C3_stack[:,:,8]))
-    
-    
-    rows, cols = np.shape(C3_stack[:,:,8])
-    file = folder +'/config.txt'
-    file = open(file,"w+")
-    file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
-    file.close()
-
-
 
 
 def write_bin_s2(file,wdata,refData):
@@ -246,9 +167,10 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
     
     if matrix == 'T3':
         # Kp- 3-D Pauli feature vector
-        Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[1,0]])
+        # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[1,0]])
         # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[0,1]])
-        # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], (S2[1,0]+S2[0,1])/2])
+        # Symmetry assumption
+        Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], (S2[1,0]+S2[0,1])])
 
         del S2
 
@@ -278,7 +200,7 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
         
     elif matrix == 'C3':
         # Kl- 3-D Lexicographic feature vector
-        Kl = np.array([S2[0,0], np.sqrt(2)*S2[1,0], S2[1,1]])
+        Kl = np.array([S2[0,0], np.sqrt(2)*0.5*(S2[0,1]+S2[1,0]), S2[1,1]])
         del S2
 
         # 3x3 COVARIANCE Matrix elements

@@ -1,7 +1,6 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
-from polsartools.utils.convert_matrices import C3_T3_mat
+from polsartools.utils.utils import conv2d,time_it
 from osgeo import gdal
 import matplotlib.pyplot as plt
 

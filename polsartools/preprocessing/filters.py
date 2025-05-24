@@ -1,6 +1,7 @@
 import os
 import numpy as np
-from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
+from polsartools.utils.proc_utils import process_chunks_parallel
+from polsartools.utils.utils import conv2d,time_it
 from polsartools.preprocessing.pre_utils import get_filter_io_paths
 
 from polsartools.preprocessing.rflee_filter import process_chunk_refined_lee
