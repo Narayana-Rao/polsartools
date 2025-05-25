@@ -33,3 +33,7 @@ formats:
 python:
   install:
     - requirements: docs/requirements.txt
+
+apt_packages:
+  - gdal-bin
+  - libgdal-dev
