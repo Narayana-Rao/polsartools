@@ -167,8 +167,6 @@ def mlcList(annFile):
     return mlckeys     
 
 
-
-
 @time_it    
 def uavsar_grd(annFile,matrix='C3'):
     inFolder = os.path.dirname(annFile)
@@ -188,6 +186,9 @@ def uavsar_grd(annFile,matrix='C3'):
             dy = float(line.split('=')[1].split(';')[0])
         if "grd_mag.col_mult" in line and "(deg/pixel)" in line:
             dx = float(line.split('=')[1].split(';')[0])
+
+    if matrix!='C3' or matrix!='T3':
+        print("Invalid matrix type. Defaulting to C3")
 
     outFolder = inFolder+'/C3'
     if not os.path.isdir(outFolder):
@@ -245,8 +246,7 @@ def uavsar_grd(annFile,matrix='C3'):
         print("Converting C3 to T3")
         convert_C3_T3(outFolder)
     
-    
-    
+
     
 @time_it  
 def uavsar_mlc(annFile,matrix='C3'):

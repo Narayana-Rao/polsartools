@@ -146,6 +146,12 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
         file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
         file.close() 
         
+        with open(out_dir+'/multilook_info.txt', 'w+') as f:
+            f.writelines(lines)
+        f.close()
+        
+        
+        
     elif matrix == 'T3':
         print("Considering S12 = S21")
         
@@ -201,6 +207,9 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
                   np.real(T22),np.real(T23),np.imag(T23),
                   np.real(T33)],T3Folder)
         
+        with open(T3Folder+'/multilook_info.txt', 'w+') as f:
+            f.writelines(lines)
+        f.close()
         
     elif matrix == 'C3':
         print("Considering S12 = S21")
@@ -255,6 +264,10 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
         write_C3([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),
                   np.real(C22),np.real(C23),np.imag(C23),
                   np.real(C33)],C3Folder) 
+        
+        with open(C3Folder+'/multilook_info.txt', 'w+') as f:
+            f.writelines(lines)
+        f.close()
     else:
         raise ValueError('Invalid matrix type. Valid types are "S2", "T3" and "C3"')
 

@@ -17,11 +17,11 @@ def time_it(func):
                 print(f"Execution time for {func.__name__}: {duration:.2f} seconds")
             elif duration < 3600:
                 minutes, seconds = divmod(duration, 60)
-                print(f"Execution time for {func.__name__}: {minutes:02}:{seconds:02} (MM:SS)")
+                print(f"Execution time for {func.__name__}: {minutes:02}:{seconds:02} (min:sec)")
             else:
                 hours, remainder = divmod(duration, 3600)
                 minutes, seconds = divmod(remainder, 60)
-                print(f"Execution time for {func.__name__}: {hours:02}:{minutes:02}:{seconds:02} (HH:MM:SS)")
+                print(f"Execution time for {func.__name__}: {hours:02}:{minutes:02}:{seconds:02} (hour:min:sec)")
                 
             return result
         except Exception as e:
