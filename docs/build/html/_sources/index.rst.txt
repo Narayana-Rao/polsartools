@@ -1,7 +1,20 @@
 
-Welcome to PolSARtools' documentation!
-========================================
-PolSARtools is a Python (PyPI) package, which  generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from different SAR sensors or input polarimetric matrix (C3, T3,C2, T2).
+Welcome to PolSARtools' Documentation! 🌐🛰️
+==========================================
+
+**PolSARtools** is a Python package available on `PyPI <https://pypi.org/project/polsartools/>`_ 🐍 that generates **derived SAR parameters**, including:
+
+- 🌀 **Polarimetric descriptors**
+- 🌿 **Vegetation indices**
+- 🧩 **Polarimetric decomposition parameters**
+
+It supports input from various SAR sensors or directly from **polarimetric matrices** such as: ``S2``, ``C3``, ``T3``, ``C2``, ``T2``.
+
+📘 Tutorial Notebooks
+----------------------
+
+Get started quickly with hands-on examples! Explore our step-by-step tutorials here:  
+👉 `polsartools-notebooks <https://github.com/Narayana-Rao/polsartools-notebooks>`_ 📓✨
 
 .. toctree::
    :maxdepth: 3
