@@ -11,41 +11,34 @@
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
 
 
-<!-- [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FNarayana-Rao%2Fpolsartools&count_bg=%2379C83D&title_bg=%23555555&icon=cliqz.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com) -->
-
-> **Cite:** Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi:  [10.21105/joss.02970](https://doi.org/10.21105/joss.02970)  
-```bibtex
-@article{bhogapurapu2021polsar,
-  title={PolSAR tools: A QGIS plugin for generating SAR descriptors},
-  author={Bhogapurapu, Narayanarao and Dey, Subhadip and Mandal, Dipankar and Bhattacharya, Avik and Rao, YS},
-  journal={Journal of Open Source Software},
-  volume={6},
-  number={60},
-  pages={2970},
-  year={2021},
-  doi= {10.21105/joss.02970}
-}
-
-```
-
 ## General Information
--------------------
-This package generates derived SAR parameters (viz. vegetation indices, polarimetric decomposition parameters) from input polarimetric matrix (C3, T3, C2, T2). The input data needs to be in [PolSARpro](https://earth.esa.int/web/polsarpro/home)/[ENVI](https://www.l3harrisgeospatial.com/Software-Technology/ENVI) format (\*.bin and \*.hdr). 
+
+This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from different SAR sensors or input polarimetric matrix (C3, T3,C2, T2). 
+
+<!-- The input data needs to be in [PolSARpro](https://earth.esa.int/web/polsarpro/home)/[ENVI](https://www.l3harrisgeospatial.com/Software-Technology/ENVI) format (\*.bin and \*.hdr).  -->
 
 ## Installation
+### 1. Install **`gdal`** Package
+
+```bash
+conda install gdal -c conda-forge
 ```
+
+### 2. Install **`polsartools`** Package
+
+You can install it using `pip`:
+
+```bash
 pip install polsartools
 ```
- 
-#### Prerequesites  ```gdal, Numpy```
- 
 
- 
-#### gdal installation error fix ```conda install gdal```
+If you encounter an error like "function not found" or need the latest version, you can install the updated version directly from GitHub:
 
+```bash
+pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
+```
 
 ## Available functionalities:
------------------------------
 * Supported sensors
   * UAVSAR (GRD, MLC)
   * NISAR (RSLC, GSLC)
@@ -58,38 +51,38 @@ pip install polsartools
     * Shannon Entropy parameters
 	* Non-negative Eigen value decomposition
 	* Neumann Decomposition 
-   * Model free 4-Component decomposition for full-pol data (MF4CF)[[11]](#11)
-   * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]](#4)
-	* Radar Vegetation Index (RVI) [[8]](#8) 
-   * Generalized volume Radar Vegetation Index (GRVI) [[2]](#2)
-   * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
-   * Degree of Polarization (DOP) [[10]](#10) 
+   * Model free 4-Component decomposition for full-pol data (MF4CF)[[11]](references.md#11)
+   * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]]references.md(#4)
+	* Radar Vegetation Index (RVI) [[8]](references.md#8) 
+   * Generalized volume Radar Vegetation Index (GRVI) [[2]](references.md#2)
+   * Polarimetric Radar Vegetation Index (PRVI) [[1]](references.md#1)
+   * Degree of Polarization (DOP) [[10]](references.md#10) 
 
 * Compact-pol : 
-  * Model free 3-Component decomposition for compact-pol data (MF3CC) [[4]](#4)
-  * Improved S-Omega decomposition for compact-pol data (iS-Omega) [[7]](#7)
-  * Compact-pol Radar Vegetation Index (CpRVI)  [[6]](#6)
-  * Degree of Polarization (DOP)  [[10]](#10) 
+  * Model free 3-Component decomposition for compact-pol data (MF3CC) [[4]](references.md#4)
+  * Improved S-Omega decomposition for compact-pol data (iS-Omega) [[7]](references.md#7)
+  * Compact-pol Radar Vegetation Index (CpRVI)  [[6]](references.md#6)
+  * Degree of Polarization (DOP)  [[10]](references.md#10) 
 
 * Dual-pol:
   * H-Alpha parameters
   * Shannon Entropy parameters
-  * Dual-pol Radar Vegetation Index (DpRVI) [[5]](#5)
-  * Dual-pol Radar Vegetation Index for GRD data (DpRVIc) [[12]](#12)
-  * Radar Vegetation Index (RVI) [[9]](#9)
-  * Degree of Polarization (DOP) [[10]](#10) 
-  * Polarimetric Radar Vegetation Index (PRVI) [[1]](#1)
-  * Dual-pol descriptors [[13]](#13)
+  * Dual-pol Radar Vegetation Index (DpRVI) [[5]](references.md#5)
+  * Dual-pol Radar Vegetation Index for GRD data (DpRVIc) [[12]](references.md#12)
+  * Radar Vegetation Index (RVI) [[9]](references.md#9)
+  * Degree of Polarization (DOP) [[10]](references.md#10) 
+  * Polarimetric Radar Vegetation Index (PRVI) [[1]](references.md#1)
+  * Dual-pol descriptors [[13]](references.md#13)
   * Model free 3-Component decomposition for dual-copol data (MF3CD)
 
-* polarimetric speckle filters:
+* Polarimetric speckle filters:
   * boxcar
   * refine lee
 
 ## Example Usage
 
-#### More sample use cases are provided in [examples](https://github.com/Narayana-Rao/polsartools/tree/main/examples) folder. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
-
+#### Sample use cases and notebooks are provided at [polsartools-notebooks](https://github.com/Narayana-Rao/polsartools-notebooks) repo. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
+<!-- 
 ```python
 import polsartools as pst
 
@@ -190,59 +183,91 @@ def main():
 if __name__ == "__main__":
     main()
 
+``` -->
+
+
+
+## Contributing
+
+We welcome contributions! Whether it's fixing bugs, adding new features, or improving documentation, your help is greatly appreciated.
+
+### How to Contribute
+1. **Fork the repository** - Fork this repository to your GitHub account.
+
+2. **Clone your fork** - Clone the repository to your local machine:
+
+    ```bash
+    git clone https://github.com/Narayana-Rao/polsartools.git
+    ```
+
+3. Create a branch - Create a new branch for your changes:
+
+    ```bash 
+    git checkout -b feature-branch
+    ```
+4. **Make changes** - Implement your changes or additions.
+
+5. **Test your changes** - Run the tests to ensure that your changes don’t break anything.
+
+6. **Commit and push** - Commit your changes and push them to your fork:
+    ```bash
+        git commit -am "Description of changes"
+        git push origin feature-branch
+    ```
+7. **Create a Pull Request** - Open a pull request to the main repository with a clear description of the changes.
+
+<!-- For more detailed guidelines on contributing, see the CONTRIBUTING.md (if available). -->
+
+
+## Bug Reporting
+
+If you encounter a bug or issue, please follow these steps to report it:
+
+1. Check the existing issues: Before submitting a new bug report, check if the issue has already been reported in the [Issues section](https://github.com/Narayana-Rao/polsartools/issues).
+
+2. Submit a bug report: If the issue hasn’t been reported, please open a new issue and include the following information:
+    * A clear description of the problem.
+    * Steps to reproduce the issue.
+    * Expected vs actual behavior.
+    * Any error messages or stack traces.
+    * Relevant code snippets or files if possible.
+    * Version of `polsartools` and Python you're using.
+
+[Click here to report a bug](https://github.com/Narayana-Rao/polsartools/issues/new?template=bug_report.md)
+
+
+## Feature Requests
+
+We’re always open to suggestions for new features or improvements!
+
+1. **Check existing feature requests:** Please make sure the feature request hasn't already been made in the [Issues section](https://github.com/Narayana-Rao/polsartools/issues).
+
+2. **Submit a feature request:** If it hasn’t been requested already, please open a new issue with the following information:
+      * A clear description of the feature.
+      * Why you think this feature would be beneficial.
+      * Any specific use cases or examples.
+
+[Click here to request a feature](https://github.com/Narayana-Rao/polsartools/issues/new?template=feature_request.md)
+
+
+## Cite
+
+If you use **PolsarTools** in your research or projects, please cite it as follows:
+
+
+> Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi:  [10.21105/joss.02970](https://doi.org/10.21105/joss.02970)  
+
+
+```bibtex
+@article{bhogapurapu2021polsar,
+  title={PolSAR tools: A QGIS plugin for generating SAR descriptors},
+  author={Bhogapurapu, Narayanarao and Dey, Subhadip and Mandal, Dipankar and Bhattacharya, Avik and Rao, YS},
+  journal={Journal of Open Source Software},
+  volume={6},
+  number={60},
+  pages={2970},
+  year={2021},
+  doi= {10.21105/joss.02970}
+}
+
 ```
-
-
-
-## Contributions
-1) Contribute to the software
-
-    [Contribution guidelines for this project](help/CONTRIBUTING.md)
-
-
-2) Report issues or problems with the package
-	
-	Please raise your issues here : <https://github.com/Narayana-Rao/polsartools/issues>
-
-<!-- 3) Seek support
-
-	Please write to us: <bnarayanarao@iitb.ac.in>  -->
-
-## References
--------------
-<a id="1">[1]</a> 
-Chang, J.G., Shoshany, M. and Oh, Y., 2018. Polarimetric Radar Vegetation Index for Biomass Estimation in Desert Fringe Ecosystems. IEEE Transactions on Geoscience and Remote Sensing, 56(12), pp.7102-7108.
-
-<a id="2">[2]</a> 
-Ratha, D., Mandal, D., Kumar, V., McNairn, H., Bhattacharya, A. and Frery, A.C., 2019. A generalized volume scattering model-based vegetation index from polarimetric SAR data. IEEE Geoscience and Remote Sensing Letters, 16(11), pp.1791-1795.
-
-<a id="3">[3]</a> 
-Mandal, D., Kumar, V., Ratha, D., J. M. Lopez-Sanchez, A. Bhattacharya, H. McNairn, Y. S. Rao, and K. V. Ramana, 2020. Assessment of rice growth conditions in a semi-arid region of India using the Generalized Radar Vegetation Index derived from RADARSAT-2 polarimetric SAR data, Remote Sensing of Environment, 237: 111561.
-
-<a id="4">[4]</a> 
-Dey, S., Bhattacharya, A., Ratha, D., Mandal, D. and Frery, A.C., 2020. Target Characterization and Scattering Power Decomposition for Full and Compact Polarimetric SAR Data. IEEE Transactions on Geoscience and Remote Sensing.
-
-<a id="5">[5]</a> 
-Mandal, D., Kumar, V., Ratha, D., Dey, S., Bhattacharya, A., Lopez-Sanchez, J.M., McNairn, H. and Rao, Y.S., 2020. Dual polarimetric radar vegetation index for crop growth monitoring using sentinel-1 SAR data. Remote Sensing of Environment, 247, p.111954.
-
-<a id="6">[6]</a> 
-Mandal, D., Ratha, D., Bhattacharya, A., Kumar, V., McNairn, H., Rao, Y.S. and Frery, A.C., 2020. A Radar Vegetation Index for Crop Monitoring Using Compact Polarimetric SAR Data. IEEE Transactions on Geoscience and Remote Sensing, 58 (9), pp. 6321-6335.
-
-<a id="7">[7]</a> 
-V. Kumar, D. Mandal, A. Bhattacharya, and Y. S. Rao, 2020. Crop Characterization Using an Improved Scattering Power Decomposition Technique for Compact Polarimetric SAR Data. International Journal of Applied Earth Observations and Geoinformation, 88: 102052.
-
-<a id="8">[8]</a> 
-Kim, Y. and van Zyl, J.J., 2009. A time-series approach to estimate soil moisture using polarimetric radar data. IEEE Transactions on Geoscience and Remote Sensing, 47(8), pp.2519-2527.
-
-<a id="9">[9]</a> 
-Trudel, M., Charbonneau, F. and Leconte, R., 2012. Using RADARSAT-2 polarimetric and ENVISAT-ASAR dual-polarization data for estimating soil moisture over agricultural fields. Canadian Journal of Remote Sensing, 38(4), pp.514-527.
-
-<a id="10">[10]</a> 
-Barakat, R., 1977. Degree of polarization and the principal idempotents of the coherency matrix. Optics Communications, 23(2), pp.147-150.
-
-<a id="11">[11]</a> S. Dey, A. Bhattacharya, A. C. Frery, C. Lopez-Martinez and Y. S. Rao, "A Model-free Four Component Scattering Power Decomposition for Polarimetric SAR Data," in IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing, 2021. doi: [10.1109/JSTARS.2021.3069299](https://doi.org/10.1109/JSTARS.2021.3069299). 
-
-<a id="12">[12]</a> Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A., Karthikeyan, L., McNairn, H. and Rao, Y.S., 2022. Soil moisture retrieval over croplands using dual-pol L-band GRD SAR data. Remote Sensing of Environment, 271, p.112900. 
-
-<a id="13">[13]</a>Bhogapurapu, N., Dey, S., Bhattacharya, A., Mandal, D., Lopez-Sanchez, J.M., McNairn, H., López-Martínez, C. and Rao, Y.S., 2021. Dual-polarimetric descriptors from Sentinel-1 GRD SAR data for crop growth assessment. ISPRS Journal of Photogrammetry and Remote Sensing, 178, pp.20-35.
-

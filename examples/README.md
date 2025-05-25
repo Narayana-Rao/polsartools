@@ -20,12 +20,26 @@ To access the example notebooks:
 
 ## Installation Requirements
 
-To run the notebooks, you will need to install the core package. You can do so by running:
+To run the notebooks, you will need to install the core package. You can do so by:
+
+### 1. Install **`gdal`** Package
+
+```bash
+conda install gdal -c conda-forge
+```
+
+### 2. Install **`polsartools`** Package
+
+Before running the notebooks, you'll need to install the core **`polsartools`** package. 
+
+You can install it using `pip`:
 
 ```bash
 pip install polsartools
 ```
-or 
+
+If you encounter an error like "function not found" or need the latest version, you can install the updated version directly from GitHub:
+
 ```bash
 pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
 ```
