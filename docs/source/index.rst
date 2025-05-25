@@ -1,6 +1,6 @@
 
-Welcome to PolSARtools' Documentation! 🌐🛰️
-============================================
+Welcome to PolSARtools' Documentation!
+=======================================
 
 **PolSARtools** is a Python package available on `PyPI <https://pypi.org/project/polsartools/>`_ 🐍 that generates **derived SAR parameters**, including:
 
@@ -18,7 +18,7 @@ Get started quickly with hands-on examples! Explore our step-by-step tutorials h
 
 
 📚 Cite Us!
-============
+------------
 
 If you use **PolSARtools** in your research or projects, we'd really appreciate a citation! 🛰️✨
 
@@ -30,7 +30,7 @@ Please cite our work as:
     🔗 https://doi.org/10.21105/joss.02970
 
 BibTeX 📄
---------
+~~~~~~~~~
 
 .. code-block:: bibtex
 
@@ -70,13 +70,13 @@ BibTeX 📄
 
 
 Disclaimer
-==========
+----------
 
 PolSARtools v0.6.1 is released under the `GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.html>`_ (GPL-3.0). 
 This means you are free to use, modify, and distribute the software, provided you adhere to the terms of the license.
 
 No Warranty
------------
+~~~~~~~~~~~
 
 This software is provided **"as is"**, **without warranty of any kind**, either express or implied, including but not limited to 
 the warranties of **merchantability**, **fitness for a particular purpose**, and **non-infringement**. In no event shall the 
