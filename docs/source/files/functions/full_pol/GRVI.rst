@@ -1,5 +1,5 @@
-``GRVI`` (Generalized volume based Radar Vegetation Index)
-==========================================================
+Generalized volume based Radar Vegetation Index (``grvi``)
+===========================================================
 This functionality computes the generalized volume based radar vegetation index for full polarimetric SAR data. The required input and the computed output are as follows:
 
 .. code-block:: python

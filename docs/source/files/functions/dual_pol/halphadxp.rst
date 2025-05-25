@@ -1,5 +1,5 @@
-``halpadp`` (Entropy-Alpha decomposition for dual-cross-pol)
-============================================================
+H/α decomposition (``halpadp``)
+================================
 This functionality computes the Entropy (H) and Alpha (α) for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
 
 .. code-block:: python

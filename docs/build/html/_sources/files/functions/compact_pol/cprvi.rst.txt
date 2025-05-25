@@ -1,5 +1,5 @@
-``CpRVI`` (Compact-pol Radar Vegetation Index)
-================================================
+Compact-pol Radar Vegetation Index (``cprvi``)
+==============================================
 This functionality computes the compact-pol radar vegetation index for compact polarimetric SAR data. The required input and the computed output are as follows:
 
 .. code-block:: python

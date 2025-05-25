@@ -33,60 +33,60 @@ Example Usage
 
 Sample use cases and notebooks are provided at `polsartools-notebooks <https://github.com/Narayana-Rao/polsartools-notebooks>`_ repo. Detailed documentation is available at `polsartools.readthedocs.io <https://polsartools.readthedocs.io/en/latest/>`_.
 
-Available functions
--------------------
-* Supported sensors
+.. Available functions
+.. -------------------
+.. * Supported sensors
 
-  * UAVSAR (GRD, MLC)
-  * NISAR (RSLC, GSLC)
-  * RADARSAT-2 (Full-pol)
-  * ALOS-2 (Fine Beam Dual-pol (FBD) Level 1.1 CEOS)
-  * Chandrayaan-II DFSAR (Full-pol)
+..   * `UAVSAR (GRD, MLC) <sensors/uavsar.html>`_
+..   * `NISAR (RSLC, GSLC) <sensors/nisar.html>`_
+..   * `RADARSAT-2 (Full-pol) <sensors/radarsat2.html>`_
+..   * `ALOS-2 (Fine Beam Dual-pol (FBD) Level 1.1 CEOS) <sensors/alos2.html>`_
+..   * `Chandrayaan-II DFSAR (Full-pol) <sensors/chandrayaan2.html>`_
 
-* Full-pol
+.. * Full-pol
 
-  * H-Alpha decomposition
-  * Shannon Entropy parameters
-  * Non-negative Eigen value decomposition
-  * Neumann Decomposition
-  * Model free 4-Component decomposition for full-pol data
-  * Model free 3-Component decomposition for full-pol data 
-  * Radar Vegetation Index 
-  * Generalized volume Radar Vegetation Index
-  * Polarimetric Radar Vegetation Index
-  * Degree of Polarization
+..   * `H-Alpha decomposition <functions/full_pol/halphafp.html>`_
+..   * Shannon Entropy parameters
+..   * Non-negative Eigen value decomposition
+..   * Neumann Decomposition
+..   * Model free 4-Component decomposition for full-pol data
+..   * Model free 3-Component decomposition for full-pol data 
+..   * Radar Vegetation Index 
+..   * Generalized volume Radar Vegetation Index
+..   * Polarimetric Radar Vegetation Index
+..   * Degree of Polarization
 
-* Compact-pol
+.. * Compact-pol
 
-  * Model free 3-Component decomposition for compact-pol data
-  * Improved S-Omega decomposition for compact-pol data
-  * Compact-pol Radar Vegetation Index
-  * Degree of Polarization
+..   * Model free 3-Component decomposition for compact-pol data
+..   * Improved S-Omega decomposition for compact-pol data
+..   * Compact-pol Radar Vegetation Index
+..   * Degree of Polarization
 
-* Dual-pol
+.. * Dual-pol
 
-  * H-Alpha parameters
-  * Shannon Entropy parameters
-  * Dual-pol Radar Vegetation Index 
-  * Dual-pol Radar Vegetation Index for GRD data
-  * Radar Vegetation Index
-  * Degree of Polarization
-  * Polarimetric Radar Vegetation Index
-  * Dual-pol descriptors
-  * Model free 3-Component decomposition for dual-copol data
+..   * H-Alpha parameters
+..   * Shannon Entropy parameters
+..   * Dual-pol Radar Vegetation Index 
+..   * Dual-pol Radar Vegetation Index for GRD data
+..   * Radar Vegetation Index
+..   * Degree of Polarization
+..   * Polarimetric Radar Vegetation Index
+..   * Dual-pol descriptors
+..   * Model free 3-Component decomposition for dual-copol data
 
-* Polarimetric speckle filters
+.. * Polarimetric speckle filters
 
-  * boxcar
-  * refine lee
+..   * boxcar
+..   * refine lee
   
-* other functions
+.. * other functions
 
-  * Generate pauliRGB for FP data
-  * Generate false color RGB for DP/CP data
-  * convert_C3_T3
-  * convert_T3_C3
-  * multi-looking
+..   * Generate pauliRGB for FP data
+..   * Generate false color RGB for DP/CP data
+..   * convert_C3_T3
+..   * convert_T3_C3
+..   * multi-looking
 
 
 

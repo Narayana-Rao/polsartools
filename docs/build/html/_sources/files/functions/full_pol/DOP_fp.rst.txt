@@ -1,5 +1,5 @@
-``DOP`` (Degree of Polarization)
-=================================
+Degree of Polarization (``dopfp``)
+==================================
 This functionality computes the 3D Barakat degree of polarization for full polarimetric SAR data. The required input and the computed output are as follows:
 
 .. code-block:: python

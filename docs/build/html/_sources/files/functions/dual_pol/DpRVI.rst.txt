@@ -1,4 +1,4 @@
-``DpRVI`` (Dual-pol Radar Vegetation Index)
+Dual-pol Radar Vegetation Index (``dprvi``)
 ============================================
 This functionality computes the dual polarimetric radar vegetation index for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
 

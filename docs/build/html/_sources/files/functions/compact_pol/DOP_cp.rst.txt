@@ -1,5 +1,5 @@
-``DOP`` (Degree of Polarization)
-=================================
+Degree of Polarization (``dopcp``)
+==================================
 This functionality computes the degree of polarization for compact polarimetric SAR data. The required input and the computed output are as follows:
 
 .. code-block:: python

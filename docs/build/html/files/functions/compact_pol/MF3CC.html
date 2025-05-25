@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>MF3CC (Model Free 3-Component decomposition for Compact-pol data) &#8212; PolSARtools 0.6.1 documentation</title>
+    <title>Model Free 3-Component decomposition (mf3cc) &#8212; PolSARtools 0.6.1 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="DOP (Degree of Polarization)" href="DOP_cp.html" />
+    <link rel="next" title="Degree of Polarization (dopcp)" href="DOP_cp.html" />
     <link rel="prev" title="iS-Omega (improved S-\(\Omega\) decomposition)" href="iS_Omega.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -289,17 +289,32 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/RVI_fp.html"><code class="docutils literal notranslate"><span class="pre">RVI</span></code> (Radar Vegetation Index)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/GRVI.html"><code class="docutils literal notranslate"><span class="pre">GRVI</span></code> (Generalized volume based Radar Vegetation Index)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/MF3CF.html"><code class="docutils literal notranslate"><span class="pre">MF3CF</span></code> (Model Free 3-Component decomposition for Full-pol data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/PRVI_fp.html"><code class="docutils literal notranslate"><span class="pre">PRVI</span></code> (Polarimetric Radar Vegetation Index)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/DOP_fp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dataFP.html">Full-pol data format</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halphafp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4cfp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neufp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nnedfp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/RVI_fp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvifp</span></code> )</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/GRVI.html">Generalized volume based Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">grvi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvifp</span></code> )</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/DOP_fp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopfp</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../dataCP.html">Compact-pol data format</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cprvi.html"><code class="docutils literal notranslate"><span class="pre">CpRVI</span></code> (Compact-pol Radar Vegetation Index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cprvi.html">Compact-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">cprvi</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="iS_Omega.html"><code class="docutils literal notranslate"><span class="pre">iS-Omega</span></code> (improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">MF3CC</span></code> (Model Free 3-Component decomposition for Compact-pol data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DOP_cp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DOP_cp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopcp</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../dataCP.html">Compact-pol data format</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/RVI_dp.html"><code class="docutils literal notranslate"><span class="pre">RVI</span></code> (Radar Vegetation Index)</a></li>
@@ -307,6 +322,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/PRVI_dp.html"><code class="docutils literal notranslate"><span class="pre">PRVI</span></code> (Polarimetric Radar Vegetation Index)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/DOP_dp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/halphadxp.html"><code class="docutils literal notranslate"><span class="pre">halpadp</span></code> (Entropy-Alpha decomposition for dual-cross-pol)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/shannon_h_dp.html">Shannon entropy (shannon_h_dp)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter</a></li>
+
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../others.html">Generate pauliRGB for FP data</a></li>
+
+
+
+
+
 </ul>
 </div>
 </nav></div>
@@ -350,7 +379,7 @@
     
     <li class="breadcrumb-item"><a href="../../02functions.html" class="nav-link">Functions</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis"><code class="docutils literal notranslate"><span class="pre">MF3CC</span></code> (Model Free 3-Component decomposition for Compact-pol data)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</span></li>
   </ul>
 </nav>
 </div>
@@ -367,8 +396,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="mf3cc-model-free-3-component-decomposition-for-compact-pol-data">
-<h1><code class="docutils literal notranslate"><span class="pre">MF3CC</span></code> (Model Free 3-Component decomposition for Compact-pol data)<a class="headerlink" href="#mf3cc-model-free-3-component-decomposition-for-compact-pol-data" title="Link to this heading">#</a></h1>
+  <section id="model-free-3-component-decomposition-mf3cc">
+<h1>Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)<a class="headerlink" href="#model-free-3-component-decomposition-mf3cc" title="Link to this heading">#</a></h1>
 <blockquote>
 <div><p>This functionality computes the model free 3 component scattering power decomposition for compact polarimetric SAR data. The required input and the computed output are as follows:</p>
 </div></blockquote>
@@ -411,7 +440,7 @@ S_2=\text{C12+C21};\qquad{}\qquad{}\qquad{}\qquad{}S_3=\pm\text{j(C12-C21)};\\
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</p>
+        <p class="prev-next-title">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopcp</span></code>)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

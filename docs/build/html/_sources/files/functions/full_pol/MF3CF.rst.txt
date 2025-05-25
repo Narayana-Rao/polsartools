@@ -1,5 +1,5 @@
-``MF3CF`` (Model Free 3-Component decomposition for Full-pol data)
-=====================================================================
+Model Free 3-Component decomposition (``mf3cf``)
+================================================
 This functionality computes the model free 3 component scattering power decomposition for full polarimetric SAR data. The required input and the computed output are as follows:
 
 .. code-block:: python

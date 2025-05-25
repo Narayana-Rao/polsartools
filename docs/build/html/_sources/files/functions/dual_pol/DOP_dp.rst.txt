@@ -1,4 +1,4 @@
-``DOP`` (Degree of Polarization)
+Degree of Polarization (``dopdp``)
 =================================
 This functionality computes the 2D Barakat degree of polarization for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
 

@@ -1,4 +1,4 @@
-``PRVI`` (Polarimetric Radar Vegetation Index)
+Polarimetric Radar Vegetation Index (``prvidp``)
 ===============================================
 This functionality computes the polarimetric radar vegetation index for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
 

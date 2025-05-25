@@ -321,7 +321,6 @@
 <li class="toctree-l1"><a class="reference internal" href="files/00start.html">Getting started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="files/00start.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="files/00start.html#example-usage">Example Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="files/00start.html#available-functions">Available functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="files/00start.html#contributing">Contributing</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="files/00start.html#how-to-contribute">How to Contribute</a></li>
 </ul>
@@ -332,37 +331,73 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="files/01sensors.html">Supported sensors</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="files/sensors/uavsar_grd.html">uavsar_grd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="files/sensors/uavsar_mlc.html">uavsar_grd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="files/sensors/nisar_rslc.html">nisar_rslc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="files/sensors/nisar_gslc.html">nisar_gslc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="files/sensors/rs2_fp.html">rs2_fp</a></li>
-<li class="toctree-l2"><a class="reference internal" href="files/sensors/alos2_fbd_l11.html">alos2_fbd_l11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="files/sensors/chyaan2_fp.html">chyaan2_fp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files/sensors/uavsar.html">UAVSAR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/sensors/uavsar.html#grd-uavsar-grd">GRD (<code class="docutils literal notranslate"><span class="pre">uavsar_grd</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/sensors/uavsar.html#mlc-uavsar-mlc">MLC (<code class="docutils literal notranslate"><span class="pre">uavsar_MLC</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files/sensors/nisar.html">NISAR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/sensors/nisar.html#rslc-nisar-rslc">RSLC (<code class="docutils literal notranslate"><span class="pre">nisar_rslc</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/sensors/nisar.html#gslc-nisar-gslc">GSLC (<code class="docutils literal notranslate"><span class="pre">nisar_gslc</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files/sensors/radarsat2.html">RADARSAT-2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/sensors/radarsat2.html#full-pol-rs2-fp">Full-pol (<code class="docutils literal notranslate"><span class="pre">rs2_fp</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files/sensors/alos2.html">ALOS-2 PALSAR-2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/sensors/alos2.html#fbd-l1-1-alos2-fbd-l11">FBD L1.1 (<code class="docutils literal notranslate"><span class="pre">alos2_fbd_l11</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files/sensors/chandrayaan2.html">Chandrayaan-II (DFSAR)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/sensors/chandrayaan2.html#full-pol-chyaan2-fp">Full-pol (<code class="docutils literal notranslate"><span class="pre">chyaan2_fp</span></code>)</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="files/02functions.html">Functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="files/02functions.html#full-pol-functions"><strong>Full-pol functions</strong></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/RVI_fp.html"><code class="docutils literal notranslate"><span class="pre">RVI</span></code> (Radar Vegetation Index)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/GRVI.html"><code class="docutils literal notranslate"><span class="pre">GRVI</span></code> (Generalized volume based Radar Vegetation Index)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/MF3CF.html"><code class="docutils literal notranslate"><span class="pre">MF3CF</span></code> (Model Free 3-Component decomposition for Full-pol data)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/PRVI_fp.html"><code class="docutils literal notranslate"><span class="pre">PRVI</span></code> (Polarimetric Radar Vegetation Index)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/DOP_fp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files/02functions.html#full-pol-functions">Full-pol functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dataFP.html">Full-pol data format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halphafp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4cfp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neufp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nnedfp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/RVI_fp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvifp</span></code> )</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/GRVI.html">Generalized volume based Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">grvi</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvifp</span></code> )</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/full_pol/DOP_fp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopfp</span></code>)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="files/02functions.html#compact-pol-functions"><strong>Compact-pol functions</strong></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/compact_pol/cprvi.html"><code class="docutils literal notranslate"><span class="pre">CpRVI</span></code> (Compact-pol Radar Vegetation Index)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/compact_pol/iS_Omega.html"><code class="docutils literal notranslate"><span class="pre">iS-Omega</span></code> (improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/compact_pol/MF3CC.html"><code class="docutils literal notranslate"><span class="pre">MF3CC</span></code> (Model Free 3-Component decomposition for Compact-pol data)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/compact_pol/DOP_cp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files/02functions.html#compact-pol-functions">Compact-pol functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dataCP.html">Compact-pol data format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/compact_pol/cprvi.html">Compact-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">cprvi</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">misomega</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/compact_pol/MF3CC.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/compact_pol/DOP_cp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopcp</span></code>)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="files/02functions.html#dual-pol"><strong>Dual-pol</strong></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/RVI_dp.html"><code class="docutils literal notranslate"><span class="pre">RVI</span></code> (Radar Vegetation Index)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/DpRVI.html"><code class="docutils literal notranslate"><span class="pre">DpRVI</span></code> (Dual-pol Radar Vegetation Index)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/PRVI_dp.html"><code class="docutils literal notranslate"><span class="pre">PRVI</span></code> (Polarimetric Radar Vegetation Index)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/DOP_dp.html"><code class="docutils literal notranslate"><span class="pre">DOP</span></code> (Degree of Polarization)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/halphadxp.html"><code class="docutils literal notranslate"><span class="pre">halpadp</span></code> (Entropy-Alpha decomposition for dual-cross-pol)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="files/02functions.html#dual-pol-functions">Dual-pol functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dataCP.html">Compact-pol data format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/RVI_dp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvidp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/DpRVI.html">Dual-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">dprvi</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/PRVI_dp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvidp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/DOP_dp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopdp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">halpadp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/shannon_h_dp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/dual_pol/mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files/02functions.html#polarimetric-speckle-filters">Polarimetric speckle filters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/speckle_filts.html#boxcar-filter-boxcar">Boxcar filter (<code class="docutils literal notranslate"><span class="pre">boxcar</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files/02functions.html#other-functions">other functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/others.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="files/functions/others.html#generate-false-color-rgb-for-dp-cp-data-dxprgb">Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">dxpRGB</span></code>)</a></li>
 </ul>
 </li>
 </ul>

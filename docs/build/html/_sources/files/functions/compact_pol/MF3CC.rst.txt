@@ -1,5 +1,5 @@
-``MF3CC`` (Model Free 3-Component decomposition for Compact-pol data)
-=======================================================================
+Model Free 3-Component decomposition (``mf3cc``)
+=================================================
  This functionality computes the model free 3 component scattering power decomposition for compact polarimetric SAR data. The required input and the computed output are as follows:
 
 .. code-block:: python
