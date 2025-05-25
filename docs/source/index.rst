@@ -1,6 +1,6 @@
 
 Welcome to PolSARtools' Documentation! 🌐🛰️
-==========================================
+============================================
 
 **PolSARtools** is a Python package available on `PyPI <https://pypi.org/project/polsartools/>`_ 🐍 that generates **derived SAR parameters**, including:
 
@@ -15,6 +15,38 @@ It supports input from various SAR sensors or directly from **polarimetric matri
 
 Get started quickly with hands-on examples! Explore our step-by-step tutorials here:  
 👉 `polsartools-notebooks <https://github.com/Narayana-Rao/polsartools-notebooks>`_ 📓✨
+
+
+📚 Cite Us!
+============
+
+If you use **PolSARtools** in your research or projects, we'd really appreciate a citation! 🛰️✨
+
+Please cite our work as:
+
+    Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A., and Rao, Y.S. (2021). 
+    *PolSAR tools: A QGIS plugin for generating SAR descriptors*. 
+    Journal of Open Source Software, **6(60)**, p.2970.  
+    🔗 https://doi.org/10.21105/joss.02970
+
+BibTeX 📄
+--------
+
+.. code-block:: bibtex
+
+    @article{bhogapurapu2021polsar,
+      title={PolSAR tools: A QGIS plugin for generating SAR descriptors},
+      author={Bhogapurapu, Narayanarao and Dey, Subhadip and Mandal, Dipankar and Bhattacharya, Avik and Rao, YS},
+      journal={Journal of Open Source Software},
+      volume={6},
+      number={60},
+      pages={2970},
+      year={2021},
+      doi={10.21105/joss.02970}
+    }
+
+🙏 Your support means a lot and helps us keep improving PolSARtools!
+
 
 .. toctree::
    :maxdepth: 3
@@ -34,10 +66,13 @@ Get started quickly with hands-on examples! Explore our step-by-step tutorials h
 .. * :ref:`modindex`
 .. * :ref:`search`
 
+
+
+
 Disclaimer
 ==========
 
-PolSAR Tools v0.6.1 is released under the `GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.html>`_ (GPL-3.0). 
+PolSARtools v0.6.1 is released under the `GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.html>`_ (GPL-3.0). 
 This means you are free to use, modify, and distribute the software, provided you adhere to the terms of the license.
 
 No Warranty

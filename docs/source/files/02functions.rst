@@ -60,7 +60,7 @@ A typical file structures of C2/T2 matrix is provded in:
 .. toctree::
     :maxdepth: 2
 
-    functions/dataCP
+    functions/dataDP
 
 
 Following are the avaialble functions for dual-pol data:

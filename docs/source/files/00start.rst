@@ -5,8 +5,8 @@ Getting started
 
 **PolSARtools** package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from different SAR sensors or input polarimetric matrix (C3, T3, C2, T2).
 
-Installation
--------------
+💾 Installation
+----------------
 
 1. Install **`gdal`** Package
 
@@ -90,8 +90,8 @@ Sample use cases and notebooks are provided at `polsartools-notebooks <https://g
 
 
 
-Contributing
-------------
+🤝 Contributing
+----------------
 
 We welcome contributions! Whether it's fixing bugs, adding new features, or improving documentation, your help is greatly appreciated.
 
@@ -125,8 +125,8 @@ How to Contribute
 
 7. **Create a Pull Request** - Open a pull request to the main repository with a clear description of the changes.
 
-Bug Reporting
--------------
+🐞 Bug Reporting
+-----------------
 
 If you encounter a bug or issue, please follow these steps to report it:
 
@@ -142,8 +142,8 @@ If you encounter a bug or issue, please follow these steps to report it:
 
 `Click here to report a bug <https://github.com/Narayana-Rao/polsartools/issues/new?template=bug_report.md>`_
 
-Feature Requests
-----------------
+💡 Feature Requests
+--------------------
 We’re always open to suggestions for new features or improvements!
 
 1. **Check existing feature requests:** Please make sure the feature request hasn't already been made in the `Issues section <https://github.com/Narayana-Rao/polsartools/issues>`_.
@@ -155,14 +155,22 @@ We’re always open to suggestions for new features or improvements!
 
 `Click here to request a feature <https://github.com/Narayana-Rao/polsartools/issues/new?template=feature_request.md>`_
 
-Cite
-----
+📚 Cite Us!
+------------
 
-If you use **PolsarTools** in your research or projects, please cite it as follows:
+If you use **PolSARtools** in your research or projects, we'd really appreciate a citation! 🛰️✨
 
-Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi: `10.21105/joss.02970 <https://doi.org/10.21105/joss.02970>`
+Please cite our work as:
 
-.. code-block::
+    Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A., and Rao, Y.S. (2021). 
+    *PolSAR tools: A QGIS plugin for generating SAR descriptors*. 
+    Journal of Open Source Software, **6(60)**, p.2970.  
+    🔗 https://doi.org/10.21105/joss.02970
+
+BibTeX 📄
+~~~~~~~~~
+
+.. code-block:: bibtex
 
     @article{bhogapurapu2021polsar,
       title={PolSAR tools: A QGIS plugin for generating SAR descriptors},
@@ -172,8 +180,10 @@ Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolS
       number={60},
       pages={2970},
       year={2021},
-      doi= {10.21105/joss.02970}
+      doi={10.21105/joss.02970}
     }
+
+🙏 Your support means a lot and helps us keep improving PolSARtools!
 
 
 
