@@ -93,6 +93,8 @@ extensions = [
  'sphinx.ext.autodoc',    # Autodocumentation
     'sphinx.ext.intersphinx',  # Links to other documentation
     'sphinx.ext.viewcode',    # View source links
+    'sphinx.ext.napoleon',
+    # 'sphinx.ext.autosectionlabel',
     # 'sphinx.ext.modindex',  
 	# 'rinoh.frontend.sphinx',
     # 'sphinx.ext.mathjax',

@@ -362,10 +362,10 @@
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">rs2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sigma0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/rs2_fp.html#rs2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.</p>
-<p>This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (<cite>inFolder</cite>) 
+<p>This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (<cite>inFolder</cite>)
 and calculates either the S2, T3, or C3 matrix. The resulting matrix is then saved in a corresponding directory
-(<cite>S2</cite>, <cite>T3</cite>, or <cite>C3</cite>). The function uses lookup tables (<cite>lutSigma.xml</cite>, <cite>lutGamma.xml</cite>, <cite>lutBeta.xml</cite>) for scaling 
-the data based on the chosen <cite>type</cite> (sigma0, gamma0, or beta0). The processed data is written into binary files 
+(<cite>S2</cite>, <cite>T3</cite>, or <cite>C3</cite>). The function uses lookup tables (<cite>lutSigma.xml</cite>, <cite>lutGamma.xml</cite>, <cite>lutBeta.xml</cite>) for scaling
+the data based on the chosen <cite>type</cite> (sigma0, gamma0, or beta0). The processed data is written into binary files
 in the output folder.</p>
 <section id="parameters">
 <h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
