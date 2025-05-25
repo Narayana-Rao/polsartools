@@ -94,9 +94,12 @@ setup(
         'tqdm',
         'matplotlib',
         'pybind11',
+        'h5py',
+        'scikit-image',
+        
     ],
     extras_require={
-        'dev': ['pytest', 'sphinx', 'doxygen'],
+        'dev': ['pytest', 'sphinx','pydata_sphinx_theme'],
     },
     entry_points={
         'console_scripts': [

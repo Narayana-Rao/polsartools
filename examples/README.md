@@ -6,7 +6,7 @@ The example notebooks that were previously part of this repository have now been
 
 You can find the example notebooks in the new repository:
 
-[**Polsartools Example Notebooks**](https://github.com/Narayana-Rao/polsartools-notebooks)
+[**`polsartools` Example Notebooks**](https://github.com/Narayana-Rao/polsartools-notebooks)
 
 In this new repository, you’ll find various Jupyter notebooks demonstrating how to use the package and its features.
 
