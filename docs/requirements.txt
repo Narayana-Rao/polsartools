@@ -3,4 +3,4 @@ sphinxcontrib.bibtex
 # sphinxawesome-theme
 # sphinx-pdj-theme
 pydata-sphinx-theme
--e git+https://github.com/your-username/polsartools.git#egg=polsartools
+-e git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
