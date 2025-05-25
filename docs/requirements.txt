@@ -3,4 +3,5 @@ sphinxcontrib.bibtex
 # sphinxawesome-theme
 # sphinx-pdj-theme
 pydata-sphinx-theme
+gdal=3.9.0
 -e git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
