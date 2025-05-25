@@ -1,19 +1,16 @@
-.. SAR tools documentation master file, created by
-   sphinx-quickstart on Mon Dec 28 22:30:50 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-Welcome to PolSAR tools's documentation!
+Welcome to PolSARtools' documentation!
 ========================================
-PolSARtools is a Python (PyPI) package, which generates derived SAR parameters (polarimetric decomposition parameters and descriptors) from input polarimetric matrix (C3, T3, C2, T2).
+PolSARtools is a Python (PyPI) package, which  generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from different SAR sensors or input polarimetric matrix (C3, T3,C2, T2).
 
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
 
-   files/General_Information
-   files/functions_description
-   files/References
+   files/00start
+   files/01sensors
+   files/02functions
+   files/03refs
 
 
 

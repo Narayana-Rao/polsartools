@@ -149,7 +149,7 @@ We’re always open to suggestions for new features or improvements!
 
 ## Cite
 
-If you use **PolsarTools** in your research or projects, please cite it as follows:
+If you use **`PolSARtools`** in your research or projects, please cite it as follows:
 
 
 > Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi:  [10.21105/joss.02970](https://doi.org/10.21105/joss.02970)  

@@ -99,7 +99,7 @@ setup(
         
     ],
     extras_require={
-        'dev': ['pytest', 'sphinx','pydata_sphinx_theme'],
+        'dev': ['pytest', 'sphinx','pydata-sphinx-theme'],
     },
     entry_points={
         'console_scripts': [

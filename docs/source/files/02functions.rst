@@ -1,5 +1,5 @@
-Functions Description 
-======================
+Functions
+=========
 
 
 **Full-pol functions**

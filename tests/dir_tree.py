@@ -48,4 +48,5 @@ def tree(dir_path: Path, level: int=-1, limit_to_directories: bool=False,
     print(f'\n{directories} directories' + (f', {files} files' if files else ''))
             
 
-tree(Path('../'), level=4)
+# tree(Path('../'), level=4)
+tree(Path('../docs/'), level=4)

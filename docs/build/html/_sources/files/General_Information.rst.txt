@@ -1,15 +1,8 @@
-General Information
-===================
+Getting started
+===============
 
 This package generates derived SAR parameters  (polarimetric decomposition parameters and descriptors)  from input polarimetric matrix (C3, T3, C2, T2). The input data needs to be in `PolSARpro`_/`ENVI`_ format (\*.bin and \*.hdr). It requires `gdal`_, `numpy`_, `scipy`_, `matplotlib`_ python libraries pre-installed.
 
-
-.. toctree::
-    :maxdepth: 1
-
-    install
-    example
-    functions
 
 Installation
 -------------
