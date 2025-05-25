@@ -357,6 +357,60 @@
 <h1>🔸ALOS-2 PALSAR-2<a class="headerlink" href="#alos-2-palsar-2" title="Link to this heading">#</a></h1>
 <section id="fbd-l1-1-alos2-fbd-l11">
 <h2>FBD L1.1 (<code class="docutils literal notranslate"><span class="pre">alos2_fbd_l11</span></code>)<a class="headerlink" href="#fbd-l1-1-alos2-fbd-l11" title="Link to this heading">#</a></h2>
+<p>The <cite>alos2_fbd_l11</cite> function extracts C2 matrix elements from the given ALOS-2 FBD mode folder and saves them into a C2 directory.</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">alos2_fbd_l11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calfac_dB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-83</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/alos2.html#alos2_fbd_l11"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-2 Fine Beam Dual-Pol (FBD) CEOS data 
+and saves them into respective binary files.</p>
+<section id="parameters">
+<h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>inFolder<span class="classifier">str</span></dt><dd><p>The path to the folder containing the ALOS-2 Fine Beam Dual-Pol CEOS data files.</p>
+</dd>
+<dt>azlks<span class="classifier">int, optional (default=3)</span></dt><dd><p>The number of azimuth looks for multi-looking.</p>
+</dd>
+<dt>rglks<span class="classifier">int, optional (default=2)</span></dt><dd><p>The number of range looks for multi-looking.</p>
+</dd>
+<dt>calfac_dB<span class="classifier">float, optional (default=-83)</span></dt><dd><p>The calibration factor in dB used to scale the raw radar data. It is applied to 
+the HH and HV polarization data before matrix computation.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>None</dt><dd><p>The function does not return any value. Instead, it creates a folder named <cite>C2</cite> 
+(if not already present) and saves the following binary files:</p>
+<ul class="simple">
+<li><p><cite>C11.bin</cite>: Contains the C11 matrix elements.</p></li>
+<li><p><cite>C22.bin</cite>: Contains the C22 matrix elements.</p></li>
+<li><p><cite>C12_real.bin</cite>: Contains the real part of the C12 matrix.</p></li>
+<li><p><cite>C12_imag.bin</cite>: Contains the imaginary part of the C12 matrix.</p></li>
+<li><p><cite>config.txt</cite>: A text file containing grid dimensions and polarimetric configuration.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h3>Raises:<a class="headerlink" href="#raises" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>FileNotFoundError</dt><dd><p>If the required ALOS-2 data files (e.g., <cite>IMG-HH</cite> and <cite>IMG-HV</cite>) cannot be found in the specified folder.</p>
+</dd>
+<dt>ValueError</dt><dd><p>If the calibration factor is invalid or if the files are not in the expected format.</p>
+</dd>
+</dl>
+</section>
+<section id="example">
+<h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">alos2_fbd_l11</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">calfac_dB</span><span class="o">=-</span><span class="mi">80</span><span class="p">)</span>
+<span class="go">This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data </span>
+<span class="go">in the specified folder and save them in the &#39;C2&#39; directory.</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
 </section>
 </section>
 

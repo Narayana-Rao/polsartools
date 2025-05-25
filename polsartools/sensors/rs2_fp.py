@@ -22,6 +22,68 @@ def write_s2_bin(file,wdata):
 
 @time_it
 def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
+    """
+    Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.
+
+    This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (`inFolder`) 
+    and calculates either the S2, T3, or C3 matrix. The resulting matrix is then saved in a corresponding directory
+    (`S2`, `T3`, or `C3`). The function uses lookup tables (`lutSigma.xml`, `lutGamma.xml`, `lutBeta.xml`) for scaling 
+    the data based on the chosen `type` (sigma0, gamma0, or beta0). The processed data is written into binary files 
+    in the output folder.
+
+    Parameters:
+    -----------
+    inFolder : str
+        Path to the folder containing the radar imagery files and the lookup tables (`lutSigma.xml`, `lutGamma.xml`, `lutBeta.xml`).
+    
+    matrix : str, optional (default='T3')
+        The type of matrix to generate. Can be:
+        
+        - 'S2' : Generates S2 matrix from the input imagery (S12 = S21 assumption).
+        - 'T3' : Generates T3 matrix from the input imagery, based on Pauli decomposition.
+        - 'C3' : Generates C3 matrix from the input imagery, based on Lexicographic decomposition.
+
+    type : str, optional (default='sigma0')
+        The type of radar cross-section to use for scaling. Available options:
+        
+        - 'sigma0' : Uses `lutSigma.xml` for scaling.
+        - 'gamma0' : Uses `lutGamma.xml` for scaling.
+        - 'beta0' : Uses `lutBeta.xml` for scaling.
+    
+    azlks : int, optional (default=8)
+        The number of azimuth looks to apply during the C3/T3 processing.
+
+    rglks : int, optional (default=2)
+        The number of range looks to apply during the C3/T3processing.
+
+    Raises:
+    -------
+    ValueError
+        If an invalid `matrix` or `type` is provided, a `ValueError` will be raised with a descriptive message.
+    
+    FileNotFoundError
+        If any of the required input files (such as the .tif imagery or the lookup tables) cannot be found in the `inFolder`.
+
+    Example Usage:
+    --------------
+    To process imagery and generate a T3 matrix:
+    
+    .. code-block:: python
+
+        rs2_fp("/path/to/data", matrix="T3", type="sigma0")
+
+    To process imagery and generate a C3 matrix:
+
+    .. code-block:: python
+
+        rs2_fp("/path/to/data", matrix="C3", type="beta0", azlks=10, rglks=3)
+    
+    Notes:
+    ------
+    - The function assumes that the input imagery is stored as "imagery_HH.tif", "imagery_HV.tif", "imagery_VH.tif", and "imagery_VV.tif" in the `inFolder`.
+    - The function uses the `read_rs2_tif` and `write_*` helper functions to read and write image data and binary files.
+    - The generated matrices (S2, T3, or C3) are saved in subdirectories within `inFolder` named accordingly.
+    """
     
     if type == 'sigma0':
         tree = ET.parse(os.path.join(inFolder,"lutSigma.xml"))

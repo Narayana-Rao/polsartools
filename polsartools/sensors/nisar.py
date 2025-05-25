@@ -79,7 +79,44 @@ def rst_mlook(input_raster, az, rg, output_raster,projection_epsg,
 
 @time_it  
 def nisar_gslc(inFile,azlks=20,rglks=10):
-    
+    """
+    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
+    and saves them into respective binary files.
+
+    Parameters:
+    -----------
+    inFile : str
+        The path to the NISAR GSLC HDF5 file containing the radar data.
+
+    azlks : int, optional (default=20)
+        The number of azimuth looks for multi-looking. 
+
+    rglks : int, optional (default=10)
+        The number of range looks for multi-looking. 
+
+    Returns:
+    --------
+    None
+        The function does not return any value. Instead, it creates a folder 
+        named `C2` (if not already present) and saves the following binary files:
+        
+        - `C11.bin`: Contains the C11 matrix elements.
+        - `C22.bin`: Contains the C22 matrix elements.
+        - `C12_real.bin`: Contains the real part of the C12 matrix.
+        - `C12_imag.bin`: Contains the imaginary part of the C12 matrix.
+        - `config.txt`: A text file containing grid dimensions and polarimetric configuration.
+
+    Raises:
+    -------
+    Exception
+        If the GSLC HDF5 file is invalid or cannot be read.
+
+    Example:
+    --------
+    >>> nisar_gslc("path_to_file.h5", azlks=30, rglks=15)
+    This will extract the C2 matrix elements from the specified NISAR GSLC file 
+    and save them in the 'C2' folder.
+    """
     inFolder = os.path.dirname(inFile)   
     C2Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2')
 
@@ -147,6 +184,44 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
     
 @time_it  
 def nisar_rslc(inFile,azlks=20,rglks=10):
+    """
+    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR RSLC HDF5 file 
+    and saves them into respective binary files.
+
+    Parameters:
+    -----------
+    inFile : str
+        The path to the NISAR RSLC HDF5 file containing the radar data.
+
+    azlks : int, optional (default=20)
+        The number of azimuth looks for multi-looking. 
+
+    rglks : int, optional (default=10)
+        The number of range looks for multi-looking. 
+
+    Returns:
+    --------
+    None
+        The function does not return any value. Instead, it creates a folder 
+        named `C2` (if not already present) and saves the following binary files:
+        
+        - `C11.bin`: Contains the C11 matrix elements.
+        - `C22.bin`: Contains the C22 matrix elements.
+        - `C12_real.bin`: Contains the real part of the C12 matrix.
+        - `C12_imag.bin`: Contains the imaginary part of the C12 matrix.
+        - `config.txt`: A text file containing grid dimensions and polarimetric configuration.
+
+    Raises:
+    -------
+    Exception
+        If the RSLC HDF5 file is invalid or cannot be read.
+
+    Example:
+    --------
+    >>> nisar_rslc("path_to_file.h5", azlks=30, rglks=15)
+    This will extract the C2 matrix elements from the specified NISAR RSLC file 
+    and save them in the 'C2' folder.
+    """
     
     inFolder = os.path.dirname(inFile)   
     C2Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2')
