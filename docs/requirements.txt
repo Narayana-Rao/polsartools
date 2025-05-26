@@ -3,5 +3,5 @@ sphinxcontrib.bibtex
 # sphinxawesome-theme
 # sphinx-pdj-theme
 pydata-sphinx-theme
-# gdal==3.4.1 --find-links https://sourceforge.net/projects/gdal-wheels-for-linux/files/GDAL-3.4.1-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl
+gdal==3.4.1 --find-links https://sourceforge.net/projects/gdal-wheels-for-linux/files/GDAL-3.4.1-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl
 -e git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
