@@ -176,9 +176,14 @@ def get_feas_bounds():
     
     return data
     
-def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', gridsize=300 ):
+def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', grey_region=True, gridsize=300):
     """
     Generates and saves a hexbin density plot of entropy (H) versus alpha (degrees) for dual-pol data.
+
+    Example:
+    --------
+    >>> halpha_plot_dp(h, alpha, path="HA_plot.png", cmap='jet', colorbar=True, norm='log')
+    This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the 'jet' colormap and logarithmic normalization
     
     Parameters:
     -----------
@@ -187,17 +192,19 @@ def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
     alpha : array-like
         Array representing alpha values in degrees.
     path : str, optional
-        Path to save the generated plot. If a folder is given, 
-        the plot is saved as 'halpha_plot_dp.png' inside that folder.
+        Path to save the generated plot. If a folder is given, the plot is saved as 'halpha_plot_dp.png' inside that folder.
+        If the file already exists, it will be overwritten.
     cmap : str, optional
         Colormap used for the hexbin plot. Defaults to 'viridis'.
     colorbar : bool, optional
         If True, displays a colorbar representing sample count. Defaults to True.
     norm : str, optional
         If set to 'log', applies logarithmic normalization to the hexbin plot.
+    grey_region : bool, optional
+        If True, fills non-feasible regions of the plot with a grey color to indicate feasible boundaries.
+        Defaults to True.
     gridsize : int, optional
-        Number of hexagonal bins used in the plot. Higher values result in finer binning.
-        Defaults to 300.
+        Number of hexagonal bins used in the plot. Higher values result in finer binning. Defaults to 300.
     
     Returns:
     --------
@@ -206,7 +213,7 @@ def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
     
     Notes:
     ------
-    - Uses `get_feas_bounds()` to obtain fesable boundary curve for plotting.
+    - Uses `get_feas_bounds()` to obtain feasible boundary curves for plotting.
     - If `norm` is 'log', a `LogNorm()` normalization is applied.
     """
 
@@ -220,14 +227,14 @@ def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
     
     plt.hexbin(h.flatten(), alpha.flatten(), gridsize=gridsize, cmap=cmap,mincnt=1,norm=norm_option)
 
-    plt.plot(data[:,0],data[:,1],'k-',linewidth=0.3,zorder=0)
-    plt.plot(data[:,0],data[:,2],'k-',linewidth=0.3,zorder=0)
+    plt.plot(data[:,0],data[:,1],'k-',linewidth=0.3)
+    plt.plot(data[:,0],data[:,2],'k-',linewidth=0.3)
     plt.yticks(np.arange(0,100,10),np.arange(0,100,10),fontsize=fs)
     plt.xticks(np.round(np.arange(0,1.2,.2),2),np.round(np.arange(0,1.2,.2),2),fontsize=fs)
     plt.xlim([0,1])
     plt.ylim([0,90])
     plt.xlabel('Entropy, H',fontsize=fs)
-    plt.ylabel(r'Alpha(degrees)',fontsize=fs)
+    plt.ylabel(r'Alpha (degrees)',fontsize=fs)
 
     ax.tick_params(axis='both', which='both', direction='in',
                     top=True, bottom=True, left=True, right=True)
@@ -241,10 +248,16 @@ def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
         spine.set_linewidth(0.5)
     if colorbar:
         cbar = plt.colorbar()
-        cbar.ax.tick_params(labelsize=fs)
-        cbar.set_label(label='\#samples',fontsize=fs)
+        cbar.ax.tick_params(labelsize=fs-4)
+        cbar.set_label(label='#samples',fontsize=fs-4)
 
-
+    if grey_region:
+        xs,ys = data[:,0],data[:,1]
+        ax.fill_between(xs, ys, interpolate=True, color='#dbdbdb',zorder=0)
+        xs,ys = data[:,0],data[:,2]
+        ax.fill_between(xs, ys, 90, interpolate=True, color='#dbdbdb',zorder=0)
+    
+    plt.tight_layout()
     if path is not None:
         if os.path.isdir(path):
             path = os.path.join(path, 'halpha_plot_dp.png')  

@@ -93,6 +93,7 @@ other functions
     :maxdepth: 3
 
     functions/others
+    functions/full_pol/halpha_plot_fp
     functions/dual_pol/halpha_plot_dp
 
 

@@ -69,6 +69,7 @@ docs/build/doctrees/files/functions/dual_pol/DOP_dp.doctree
 docs/build/doctrees/files/functions/dual_pol/DpRVI.doctree
 docs/build/doctrees/files/functions/dual_pol/PRVI_dp.doctree
 docs/build/doctrees/files/functions/dual_pol/RVI_dp.doctree
+docs/build/doctrees/files/functions/dual_pol/halpha_plot_dp.doctree
 docs/build/doctrees/files/functions/dual_pol/halphadxp.doctree
 docs/build/doctrees/files/functions/dual_pol/mf3cd.doctree
 docs/build/doctrees/files/functions/dual_pol/shannon_h_dp.doctree
@@ -94,13 +95,6 @@ docs/build/html/index.html
 docs/build/html/objects.inv
 docs/build/html/search.html
 docs/build/html/searchindex.js
-docs/build/html/_modules/index.html
-docs/build/html/_modules/polsartools/polsar/dxp/shannon_h_dp.html
-docs/build/html/_modules/polsartools/sensors/alos2.html
-docs/build/html/_modules/polsartools/sensors/chyaan2.html
-docs/build/html/_modules/polsartools/sensors/nisar.html
-docs/build/html/_modules/polsartools/sensors/rs2_fp.html
-docs/build/html/_modules/polsartools/sensors/uavsar.html
 docs/build/html/_sources/index.rst.txt
 docs/build/html/_sources/files/00start.rst.txt
 docs/build/html/_sources/files/01sensors.rst.txt
@@ -119,6 +113,7 @@ docs/build/html/_sources/files/functions/dual_pol/DOP_dp.rst.txt
 docs/build/html/_sources/files/functions/dual_pol/DpRVI.rst.txt
 docs/build/html/_sources/files/functions/dual_pol/PRVI_dp.rst.txt
 docs/build/html/_sources/files/functions/dual_pol/RVI_dp.rst.txt
+docs/build/html/_sources/files/functions/dual_pol/halpha_plot_dp.rst.txt
 docs/build/html/_sources/files/functions/dual_pol/halphadxp.rst.txt
 docs/build/html/_sources/files/functions/dual_pol/mf3cd.rst.txt
 docs/build/html/_sources/files/functions/dual_pol/shannon_h_dp.rst.txt
@@ -184,6 +179,7 @@ docs/build/html/files/functions/dual_pol/DOP_dp.html
 docs/build/html/files/functions/dual_pol/DpRVI.html
 docs/build/html/files/functions/dual_pol/PRVI_dp.html
 docs/build/html/files/functions/dual_pol/RVI_dp.html
+docs/build/html/files/functions/dual_pol/halpha_plot_dp.html
 docs/build/html/files/functions/dual_pol/halphadxp.html
 docs/build/html/files/functions/dual_pol/mf3cd.html
 docs/build/html/files/functions/dual_pol/shannon_h_dp.html
@@ -225,6 +221,7 @@ docs/source/files/functions/dual_pol/DOP_dp.rst
 docs/source/files/functions/dual_pol/DpRVI.rst
 docs/source/files/functions/dual_pol/PRVI_dp.rst
 docs/source/files/functions/dual_pol/RVI_dp.rst
+docs/source/files/functions/dual_pol/halpha_plot_dp.rst
 docs/source/files/functions/dual_pol/halphadxp.rst
 docs/source/files/functions/dual_pol/mf3cd.rst
 docs/source/files/functions/dual_pol/shannon_h_dp.rst
@@ -331,6 +328,7 @@ polsartools/polsar/fp/__init__.py
 polsartools/polsar/fp/dopfp.py
 polsartools/polsar/fp/fp_infiles.py
 polsartools/polsar/fp/grvi.py
+polsartools/polsar/fp/halpha_plot_fp.py
 polsartools/polsar/fp/halphafp.py
 polsartools/polsar/fp/mf3cf.py
 polsartools/polsar/fp/mf4cf.py

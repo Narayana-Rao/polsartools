@@ -513,15 +513,15 @@
     
 <div class="viewcode-block" id="halpha_plot_dp">
 <a class="viewcode-back" href="../../../../files/functions/dual_pol/halpha_plot_dp.html#polsartools.halpha_plot_dp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">halpha_plot_dp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">gridsize</span><span class="o">=</span><span class="mi">300</span> <span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">halpha_plot_dp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">grey_region</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gridsize</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates and saves a hexbin density plot of entropy (H) versus alpha (degrees) for dual-pol data.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; halpha_plot_dp(h, alpha, path=&quot;HA_plot.png&quot;, cmap=&#39;jet&#39;, colorbar=True,norm=&#39;log&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; halpha_plot_dp(h, alpha, path=&quot;HA_plot.png&quot;, cmap=&#39;jet&#39;, colorbar=True, norm=&#39;log&#39;)</span>
 <span class="sd">    This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the &#39;jet&#39; colormap and logarithmic normalization</span>
-<span class="sd">        </span>
+<span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    h : array-like</span>
@@ -529,17 +529,19 @@
 <span class="sd">    alpha : array-like</span>
 <span class="sd">        Array representing alpha values in degrees.</span>
 <span class="sd">    path : str, optional</span>
-<span class="sd">        Path to save the generated plot. If a folder is given, </span>
-<span class="sd">        the plot is saved as &#39;halpha_plot_dp.png&#39; inside that folder.</span>
+<span class="sd">        Path to save the generated plot. If a folder is given, the plot is saved as &#39;halpha_plot_dp.png&#39; inside that folder.</span>
+<span class="sd">        If the file already exists, it will be overwritten.</span>
 <span class="sd">    cmap : str, optional</span>
 <span class="sd">        Colormap used for the hexbin plot. Defaults to &#39;viridis&#39;.</span>
 <span class="sd">    colorbar : bool, optional</span>
 <span class="sd">        If True, displays a colorbar representing sample count. Defaults to True.</span>
 <span class="sd">    norm : str, optional</span>
 <span class="sd">        If set to &#39;log&#39;, applies logarithmic normalization to the hexbin plot.</span>
+<span class="sd">    grey_region : bool, optional</span>
+<span class="sd">        If True, fills non-feasible regions of the plot with a grey color to indicate feasible boundaries.</span>
+<span class="sd">        Defaults to True.</span>
 <span class="sd">    gridsize : int, optional</span>
-<span class="sd">        Number of hexagonal bins used in the plot. Higher values result in finer binning.</span>
-<span class="sd">        Defaults to 300.</span>
+<span class="sd">        Number of hexagonal bins used in the plot. Higher values result in finer binning. Defaults to 300.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
@@ -548,7 +550,7 @@
 <span class="sd">    </span>
 <span class="sd">    Notes:</span>
 <span class="sd">    ------</span>
-<span class="sd">    - Uses `get_feas_bounds()` to obtain fesable boundary curve for plotting.</span>
+<span class="sd">    - Uses `get_feas_bounds()` to obtain feasible boundary curves for plotting.</span>
 <span class="sd">    - If `norm` is &#39;log&#39;, a `LogNorm()` normalization is applied.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -562,14 +564,14 @@
     
     <span class="n">plt</span><span class="o">.</span><span class="n">hexbin</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">gridsize</span><span class="o">=</span><span class="n">gridsize</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span><span class="n">mincnt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">norm</span><span class="o">=</span><span class="n">norm_option</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;k-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;k-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;k-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;k-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.2</span><span class="p">,</span><span class="mf">.2</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.2</span><span class="p">,</span><span class="mf">.2</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">90</span><span class="p">])</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Entropy, H&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Alpha(degrees)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Alpha (degrees)&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;in&#39;</span><span class="p">,</span>
                     <span class="n">top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -583,10 +585,16 @@
         <span class="n">spine</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
         <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-        <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
-        <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;\#samples&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="n">fs</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;#samples&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="n">fs</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
 
-
+    <span class="k">if</span> <span class="n">grey_region</span><span class="p">:</span>
+        <span class="n">xs</span><span class="p">,</span><span class="n">ys</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#dbdbdb&#39;</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">xs</span><span class="p">,</span><span class="n">ys</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#dbdbdb&#39;</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;halpha_plot_dp.png&#39;</span><span class="p">)</span>  

@@ -3,7 +3,7 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-__version__ = "0.6.1"  
+__version__ = "0.7"  
 
 # Import submodules
 # from . import polsar
@@ -11,7 +11,7 @@ __version__ = "0.6.1"
 # from . import utils 
 # from . import sensors
 # Import functions from the submodules for direct access
-from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,halphafp,yam4cfp,shannon_h_fp
+from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,halphafp,yam4cfp,shannon_h_fp,halpha_plot_fp
 from .polsar.cp import cprvi, dopcp, misomega, mf3cc
 from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp, shannon_h_dp,halpha_plot_dp
 from .polsar.dcp import mf3cd
@@ -30,9 +30,9 @@ from .preprocessing.filters import boxcar,rlee
 # import polsartools.cprvicpp #process_chunk_cprvicpp
 __all__ = [
     'uavsar_grd', 'uavsar_mlc', 'nisar_gslc', 'nisar_rslc', 'alos2_fbd_l11', 'chyaan2_fp','rs2_fp', #import data from sensors
-    'rlee', # 'boxcar', #import filters
+    'rlee', 'boxcar', #import filters
     'convert_T3_C3', 'convert_C3_T3', 'pauliRGB',#import utils
-    'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 'halphafp', 'shannon_h_fp','yam4cfp', # Full-pol
+    'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 'halphafp', 'shannon_h_fp','yam4cfp', 'halpha_plot_fp', # Full-pol
     'cprvi', 'dopcp', 'misomega', 'mf3cc',                 # Compact-pol
     'dprvi', 'dopdp', 'prvidp', 'rvidp', 'halphadp', 'shannon_h_dp', 'halpha_plot_dp',      # Dual-cross-pol
     'mf3cd'                                         # Dual-co-pol

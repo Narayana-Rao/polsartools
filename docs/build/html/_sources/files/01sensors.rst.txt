@@ -3,6 +3,14 @@ Supported sensors
 
 **PolSARtools** currently supports the import of sensor data from the following sources into polarimetric matrices.
 
+.. toctree::
+    :maxdepth: 3
+
+    sensors/uavsar
+    sensors/nisar
+    sensors/radarsat2
+    sensors/alos2
+    sensors/chandrayaan2
 
 
 .. - `UAVSAR (GRD, MLC) <sensors/uavsar.html>`_
@@ -10,17 +18,6 @@ Supported sensors
 .. - `RADARSAT-2 (Full-pol) <sensors/radarsat2.html>`_
 .. - `ALOS-2 (Fine Beam Dual-pol (FBD) Level 1.1 CEOS) <sensors/alos2.html>`_
 .. - `Chandrayaan-II DFSAR (Full-pol) <sensors/chandrayaan2.html>`_
-
-
-.. toctree::
-    :maxdepth: 2
-    :caption: Sensors
-
-   sensors/uavsar
-   sensors/nisar
-   sensors/radarsat2
-   sensors/alos2
-   sensors/chandrayaan2
 
 
 .. .. toctree::
