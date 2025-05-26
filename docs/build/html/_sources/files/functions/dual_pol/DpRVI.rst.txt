@@ -1,11 +1,14 @@
 Dual-pol Radar Vegetation Index (``dprvi``)
 ============================================
-This functionality computes the dual polarimetric radar vegetation index for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
+.. This functionality computes the dual polarimetric radar vegetation index for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
 
-.. code-block:: python
+.. .. code-block:: python
 
-        input : input_C2_folder, window_size
-        output: DpRVI.bin
+..         input : input_C2_folder, window_size
+..         output: DpRVI.bin
+
+.. autofunction:: polsartools.dprvi
+   :noindex:
 
 The formulation of DpRVI is as follows:
 

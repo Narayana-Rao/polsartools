@@ -75,9 +75,6 @@ Following are the avaialble functions for dual-pol data:
     functions/dual_pol/halphadxp
     functions/dual_pol/shannon_h_dp
     functions/dual_pol/mf3cd
-    
-
-    
 
 
     
@@ -93,8 +90,9 @@ other functions
 ---------------
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
     functions/others
+    functions/dual_pol/halpha_plot_dp
 
 

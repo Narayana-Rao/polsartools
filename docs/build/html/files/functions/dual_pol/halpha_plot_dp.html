@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Shannon entropy (shannon_h_dp) &#8212; PolSARtools 0.6.1 documentation</title>
+    <title>Dual-pol H-alpha plot (halpha_plot_dp) &#8212; PolSARtools 0.6.1 documentation</title>
   
   
   
@@ -41,12 +41,12 @@
     <script src="../../../_static/documentation_options.js?v=2bd037f0"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/dual_pol/shannon_h_dp';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/dual_pol/halpha_plot_dp';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Model Free 3-Component decomposition for dual-co-pol (mf3cd)" href="mf3cd.html" />
-    <link rel="prev" title="H/α decomposition (halphadp)" href="halphadxp.html" />
+    <link rel="next" title="References" href="../../03refs.html" />
+    <link rel="prev" title="Generate pauliRGB for FP data (pauliRGB)" href="../others.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -315,23 +315,23 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../dataDP.html">Dual-pol data format</a></li>
 </ul>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="RVI_dp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvidp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="DpRVI.html">Dual-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">dprvi</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="PRVI_dp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvidp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="DOP_dp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopdp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">halphadp</span></code>)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shannon_h_dp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
 
 </ul>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../others.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
 </ul>
 </div>
 </nav></div>
@@ -375,7 +375,7 @@
     
     <li class="breadcrumb-item"><a href="../../02functions.html" class="nav-link">Functions</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</span></li>
   </ul>
 </nav>
 </div>
@@ -392,55 +392,52 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="shannon-entropy-shannon-h-dp">
-<h1>Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)<a class="headerlink" href="#shannon-entropy-shannon-h-dp" title="Link to this heading">#</a></h1>
+  <section id="dual-pol-h-alpha-plot-halpha-plot-dp">
+<h1>Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)<a class="headerlink" href="#dual-pol-h-alpha-plot-halpha-plot-dp" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">shannon_h_dp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/dxp/shannon_h_dp.html#shannon_h_dp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Computes Shannon entropy parameter, total entropy, SE, intensity (SEI) and polarimetry (SEP) from the input dual-polarization (dual-pol) C2 matrix data, and writes
-the output in various formats (GeoTIFF or binary). The computation is performed in parallel for efficiency.</p>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">halpha_plot_dp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/dxp/halpha_plot_dp.html#halpha_plot_dp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generates and saves a hexbin density plot of entropy (H) versus alpha (degrees) for dual-pol data.</p>
 <section id="example">
 <h2>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shannon_h_dp</span><span class="p">(</span><span class="s2">&quot;path_to_C2_folder&quot;</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="go">This will compute Shannon entropy parameters from the C2 matrix in the specified folder,</span>
-<span class="go">generating output in Geotiff format with Cloud Optimized GeoTIFF settings enabled.</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">halpha_plot_dp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;HA_plot.png&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">norm</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="go">This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the &#39;jet&#39; colormap and logarithmic normalization</span>
 </pre></div>
 </div>
 </section>
 <section id="parameters">
 <h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <dl class="simple">
-<dt>infolder<span class="classifier">str</span></dt><dd><p>Path to the input folder containing C2 matrix data.</p>
+<dt>h<span class="classifier">array-like</span></dt><dd><p>Array representing entropy values.</p>
 </dd>
-<dt>window_size<span class="classifier">int, optional</span></dt><dd><p>Size of the processing window (default is 1).</p>
+<dt>alpha<span class="classifier">array-like</span></dt><dd><p>Array representing alpha values in degrees.</p>
 </dd>
-<dt>outType<span class="classifier">str, optional</span></dt><dd><p>Output format of the files; can be “tif” (GeoTIFF) or “bin” (binary) (default is “tif”).</p>
+<dt>path<span class="classifier">str, optional</span></dt><dd><p>Path to save the generated plot. If a folder is given,
+the plot is saved as ‘halpha_plot_dp.png’ inside that folder.</p>
 </dd>
-<dt>cog_flag<span class="classifier">bool, optional</span></dt><dd><p>If True, outputs Cloud Optimized GeoTIFF (COG) (default is False).</p>
+<dt>cmap<span class="classifier">str, optional</span></dt><dd><p>Colormap used for the hexbin plot. Defaults to ‘viridis’.</p>
 </dd>
-<dt>cog_overviews<span class="classifier">list of int, optional</span></dt><dd><p>List of overview levels to be used for COGs (default is [2, 4, 8, 16]).</p>
+<dt>colorbar<span class="classifier">bool, optional</span></dt><dd><p>If True, displays a colorbar representing sample count. Defaults to True.</p>
 </dd>
-<dt>write_flag<span class="classifier">bool, optional</span></dt><dd><p>Whether to write the computed output files (default is True).</p>
+<dt>norm<span class="classifier">str, optional</span></dt><dd><p>If set to ‘log’, applies logarithmic normalization to the hexbin plot.</p>
 </dd>
-<dt>max_workers<span class="classifier">int, optional</span></dt><dd><p>Number of parallel workers for processing (default is None, which uses one less than the number of available CPU cores).</p>
-</dd>
-<dt>block_size<span class="classifier">tuple of int, optional</span></dt><dd><p>Size of each processing block (default is (512, 512)), defining the spatial chunk dimensions used in parallel computation.</p>
+<dt>gridsize<span class="classifier">int, optional</span></dt><dd><p>Number of hexagonal bins used in the plot. Higher values result in finer binning.
+Defaults to 300.</p>
 </dd>
 </dl>
 </section>
 <section id="returns">
 <h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
 <dl class="simple">
-<dt>None</dt><dd><p>The function writes the computed entropy parameters to the specified output format.</p>
+<dt>None</dt><dd><p>Displays the plot and optionally saves it to the specified location.</p>
 </dd>
 </dl>
 </section>
-<section id="output-files">
-<h2>Output Files:<a class="headerlink" href="#output-files" title="Link to this heading">#</a></h2>
+<section id="notes">
+<h2>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>“H_Shannon.tif” or “H_Shannon.bin”</p></li>
-<li><p>“HI_Shannon.tif” or “HI_Shannon.bin”</p></li>
-<li><p>“HP_Shannon.tif” or “HP_Shannon.bin”</p></li>
+<li><p>Uses <cite>get_feas_bounds()</cite> to obtain fesable boundary curve for plotting.</p></li>
+<li><p>If <cite>norm</cite> is ‘log’, a <cite>LogNorm()</cite> normalization is applied.</p></li>
 </ul>
 </section>
 </dd></dl>
@@ -458,20 +455,20 @@ the output in various formats (GeoTIFF or binary). The computation is performed 
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="halphadxp.html"
+       href="../others.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">halphadp</span></code>)</p>
+        <p class="prev-next-title">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</p>
       </div>
     </a>
     <a class="right-next"
-       href="mf3cd.html"
+       href="../../03refs.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</p>
+        <p class="prev-next-title">References</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -490,7 +487,7 @@ the output in various formats (GeoTIFF or binary). The computation is performed 
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../../_sources/files/functions/dual_pol/shannon_h_dp.rst.txt"
+      <li><a href="../../../_sources/files/functions/dual_pol/halpha_plot_dp.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

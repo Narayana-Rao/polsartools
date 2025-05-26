@@ -1,11 +1,14 @@
 Polarimetric Radar Vegetation Index (``prvidp``)
 =================================================
-This functionality computes the polarimetric radar vegetation index for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
+.. This functionality computes the polarimetric radar vegetation index for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
 
-.. code-block:: python
+.. .. code-block:: python
 
-        input : input_c2_folder, window_size
-        output: PRVI_dp.bin
+..         input : input_c2_folder, window_size
+..         output: PRVI_dp.bin
+
+.. autofunction:: polsartools.prvidp
+   :noindex:
 
 The formulation of PRVI is as follows: 
 
