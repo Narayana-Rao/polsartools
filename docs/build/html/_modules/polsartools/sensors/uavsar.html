@@ -510,6 +510,15 @@
 <span class="sd">    Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them </span>
 <span class="sd">    into respective directories (C3 or T3).</span>
 
+<span class="sd">    Example:</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; uavsar_grd(&quot;path_to_file.ann&quot;, matrix=&#39;C3&#39;)</span>
+<span class="sd">    This will extract the C3 matrix elements from the specified .ann file and </span>
+<span class="sd">    save them in the &#39;C3&#39; directory.</span>
+
+<span class="sd">    &gt;&gt;&gt; uavsar_grd(&quot;path_to_file.ann&quot;, matrix=&#39;T3&#39;)</span>
+<span class="sd">    This will extract the T3 matrix elements and save them in the &#39;T3&#39; directory.</span>
+<span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    annFile : str</span>
@@ -535,14 +544,7 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If the matrix argument is not one of &#39;C3&#39; or &#39;T3&#39;.</span>
 
-<span class="sd">    Example:</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; uavsar_grd(&quot;path_to_file.ann&quot;, matrix=&#39;C3&#39;)</span>
-<span class="sd">    This will extract the C3 matrix elements from the specified .ann file and </span>
-<span class="sd">    save them in the &#39;C3&#39; directory.</span>
 
-<span class="sd">    &gt;&gt;&gt; uavsar_grd(&quot;path_to_file.ann&quot;, matrix=&#39;T3&#39;)</span>
-<span class="sd">    This will extract the T3 matrix elements and save them in the &#39;T3&#39; directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">annFile</span><span class="p">)</span>
@@ -633,6 +635,15 @@
 <span class="sd">    Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them </span>
 <span class="sd">    into respective directories (C3 or T3).</span>
 
+<span class="sd">    Example:</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, matrix=&#39;C3&#39;)</span>
+<span class="sd">    This will extract the C3 matrix elements from the specified .ann file and </span>
+<span class="sd">    save them in the &#39;C3&#39; directory.</span>
+
+<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, matrix=&#39;T3&#39;)</span>
+<span class="sd">    This will extract the T3 matrix elements and save them in the &#39;T3&#39; directory.</span>
+<span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    annFile : str</span>
@@ -658,14 +669,7 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If the matrix argument is not one of &#39;C3&#39; or &#39;T3&#39;.</span>
 
-<span class="sd">    Example:</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, matrix=&#39;C3&#39;)</span>
-<span class="sd">    This will extract the C3 matrix elements from the specified .ann file and </span>
-<span class="sd">    save them in the &#39;C3&#39; directory.</span>
 
-<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, matrix=&#39;T3&#39;)</span>
-<span class="sd">    This will extract the T3 matrix elements and save them in the &#39;T3&#39; directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">create_extent</span><span class="p">(</span><span class="n">annFile</span><span class="p">)</span>

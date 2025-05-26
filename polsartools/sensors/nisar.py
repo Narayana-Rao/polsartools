@@ -83,6 +83,12 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
     Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
     and saves them into respective binary files.
 
+    Example:
+    --------
+    >>> nisar_gslc("path_to_file.h5", azlks=30, rglks=15)
+    This will extract the C2 matrix elements from the specified NISAR GSLC file 
+    and save them in the 'C2' folder.
+    
     Parameters:
     -----------
     inFile : str
@@ -111,11 +117,7 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
     Exception
         If the GSLC HDF5 file is invalid or cannot be read.
 
-    Example:
-    --------
-    >>> nisar_gslc("path_to_file.h5", azlks=30, rglks=15)
-    This will extract the C2 matrix elements from the specified NISAR GSLC file 
-    and save them in the 'C2' folder.
+
     """
     inFolder = os.path.dirname(inFile)   
     C2Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2')
@@ -187,7 +189,13 @@ def nisar_rslc(inFile,azlks=20,rglks=10):
     """
     Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR RSLC HDF5 file 
     and saves them into respective binary files.
-
+    
+    Example:
+    --------
+    >>> nisar_rslc("path_to_file.h5", azlks=30, rglks=15)
+    This will extract the C2 matrix elements from the specified NISAR RSLC file 
+    and save them in the 'C2' folder.
+    
     Parameters:
     -----------
     inFile : str
@@ -216,11 +224,7 @@ def nisar_rslc(inFile,azlks=20,rglks=10):
     Exception
         If the RSLC HDF5 file is invalid or cannot be read.
 
-    Example:
-    --------
-    >>> nisar_rslc("path_to_file.h5", azlks=30, rglks=15)
-    This will extract the C2 matrix elements from the specified NISAR RSLC file 
-    and save them in the 'C2' folder.
+
     """
     
     inFolder = os.path.dirname(inFile)   

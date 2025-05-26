@@ -4,10 +4,21 @@ import numpy as np
 from concurrent.futures import ProcessPoolExecutor,as_completed
 from tqdm import tqdm
 
-def process_chunks_parallel(input_filepaths, output_filepaths, 
-                            window_size, write_flag, processing_func, 
-                            block_size=(512, 512), max_workers=None, 
-                            num_outputs=1, chi_in=None,psi_in=None, model="", **kwargs):
+def process_chunks_parallel(
+                            input_filepaths,
+                            output_filepaths,
+                            window_size,
+                            write_flag,
+                            processing_func,
+                            *proc_args,  # NEW
+                            block_size=(512, 512),
+                            max_workers=None,
+                            num_outputs=1,
+                            cog_flag=False,
+                            cog_overviews=[2, 4, 8, 16],
+                            post_proc=None,  # NEW
+                            **proc_kwargs  # NEW
+                        ):
 
 
     if len(input_filepaths) not in [2, 4, 9]:
@@ -41,10 +52,13 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
             for x in range(0, raster_width, adjusted_block_size_x):
                 read_block_width = min(adjusted_block_size_x, raster_width - x)
                 read_block_height = min(adjusted_block_size_y, raster_height - y)
-                args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in,model)
+                # args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in,model)
+                args_ = ( input_filepaths, x, y, read_block_width, read_block_height, window_size,     raster_width, raster_height, *proc_args )
+                
                 # print(f"Submitting task for chunk at ({x}, {y})")
-                tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
-
+                # tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
+                tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs, proc_kwargs))
+                
         # Initialize tqdm progress bar with the total number of tasks
         with tqdm(total=len(tasks), desc=f"Progress ", unit=" block") as pbar:
             temp_files = []
@@ -73,10 +87,13 @@ def process_chunks_parallel(input_filepaths, output_filepaths,
 
 
     if write_flag:
-        merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs)
+        merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs,cog_flag,cog_overviews)
         for temp_path_set, _, _ in temp_files:
             for temp_path in temp_path_set:
                 os.remove(temp_path)
+                
+        if post_proc:
+            post_proc(output_filepaths)
     else:
         return merged_arrays
 
@@ -231,17 +248,17 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
     return temp_paths, x_start, y_start
 
-def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs):
+def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs,cog_flag,cog_overviews):
     for i in range(num_outputs):
         if '.tif' in output_filepaths[0]:
             driver = gdal.GetDriverByName('GTiff')
-            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
-                                       options=['COMPRESS=LZW','BIGTIFF=YES','TILED=YES'])
-        
-        if '.bin' in output_filepaths[0]:
+            options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
+            if cog_flag:
+                options.extend(['COG=YES', 'TFW=YES']) 
+            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32, options=options)
+        elif '.bin' in output_filepaths[0]:
             driver = gdal.GetDriverByName('ENVI')
-            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32,
-                                       )
+            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32)
 
         output_dataset.SetGeoTransform(geotransform)
         output_dataset.SetProjection(projection)
@@ -263,20 +280,33 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
 
         output_dataset.FlushCache()
         output_dataset = None
+        
+        if '.tif' in output_filepaths[i] and cog_flag:
+            # add_overviews(output_filepaths[i])
+            gdal.SetConfigOption('COMPRESS_OVERVIEW', 'LZW')
+            dataset = gdal.Open(output_filepaths[i], gdal.GA_Update)
+            dataset.BuildOverviews("AVERAGE", cog_overviews)
+            dataset = None
+        
         print(f"Saved file {output_filepaths[i]}")
-def process_and_write_chunk(args, processing_func, num_outputs):
+
+
+
+def process_and_write_chunk(args, processing_func, num_outputs,proc_kwargs):
     try:
-        (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in,psi_in,model) = args
+        (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, *proc_args) = args
 
         chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
-        processed_chunks = processing_func(chunks, window_size, input_filepaths, chi_in,psi_in,model)
+        # processed_chunks = processing_func(chunks, window_size, input_filepaths, chi_in,psi_in,model)
+        processed_chunks = processing_func(
+            chunks, window_size, input_filepaths, *proc_args, **proc_kwargs
+        )
 
         if num_outputs == 1:
             processed_chunks = [processed_chunks]
 
         temp_paths, temp_x_start, temp_y_start = write_chunk_to_temp_file(
-            processed_chunks,
-            x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, num_outputs
+            processed_chunks, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, num_outputs
         )
 
         return temp_paths, temp_x_start, temp_y_start

@@ -173,6 +173,15 @@ def uavsar_grd(annFile,matrix='C3'):
     Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them 
     into respective directories (C3 or T3).
 
+    Example:
+    --------
+    >>> uavsar_grd("path_to_file.ann", matrix='C3')
+    This will extract the C3 matrix elements from the specified .ann file and 
+    save them in the 'C3' directory.
+
+    >>> uavsar_grd("path_to_file.ann", matrix='T3')
+    This will extract the T3 matrix elements and save them in the 'T3' directory.
+    
     Parameters:
     -----------
     annFile : str
@@ -188,7 +197,7 @@ def uavsar_grd(annFile,matrix='C3'):
     --------
     None
         The function does not return any value. Instead, it creates a directory (C3 or T3) 
-        and populates it with the corresponding matrix elements extracted from the .ann file.
+        and populates it with the corresponding matrix elements.
 
     Raises:
     -------
@@ -198,14 +207,7 @@ def uavsar_grd(annFile,matrix='C3'):
     ValueError
         If the matrix argument is not one of 'C3' or 'T3'.
 
-    Example:
-    --------
-    >>> uavsar_grd("path_to_file.ann", matrix='C3')
-    This will extract the C3 matrix elements from the specified .ann file and 
-    save them in the 'C3' directory.
 
-    >>> uavsar_grd("path_to_file.ann", matrix='T3')
-    This will extract the T3 matrix elements and save them in the 'T3' directory.
     """
     
     inFolder = os.path.dirname(annFile)
@@ -293,6 +295,15 @@ def uavsar_mlc(annFile,matrix='C3'):
     Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them 
     into respective directories (C3 or T3).
 
+    Example:
+    --------
+    >>> uavsar_mlc("path_to_file.ann", matrix='C3')
+    This will extract the C3 matrix elements from the specified .ann file and 
+    save them in the 'C3' directory.
+
+    >>> uavsar_mlc("path_to_file.ann", matrix='T3')
+    This will extract the T3 matrix elements and save them in the 'T3' directory.
+
     Parameters:
     -----------
     annFile : str
@@ -308,7 +319,7 @@ def uavsar_mlc(annFile,matrix='C3'):
     --------
     None
         The function does not return any value. Instead, it creates a directory (C3 or T3) 
-        and populates it with the corresponding matrix elements extracted from the .ann file.
+        and populates it with the corresponding matrix elements.
 
     Raises:
     -------
@@ -318,14 +329,7 @@ def uavsar_mlc(annFile,matrix='C3'):
     ValueError
         If the matrix argument is not one of 'C3' or 'T3'.
 
-    Example:
-    --------
-    >>> uavsar_mlc("path_to_file.ann", matrix='C3')
-    This will extract the C3 matrix elements from the specified .ann file and 
-    save them in the 'C3' directory.
 
-    >>> uavsar_mlc("path_to_file.ann", matrix='T3')
-    This will extract the T3 matrix elements and save them in the 'T3' directory.
     """
     
     create_extent(annFile)

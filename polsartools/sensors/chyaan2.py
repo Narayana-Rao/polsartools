@@ -67,6 +67,12 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
     Extracts specified matrix elements (S2, T3, or C3) from Chandrayaan-II DFSAR Full-Pol data 
     and saves them into respective directories.
 
+    Example:
+    --------
+    >>> chyaan2_fp("path_to_folder", matrix='T3', azlks=5, rglks=3)
+    This will extract the T3 matrix elements from the Chandrayaan-II DFSAR Full-Pol data 
+    in the specified folder and save them in the 'T3' directory.
+    
     Parameters:
     -----------
     inFolder : str
@@ -118,11 +124,7 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
     ValueError
         If an invalid matrix type is provided (valid options are 'S2', 'T3', or 'C3').
 
-    Example:
-    --------
-    >>> chyaan2_fp("path_to_folder", matrix='T3', azlks=5, rglks=3)
-    This will extract the T3 matrix elements from the Chandrayaan-II DFSAR Full-Pol data 
-    in the specified folder and save them in the 'T3' directory.
+
     """
     #%%
     xmlFile = glob.glob(inFolder+'/data/calibrated/*/*sli*.xml')[0]

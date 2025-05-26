@@ -368,6 +368,20 @@
 <span class="sd">    the data based on the chosen `type` (sigma0, gamma0, or beta0). The processed data is written into binary files </span>
 <span class="sd">    in the output folder.</span>
 
+<span class="sd">    Example Usage:</span>
+<span class="sd">    --------------</span>
+<span class="sd">    To process imagery and generate a T3 matrix:</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        rs2_fp(&quot;/path/to/data&quot;, matrix=&quot;T3&quot;, type=&quot;sigma0&quot;)</span>
+
+<span class="sd">    To process imagery and generate a C3 matrix:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        rs2_fp(&quot;/path/to/data&quot;, matrix=&quot;C3&quot;, type=&quot;beta0&quot;, azlks=10, rglks=3)</span>
+<span class="sd">        </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    inFolder : str</span>
@@ -401,20 +415,6 @@
 <span class="sd">    FileNotFoundError</span>
 <span class="sd">        If any of the required input files (such as the .tif imagery or the lookup tables) cannot be found in the `inFolder`.</span>
 
-<span class="sd">    Example Usage:</span>
-<span class="sd">    --------------</span>
-<span class="sd">    To process imagery and generate a T3 matrix:</span>
-<span class="sd">    </span>
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        rs2_fp(&quot;/path/to/data&quot;, matrix=&quot;T3&quot;, type=&quot;sigma0&quot;)</span>
-
-<span class="sd">    To process imagery and generate a C3 matrix:</span>
-
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        rs2_fp(&quot;/path/to/data&quot;, matrix=&quot;C3&quot;, type=&quot;beta0&quot;, azlks=10, rglks=3)</span>
-<span class="sd">    </span>
 <span class="sd">    Notes:</span>
 <span class="sd">    ------</span>
 <span class="sd">    - The function assumes that the input imagery is stored as &quot;imagery_HH.tif&quot;, &quot;imagery_HV.tif&quot;, &quot;imagery_VH.tif&quot;, and &quot;imagery_VV.tif&quot; in the `inFolder`.</span>

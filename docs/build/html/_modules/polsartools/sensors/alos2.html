@@ -403,6 +403,12 @@
 <span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-2 Fine Beam Dual-Pol (FBD) CEOS data </span>
 <span class="sd">    and saves them into respective binary files.</span>
 
+<span class="sd">    Example:</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; alos2_fbd_l11(&quot;path_to_folder&quot;, azlks=5, rglks=3, calfac_dB=-80)</span>
+<span class="sd">    This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data </span>
+<span class="sd">    in the specified folder and save them in the &#39;C2&#39; directory.</span>
+<span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    inFolder : str</span>
@@ -438,11 +444,7 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If the calibration factor is invalid or if the files are not in the expected format.</span>
 
-<span class="sd">    Example:</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; alos2_fbd_l11(&quot;path_to_folder&quot;, azlks=5, rglks=3, calfac_dB=-80)</span>
-<span class="sd">    This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data </span>
-<span class="sd">    in the specified folder and save them in the &#39;C2&#39; directory.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     
     

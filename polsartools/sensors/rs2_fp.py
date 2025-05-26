@@ -31,6 +31,20 @@ def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
     the data based on the chosen `type` (sigma0, gamma0, or beta0). The processed data is written into binary files 
     in the output folder.
 
+    Example Usage:
+    --------------
+    To process imagery and generate a T3 matrix:
+    
+    .. code-block:: python
+
+        rs2_fp("/path/to/data", matrix="T3", type="sigma0")
+
+    To process imagery and generate a C3 matrix:
+
+    .. code-block:: python
+
+        rs2_fp("/path/to/data", matrix="C3", type="beta0", azlks=10, rglks=3)
+        
     Parameters:
     -----------
     inFolder : str
@@ -64,20 +78,6 @@ def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
     FileNotFoundError
         If any of the required input files (such as the .tif imagery or the lookup tables) cannot be found in the `inFolder`.
 
-    Example Usage:
-    --------------
-    To process imagery and generate a T3 matrix:
-    
-    .. code-block:: python
-
-        rs2_fp("/path/to/data", matrix="T3", type="sigma0")
-
-    To process imagery and generate a C3 matrix:
-
-    .. code-block:: python
-
-        rs2_fp("/path/to/data", matrix="C3", type="beta0", azlks=10, rglks=3)
-    
     Notes:
     ------
     - The function assumes that the input imagery is stored as "imagery_HH.tif", "imagery_HV.tif", "imagery_VH.tif", and "imagery_VV.tif" in the `inFolder`.

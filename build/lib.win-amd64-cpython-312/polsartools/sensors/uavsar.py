@@ -167,10 +167,47 @@ def mlcList(annFile):
     return mlckeys     
 
 
-
-
 @time_it    
 def uavsar_grd(annFile,matrix='C3'):
+    """
+    Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them 
+    into respective directories (C3 or T3).
+
+    Parameters:
+    -----------
+    annFile : str
+        The path to the UAVSAR annotation file (.ann) that contains the radar data metadata.
+
+    matrix : str, optional (default='C3')
+        The type of matrix to extract. Can either be 'C3' or 'T3'. 
+        
+        - 'C3' will extract the C3 matrix elements.
+        - 'T3' will extract the T3 matrix elements.
+
+    Returns:
+    --------
+    None
+        The function does not return any value. Instead, it creates a directory (C3 or T3) 
+        and populates it with the corresponding matrix elements extracted from the .ann file.
+
+    Raises:
+    -------
+    FileNotFoundError
+        If the specified .ann file does not exist or cannot be found.
+
+    ValueError
+        If the matrix argument is not one of 'C3' or 'T3'.
+
+    Example:
+    --------
+    >>> uavsar_grd("path_to_file.ann", matrix='C3')
+    This will extract the C3 matrix elements from the specified .ann file and 
+    save them in the 'C3' directory.
+
+    >>> uavsar_grd("path_to_file.ann", matrix='T3')
+    This will extract the T3 matrix elements and save them in the 'T3' directory.
+    """
+    
     inFolder = os.path.dirname(annFile)
     grdfiles = grdList(annFile)
     create_extent(annFile)
@@ -188,6 +225,9 @@ def uavsar_grd(annFile,matrix='C3'):
             dy = float(line.split('=')[1].split(';')[0])
         if "grd_mag.col_mult" in line and "(deg/pixel)" in line:
             dx = float(line.split('=')[1].split(';')[0])
+
+    if matrix!='C3' or matrix!='T3':
+        print("Invalid matrix type. Defaulting to C3")
 
     outFolder = inFolder+'/C3'
     if not os.path.isdir(outFolder):
@@ -245,11 +285,49 @@ def uavsar_grd(annFile,matrix='C3'):
         print("Converting C3 to T3")
         convert_C3_T3(outFolder)
     
-    
-    
+
     
 @time_it  
 def uavsar_mlc(annFile,matrix='C3'):
+    """
+    Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them 
+    into respective directories (C3 or T3).
+
+    Parameters:
+    -----------
+    annFile : str
+        The path to the UAVSAR annotation file (.ann) that contains the radar data metadata.
+
+    matrix : str, optional (default='C3')
+        The type of matrix to extract. Can either be 'C3' or 'T3'. 
+        
+        - 'C3' will extract the C3 matrix elements.
+        - 'T3' will extract the T3 matrix elements.
+
+    Returns:
+    --------
+    None
+        The function does not return any value. Instead, it creates a directory (C3 or T3) 
+        and populates it with the corresponding matrix elements extracted from the .ann file.
+
+    Raises:
+    -------
+    FileNotFoundError
+        If the specified .ann file does not exist or cannot be found.
+
+    ValueError
+        If the matrix argument is not one of 'C3' or 'T3'.
+
+    Example:
+    --------
+    >>> uavsar_mlc("path_to_file.ann", matrix='C3')
+    This will extract the C3 matrix elements from the specified .ann file and 
+    save them in the 'C3' directory.
+
+    >>> uavsar_mlc("path_to_file.ann", matrix='T3')
+    This will extract the T3 matrix elements and save them in the 'T3' directory.
+    """
+    
     create_extent(annFile)
     mlcfiles = mlcList(annFile)
     inFolder = os.path.dirname(annFile)

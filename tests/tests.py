@@ -38,6 +38,7 @@ def full_pol_processing(full_T3, window_size=3):
     pst.grvi(full_T3, window_size=window_size)
     pst.rvifp(full_T3, window_size=window_size)
     pst.prvifp(full_T3, window_size=window_size)
+    pst.shannon_h_fp(full_T3, window_size=window_size)
     
 
 def dual_cross_pol_processing(dxp_C2, window_size=3):
@@ -171,6 +172,8 @@ def test_full_pol_processing():
             os.path.join(full_T3,'Ps_mf3cf.tif'),os.path.join(full_T3,'Pd_mf3cf.tif'),os.path.join(full_T3,'Pv_mf3cf.tif'),os.path.join(full_T3,'Theta_FP_mf3cf.tif'),
             
             os.path.join(full_T3,'Ps_mf4cf.tif'),os.path.join(full_T3,'Pd_mf4cf.tif'),os.path.join(full_T3,'Pv_mf4cf.tif'),os.path.join(full_T3,'Pc_mf4cf.tif'),os.path.join(full_T3,'Theta_FP_mf4cf.tif'),os.path.join(full_T3,'Tau_FP_mf4cf.tif'),
+            
+            os.path.join(full_T3,'H_Shannon.tif'), os.path.join(full_T3,'HI_Shannon.tif'), os.path.join(full_T3,'HP_Shannon.tif'),
             
             os.path.join(full_T3,'dop_fp.tif'),
             os.path.join(full_T3,'grvi.tif'),

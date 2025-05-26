@@ -3,36 +3,12 @@ import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import C3_T3_mat
+from .fp_infiles import fp_c3t3files
 
 @time_it
-def rvifp(infolder, outname=None,  chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
+def rvifp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
 
-    if os.path.isfile(os.path.join(infolder,"T11.bin")):
-        input_filepaths = [
-        os.path.join(infolder,"T11.bin"),
-        
-        os.path.join(infolder,'T12_real.bin'), os.path.join(infolder,'T12_imag.bin'),  
-        os.path.join(infolder,'T13_real.bin'), os.path.join(infolder,'T13_imag.bin'),
-        os.path.join(infolder,"T22.bin"),
-        os.path.join(infolder,'T23_real.bin'), os.path.join(infolder,'T23_imag.bin'),  
-     
-        os.path.join(infolder,"T33.bin"),
-        ]
-    elif os.path.isfile(os.path.join(infolder,"C11.bin")):
-
-        input_filepaths = [
-        os.path.join(infolder,"C11.bin"),
-        
-        os.path.join(infolder,'C12_real.bin'), os.path.join(infolder,'C12_imag.bin'),  
-        os.path.join(infolder,'C13_real.bin'), os.path.join(infolder,'C13_imag.bin'),
-        os.path.join(infolder,"C22.bin"),
-        os.path.join(infolder,'C23_real.bin'), os.path.join(infolder,'C23_imag.bin'),  
-     
-        os.path.join(infolder,"C33.bin"),
-        ]
-
-    else:
-        print(f"Invalid C3 or T3 folder!!")
+    input_filepaths = fp_c3t3files(infolder)
     output_filepaths = []
     if outname is None:
         output_filepaths.append(os.path.join(infolder, "rvifp.tif"))

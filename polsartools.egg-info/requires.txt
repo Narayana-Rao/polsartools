@@ -5,8 +5,10 @@ click
 tqdm
 matplotlib
 pybind11
+h5py
+scikit-image
 
 [dev]
 pytest
 sphinx
-doxygen
+pydata-sphinx-theme

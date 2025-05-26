@@ -62,6 +62,68 @@ def write_bin(file,wdata):
 
 @time_it
 def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
+    
+    """
+    Extracts specified matrix elements (S2, T3, or C3) from Chandrayaan-II DFSAR Full-Pol data 
+    and saves them into respective directories.
+
+    Parameters:
+    -----------
+    inFolder : str
+        The path to the folder containing the Chandrayaan-II DFSAR Full-Pol data files.
+
+    matrix : str, optional (default='T3')
+        The type of matrix to extract. Can either be 'S2', 'T3', or 'C3'.
+
+        - 'S2' will extract the S2 matrix elements.
+        - 'T3' will extract the T3 matrix elements.
+        - 'C3' will extract the C3 matrix elements.
+
+    azlks : int, optional (default=None)
+        The number of azimuth looks for multi-looking. If not specified, the value is derived from 
+        the ground range and output line spacing.
+
+    rglks : int, optional (default=None)
+        The number of range looks for multi-looking. If not specified, the value is set to 1.
+
+    Returns:
+    --------
+    None
+        The function does not return any value. Instead, it creates a folder named `S2`, `T3`, or `C3` 
+        (depending on the chosen matrix) and saves the corresponding binary files.
+
+        - For 'S2':
+          - `s11.bin`: Contains the S11 matrix elements.
+          - `s12.bin`: Contains the S12 matrix elements.
+          - `s21.bin`: Contains the S21 matrix elements.
+          - `s22.bin`: Contains the S22 matrix elements.
+          - `config.txt`: Contains metadata including multilook parameters.
+          - `multilook_info.txt`: Contains detailed information about the multilook parameters.
+
+        - For 'T3':
+          - `t11.bin`, `t12.bin`, `t13.bin`, `t22.bin`, `t23.bin`, `t33.bin`: Contain the T3 matrix elements.
+          - `config.txt`: Contains metadata including multilook parameters.
+          - `multilook_info.txt`: Contains detailed information about the multilook parameters.
+
+        - For 'C3':
+          - `c11.bin`, `c12.bin`, `c13.bin`, `c22.bin`, `c23.bin`, `c33.bin`: Contain the C3 matrix elements.
+          - `config.txt`: Contains metadata including multilook parameters.
+          - `multilook_info.txt`: Contains detailed information about the multilook parameters.
+
+    Raises:
+    -------
+    FileNotFoundError
+        If the required files for the specified matrix type cannot be found in the folder.
+
+    ValueError
+        If an invalid matrix type is provided (valid options are 'S2', 'T3', or 'C3').
+
+    Example:
+    --------
+    >>> chyaan2_fp("path_to_folder", matrix='T3', azlks=5, rglks=3)
+    This will extract the T3 matrix elements from the Chandrayaan-II DFSAR Full-Pol data 
+    in the specified folder and save them in the 'T3' directory.
+    """
     #%%
     xmlFile = glob.glob(inFolder+'/data/calibrated/*/*sli*.xml')[0]
     fxml = open(xmlFile, 'r')
@@ -146,6 +208,12 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
         file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
         file.close() 
         
+        with open(out_dir+'/multilook_info.txt', 'w+') as f:
+            f.writelines(lines)
+        f.close()
+        
+        
+        
     elif matrix == 'T3':
         print("Considering S12 = S21")
         
@@ -201,6 +269,9 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
                   np.real(T22),np.real(T23),np.imag(T23),
                   np.real(T33)],T3Folder)
         
+        with open(T3Folder+'/multilook_info.txt', 'w+') as f:
+            f.writelines(lines)
+        f.close()
         
     elif matrix == 'C3':
         print("Considering S12 = S21")
@@ -255,6 +326,10 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
         write_C3([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),
                   np.real(C22),np.real(C23),np.imag(C23),
                   np.real(C33)],C3Folder) 
+        
+        with open(C3Folder+'/multilook_info.txt', 'w+') as f:
+            f.writelines(lines)
+        f.close()
     else:
         raise ValueError('Invalid matrix type. Valid types are "S2", "T3" and "C3"')
 

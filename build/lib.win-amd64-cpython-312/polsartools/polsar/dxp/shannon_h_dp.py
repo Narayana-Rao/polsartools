@@ -2,7 +2,7 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
-
+from .dxp_infiles import dxpc2files
 
 """
 normlized shannon entropy parameters are not agreeing with polsarpro
@@ -10,25 +10,33 @@ others are fine
 
 """
 @time_it
-def shannon_h_dp(infolder, outname=None,  chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
-    input_filepaths = [
-        os.path.join(infolder, "C11.bin"), 
-        os.path.join(infolder, "C12_real.bin"),
-        os.path.join(infolder, "C12_imag.bin"),
-        os.path.join(infolder, "C22.bin")
-    ]
+def shannon_h_dp(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None):
+    input_filepaths = dxpc2files(infolder)
     output_filepaths = []
-    if outname is None:
+    if outType == "tif":
         output_filepaths.append(os.path.join(infolder, "H_Shannon.tif"))
         output_filepaths.append(os.path.join(infolder, "HI_Shannon.tif"))
         output_filepaths.append(os.path.join(infolder, "HP_Shannon.tif"))
+    else:
+        output_filepaths.append(os.path.join(infolder, "H_Shannon.bin"))
+        output_filepaths.append(os.path.join(infolder, "HI_Shannon.bin"))
+        output_filepaths.append(os.path.join(infolder, "HP_Shannon.bin"))
         
         # output_filepaths.append(os.path.join(infolder, "HS_norm.tif"))
         # output_filepaths.append(os.path.join(infolder, "HSI_norm.tif"))
         # output_filepaths.append(os.path.join(infolder, "HSP_norm.tif"))
         
-
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,processing_func=process_chunk_shannondp,block_size=(512, 512), max_workers=max_workers,  num_outputs=3)
+    # def post_processing_task(output_paths):
+    #     print("Post-processing after merge:")
+    #     for path in output_paths:
+    #         print(f" - {path}")
+            
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
+                            processing_func=process_chunk_shannondp,block_size=(512, 512), max_workers=max_workers,  num_outputs=3,
+                            cog_flag=cog_flag,
+                            cog_overviews=cog_overviews,
+                            # post_proc=post_processing_task 
+                            )
 
 def process_chunk_shannondp(chunks, window_size,*args):
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)

@@ -363,6 +363,14 @@
 <span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">alos2_fbd_l11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calfac_dB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-83</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/alos2.html#alos2_fbd_l11"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-2 Fine Beam Dual-Pol (FBD) CEOS data
 and saves them into respective binary files.</p>
+<section id="example">
+<h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">alos2_fbd_l11</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">calfac_dB</span><span class="o">=-</span><span class="mi">80</span><span class="p">)</span>
+<span class="go">This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data</span>
+<span class="go">in the specified folder and save them in the &#39;C2&#39; directory.</span>
+</pre></div>
+</div>
+</section>
 <section id="parameters">
 <h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
 <dl class="simple">
@@ -400,14 +408,6 @@ the HH and HV polarization data before matrix computation.</p>
 <dt>ValueError</dt><dd><p>If the calibration factor is invalid or if the files are not in the expected format.</p>
 </dd>
 </dl>
-</section>
-<section id="example">
-<h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">alos2_fbd_l11</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">calfac_dB</span><span class="o">=-</span><span class="mi">80</span><span class="p">)</span>
-<span class="go">This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data</span>
-<span class="go">in the specified folder and save them in the &#39;C2&#39; directory.</span>
-</pre></div>
-</div>
 </section>
 </dd></dl>
 

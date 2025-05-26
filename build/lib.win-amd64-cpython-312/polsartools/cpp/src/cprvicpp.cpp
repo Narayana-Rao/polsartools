@@ -17,7 +17,7 @@ namespace py = pybind11;
 py::array_t<double> process_chunk_cprvicpp(
     const std::vector<py::array_t<double>>& chunks,
     int window_size,
-    const std::vector<std::string>& input_filepaths,
+    // const std::vector<std::string>& input_filepaths,
     double chi_in,
     double psi_in
 ) {

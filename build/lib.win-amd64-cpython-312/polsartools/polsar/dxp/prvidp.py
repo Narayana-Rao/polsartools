@@ -2,15 +2,10 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
-
+from .dxp_infiles import dxpc2files
 @time_it
-def prvidp(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
-    input_filepaths = [
-        os.path.join(infolder, "C11.bin"), 
-        os.path.join(infolder, "C12_real.bin"),
-        os.path.join(infolder, "C12_imag.bin"),
-        os.path.join(infolder, "C22.bin")
-    ]
+def prvidp(infolder, outname=None, window_size=1,write_flag=True,max_workers=None):
+    input_filepaths = dxpc2files(infolder)
     output_filepaths = []
     if outname is None:
         output_filepaths.append(os.path.join(infolder, "prvidp.tif"))

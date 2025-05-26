@@ -363,6 +363,14 @@
 <span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">nisar_rslc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/nisar.html#nisar_rslc"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR RSLC HDF5 file
 and saves them into respective binary files.</p>
+<section id="example">
+<h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nisar_rslc</span><span class="p">(</span><span class="s2">&quot;path_to_file.h5&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="go">This will extract the C2 matrix elements from the specified NISAR RSLC file</span>
+<span class="go">and save them in the &#39;C2&#39; folder.</span>
+</pre></div>
+</div>
+</section>
 <section id="parameters">
 <h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
 <dl class="simple">
@@ -396,14 +404,6 @@ named <cite>C2</cite> (if not already present) and saves the following binary fi
 </dd>
 </dl>
 </section>
-<section id="example">
-<h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nisar_rslc</span><span class="p">(</span><span class="s2">&quot;path_to_file.h5&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="go">This will extract the C2 matrix elements from the specified NISAR RSLC file</span>
-<span class="go">and save them in the &#39;C2&#39; folder.</span>
-</pre></div>
-</div>
-</section>
 </dd></dl>
 
 </section>
@@ -416,7 +416,15 @@ named <cite>C2</cite> (if not already present) and saves the following binary fi
 <dd><p>Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file
 and saves them into respective binary files.</p>
 <section id="id1">
-<h3>Parameters:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<h3>Example:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nisar_gslc</span><span class="p">(</span><span class="s2">&quot;path_to_file.h5&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="go">This will extract the C2 matrix elements from the specified NISAR GSLC file</span>
+<span class="go">and save them in the &#39;C2&#39; folder.</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>Parameters:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
 <dl class="simple">
 <dt>inFile<span class="classifier">str</span></dt><dd><p>The path to the NISAR GSLC HDF5 file containing the radar data.</p>
 </dd>
@@ -426,8 +434,8 @@ and saves them into respective binary files.</p>
 </dd>
 </dl>
 </section>
-<section id="id2">
-<h3>Returns:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<section id="id3">
+<h3>Returns:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
 <dl class="simple">
 <dt>None</dt><dd><p>The function does not return any value. Instead, it creates a folder
 named <cite>C2</cite> (if not already present) and saves the following binary files:</p>
@@ -441,20 +449,12 @@ named <cite>C2</cite> (if not already present) and saves the following binary fi
 </dd>
 </dl>
 </section>
-<section id="id3">
-<h3>Raises:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<section id="id4">
+<h3>Raises:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
 <dl class="simple">
 <dt>Exception</dt><dd><p>If the GSLC HDF5 file is invalid or cannot be read.</p>
 </dd>
 </dl>
-</section>
-<section id="id4">
-<h3>Example:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nisar_gslc</span><span class="p">(</span><span class="s2">&quot;path_to_file.h5&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="go">This will extract the C2 matrix elements from the specified NISAR GSLC file</span>
-<span class="go">and save them in the &#39;C2&#39; folder.</span>
-</pre></div>
-</div>
 </section>
 </dd></dl>
 

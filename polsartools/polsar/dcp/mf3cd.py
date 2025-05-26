@@ -2,19 +2,11 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
-
+from .dcp_infiles import dcpt2files
 @time_it
 def mf3cd(infolder, outname=None,  chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
-    if os.path.isfile(os.path.join(infolder,"T11.bin")):
-        input_filepaths = [
-            os.path.join(infolder, "T11.bin"), 
-            os.path.join(infolder, "T12_real.bin"),
-            os.path.join(infolder, "T12_imag.bin"),
-            os.path.join(infolder, "T22.bin")
-        ]
-    else:
-        raise(f"Invalid T2 folder!!")
-        
+
+    input_filepaths = dcpt2files(infolder)
     output_filepaths = []
     if outname is None:
         output_filepaths.append(os.path.join(infolder, "Ps_mf3cd.tif"))

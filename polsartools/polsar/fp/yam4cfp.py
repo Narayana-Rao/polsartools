@@ -3,46 +3,26 @@ import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import T3_C3_mat, C3_T3_mat
-
+from .fp_infiles import fp_c3t3files
 @time_it
-def yam4cfp(infolder, outname=None, model="",window_size=1,write_flag=True,max_workers=None):
+def yam4cfp(infolder, outname=None, model="", window_size=1,write_flag=True,max_workers=None):
 
-    if os.path.isfile(os.path.join(infolder,"T11.bin")):
-        input_filepaths = [
-        os.path.join(infolder,"T11.bin"),
-        os.path.join(infolder,'T12_real.bin'), os.path.join(infolder,'T12_imag.bin'),  
-        os.path.join(infolder,'T13_real.bin'), os.path.join(infolder,'T13_imag.bin'),
-        os.path.join(infolder,"T22.bin"),
-        os.path.join(infolder,'T23_real.bin'), os.path.join(infolder,'T23_imag.bin'),  
-        os.path.join(infolder,"T33.bin"),
-        ]
-    elif os.path.isfile(os.path.join(infolder,"C11.bin")):
-        input_filepaths = [
-        os.path.join(infolder,"C11.bin"),
-        os.path.join(infolder,'C12_real.bin'), os.path.join(infolder,'C12_imag.bin'),  
-        os.path.join(infolder,'C13_real.bin'), os.path.join(infolder,'C13_imag.bin'),
-        os.path.join(infolder,"C22.bin"),
-        os.path.join(infolder,'C23_real.bin'), os.path.join(infolder,'C23_imag.bin'),  
-        os.path.join(infolder,"C33.bin"),
-        ]
-
-    else:
-        print(f"Invalid C3 or T3 folder!!")
+    input_filepaths = fp_c3t3files(infolder)
 
     output_filepaths = []
     if outname is None:
         # print(model)
-        if not model:
+        if not model or model=="y4co":
             output_filepaths.append(os.path.join(infolder, "Yam4co_odd.tif"))
             output_filepaths.append(os.path.join(infolder, "Yam4co_dbl.tif"))
             output_filepaths.append(os.path.join(infolder, "Yam4co_vol.tif"))
             output_filepaths.append(os.path.join(infolder, "Yam4co_hlx.tif"))
-        elif model=="Y4R":
+        elif model=="y4cr":
             output_filepaths.append(os.path.join(infolder, "Yam4cr_odd.tif"))
             output_filepaths.append(os.path.join(infolder, "Yam4cr_dbl.tif"))
             output_filepaths.append(os.path.join(infolder, "Yam4cr_vol.tif"))
             output_filepaths.append(os.path.join(infolder, "Yam4cr_hlx.tif"))
-        elif model=="S4R":
+        elif model=="y4cs":
             output_filepaths.append(os.path.join(infolder, "Yam4csr_odd.tif"))
             output_filepaths.append(os.path.join(infolder, "Yam4csr_dbl.tif"))
             output_filepaths.append(os.path.join(infolder, "Yam4csr_vol.tif"))
@@ -79,7 +59,8 @@ def unitary_rotation(T3, teta):
 
     return T3
 
-def process_chunk_yam4cfp(chunks, window_size, input_filepaths, model,*args):
+# def process_chunk_yam4cfp(chunks, window_size, input_filepaths, model,*args):
+def process_chunk_yam4cfp(chunks, window_size, input_filepaths, model, *args, **kwargs):
 
     # additional_arg1 = args[0] if len(args) > 0 else None
     # additional_arg2 = args[1] if len(args) > 1 else None
@@ -159,7 +140,7 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths, model,*args):
     M_hlx =  np.zeros((rows,cols))
 
     
-    print(model)
+    # print(model)
     for ii in range(rows):
         for jj in range(cols):
             T3 = np.array((
@@ -167,16 +148,16 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths, model,*args):
                     T_T1[ii,jj,3],T_T1[ii,jj,4],T_T1[ii,jj,5],
                     T_T1[ii,jj,6],T_T1[ii,jj,7],T_T1[ii,jj,8],
                         ))        
-            if model in ["Y4R", "S4R"]:
-                print(model)
+            if model in ["y4cr", "y4cs"]:
+                # print(model)
                 teta = 0.5 * np.arctan(2 * T3[5].real / (T3[4].real - T3[8].real))
                 T3 = unitary_rotation(T3, teta)
 
             Pc = 2.0 * np.abs(T3[5].imag)
             HV_type = 1
             
-            if model=="S4R":
-                print(model)
+            if model=="y4cs":
+                # print(model)
                 C1 = T3[0] - T3[4] + (7.0 / 8.0) * T3[8] + (Pc / 16.0)
                 if C1 > 0.0:
                     HV_type = 1  # Surface scattering

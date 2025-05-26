@@ -420,6 +420,12 @@
 <span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file </span>
 <span class="sd">    and saves them into respective binary files.</span>
 
+<span class="sd">    Example:</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; nisar_gslc(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
+<span class="sd">    This will extract the C2 matrix elements from the specified NISAR GSLC file </span>
+<span class="sd">    and save them in the &#39;C2&#39; folder.</span>
+<span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    inFile : str</span>
@@ -448,11 +454,7 @@
 <span class="sd">    Exception</span>
 <span class="sd">        If the GSLC HDF5 file is invalid or cannot be read.</span>
 
-<span class="sd">    Example:</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; nisar_gslc(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
-<span class="sd">    This will extract the C2 matrix elements from the specified NISAR GSLC file </span>
-<span class="sd">    and save them in the &#39;C2&#39; folder.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>   
     <span class="n">C2Folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
@@ -527,7 +529,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR RSLC HDF5 file </span>
 <span class="sd">    and saves them into respective binary files.</span>
-
+<span class="sd">    </span>
+<span class="sd">    Example:</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; nisar_rslc(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
+<span class="sd">    This will extract the C2 matrix elements from the specified NISAR RSLC file </span>
+<span class="sd">    and save them in the &#39;C2&#39; folder.</span>
+<span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    inFile : str</span>
@@ -556,11 +564,7 @@
 <span class="sd">    Exception</span>
 <span class="sd">        If the RSLC HDF5 file is invalid or cannot be read.</span>
 
-<span class="sd">    Example:</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; nisar_rslc(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
-<span class="sd">    This will extract the C2 matrix elements from the specified NISAR RSLC file </span>
-<span class="sd">    and save them in the &#39;C2&#39; folder.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>   

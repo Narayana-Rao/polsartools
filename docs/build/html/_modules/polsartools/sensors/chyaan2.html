@@ -404,6 +404,12 @@
 <span class="sd">    Extracts specified matrix elements (S2, T3, or C3) from Chandrayaan-II DFSAR Full-Pol data </span>
 <span class="sd">    and saves them into respective directories.</span>
 
+<span class="sd">    Example:</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; chyaan2_fp(&quot;path_to_folder&quot;, matrix=&#39;T3&#39;, azlks=5, rglks=3)</span>
+<span class="sd">    This will extract the T3 matrix elements from the Chandrayaan-II DFSAR Full-Pol data </span>
+<span class="sd">    in the specified folder and save them in the &#39;T3&#39; directory.</span>
+<span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    inFolder : str</span>
@@ -455,11 +461,7 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If an invalid matrix type is provided (valid options are &#39;S2&#39;, &#39;T3&#39;, or &#39;C3&#39;).</span>
 
-<span class="sd">    Example:</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; chyaan2_fp(&quot;path_to_folder&quot;, matrix=&#39;T3&#39;, azlks=5, rglks=3)</span>
-<span class="sd">    This will extract the T3 matrix elements from the Chandrayaan-II DFSAR Full-Pol data </span>
-<span class="sd">    in the specified folder and save them in the &#39;T3&#39; directory.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#%%</span>
     <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">inFolder</span><span class="o">+</span><span class="s1">&#39;/data/calibrated/*/*sli*.xml&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
