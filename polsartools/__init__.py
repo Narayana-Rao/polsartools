@@ -13,7 +13,7 @@ __version__ = "0.6.1"
 # Import functions from the submodules for direct access
 from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,halphafp,yam4cfp,shannon_h_fp
 from .polsar.cp import cprvi, dopcp, misomega, mf3cc
-from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp, shannon_h_dp
+from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp, shannon_h_dp,halpha_plot_dp
 from .polsar.dcp import mf3cd
 from .sensors.uavsar import uavsar_grd,uavsar_mlc
 from .sensors.nisar import nisar_gslc,nisar_rslc
@@ -34,7 +34,7 @@ __all__ = [
     'convert_T3_C3', 'convert_C3_T3', 'pauliRGB',#import utils
     'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 'halphafp', 'shannon_h_fp','yam4cfp', # Full-pol
     'cprvi', 'dopcp', 'misomega', 'mf3cc',                 # Compact-pol
-    'dprvi', 'dopdp', 'prvidp', 'rvidp', 'halphadp', 'shannon_h_dp',       # Dual-cross-pol
+    'dprvi', 'dopdp', 'prvidp', 'rvidp', 'halphadp', 'shannon_h_dp', 'halpha_plot_dp',      # Dual-cross-pol
     'mf3cd'                                         # Dual-co-pol
     
 ]

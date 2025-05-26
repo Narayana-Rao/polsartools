@@ -1,6 +1,6 @@
 import os
 
-def get_filter_io_paths(infolder, outname, window_size, filter_type=None):
+def get_filter_io_paths(infolder,  window_size, filter_type=None):
     # Determine the input filepaths based on available matrix types
     input_filepaths = []
     matrix_type = None  # To identify if it's C2, C3, T2, or T3
@@ -46,28 +46,34 @@ def get_filter_io_paths(infolder, outname, window_size, filter_type=None):
 
     # Determine the output folder and filepaths
     output_filepaths = []
-    if outname is None:
-        # outFolder = os.path.join(os.path.dirname(infolder), os.path.basename(infolder) + f"_{window_size}x{window_size}")
-        outFolder = os.path.join(os.path.dirname(infolder)+ f"_rlee_{window_size}x{window_size}", os.path.basename(infolder) )
-        os.makedirs(outFolder, exist_ok=True)
-        
-        # Only use the first letter of the matrix type (C for C3, T for T3)
-        matrix_prefix = matrix_type[0]
+    # if outname is None:
+    # outFolder = os.path.join(os.path.dirname(infolder), os.path.basename(infolder) + f"_{window_size}x{window_size}")
+    if filter_type =='rlee':
+        outFolder = os.path.join(os.path.dirname(infolder)+ f"_{filter_type}_{window_size}x{window_size}", os.path.basename(infolder) )
+    elif filter_type == 'boxcar':
+        outFolder = os.path.join(os.path.dirname(infolder)+ f"_boxcar_{window_size}x{window_size}", os.path.basename(infolder) )
+    else:
+        outFolder = os.path.join(os.path.dirname(infolder)+ f"_{window_size}x{window_size}", os.path.basename(infolder) )
+    
+    os.makedirs(outFolder, exist_ok=True)
+    
+    # Only use the first letter of the matrix type (C for C3, T for T3)
+    matrix_prefix = matrix_type[0]
 
-        if matrix_type == "C3" or matrix_type == "T3":
-            output_filepaths = [
-                os.path.join(outFolder, f"{matrix_prefix}11.bin"),
-                os.path.join(outFolder, f"{matrix_prefix}12_real.bin"), os.path.join(outFolder, f"{matrix_prefix}12_imag.bin"),
-                os.path.join(outFolder, f"{matrix_prefix}13_real.bin"), os.path.join(outFolder, f"{matrix_prefix}13_imag.bin"),
-                os.path.join(outFolder, f"{matrix_prefix}22.bin"),
-                os.path.join(outFolder, f"{matrix_prefix}23_real.bin"), os.path.join(outFolder, f"{matrix_prefix}23_imag.bin"),
-                os.path.join(outFolder, f"{matrix_prefix}33.bin"),
-            ]
-        elif matrix_type == "C2" or matrix_type == "T2":
-            output_filepaths = [
-                os.path.join(outFolder, f"{matrix_prefix}11.bin"),
-                os.path.join(outFolder, f"{matrix_prefix}12_real.bin"), os.path.join(outFolder, f"{matrix_prefix}12_imag.bin"),
-                os.path.join(outFolder, f"{matrix_prefix}22.bin"),
-            ]
+    if matrix_type == "C3" or matrix_type == "T3":
+        output_filepaths = [
+            os.path.join(outFolder, f"{matrix_prefix}11.bin"),
+            os.path.join(outFolder, f"{matrix_prefix}12_real.bin"), os.path.join(outFolder, f"{matrix_prefix}12_imag.bin"),
+            os.path.join(outFolder, f"{matrix_prefix}13_real.bin"), os.path.join(outFolder, f"{matrix_prefix}13_imag.bin"),
+            os.path.join(outFolder, f"{matrix_prefix}22.bin"),
+            os.path.join(outFolder, f"{matrix_prefix}23_real.bin"), os.path.join(outFolder, f"{matrix_prefix}23_imag.bin"),
+            os.path.join(outFolder, f"{matrix_prefix}33.bin"),
+        ]
+    elif matrix_type == "C2" or matrix_type == "T2":
+        output_filepaths = [
+            os.path.join(outFolder, f"{matrix_prefix}11.bin"),
+            os.path.join(outFolder, f"{matrix_prefix}12_real.bin"), os.path.join(outFolder, f"{matrix_prefix}12_imag.bin"),
+            os.path.join(outFolder, f"{matrix_prefix}22.bin"),
+        ]
     
     return input_filepaths, output_filepaths

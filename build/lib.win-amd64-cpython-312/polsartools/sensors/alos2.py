@@ -66,6 +66,12 @@ def alos2_fbd_l11(inFolder,azlks=3,rglks=2,calfac_dB=-83):
     Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-2 Fine Beam Dual-Pol (FBD) CEOS data 
     and saves them into respective binary files.
 
+    Example:
+    --------
+    >>> alos2_fbd_l11("path_to_folder", azlks=5, rglks=3, calfac_dB=-80)
+    This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data 
+    in the specified folder and save them in the 'C2' directory.
+    
     Parameters:
     -----------
     inFolder : str
@@ -101,11 +107,7 @@ def alos2_fbd_l11(inFolder,azlks=3,rglks=2,calfac_dB=-83):
     ValueError
         If the calibration factor is invalid or if the files are not in the expected format.
 
-    Example:
-    --------
-    >>> alos2_fbd_l11("path_to_folder", azlks=5, rglks=3, calfac_dB=-80)
-    This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data 
-    in the specified folder and save them in the 'C2' directory.
+
     """
     
     

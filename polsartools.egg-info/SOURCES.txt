@@ -95,6 +95,7 @@ docs/build/html/objects.inv
 docs/build/html/search.html
 docs/build/html/searchindex.js
 docs/build/html/_modules/index.html
+docs/build/html/_modules/polsartools/polsar/dxp/shannon_h_dp.html
 docs/build/html/_modules/polsartools/sensors/alos2.html
 docs/build/html/_modules/polsartools/sensors/chyaan2.html
 docs/build/html/_modules/polsartools/sensors/nisar.html
@@ -290,6 +291,7 @@ polsartools/polsar/cp/misomega.py
 polsartools/polsar/cp/__pycache__/__init__.cpython-310.pyc
 polsartools/polsar/cp/__pycache__/__init__.cpython-312.pyc
 polsartools/polsar/cp/__pycache__/__init__.cpython-313.pyc
+polsartools/polsar/cp/__pycache__/cp_infiles.cpython-312.pyc
 polsartools/polsar/cp/__pycache__/cprvi.cpython-310.pyc
 polsartools/polsar/cp/__pycache__/cprvi.cpython-312.pyc
 polsartools/polsar/cp/__pycache__/cprvi.cpython-313.pyc
@@ -308,12 +310,15 @@ polsartools/polsar/dcp/mf3cd.py
 polsartools/polsar/dcp/__pycache__/__init__.cpython-310.pyc
 polsartools/polsar/dcp/__pycache__/__init__.cpython-312.pyc
 polsartools/polsar/dcp/__pycache__/__init__.cpython-313.pyc
+polsartools/polsar/dcp/__pycache__/dcp_infiles.cpython-312.pyc
 polsartools/polsar/dcp/__pycache__/mf3cd.cpython-312.pyc
 polsartools/polsar/dxp/__init__.py
 polsartools/polsar/dxp/dopdp.py
 polsartools/polsar/dxp/dprvi.py
 polsartools/polsar/dxp/dxp_infiles.py
+polsartools/polsar/dxp/halpha_plot_dp.py
 polsartools/polsar/dxp/halphadp.py
+polsartools/polsar/dxp/post_proc_eg.py
 polsartools/polsar/dxp/prvidp.py
 polsartools/polsar/dxp/rvidp.py
 polsartools/polsar/dxp/shannon_h_dp.py

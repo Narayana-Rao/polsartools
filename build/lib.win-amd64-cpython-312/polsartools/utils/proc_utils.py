@@ -250,27 +250,6 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
 def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs,cog_flag,cog_overviews):
     for i in range(num_outputs):
-        # if '.tif' in output_filepaths[0] and cog_flag == False:
-        #     driver = gdal.GetDriverByName('GTiff')
-        #     options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
-        #     output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32, options=options)
-        # if '.tif' in output_filepaths[0] and cog_flag==True:
-            
-        #     driver = gdal.GetDriverByName('GTiff')
-        #     options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
-        #     options.extend(['COPY_SRC_OVERVIEWS=YES', 'COG=YES', 'TFW=YES'])
-            
-        #     output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32, options=options)
-        #     gdal.SetConfigOption('COMPRESS_OVERVIEW', 'LZW')
-        #     output_dataset.BuildOverviews("AVERAGE", [2, 4, 8, 16])
-            
-        # elif '.bin' in output_filepaths[0]:
-        #     driver = gdal.GetDriverByName('ENVI')
-        #     output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32)
-
-        driver = None
-        
-        
         if '.tif' in output_filepaths[0]:
             driver = gdal.GetDriverByName('GTiff')
             options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']

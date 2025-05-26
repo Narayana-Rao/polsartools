@@ -1,18 +1,24 @@
 import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
-from polsartools.utils.utils import conv2d,time_it
+from polsartools.utils.utils import conv2d,time_it,eig22
 from .dxp_infiles import dxpc2files
 @time_it
-def dprvi(infolder, outname=None,window_size=1,write_flag=True,max_workers=None):
+def dprvi(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
     input_filepaths = dxpc2files(infolder)
     output_filepaths = []
-    if outname is None:
+
+    if outType == "bin":
+        output_filepaths.append(os.path.join(infolder, "dprvi.bin"))
+    else:
         output_filepaths.append(os.path.join(infolder, "dprvi.tif"))
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, 
-        write_flag=write_flag,processing_func=process_chunk_dprvi,block_size=(512, 512), max_workers=max_workers,  num_outputs=1)
-
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
+                            processing_func=process_chunk_dprvi,block_size=block_size, max_workers=max_workers,  num_outputs=1,
+                            cog_flag=cog_flag,
+                            cog_overviews=cog_overviews,
+                            )
+    
 def process_chunk_dprvi(chunks, window_size,*args):
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11_T1 = np.array(chunks[0])

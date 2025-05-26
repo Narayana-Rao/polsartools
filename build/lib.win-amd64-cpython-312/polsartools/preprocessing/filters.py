@@ -7,17 +7,30 @@ from polsartools.preprocessing.pre_utils import get_filter_io_paths
 from polsartools.preprocessing.rflee_filter import process_chunk_refined_lee
 from polsartools.rflee import process_chunk_rfleecpp
 @time_it
-def boxcar(infolder, outname=None, chi_in=0, psi_in=0, window_size=3, write_flag=True, max_workers=None):
+def boxcar(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
     
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, outname, window_size, filter_type="boxcar")
+    input_filepaths, output_filepaths = get_filter_io_paths(infolder, window_size, filter_type="boxcar")
 
     # Process chunks in parallel
     num_outputs = len(output_filepaths)
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-                            processing_func=process_chunk_boxcar, block_size=(512, 512), max_workers=max_workers, 
-                            num_outputs=num_outputs)
 
-def process_chunk_boxcar(chunks, window_size, input_filepaths, *args):
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
+                            processing_func=process_chunk_boxcar,block_size=block_size, max_workers=max_workers,  num_outputs=num_outputs,
+                            cog_flag=cog_flag,
+                            cog_overviews=cog_overviews,
+                            )
+
+def process_chunk_boxcar(chunks, window_size, *args):
+    
+    # for i in range(len(chunks)):
+    #     pad_top_left = window_size // 2 
+    #     pad_bottom_right = window_size // 2 +1
+    #     chunks[i] = np.pad(chunks[i], 
+    #                         ((pad_top_left, pad_bottom_right), 
+    #                         (pad_top_left, pad_bottom_right)), 
+    #                         mode='constant', constant_values=0)
+
+    
     filtered_chunks = []
     for i in range(len(chunks)):
         img = np.array(chunks[i])
@@ -27,9 +40,10 @@ def process_chunk_boxcar(chunks, window_size, input_filepaths, *args):
 
 
 @time_it
-def rlee(infolder, outname=None, chi_in=0, psi_in=0, window_size=3, write_flag=True, max_workers=None):
-    # File reading and output setup similar to the boxcar filter
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, outname, window_size, filter_type="refined_lee")
+def rlee(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
+
+
+    input_filepaths, output_filepaths = get_filter_io_paths(infolder, window_size, filter_type="rlee")
     num_outputs = len(output_filepaths)
     
     ### Python implementation
@@ -39,11 +53,14 @@ def rlee(infolder, outname=None, chi_in=0, psi_in=0, window_size=3, write_flag=T
     
     #### Uncomment below to use C++ implementation 
 
-    process_chunks_parallel(input_filepaths, output_filepaths, window_size=window_size, write_flag=write_flag,
-                        processing_func=process_chunk_rfl, block_size=(512, 512), max_workers=max_workers,
-                        num_outputs=num_outputs)
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
+                            processing_func=process_chunk_rfl,block_size=block_size, max_workers=max_workers,  num_outputs=num_outputs,
+                            cog_flag=cog_flag,
+                            cog_overviews=cog_overviews,
+                            )
 
-def process_chunk_rfl(chunks, window_size,input_filepaths, *args):
+
+def process_chunk_rfl(chunks, window_size, *args):
 
     # print('before pad',np.shape(chunks[0]))
     
