@@ -78,6 +78,7 @@ docs/build/doctrees/files/functions/full_pol/GRVI.doctree
 docs/build/doctrees/files/functions/full_pol/MF3CF.doctree
 docs/build/doctrees/files/functions/full_pol/PRVI_fp.doctree
 docs/build/doctrees/files/functions/full_pol/RVI_fp.doctree
+docs/build/doctrees/files/functions/full_pol/halpha_plot_fp.doctree
 docs/build/doctrees/files/functions/full_pol/halphafp.doctree
 docs/build/doctrees/files/functions/full_pol/mf4cf.doctree
 docs/build/doctrees/files/functions/full_pol/neufp.doctree
@@ -95,6 +96,21 @@ docs/build/html/index.html
 docs/build/html/objects.inv
 docs/build/html/search.html
 docs/build/html/searchindex.js
+docs/build/html/_modules/index.html
+docs/build/html/_modules/polsartools/polsar/dcp/mf3cd.html
+docs/build/html/_modules/polsartools/polsar/dxp/dopdp.html
+docs/build/html/_modules/polsartools/polsar/dxp/dprvi.html
+docs/build/html/_modules/polsartools/polsar/dxp/halpha_plot_dp.html
+docs/build/html/_modules/polsartools/polsar/dxp/halphadp.html
+docs/build/html/_modules/polsartools/polsar/dxp/prvidp.html
+docs/build/html/_modules/polsartools/polsar/dxp/rvidp.html
+docs/build/html/_modules/polsartools/polsar/dxp/shannon_h_dp.html
+docs/build/html/_modules/polsartools/polsar/fp/halpha_plot_fp.html
+docs/build/html/_modules/polsartools/sensors/alos2.html
+docs/build/html/_modules/polsartools/sensors/chyaan2.html
+docs/build/html/_modules/polsartools/sensors/nisar.html
+docs/build/html/_modules/polsartools/sensors/rs2_fp.html
+docs/build/html/_modules/polsartools/sensors/uavsar.html
 docs/build/html/_sources/index.rst.txt
 docs/build/html/_sources/files/00start.rst.txt
 docs/build/html/_sources/files/01sensors.rst.txt
@@ -122,6 +138,7 @@ docs/build/html/_sources/files/functions/full_pol/GRVI.rst.txt
 docs/build/html/_sources/files/functions/full_pol/MF3CF.rst.txt
 docs/build/html/_sources/files/functions/full_pol/PRVI_fp.rst.txt
 docs/build/html/_sources/files/functions/full_pol/RVI_fp.rst.txt
+docs/build/html/_sources/files/functions/full_pol/halpha_plot_fp.rst.txt
 docs/build/html/_sources/files/functions/full_pol/halphafp.rst.txt
 docs/build/html/_sources/files/functions/full_pol/mf4cf.rst.txt
 docs/build/html/_sources/files/functions/full_pol/neufp.rst.txt
@@ -188,6 +205,7 @@ docs/build/html/files/functions/full_pol/GRVI.html
 docs/build/html/files/functions/full_pol/MF3CF.html
 docs/build/html/files/functions/full_pol/PRVI_fp.html
 docs/build/html/files/functions/full_pol/RVI_fp.html
+docs/build/html/files/functions/full_pol/halpha_plot_fp.html
 docs/build/html/files/functions/full_pol/halphafp.html
 docs/build/html/files/functions/full_pol/mf4cf.html
 docs/build/html/files/functions/full_pol/neufp.html
@@ -230,6 +248,7 @@ docs/source/files/functions/full_pol/GRVI.rst
 docs/source/files/functions/full_pol/MF3CF.rst
 docs/source/files/functions/full_pol/PRVI_fp.rst
 docs/source/files/functions/full_pol/RVI_fp.rst
+docs/source/files/functions/full_pol/halpha_plot_fp.rst
 docs/source/files/functions/full_pol/halphafp.rst
 docs/source/files/functions/full_pol/mf4cf.rst
 docs/source/files/functions/full_pol/neufp.rst
@@ -380,6 +399,7 @@ polsartools/sensors/__pycache__/uavsar.cpython-310.pyc
 polsartools/sensors/__pycache__/uavsar.cpython-313.pyc
 polsartools/utils/__init__.py
 polsartools/utils/convert_C3_T3.py
+polsartools/utils/convert_S2_C3T3.py
 polsartools/utils/convert_T3_C3.py
 polsartools/utils/convert_matrices.py
 polsartools/utils/dxpRGB.py

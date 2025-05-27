@@ -53,17 +53,18 @@ def process_chunks_parallel(
                 read_block_width = min(adjusted_block_size_x, raster_width - x)
                 read_block_height = min(adjusted_block_size_y, raster_height - y)
                 # args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in,model)
-                args_ = ( input_filepaths, x, y, read_block_width, read_block_height, window_size,     raster_width, raster_height, *proc_args )
+                args_ = ( input_filepaths, x, y, read_block_width, read_block_height, window_size,  raster_width, raster_height, *proc_args )
                 
                 # print(f"Submitting task for chunk at ({x}, {y})")
                 # tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
-                tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs, proc_kwargs))
-                
+                # tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs, proc_kwargs))
+                # tasks.append(executor.submit(process_and_write_chunk, *args_, processing_func, num_outputs, **proc_kwargs))
+                tasks.append(executor.submit(process_and_write_chunk, *args_, processing_func=processing_func, num_outputs=num_outputs, **proc_kwargs))
         # Initialize tqdm progress bar with the total number of tasks
         with tqdm(total=len(tasks), desc=f"Progress ", unit=" block") as pbar:
             temp_files = []
             for future in as_completed(tasks):
-                try:
+                # try:
                     result = future.result()
                     if result is None:
                         raise ValueError("Block processing returned None")
@@ -82,8 +83,8 @@ def process_chunks_parallel(
                             os.remove(temp_paths[i])
                     
                     pbar.update(1)
-                except Exception as e:
-                    print(f"Error in processing task: {e}")
+                # except Exception as e:
+                #     print(f"Error in processing task: {e}")
 
 
     if write_flag:
@@ -292,14 +293,16 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
 
 
 
-def process_and_write_chunk(args, processing_func, num_outputs,proc_kwargs):
-    try:
+def process_and_write_chunk(*args, processing_func, num_outputs,**proc_kwargs):
+    # try:
         (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, *proc_args) = args
 
         chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
         # processed_chunks = processing_func(chunks, window_size, input_filepaths, chi_in,psi_in,model)
         processed_chunks = processing_func(
+            # chunks, window_size, input_filepaths, *proc_args, **proc_kwargs
             chunks, window_size, input_filepaths, *proc_args, **proc_kwargs
+            # chunks, *proc_args, **proc_kwargs
         )
 
         if num_outputs == 1:
@@ -310,6 +313,6 @@ def process_and_write_chunk(args, processing_func, num_outputs,proc_kwargs):
         )
 
         return temp_paths, temp_x_start, temp_y_start
-    except Exception as e:
-        print(f"Error in processing chunk: {e}")
-        return None
+    # except Exception as e:
+    #     print(f"Error in processing chunk: {e}")
+    #     return None

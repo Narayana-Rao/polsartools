@@ -20,7 +20,7 @@ from .sensors.nisar import nisar_gslc,nisar_rslc
 from .sensors.alos2 import alos2_fbd_l11
 from .sensors.chyaan2 import chyaan2_fp
 from .sensors.rs2_fp import rs2_fp
-from .utils import convert_T3_C3,convert_C3_T3
+from .utils import convert_T3_C3,convert_C3_T3, convert_S2_CT
 from .preprocessing.filters import boxcar,rlee
 # from .utils.pauliRGB import read_bin
 ## CPP functions
@@ -31,7 +31,7 @@ from .preprocessing.filters import boxcar,rlee
 __all__ = [
     'uavsar_grd', 'uavsar_mlc', 'nisar_gslc', 'nisar_rslc', 'alos2_fbd_l11', 'chyaan2_fp','rs2_fp', #import data from sensors
     'rlee', 'boxcar', #import filters
-    'convert_T3_C3', 'convert_C3_T3', 'pauliRGB',#import utils
+    'convert_T3_C3', 'convert_C3_T3', 'pauliRGB', 'convert_S2_CT', #import utils
     'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 'halphafp', 'shannon_h_fp','yam4cfp', 'halpha_plot_fp', # Full-pol
     'cprvi', 'dopcp', 'misomega', 'mf3cc',                 # Compact-pol
     'dprvi', 'dopdp', 'prvidp', 'rvidp', 'halphadp', 'shannon_h_dp', 'halpha_plot_dp',      # Dual-cross-pol

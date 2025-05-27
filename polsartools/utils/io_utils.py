@@ -1,11 +1,13 @@
 import numpy as np
 from osgeo import gdal 
 from skimage.util.shape import view_as_blocks
+
 def read_bin(file):
     ds = gdal.Open(file,gdal.GA_ReadOnly)
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
     return arr
+
 def mlook(data,az,rg):
     temp = data[0:data.shape[0]-data.shape[0]%az,0:data.shape[1]-data.shape[1]%rg]
     blocks = view_as_blocks(temp, block_shape=(az, rg))

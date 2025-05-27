@@ -725,7 +725,7 @@ def halpha_plot_fp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
     
     Example:
     --------
-    >>> halpha_plot_dp(h, alpha, path="HA_plot.png", cmap='jet', colorbar=True, norm='log')
+    >>> halpha_plot_fp(h, alpha, path="HA_plot.png", cmap='jet', colorbar=True, norm='log')
     This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the 'jet' colormap and logarithmic normalization
     
     Parameters:
