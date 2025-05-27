@@ -17,6 +17,9 @@ def process_chunks_parallel(
                             cog_flag=False,
                             cog_overviews=[2, 4, 8, 16],
                             post_proc=None,  # NEW
+                            out_x_size=None, out_y_size=None,
+                            out_geotransform=None,
+                            out_projection=None,
                             **proc_kwargs  # NEW
                         ):
 
@@ -36,11 +39,19 @@ def process_chunks_parallel(
     geotransform = input_datasets[0].GetGeoTransform()
     projection = input_datasets[0].GetProjection()
 
+
+
+    # # Override if resized output is requested
+    output_width = out_x_size if out_x_size else raster_width
+    output_height = out_y_size if out_y_size else raster_height
+    output_geotransform = out_geotransform if out_geotransform else geotransform
+    output_projection = out_projection if out_projection else projection
+
     # Ensure block_size does not exceed raster dimensions
     adjusted_block_size_x = min(block_size[0], raster_width)
     adjusted_block_size_y = min(block_size[1], raster_height)
 
-    merged_arrays = [np.zeros((raster_height, raster_width), dtype=np.float32) for _ in range(num_outputs)] if not write_flag else None
+    merged_arrays = [np.zeros((output_height, output_width), dtype=np.float32) for _ in range(num_outputs)] if not write_flag else None
 
     tasks = []
 
@@ -56,10 +67,7 @@ def process_chunks_parallel(
                 args_ = ( input_filepaths, x, y, read_block_width, read_block_height, window_size,  raster_width, raster_height, *proc_args )
                 
                 # print(f"Submitting task for chunk at ({x}, {y})")
-                # tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs))
-                # tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs, proc_kwargs))
-                # tasks.append(executor.submit(process_and_write_chunk, *args_, processing_func, num_outputs, **proc_kwargs))
-                tasks.append(executor.submit(process_and_write_chunk, *args_, processing_func=processing_func, num_outputs=num_outputs, **proc_kwargs))
+                tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs, output_width,  output_height,**proc_kwargs))
         # Initialize tqdm progress bar with the total number of tasks
         with tqdm(total=len(tasks), desc=f"Progress ", unit=" block") as pbar:
             temp_files = []
@@ -85,10 +93,11 @@ def process_chunks_parallel(
                     pbar.update(1)
                 # except Exception as e:
                 #     print(f"Error in processing task: {e}")
-
-
+            
+    azlks = proc_kwargs.get('azlks', 1)
+    rglks = proc_kwargs.get('rglks', 1)
     if write_flag:
-        merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs,cog_flag,cog_overviews)
+        merge_temp_files(output_filepaths, temp_files,  output_width, output_height,     output_geotransform, output_projection, num_outputs,cog_flag,cog_overviews,azlks=azlks, rglks=rglks )
         for temp_path_set, _, _ in temp_files:
             for temp_path in temp_path_set:
                 os.remove(temp_path)
@@ -102,8 +111,17 @@ def read_chunk_with_overlap(filepath, x_start, y_start, width, height, window_si
     dataset = gdal.Open(filepath, gdal.GA_ReadOnly)
     if dataset is None:
         raise FileNotFoundError(f"Cannot open {filepath}")
-
+    
     band = dataset.GetRasterBand(1)
+    
+    
+    if not window_size:  # None or 0
+        chunk = band.ReadAsArray(x_start, y_start, width, height)
+        dataset = None
+        return chunk
+
+
+    
     # Handle edge cases for window overlap near the borders of the raster
     xoff = max(x_start - window_size, 0)
     yoff = max(y_start - window_size, 0)
@@ -171,7 +189,7 @@ def read_chunk_with_overlap(filepath, x_start, y_start, width, height, window_si
     dataset = None  # Close the dataset after reading
     return chunk
 
-def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, block_height, window_size, raster_width, raster_height, num_outputs):
+def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, block_height, window_size, output_width, output_height, num_outputs):
     temp_paths = []
     
     for i in range(num_outputs):
@@ -186,61 +204,58 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
         temp_band = temp_dataset.GetRasterBand(1)
 
-        # Check if the block size is equal to the raster size
-        if block_width >= raster_width and block_height >= raster_height:
-            # temp_band.WriteArray(processed_chunks[i][:-window_size//2, :][:, :-window_size//2])  
-            
-            # rows, cols = processed_chunks[i].shape
-            
-            # # Calculate the shift
-            # shift = window_size // 2
-            # # Create a new array with dimensions adjusted for the shift
-            # new_rows = rows + shift
-            # new_cols = cols + shift
-            # new_arr = np.zeros((new_rows, new_cols), dtype=processed_chunks[i].dtype)
-            # new_arr[shift:shift+rows, shift:shift+cols] = processed_chunks[i]
-            # new_arr[:shift, :shift] = processed_chunks[i][-shift:, -shift:]
 
-            # temp_band.WriteArray(new_arr)       
-            temp_band.WriteArray(processed_chunks[i]) 
+        if not window_size:
+            temp_band.WriteArray(processed_chunks[i])
             temp_dataset.FlushCache()
             temp_dataset = None
             temp_paths.append(temp_path)
-            continue  # Skip to the next output
+            continue
+        # Check if the block size is equal to the raster size
+        # if block_width >= output_width and block_height >= output_height:     
+        #     temp_band.WriteArray(processed_chunks[i]) 
+        #     temp_dataset.FlushCache()
+        #     temp_dataset = None
+        #     temp_paths.append(temp_path)
+        #     continue  # Skip to the next output
         
         # Determine the boundaries
-        is_left_border = x_start == 0
-        is_right_border = x_start + block_width >= raster_width
-        is_top_border = y_start == 0
-        is_bottom_border = y_start + block_height >= raster_height
+        
+        if window_size:
+            is_left_border = x_start == 0
+            is_right_border = x_start + block_width >= output_width
+            is_top_border = y_start == 0
+            is_bottom_border = y_start + block_height >= output_height
 
-        if is_left_border and is_top_border:
-            # Top-left corner: reduce only from right and bottom
-            temp_band.WriteArray(processed_chunks[i][:-window_size, :][:, :-window_size])
-        elif is_left_border and is_bottom_border:
-            # Bottom-left corner: reduce only from right and top
-            temp_band.WriteArray(processed_chunks[i][window_size:, :][:, :-window_size])
-        elif is_right_border and is_top_border:
-            # Top-right corner: reduce only from left and bottom
-            temp_band.WriteArray(processed_chunks[i][:-window_size, :][:, window_size:])
-        elif is_right_border and is_bottom_border:
-            # Bottom-right corner: reduce only from left and top
-            temp_band.WriteArray(processed_chunks[i][window_size:, :][:, window_size:])
-        elif is_left_border:
-            # Left edge: reduce from right, top, and bottom
-            temp_band.WriteArray(processed_chunks[i][window_size:-window_size,:-window_size ])  # Skip left
-        elif is_right_border:
-            # Right edge: reduce from left, top, and bottom
-            temp_band.WriteArray(processed_chunks[i][ window_size:-window_size,window_size:])  # Skip right
-        elif is_top_border:
-            # Top edge: reduce from left, right, and bottom
-            temp_band.WriteArray(processed_chunks[i][ :-window_size,window_size:-window_size])  # Skip top
-        elif is_bottom_border:
-            # Bottom edge: reduce from left, right, and top
-            temp_band.WriteArray(processed_chunks[i][window_size:,window_size:-window_size])  # Skip bottom
+            if is_left_border and is_top_border:
+                # Top-left corner: reduce only from right and bottom
+                temp_band.WriteArray(processed_chunks[i][:-window_size, :][:, :-window_size])
+            elif is_left_border and is_bottom_border:
+                # Bottom-left corner: reduce only from right and top
+                temp_band.WriteArray(processed_chunks[i][window_size:, :][:, :-window_size])
+            elif is_right_border and is_top_border:
+                # Top-right corner: reduce only from left and bottom
+                temp_band.WriteArray(processed_chunks[i][:-window_size, :][:, window_size:])
+            elif is_right_border and is_bottom_border:
+                # Bottom-right corner: reduce only from left and top
+                temp_band.WriteArray(processed_chunks[i][window_size:, :][:, window_size:])
+            elif is_left_border:
+                # Left edge: reduce from right, top, and bottom
+                temp_band.WriteArray(processed_chunks[i][window_size:-window_size,:-window_size ])  # Skip left
+            elif is_right_border:
+                # Right edge: reduce from left, top, and bottom
+                temp_band.WriteArray(processed_chunks[i][ window_size:-window_size,window_size:])  # Skip right
+            elif is_top_border:
+                # Top edge: reduce from left, right, and bottom
+                temp_band.WriteArray(processed_chunks[i][ :-window_size,window_size:-window_size])  # Skip top
+            elif is_bottom_border:
+                # Bottom edge: reduce from left, right, and top
+                temp_band.WriteArray(processed_chunks[i][window_size:,window_size:-window_size])  # Skip bottom
+            else:
+                # Non-border chunks: apply window size reduction
+                temp_band.WriteArray(processed_chunks[i][window_size:-window_size, window_size:-window_size])
         else:
-            # Non-border chunks: apply window size reduction
-            temp_band.WriteArray(processed_chunks[i][window_size:-window_size, window_size:-window_size])
+            temp_band.WriteArray(processed_chunks[i])
 
         temp_dataset.FlushCache()
         temp_dataset = None
@@ -249,20 +264,20 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
     return temp_paths, x_start, y_start
 
-def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, geotransform, projection, num_outputs,cog_flag,cog_overviews):
+def merge_temp_files(output_filepaths, temp_files, output_width, output_height, output_geotransform, output_projection, num_outputs,cog_flag,cog_overviews,azlks=1, rglks=1):
     for i in range(num_outputs):
         if '.tif' in output_filepaths[0]:
             driver = gdal.GetDriverByName('GTiff')
             options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
             if cog_flag:
                 options.extend(['COG=YES', 'TFW=YES']) 
-            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32, options=options)
+            output_dataset = driver.Create(output_filepaths[i], output_width, output_height, 1, gdal.GDT_Float32, options=options)
         elif '.bin' in output_filepaths[0]:
             driver = gdal.GetDriverByName('ENVI')
-            output_dataset = driver.Create(output_filepaths[i], raster_width, raster_height, 1, gdal.GDT_Float32)
+            output_dataset = driver.Create(output_filepaths[i], output_width, output_height, 1, gdal.GDT_Float32)
 
-        output_dataset.SetGeoTransform(geotransform)
-        output_dataset.SetProjection(projection)
+        output_dataset.SetGeoTransform(output_geotransform)
+        output_dataset.SetProjection(output_projection)
         output_band = output_dataset.GetRasterBand(1)
 
         for temp_path_set, x_start, y_start in temp_files:
@@ -272,10 +287,24 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
             temp_chunk = temp_band.ReadAsArray()
             temp_height, temp_width = temp_chunk.shape
             
+            # Scale the input-based chunk position to the output grid
+            scaled_x = x_start 
+            scaled_y = y_start 
+
+            # Safety check: trim the chunk if it goes beyond bounds
+            chunk_height, chunk_width = temp_chunk.shape
+            if scaled_x + chunk_width > output_width:
+                temp_chunk = temp_chunk[:, :output_width - scaled_x]
+            if scaled_y + chunk_height > output_height:
+                temp_chunk = temp_chunk[:output_height - scaled_y, :]
+            
+            
             if len(temp_files) == 1:
                 x_start, y_start = 0, 0
+                scaled_x, scaled_y = 0, 0
                 
-            output_band.WriteArray(temp_chunk, xoff=x_start, yoff=y_start)
+            # output_band.WriteArray(temp_chunk, xoff=x_start, yoff=y_start)
+            output_band.WriteArray(temp_chunk, xoff=scaled_x, yoff=scaled_y)
             # print(x_start,y_start)
             temp_dataset = None
 
@@ -293,7 +322,7 @@ def merge_temp_files(output_filepaths, temp_files, raster_width, raster_height, 
 
 
 
-def process_and_write_chunk(*args, processing_func, num_outputs,**proc_kwargs):
+def process_and_write_chunk(args, processing_func, num_outputs, output_width, output_height, **proc_kwargs):
     # try:
         (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, *proc_args) = args
 
@@ -308,11 +337,18 @@ def process_and_write_chunk(*args, processing_func, num_outputs,**proc_kwargs):
         if num_outputs == 1:
             processed_chunks = [processed_chunks]
 
+    
+        azlks = proc_kwargs.get('azlks', 1)
+        rglks = proc_kwargs.get('rglks', 1)
+
+        out_x_start = x_start // rglks
+        out_y_start = y_start // azlks
+
         temp_paths, temp_x_start, temp_y_start = write_chunk_to_temp_file(
-            processed_chunks, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, num_outputs
+            processed_chunks, out_x_start, out_y_start, read_block_width//rglks, read_block_height//azlks, window_size,  output_width, output_height,  num_outputs
         )
 
-        return temp_paths, temp_x_start, temp_y_start
+        return temp_paths, out_x_start, out_y_start
     # except Exception as e:
     #     print(f"Error in processing chunk: {e}")
     #     return None
