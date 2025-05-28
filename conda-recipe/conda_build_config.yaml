@@ -16,6 +16,6 @@ platform:
   - osx-arm64
 
 cxx_compiler:
-  - vs     # [win]
-  - gcc    # [linux]
-  - clang  # [osx]
+  - vs2019  # [win]
+  - gcc     # [linux]
+  - clang   # [osx]
