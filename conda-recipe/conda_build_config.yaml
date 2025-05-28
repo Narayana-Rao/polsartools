@@ -1,12 +1,12 @@
 python:
-  - 3.6
-  - 3.7
-  - 3.8
+  # - 3.6
+  # - 3.7
+  # - 3.8
   - 3.9
-  - 3.10
-  - 3.11
-  - 3.12
-  - 3.13
+  # - 3.10
+  # - 3.11
+  # - 3.12
+  # - 3.13
 platform:
   - win-32
   - win-64
@@ -16,6 +16,6 @@ platform:
   - osx-arm64
 
 cxx_compiler:
+  - vs         # Windows
   - gcc        # Linux
   - clang      # macOS
-  - vs         # Windows
