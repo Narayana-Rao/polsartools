@@ -33,7 +33,7 @@ requirements:
     - h5py
     - scikit-image
     - gdal
-
+    - libgcc-ng 
 test:
   # Include tests to validate the build
   commands:
