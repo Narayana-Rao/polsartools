@@ -4,22 +4,40 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from .cp_infiles import cpc2files
 @time_it
-def mf3cc(infolder, outname=None, chi_in=45, psi_in=0, window_size=1,write_flag=True,max_workers=None):
+def mf3cc(infolder,   chi_in=45, psi_in=0, window_size=1, outType="tif", cog_flag=False, 
+          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+          max_workers=None,block_size=(512, 512)):
     input_filepaths = cpc2files(infolder)
 
     output_filepaths = []
-    if outname is None:
+    if outType == "bin":
+        output_filepaths.append(os.path.join(infolder, "Ps_mf3cc.bin"))
+        output_filepaths.append(os.path.join(infolder, "Pd_mf3cc.bin"))
+        output_filepaths.append(os.path.join(infolder, "Pv_mf3cc.bin"))
+        output_filepaths.append(os.path.join(infolder, "Theta_CP_mf3cc.bin"))
+    else:
         output_filepaths.append(os.path.join(infolder, "Ps_mf3cc.tif"))
         output_filepaths.append(os.path.join(infolder, "Pd_mf3cc.tif"))
         output_filepaths.append(os.path.join(infolder, "Pv_mf3cc.tif"))
         output_filepaths.append(os.path.join(infolder, "Theta_CP_mf3cc.tif"))
         
+    process_chunks_parallel(input_filepaths, list(output_filepaths), 
+                            window_size,
+                        write_flag,
+                        process_chunk_mf3cc,
+                        *[chi_in, psi_in],
+                        block_size=block_size, 
+                        max_workers=max_workers,  
+                        num_outputs=len(output_filepaths),
+                        cog_flag=cog_flag,
+                        cog_overviews=cog_overviews,
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, 
-                write_flag=write_flag,processing_func=process_chunk_mf3cc,block_size=(512, 512), 
-                max_workers=max_workers,  num_outputs=4, chi_in=chi_in,psi_in=psi_in)
-
-def process_chunk_mf3cc(chunks, window_size,chi_in,psi_in):
+                        )
+def process_chunk_mf3cc(chunks, window_size, *args, **kwargs):
+    
+    chi_in=args[-2]
+    psi_in=args[-1]
+    # print(chi_in,psi_in):
 
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11_T1 = np.array(chunks[0])

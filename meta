@@ -1,9 +1,13 @@
 
-# DOCS
+# Bump version in 
+# /polsartools/version.json
+#  __version__.py
+#  __init__.py
+
+# BUILD DOCS
 sphinx-build -M clean docs/source docs/build
 sphinx-build -M html docs/source docs/build
 sphinx-build -M latexpdf docs/source docs/build
-
 
 # PyPI
 python -m build or 
@@ -20,12 +24,17 @@ python -m twine upload dist/*
 enter token
 
 # build Conda packages
-conda build --python=3.8 .
-conda build --python=3.9 .
-conda build --python=3.10 .
+cd conda-recipe
+conda build .
+# conda build --python=3.9 .
+# conda build --python=3.10 .
 
 # UPLOAD to conda
-anaconda upload /path/package.tar.bz2
+anaconda upload //AppData/Local/anaconda3/conda-bld/win-64/polsartools-0.6.1-py38_0.conda
+
+
+conda build purge
+
 
 ################### REFERNCES
 https://packaging.python.org/en/latest/tutorials/packaging-projects/

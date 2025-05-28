@@ -4,7 +4,9 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from .dxp_infiles import dxpc2files
 @time_it
-def dopdp(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
+def dopdp(infolder,  window_size=1, outType="tif", cog_flag=False, 
+          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+          max_workers=None,block_size=(512, 512)):
     """
         
         Computes Barakat degree of polarization (DOP) from the input dual-polarization (dual-pol) C2 matrix data, and writes

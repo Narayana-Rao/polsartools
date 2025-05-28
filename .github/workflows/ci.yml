@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        # os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
     
     steps:
@@ -33,6 +33,14 @@ jobs:
         miniconda-version: "latest"
         auto-activate-base: false
         python-version: ${{ matrix.python-version }}
+
+    # **CACHE CONDA ENVIRONMENTS**
+    - name: Cache Conda packages
+      uses: actions/cache@v3
+      with:
+        path: ~/miniconda/envs
+        key: conda-${{ runner.os }}-${{ matrix.python-version }}
+        restore-keys: conda-${{ runner.os }}-
 
     - name: Install Conda dependencies
       run: |

@@ -6,7 +6,7 @@ Home-page: https://github.com/Narayana-Rao/polsartools
 Author: Narayanarao Bhogapurapu
 Author-email: bnarayanarao@iitb.ac.in
 Classifier: Programming Language :: Python :: 3
-Classifier: License :: OSI Approved :: MIT License
+Classifier: License :: OSI Approved :: GPL-3.0 License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown

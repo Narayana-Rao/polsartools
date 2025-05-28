@@ -11,15 +11,18 @@ build:
   script: "{{ PYTHON }} -m pip install . --no-deps -vv"
 
 requirements:
+  build:
+    - python {{ python }}
+    - {{ compiler('cxx') }}  # C++ compiler
   host:
-    - python
+    - python {{ python }}
     - pip
     - pybind11
     - h5py
     - setuptools
     - wheel
   run:
-    - python
+    - python  {{ python }}
     - pip
     - numpy
     - scipy
@@ -40,8 +43,3 @@ about:
   home: https://github.com/Narayana-Rao/polsartools
   license: GPL-3.0
   summary: "A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data."
-
-# platforms:
-#   - linux
-#   - osx
-#   - win
