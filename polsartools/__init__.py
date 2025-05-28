@@ -17,7 +17,7 @@ from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp, shannon_h_dp,halp
 from .polsar.dcp import mf3cd
 from .sensors.uavsar import uavsar_grd,uavsar_mlc
 from .sensors.nisar import nisar_gslc,nisar_rslc
-from .sensors.alos2 import alos2_fbd_l11
+from .sensors.alos2 import alos2_fbd_l11,alos2_hbq_l11
 from .sensors.chyaan2 import chyaan2_fp
 from .sensors.rs2_fp import rs2_fp
 from .sensors.isro_asar import isro_asar
@@ -33,7 +33,7 @@ __all__ = [
     # SENSORS
     'uavsar_grd', 'uavsar_mlc','isro_asar',  
     'nisar_gslc', 'nisar_rslc',
-    'alos2_fbd_l11', 'chyaan2_fp','rs2_fp',  
+    'alos2_fbd_l11','alos2_hbq_l11', 'chyaan2_fp','rs2_fp',  
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS

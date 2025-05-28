@@ -45,9 +45,10 @@ Sample use cases and notebooks are provided at [polsartools-notebooks](https://g
 ## Available functionalities:
 * Supported sensors
   * UAVSAR (GRD, MLC)
+  * ISRO ASAR (H5)
   * NISAR (RSLC, GSLC)
   * RADARSAT-2 (Full-pol)
-  * ALOS-2 (Fine Beam Dual-pol (FBD) Level 1.1 CEOS)
+  * ALOS-2 (Fine Beam Dual-pol (FBD), Quad-pol (HBQ) Level 1.1 CEOS)
   * Chandrayaan-II DFSAR (Full-pol)
 
  * Full-pol :
