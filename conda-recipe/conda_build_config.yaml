@@ -16,6 +16,6 @@ platform:
   - osx-arm64
 
 cxx_compiler:
-  - vs         # Windows
-  - gcc        # Linux
-  - clang      # macOS
+  - vs     # [win]
+  - gcc    # [linux]
+  - clang  # [osx]
