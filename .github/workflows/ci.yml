@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [ubuntu-latest]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
     
     steps:
@@ -61,6 +61,12 @@ jobs:
         brew install gdal
         brew upgrade gdal
 
+    - name: Install Microsoft C++ Build Tools
+      if: runner.os == 'Windows'
+      run: |
+        choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --quiet" -y
+        refreshenv
+        
     - name: Install GDAL with Conda (Windows)
       if: runner.os == 'Windows'
       run: |
