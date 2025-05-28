@@ -390,6 +390,7 @@ polsartools/sensors/alos2.py
 polsartools/sensors/basic_func.py
 polsartools/sensors/chyaan2.py
 polsartools/sensors/import_s1grd.py
+polsartools/sensors/isro_asar.py
 polsartools/sensors/nisar.py
 polsartools/sensors/rs2_fp.py
 polsartools/sensors/uavsar.py

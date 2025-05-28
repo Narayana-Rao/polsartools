@@ -78,7 +78,7 @@ def rst_mlook(input_raster, az, rg, output_raster,projection_epsg,
     return np.shape(result)[0],np.shape(result)[1]
 
 @time_it  
-def nisar_gslc(inFile,azlks=20,rglks=10):
+def nisar_gslc(inFile,azlks=22,rglks=10):
     """
     Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
     and saves them into respective binary files.
@@ -120,6 +120,8 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
 
     """
     inFolder = os.path.dirname(inFile)   
+    if not inFolder:
+        inFolder = "."
     C2Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2')
 
     try:
@@ -129,34 +131,29 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
     
     
     if '/science/LSAR' in h5File:
-        xCoordinateSpacing = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/xCoordinateSpacing'])
-        yCoordinateSpacing = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/yCoordinateSpacing'])
-        xCoordinates = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/xCoordinates'])
-        yCoordinates = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/yCoordinates'])
-        projection = np.array(h5File['/science/LSAR/GSLC/metadata/radarGrid/projection'])
-        S11 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
-        S12 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
-        
+        freq_band = 'L' 
         print("Detected L-band data ")
 
     elif '/science/SSAR' in h5File:
-        xCoordinateSpacing = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/xCoordinateSpacing'])
-        yCoordinateSpacing = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/yCoordinateSpacing'])
-        xCoordinates = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/xCoordinates'])
-        yCoordinates = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/yCoordinates'])
-        projection = np.array(h5File['/science/SSAR/GSLC/metadata/radarGrid/projection'])
-        S11 = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/HH'])
-        S12 = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/HH'])
+        freq_band = 'S'
         print(" Detected S-band data")
 
     else:
         print("Neither LSAR nor SSAR data found in the file.")
-        
+        h5File.close()
+        return
+    
+    
+    xCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/xCoordinateSpacing'])
+    yCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/yCoordinateSpacing'])
+    xCoordinates = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/xCoordinates'])
+    yCoordinates = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/yCoordinates'])
+    projection = np.array(h5File[f'/science/{freq_band}SAR/GSLC/metadata/radarGrid/projection'])
+    S11 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HH'])
+    S12 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HH'])
+    
+    h5File.close()
 
-    
-    
-    
-    
     C11 = np.abs(S11)**2
     C22 = np.abs(S12)**2
     C12 = S11*np.conjugate(S12)
@@ -207,7 +204,7 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
     h5File.close()
     
 @time_it  
-def nisar_rslc(inFile,azlks=20,rglks=10):
+def nisar_rslc(inFile,azlks=22,rglks=10):
     """
     Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR RSLC HDF5 file 
     and saves them into respective binary files.
@@ -249,29 +246,36 @@ def nisar_rslc(inFile,azlks=20,rglks=10):
 
     """
     
-    inFolder = os.path.dirname(inFile)   
+    inFolder = os.path.dirname(inFile)
+    if not inFolder:
+        inFolder = "."   
     C2Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2')
-
-    try:
-        h5File = h5py.File(inFile,"r")
-        # sceneCenterAlongTrackSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/sceneCenterAlongTrackSpacing' ])
-        # sceneCenterGroundRangeSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/sceneCenterGroundRangeSpacing'])
-        # slantRange = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/slantRange'])
-        # slantRangeSpacing = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/slantRangeSpacing'])
-
-
-        # alongTrackUnitVectorX = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorX' ])
-        # alongTrackUnitVectorY = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorY' ])
-        # coordinateX = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/coordinateX' ])
-        # coordinateY = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/coordinateY'])
-        # elevationAngle = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/elevationAngle'])
-        # epsg = np.array(h5File['/science/LSAR/RSLC/metadata/geolocationGrid/epsg'])
-        
-    except:
-        raise('Invalid RSLC file !!')
-
-    S11 = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/HH'])
-    S12 = np.array(h5File['/science/LSAR/RSLC/swaths/frequencyA/HV'])
+    h5File = h5py.File(inFile,"r")
+    if '/science/LSAR' in h5File:
+        freq_band = 'L' 
+        print("Detected L-band data ")
+    elif '/science/SSAR' in h5File:
+        freq_band = 'S' 
+        print(" Detected S-band data")
+    else:
+        print("Neither LSAR nor SSAR data found in the file.")
+        h5File.close()
+        return
+    
+    
+    
+    S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])
+    S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])
+    
+    # xCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinateSpacing'])
+    # yCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinateSpacing'])
+    # xCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinates'])
+    # yCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinates'])
+    # projection = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/radarGrid/projection'])
+    
+    
+    
+    h5File.close()
     
     C11 = np.abs(S11)**2
     C22 = np.abs(S12)**2
