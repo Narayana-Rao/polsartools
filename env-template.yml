@@ -1,0 +1,17 @@
+name: pst-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python={{ PYTHON_VERSION }}
+  - gdal
+  - numpy
+  - h5py
+  - matplotlib
+  - scipy
+  - scikit-image
+  - pytest
+  - pip
+  - pip:
+      - polsartools
+      - pytest

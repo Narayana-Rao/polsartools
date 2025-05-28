@@ -12,11 +12,13 @@ jobs:
     name: Build ${{ matrix.os }} ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [windows-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
+        # python-version: ["3.9", "3.10", "3.11"]
+        os: [windows-latest]
         python-version: ["3.9"]
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -26,31 +28,37 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    # Set up Miniconda for Conda build
     - name: Set up Miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
-        miniconda-version: "latest"
         auto-activate-base: false
+        miniconda-version: "latest"
         python-version: ${{ matrix.python-version }}
+        activate-environment: pst-env
 
-    # **CACHE CONDA ENVIRONMENTS**
     - name: Cache Conda packages
       uses: actions/cache@v3
       with:
-        path: ~/miniconda/envs
+        path: ~/conda_pkgs_dir
         key: conda-${{ runner.os }}-${{ matrix.python-version }}
-        restore-keys: conda-${{ runner.os }}-
+        restore-keys: |
+          conda-${{ runner.os }}-
 
-    - name: Install Conda dependencies
+    - name: Prepare Conda environment file
+      shell: bash
       run: |
-        conda install -y conda-build anaconda-client  # Install Conda build tools
+        sed "s/{{ PYTHON_VERSION }}/${{ matrix.python-version }}/g" env-template.yml > environment.yml
 
-    # Install GDAL system dependencies based on the OS
+    - name: Create Conda environment
+      shell: bash -l {0}
+      run: |
+        conda env create -f environment.yml -n pst-env
+
+    # Install OS-specific GDAL dependencies
     - name: Install GDAL system dependencies (Ubuntu)
       if: runner.os == 'Linux'
       run: |
-        sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+        sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
         sudo apt-get update
         sudo apt-get install -y gdal-bin libgdal-dev
 
@@ -61,32 +69,34 @@ jobs:
         brew install gdal
         brew upgrade gdal
 
-    - name: Set up MSVC environment for Pybind11
+    - name: Set up MSVC environment (Windows)
       if: runner.os == 'Windows'
       uses: ilammy/msvc-dev-cmd@v1
-      
-        # - name: Install Microsoft C++ Build Tools
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #     choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --quiet" -y
-    #     refreshenv
-        
-    - name: Install GDAL with Conda (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        conda install -c conda-forge gdal pytest h5py
 
-    - name: Install dependencies and polsartools pip package
+    - name: Install missing DLL support for h5py (Windows)
+      if: runner.os == 'Windows'
+      shell: bash -l {0}
       run: |
+        conda activate pst-env
+        conda install -y -c conda-forge hdf5 h5py
+
+    - name: Install polsartools pip package
+      shell: bash -l {0}
+      run: |
+        conda activate pst-env
         python -m pip install --upgrade pip
-        python -m pip install -r requirements.txt
-        python -m pip install .  
+        python -m pip install .
 
     - name: Build Conda package
+      shell: bash -l {0}
       run: |
-        conda build ./conda-recipe  
+        conda activate pst-env
+        conda install -y conda-build
+        conda build ./conda-recipe
 
-    - name: Test with pytest
+    - name: Run tests
+      shell: bash -l {0}
       run: |
+        conda activate pst-env
         cd tests
         python -m pytest -v tests.py
