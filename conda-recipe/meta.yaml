@@ -1,8 +1,8 @@
-{% set version = load_file_data("polsartools/version.json")["version"] %}
+# {% set version = load_file_data("polsartools/version.json")["version"] %}
 
 package:
   name: polsartools
-  version: "{{ version }}"
+  version: "0.7"
 
 source:
   path: ..  

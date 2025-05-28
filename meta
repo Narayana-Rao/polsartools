@@ -3,6 +3,7 @@
 # /polsartools/version.json
 #  __version__.py
 #  __init__.py
+# conda-recipe/meta.yaml
 
 # BUILD DOCS
 sphinx-build -M clean docs/source docs/build
