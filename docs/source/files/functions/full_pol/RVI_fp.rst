@@ -1,12 +1,15 @@
 Radar Vegetation Index (``rvifp`` )
 ===================================
-This functionality computes the Radar vegetation index for full polarimetric SAR data. The required input and the computed output are as follows:
+.. This functionality computes the Radar vegetation index for full polarimetric SAR data. The required input and the computed output are as follows:
     
-.. code-block:: python
+.. .. code-block:: python
 
-    input : input_T3/C3_folder, window_size
-    output : RVI_FP.bin
-   
+..     input : input_T3/C3_folder, window_size
+..     output : RVI_FP.bin
+
+.. autofunction:: polsartools.rvifp
+   :noindex:
+
 The formulation of RVI is as follows:
 
 .. math::

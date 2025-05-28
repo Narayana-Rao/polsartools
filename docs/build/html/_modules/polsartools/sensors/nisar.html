@@ -415,7 +415,7 @@
 <div class="viewcode-block" id="nisar_gslc">
 <a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_gslc">[docs]</a>
 <span class="nd">@time_it</span>  
-<span class="k">def</span><span class="w"> </span><span class="nf">nisar_gslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">nisar_gslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file </span>
 <span class="sd">    and saves them into respective binary files.</span>
@@ -457,21 +457,40 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>   
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">inFolder</span><span class="p">:</span>
+        <span class="n">inFolder</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
     <span class="n">C2Folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">h5File</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
-        <span class="n">xCoordinateSpacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="s1">&#39;/science/LSAR/GSLC/grids/frequencyA/xCoordinateSpacing&#39;</span><span class="p">])</span>
-        <span class="n">yCoordinateSpacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="s1">&#39;/science/LSAR/GSLC/grids/frequencyA/yCoordinateSpacing&#39;</span><span class="p">])</span>
-        <span class="n">xCoordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="s1">&#39;/science/LSAR/GSLC/grids/frequencyA/xCoordinates&#39;</span><span class="p">])</span>
-        <span class="n">yCoordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="s1">&#39;/science/LSAR/GSLC/grids/frequencyA/yCoordinates&#39;</span><span class="p">])</span>
-        <span class="n">projection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="s1">&#39;/science/LSAR/GSLC/metadata/radarGrid/projection&#39;</span><span class="p">])</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Invalid GSLC file !!&#39;</span><span class="p">)</span>
-
-    <span class="n">S11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="s1">&#39;/science/LSAR/GSLC/grids/frequencyA/HH&#39;</span><span class="p">])</span>
-    <span class="n">S12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="s1">&#39;/science/LSAR/GSLC/grids/frequencyA/HH&#39;</span><span class="p">])</span>
+        <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Invalid .h5 file !!&#39;</span><span class="p">)</span>
     
+    
+    <span class="k">if</span> <span class="s1">&#39;/science/LSAR&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
+        <span class="n">freq_band</span> <span class="o">=</span> <span class="s1">&#39;L&#39;</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Detected L-band data &quot;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="s1">&#39;/science/SSAR&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
+        <span class="n">freq_band</span> <span class="o">=</span> <span class="s1">&#39;S&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Detected S-band data&quot;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither LSAR nor SSAR data found in the file.&quot;</span><span class="p">)</span>
+        <span class="n">h5File</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span>
+    
+    
+    <span class="n">xCoordinateSpacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/GSLC/grids/frequencyA/xCoordinateSpacing&#39;</span><span class="p">])</span>
+    <span class="n">yCoordinateSpacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/GSLC/grids/frequencyA/yCoordinateSpacing&#39;</span><span class="p">])</span>
+    <span class="n">xCoordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/GSLC/grids/frequencyA/xCoordinates&#39;</span><span class="p">])</span>
+    <span class="n">yCoordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/GSLC/grids/frequencyA/yCoordinates&#39;</span><span class="p">])</span>
+    <span class="n">projection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/GSLC/metadata/radarGrid/projection&#39;</span><span class="p">])</span>
+    <span class="n">S11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/GSLC/grids/frequencyA/HH&#39;</span><span class="p">])</span>
+    <span class="n">S12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/GSLC/grids/frequencyA/HH&#39;</span><span class="p">])</span>
+    
+    <span class="n">h5File</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
     <span class="n">C11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S11</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">C22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">C12</span> <span class="o">=</span> <span class="n">S11</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">S12</span><span class="p">)</span>
@@ -525,7 +544,7 @@
 <div class="viewcode-block" id="nisar_rslc">
 <a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_rslc">[docs]</a>
 <span class="nd">@time_it</span>  
-<span class="k">def</span><span class="w"> </span><span class="nf">nisar_rslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">nisar_rslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR RSLC HDF5 file </span>
 <span class="sd">    and saves them into respective binary files.</span>
@@ -567,29 +586,36 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>   
+    <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">inFolder</span><span class="p">:</span>
+        <span class="n">inFolder</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>   
     <span class="n">C2Folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">h5File</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
-        <span class="c1"># sceneCenterAlongTrackSpacing = np.array(h5File[&#39;/science/LSAR/RSLC/swaths/frequencyA/sceneCenterAlongTrackSpacing&#39; ])</span>
-        <span class="c1"># sceneCenterGroundRangeSpacing = np.array(h5File[&#39;/science/LSAR/RSLC/swaths/frequencyA/sceneCenterGroundRangeSpacing&#39;])</span>
-        <span class="c1"># slantRange = np.array(h5File[&#39;/science/LSAR/RSLC/swaths/frequencyA/slantRange&#39;])</span>
-        <span class="c1"># slantRangeSpacing = np.array(h5File[&#39;/science/LSAR/RSLC/swaths/frequencyA/slantRangeSpacing&#39;])</span>
-
-
-        <span class="c1"># alongTrackUnitVectorX = np.array(h5File[&#39;/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorX&#39; ])</span>
-        <span class="c1"># alongTrackUnitVectorY = np.array(h5File[&#39;/science/LSAR/RSLC/metadata/geolocationGrid/alongTrackUnitVectorY&#39; ])</span>
-        <span class="c1"># coordinateX = np.array(h5File[&#39;/science/LSAR/RSLC/metadata/geolocationGrid/coordinateX&#39; ])</span>
-        <span class="c1"># coordinateY = np.array(h5File[&#39;/science/LSAR/RSLC/metadata/geolocationGrid/coordinateY&#39;])</span>
-        <span class="c1"># elevationAngle = np.array(h5File[&#39;/science/LSAR/RSLC/metadata/geolocationGrid/elevationAngle&#39;])</span>
-        <span class="c1"># epsg = np.array(h5File[&#39;/science/LSAR/RSLC/metadata/geolocationGrid/epsg&#39;])</span>
-        
-    <span class="k">except</span><span class="p">:</span>
-        <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Invalid RSLC file !!&#39;</span><span class="p">)</span>
-
-    <span class="n">S11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="s1">&#39;/science/LSAR/RSLC/swaths/frequencyA/HH&#39;</span><span class="p">])</span>
-    <span class="n">S12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="s1">&#39;/science/LSAR/RSLC/swaths/frequencyA/HV&#39;</span><span class="p">])</span>
+    <span class="n">h5File</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;/science/LSAR&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
+        <span class="n">freq_band</span> <span class="o">=</span> <span class="s1">&#39;L&#39;</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Detected L-band data &quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">&#39;/science/SSAR&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
+        <span class="n">freq_band</span> <span class="o">=</span> <span class="s1">&#39;S&#39;</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Detected S-band data&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither LSAR nor SSAR data found in the file.&quot;</span><span class="p">)</span>
+        <span class="n">h5File</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span>
+    
+    
+    
+    <span class="n">S11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/HH&#39;</span><span class="p">])</span>
+    <span class="n">S12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/HV&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># xCoordinateSpacing = np.array(h5File[f&#39;/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinateSpacing&#39;])</span>
+    <span class="c1"># yCoordinateSpacing = np.array(h5File[f&#39;/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinateSpacing&#39;])</span>
+    <span class="c1"># xCoordinates = np.array(h5File[f&#39;/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinates&#39;])</span>
+    <span class="c1"># yCoordinates = np.array(h5File[f&#39;/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinates&#39;])</span>
+    <span class="c1"># projection = np.array(h5File[f&#39;/science/{freq_band}SAR/RSLC/metadata/radarGrid/projection&#39;])</span>
+    
+    
+    
+    <span class="n">h5File</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     
     <span class="n">C11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S11</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">C22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>

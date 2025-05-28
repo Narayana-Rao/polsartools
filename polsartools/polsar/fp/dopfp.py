@@ -6,39 +6,80 @@ from polsartools.utils.convert_matrices import C3_T3_mat
 from .fp_infiles import fp_c3t3files
 
 @time_it
-def dopfp(infolder, outname=None,window_size=1,write_flag=True,max_workers=None):
+def dopfp(infolder,  window_size=1, outType="tif", cog_flag=False, 
+          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+          max_workers=None,block_size=(512, 512)):
 
-    """
-    Computes the degree of polarimetric coherence (DOP) of a coherence matrix for full polarimetric SAR data.
+    """Calculate Barakat Degree of Polarization from full-pol SAR coherency/covariance matrix.
 
+    This function computes the Barakat Degree of Polarization (DoP) from full-polarimetric
+    SAR data using either the coherency (T3) or covariance (C3) matrix. The Barakat DoP
+    provides a generalized measure of the polarization state for partially polarized waves
+    in full-pol SAR systems.
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> dopfp("/path/to/fullpol_data")
+    
+    >>> # Advanced usage with custom parameters
+    >>> dopfp(
+    ...     infolder="/path/to/fullpol_data",
+    ...     window_size=5,
+    ...     outType="tif",
+    ...     cog_flag=True,
+    ...     block_size=(1024, 1024)
+    ... )
+    
     Parameters
     ----------
-    infolder : string
-        The folder containing the input files.
-    outname : string
-        The name of the output file. If None, the output file will be named "dop_fp.tif".
-    window_size : int
-        The size of the window used for computing the DOP.
-    write_flag : bool
-        Whether to write the output to file or not.
-    max_workers : int
-        The maximum number of workers to use for parallel processing. If None, the number of workers
-        will be set to the number of cores available.
+    infolder : str
+        Path to the input folder containing full-pol C3 or T3 matrix files.
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows improve DoP estimation
+        accuracy but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
 
     Returns
     -------
-    A geotiff file containing the DOP.
+    None
+        Writes one output file to disk:
+        - 'dop_fp.tif' or 'dop_fp.bin': Barakat Degree of Polarization image
+    
+
     """
 
     input_filepaths = fp_c3t3files(infolder)
     output_filepaths = []
-    if outname is None:
+    if outType == "bin":
+        output_filepaths.append(os.path.join(infolder, "dop_fp.bin"))
+    else:
         output_filepaths.append(os.path.join(infolder, "dop_fp.tif"))
     
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-            processing_func=process_chunk_dopfp,
-            block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=1)
+    process_chunks_parallel(input_filepaths, list(output_filepaths), 
+                            window_size=window_size, write_flag=write_flag,
+                        processing_func=process_chunk_dopfp,block_size=block_size, 
+                        max_workers=max_workers,  num_outputs=1,
+                        cog_flag=cog_flag,
+                        cog_overviews=cog_overviews,
+                        )
 
 def process_chunk_dopfp(chunks, window_size,input_filepaths,*args):
 

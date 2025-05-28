@@ -7,6 +7,70 @@ from .cp_infiles import cpc2files
 def misomega(infolder,   chi_in=45, psi_in=0, window_size=1, outType="tif", cog_flag=False, 
           cog_overviews = [2, 4, 8, 16], write_flag=True, 
           max_workers=None,block_size=(512, 512)):
+    """Perform Modified/Improved S-Omega Decomposition for compact-pol SAR data.
+
+    This function implements an enhanced version of the S-Omega decomposition
+    technique for compact-polarimetric SAR data. It decomposes the total
+    backscattered power into three components: surface scattering (Ps),
+    double-bounce scattering (Pd), and volume scattering (Pv), with improvements
+    over the traditional S-Omega method.
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> misomega("/path/to/cp_data")
+    
+    >>> # Advanced usage with custom parameters
+    >>> misomega(
+    ...     infolder="/path/to/cp_data",
+    ...     chi_in=-45,
+    ...     window_size=5,
+    ...     outType="tif",
+    ...     cog_flag=True,
+    ...     block_size=(1024, 1024)
+    ... )
+
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing compact-pol C2 matrix files.
+    chi_in : float, default=45
+        Ellipticity angle chi of the transmitted wave in degrees.
+        For circular polarization, chi = 45° (right circular) or -45° (left circular).
+    psi_in : float, default=0
+        Orientation angle psi of the transmitted wave in degrees.
+        For circular polarization, typically 0°.
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows reduce speckle noise
+        but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
+
+    Returns
+    -------
+    None
+        Writes three output files to disk:
+        1. Ps_miSOmega: Surface scattering power component
+        2. Pd_miSOmega: Double-bounce scattering power component
+        3. Pv_miSOmega: Volume scattering power component
+    """
     input_filepaths = cpc2files(infolder)
 
     output_filepaths = []

@@ -1,11 +1,16 @@
 Model Free 3-Component decomposition (``mf3cf``)
 ================================================
-This functionality computes the model free 3 component scattering power decomposition for full polarimetric SAR data. The required input and the computed output are as follows:
+.. This functionality computes the model free 3 component scattering power decomposition for full polarimetric SAR data. The required input and the computed output are as follows:
 
-.. code-block:: python
+.. .. code-block:: python
         
-        input : input_T3/C3_folder, window_size
-        output: Ps_FP.bin, Pd_FP.bin, Pv_FP.bin, Theta_FP.bin
+..         input : input_T3/C3_folder, window_size
+..         output: Ps_FP.bin, Pd_FP.bin, Pv_FP.bin, Theta_FP.bin
+
+
+.. autofunction:: polsartools.mf3cf
+   :noindex:
+
 
 The formulation of the scattering powers (:math:`P_s` : Surface, :math:`P_d` : Double bounce, :math:`P_v` : volume) is as follows:
 

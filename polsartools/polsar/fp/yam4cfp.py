@@ -5,13 +5,105 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import T3_C3_mat, C3_T3_mat
 from .fp_infiles import fp_c3t3files
 @time_it
-def yam4cfp(infolder, outname=None, model="", window_size=1,write_flag=True,max_workers=None):
 
+def yam4cfp(infolder,  model="", window_size=1, outType="tif", cog_flag=False, 
+                    cog_overviews = [2, 4, 8, 16], write_flag=True, 
+                    max_workers=None,block_size=(512, 512)):
+    
+    """Perform Yamaguchi 4-Component Decomposition for full-pol SAR data.
+
+    This function implements the Yamaguchi 4-component decomposition with three
+    different model options: original (Y4O), rotation-corrected (Y4R), and
+    extended volume scattering model (Y4S). The decomposition separates the total
+    power into surface, double-bounce, volume, and helix scattering components.
+
+    Examples
+    --------
+    >>> # Original Yamaguchi decomposition
+    >>> yam4cfp("/path/to/fullpol_data")
+    
+    >>> # Rotation-corrected decomposition
+    >>> yam4cfp(
+    ...     infolder="/path/to/fullpol_data",
+    ...     model="y4cr",
+    ...     window_size=5,
+    ...     outType="tif",
+    ...     cog_flag=True
+    ... )
+    
+    >>> # Extended volume model decomposition
+    >>> yam4cfp(
+    ...     infolder="/path/to/fullpol_data",
+    ...     model="y4cs",
+    ...     window_size=5
+    ... )
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing full-pol T3 or C3 matrix files.
+    model : {'', 'y4cr', 'y4cs'}, default=''
+        Decomposition model to use:
+        - '': Original Yamaguchi 4-component (Y4O)
+        - 'y4cr': Rotation-corrected Yamaguchi (Y4R)
+        - 'y4cs': Extended volume scattering model (Y4S)
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows reduce speckle noise
+        but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
+
+    Returns
+    -------
+    None
+        Writes four output files to disk for the selected model:
+        1. {prefix}_odd: Surface scattering power
+        2. {prefix}_dbl: Double-bounce scattering power
+        3. {prefix}_vol: Volume scattering power
+        4. {prefix}_hlx: Helix scattering power
+        where prefix is 'Yam4co', 'Yam4cr', or 'Yam4csr' based on model choice.
+
+
+    """
     input_filepaths = fp_c3t3files(infolder)
 
     output_filepaths = []
-    if outname is None:
-        # print(model)
+    if outType == "bin":
+        if not model or model=="y4co":
+            output_filepaths.append(os.path.join(infolder, "Yam4co_odd.bin"))
+            output_filepaths.append(os.path.join(infolder, "Yam4co_dbl.bin"))
+            output_filepaths.append(os.path.join(infolder, "Yam4co_vol.bin"))
+            output_filepaths.append(os.path.join(infolder, "Yam4co_hlx.bin"))
+        elif model=="y4cr":
+            output_filepaths.append(os.path.join(infolder, "Yam4cr_odd.bin"))
+            output_filepaths.append(os.path.join(infolder, "Yam4cr_dbl.bin"))
+            output_filepaths.append(os.path.join(infolder, "Yam4cr_vol.bin"))
+            output_filepaths.append(os.path.join(infolder, "Yam4cr_hlx.bin"))
+        elif model=="y4cs":
+            output_filepaths.append(os.path.join(infolder, "Yam4csr_odd.bin"))
+            output_filepaths.append(os.path.join(infolder, "Yam4csr_dbl.bin"))
+            output_filepaths.append(os.path.join(infolder, "Yam4csr_vol.bin"))
+            output_filepaths.append(os.path.join(infolder, "Yam4csr_hlx.bin"))
+        else:
+            raise(f"Invalid model!! \n model type argument must be either '' for default or Y4R or S4R")
+    
+    else:
         if not model or model=="y4co":
             output_filepaths.append(os.path.join(infolder, "Yam4co_odd.tif"))
             output_filepaths.append(os.path.join(infolder, "Yam4co_dbl.tif"))
@@ -31,10 +123,16 @@ def yam4cfp(infolder, outname=None, model="", window_size=1,write_flag=True,max_
             raise(f"Invalid model!! \n model type argument must be either '' for default or Y4R or S4R")
             
     
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, model=model, write_flag=write_flag,
-            processing_func=process_chunk_yam4cfp,
-            block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=4)
+    process_chunks_parallel(input_filepaths, list(output_filepaths), 
+                    window_size, write_flag,
+                    process_chunk_yam4cfp,
+                    *[model],
+                    block_size=block_size, 
+                    max_workers=max_workers,  num_outputs=len(output_filepaths),
+                    cog_flag=cog_flag,
+                    cog_overviews=cog_overviews,
+                    )
+
 
 def unitary_rotation(T3, teta):
     # Direct access to each slice, no transposition or extra memory allocation
@@ -60,8 +158,8 @@ def unitary_rotation(T3, teta):
     return T3
 
 # def process_chunk_yam4cfp(chunks, window_size, input_filepaths, model,*args):
-def process_chunk_yam4cfp(chunks, window_size, input_filepaths, model, *args, **kwargs):
-
+def process_chunk_yam4cfp(chunks, window_size, input_filepaths,  *args, **kwargs):
+    model = args[-1]
     # additional_arg1 = args[0] if len(args) > 0 else None
     # additional_arg2 = args[1] if len(args) > 1 else None
 

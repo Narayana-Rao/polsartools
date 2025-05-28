@@ -396,11 +396,63 @@
                   
   <section id="compact-pol-radar-vegetation-index-cprvi">
 <h1>Compact-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">cprvi</span></code>)<a class="headerlink" href="#compact-pol-radar-vegetation-index-cprvi" title="Link to this heading">#</a></h1>
-<p>This functionality computes the compact-pol radar vegetation index for compact polarimetric SAR data. The required input and the computed output are as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="p">:</span> <span class="n">input_C2_folder</span><span class="p">,</span> <span class="n">window_size</span>
-<span class="n">output</span><span class="p">:</span> <span class="n">CpRVI</span><span class="o">.</span><span class="n">bin</span>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">cprvi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/cp/cprvi.html#cprvi"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compute compact-pol Radar Vegetation Index (CpRVI) from C2 matrix data.</p>
+<p>This function processes compact-polarimetric SAR data to generate the CP-RVI, which
+is useful for vegetation monitoring and biomass estimation using compact-pol SAR systems.
+The processing is done in parallel blocks for improved performance.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage with default parameters (right circular transmission)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cprvi</span><span class="p">(</span><span class="s2">&quot;/path/to/cp_data&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Custom parameters for left circular transmission</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cprvi</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">infolder</span><span class="o">=</span><span class="s2">&quot;/path/to/cp_data&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">chi_in</span><span class="o">=-</span><span class="mi">45</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">psi_in</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">window_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cog_flag</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>infolder</strong> (<em>str</em>) – Path to the input folder containing compact-pol C2 matrix files.</p></li>
+<li><p><strong>chi_in</strong> (<em>float</em><em>, </em><em>default=45</em>) – Ellipticity angle chi of the transmitted wave in degrees.
+For circular polarization, chi = 45° (right circular) or -45° (left circular).</p></li>
+<li><p><strong>psi_in</strong> (<em>float</em><em>, </em><em>default=0</em>) – Orientation angle psi of the transmitted wave in degrees.
+For circular polarization, typically 0°.</p></li>
+<li><p><strong>window_size</strong> (<em>int</em><em>, </em><em>default=1</em>) – Size of the spatial averaging window. Larger windows reduce speckle noise
+but decrease spatial resolution.</p></li>
+<li><p><strong>outType</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output file format:
+- ‘tif’: GeoTIFF format with georeferencing information
+- ‘bin’: Raw binary format</p></li>
+<li><p><strong>cog_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
+and overviews for efficient web access.</p></li>
+<li><p><strong>cog_overviews</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for COG creation. Each number represents the
+decimation factor for that overview level.</p></li>
+<li><p><strong>write_flag</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, writes results to disk. If False, only processes data in memory.</p></li>
+<li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Maximum number of parallel processing workers. If None, uses
+CPU count - 1 workers.</p></li>
+<li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Size of processing blocks (rows, cols) for parallel computation.
+Larger blocks use more memory but may be more efficient.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Results are written to disk as either ‘cprvi.tif’ or ‘cprvi.bin’
+in the input folder.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <p>The formulation of the CpRVI is as follows:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\text{CpRVI}=\left(1-\dfrac{3}{2}\text{GD}_{\text{ID}}\right)\Big(\frac{p}{q}\Big)^{2(\frac{3}{2}\text{GD}_{\text{ID}})}\\

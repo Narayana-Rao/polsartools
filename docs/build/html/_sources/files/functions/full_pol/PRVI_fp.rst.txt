@@ -1,12 +1,16 @@
 Polarimetric Radar Vegetation Index (``prvifp`` )
 =================================================
-This functionality computes the polarimetric Radar vegetation index for full polarimetric SAR data. The required input and the computed output are as follows:
+.. This functionality computes the polarimetric Radar vegetation index for full polarimetric SAR data. The required input and the computed output are as follows:
 
-.. code-block:: python
+.. .. code-block:: python
 
-        input : input_T3/C3_folder, window_size
-        output: PRVI_FP.bin
+..         input : input_T3/C3_folder, window_size
+..         output: PRVI_FP.bin
 
+.. autofunction:: polsartools.prvifp
+   :noindex:
+
+   
 The formlation of PRVI interms of degree of polarization and cross-pol backscatter intensity can be expressed as follows: 
 
 .. math::

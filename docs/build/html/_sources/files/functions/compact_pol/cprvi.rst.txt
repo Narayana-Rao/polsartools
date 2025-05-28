@@ -1,11 +1,17 @@
 Compact-pol Radar Vegetation Index (``cprvi``)
 ==============================================
-This functionality computes the compact-pol radar vegetation index for compact polarimetric SAR data. The required input and the computed output are as follows:
+.. This functionality computes the compact-pol radar vegetation index for compact polarimetric SAR data. The required input and the computed output are as follows:
 
-.. code-block:: python
+.. .. code-block:: python
 
-        input : input_C2_folder, window_size
-        output: CpRVI.bin
+..         input : input_C2_folder, window_size
+..         output: CpRVI.bin
+
+
+.. autofunction:: polsartools.cprvi
+   :noindex:
+
+
 
 The formulation of the CpRVI is as follows:
 

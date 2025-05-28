@@ -5,21 +5,89 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import C3_T3_mat
 from .fp_infiles import fp_c3t3files
 @time_it
-def neufp(infolder, outname=None,window_size=1,write_flag=True,max_workers=None):
+def neufp(infolder,  window_size=1, outType="tif", cog_flag=False, 
+          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+          max_workers=None,block_size=(512, 512)):
+    """Perform Neumann Decomposition for full-pol SAR data.
 
+    This function implements the Neumann decomposition for full-polarimetric SAR data,
+    extracting four key parameters: polarization orientation angle (psi), degree of
+    polarization (delta_mod), phase difference (delta_pha), and helicity (tau).
+    This decomposition is particularly useful for characterizing complex scattering
+    mechanisms in urban and natural environments.
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> neufp("/path/to/fullpol_data")
+    
+    >>> # Advanced usage with custom parameters
+    >>> neufp(
+    ...     infolder="/path/to/fullpol_data",
+    ...     window_size=5,
+    ...     outType="tif",
+    ...     cog_flag=True,
+    ...     block_size=(1024, 1024)
+    ... )
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing full-pol T3 or C3 matrix files.
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows reduce speckle noise
+        but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
+
+    Returns
+    -------
+    None
+        Writes four output files to disk:
+        1. Neu_psi: Polarization orientation angle
+        2. Neu_delta_mod: Degree of polarization
+        3. Neu_delta_pha: Phase difference
+        4. Neu_tau: Helicity parameter
+
+
+    """
     input_filepaths = fp_c3t3files(infolder)
 
     output_filepaths = []
-    if outname is None:
+    if outType == "bin":
+        output_filepaths.append(os.path.join(infolder, "Neu_psi.bin"))
+        output_filepaths.append(os.path.join(infolder, "Neu_delta_mod.bin"))
+        output_filepaths.append(os.path.join(infolder, "Neu_delta_pha.bin"))
+        output_filepaths.append(os.path.join(infolder, "Neu_tau.bin"))
+    else:
         output_filepaths.append(os.path.join(infolder, "Neu_psi.tif"))
         output_filepaths.append(os.path.join(infolder, "Neu_delta_mod.tif"))
         output_filepaths.append(os.path.join(infolder, "Neu_delta_pha.tif"))
         output_filepaths.append(os.path.join(infolder, "Neu_tau.tif"))
     
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-            processing_func=process_chunk_neufp,
-            block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=4)
+    process_chunks_parallel(input_filepaths, list(output_filepaths), 
+                            window_size=window_size, write_flag=write_flag,
+                        processing_func=process_chunk_neufp,block_size=block_size, 
+                        max_workers=max_workers,  num_outputs=len(output_filepaths),
+                        cog_flag=cog_flag,
+                        cog_overviews=cog_overviews,
+                        )
 
 def process_chunk_neufp(chunks, window_size, input_filepaths, *args):
 

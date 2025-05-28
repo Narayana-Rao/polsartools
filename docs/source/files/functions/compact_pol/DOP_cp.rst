@@ -1,11 +1,17 @@
 Degree of Polarization (``dopcp``)
 ==================================
-This functionality computes the degree of polarization for compact polarimetric SAR data. The required input and the computed output are as follows:
+.. This functionality computes the degree of polarization for compact polarimetric SAR data. The required input and the computed output are as follows:
 
-.. code-block:: python
+.. .. code-block:: python
 
-        input : input_c2_folder, window_size, tau
-        output: DOP_CP.bin
+..         input : input_c2_folder, window_size, tau
+..         output: DOP_CP.bin
+
+
+.. autofunction:: polsartools.dopcp
+   :noindex:
+
+
 
 The conventional degree of polarization in terms of stokes paramters can be written as follows:
 

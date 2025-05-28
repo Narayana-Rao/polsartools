@@ -1,11 +1,17 @@
 Model Free 3-Component decomposition (``mf3cc``)
 =================================================
- This functionality computes the model free 3 component scattering power decomposition for compact polarimetric SAR data. The required input and the computed output are as follows:
+..  This functionality computes the model free 3 component scattering power decomposition for compact polarimetric SAR data. The required input and the computed output are as follows:
 
-.. code-block:: python
+.. .. code-block:: python
 
-    input : input_C2_folder, window_size, tau
-    output: Ps_CP.bin, Pd_CP.bin, Pv_CP.bin, Theta_CP.bin
+..     input : input_C2_folder, window_size, tau
+..     output: Ps_CP.bin, Pd_CP.bin, Pv_CP.bin, Theta_CP.bin
+
+
+.. autofunction:: polsartools.mf3cc
+   :noindex:
+
+
 
 The formulation of the scattering powers (:math:`P_s` : Surface, :math:`P_d`: Double bounce, :math:`P_v`: volume) is as follows:
 

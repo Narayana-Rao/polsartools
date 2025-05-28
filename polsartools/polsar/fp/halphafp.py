@@ -5,12 +5,119 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import T3_C3_mat
 from .fp_infiles import fp_c3t3files
 @time_it
-def halphafp(infolder, outname=None,window_size=1,write_flag=True,max_workers=None):
+def halphafp(infolder,  window_size=1, outType="tif", cog_flag=False, 
+          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+          max_workers=None,block_size=(512, 512)):
+    """Perform H/α/A (Entropy/Alpha/Anisotropy) decomposition for full-pol SAR data.
 
+    This function implements the Cloude-Pottier decomposition, computing entropy (H),
+    alpha angle (α), anisotropy (A), and normalized eigenvalues from full-polarimetric
+    SAR coherency (T3) or covariance (C3) matrices. This decomposition is fundamental
+    for understanding scattering mechanisms in polarimetric SAR data.
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> halphafp("/path/to/fullpol_data")
+    
+    >>> # Advanced usage with custom parameters
+    >>> halphafp(
+    ...     infolder="/path/to/fullpol_data",
+    ...     window_size=5,
+    ...     outType="tif",
+    ...     cog_flag=True,
+    ...     block_size=(1024, 1024)
+    ... )
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing full-pol T3 or C3 matrix files.
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows improve eigenvalue/eigenvector
+        estimation but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
+
+    Returns
+    -------
+    None
+        Writes six output files to disk:
+        1. H_fp: Entropy (H) [0-1]
+        2. alpha_fp: Alpha angle (α) [0°-90°]
+        3. anisotropy_fp: Anisotropy (A) [0-1]
+        4. e1_norm: Normalized first eigenvalue
+        5. e2_norm: Normalized second eigenvalue
+        6. e3_norm: Normalized third eigenvalue
+
+    Notes
+    -----
+    The H/α/A decomposition provides three main parameters:
+
+    1. Entropy (H):
+       - Range: [0, 1]
+       - H = 0: Single scattering mechanism
+       - H = 1: Random mixture of scattering mechanisms
+       - Formula: H = -∑(pᵢ log₃(pᵢ)), where pᵢ are normalized eigenvalues
+
+    2. Alpha angle (α):
+       - Range: [0°, 90°]
+       - α ≈ 0°: Surface scattering
+       - α ≈ 45°: Volume scattering
+       - α ≈ 90°: Double-bounce scattering
+       - Formula: α = ∑(pᵢαᵢ), where αᵢ are individual alpha angles
+
+    3. Anisotropy (A):
+       - Range: [0, 1]
+       - Measures relative importance of secondary mechanisms
+       - A = (λ₂ - λ₃)/(λ₂ + λ₃), where λᵢ are eigenvalues
+
+    Applications:
+    - Land cover classification
+    - Forest type mapping
+    - Urban area analysis
+    - Agricultural monitoring
+    - Target detection
+    - Change detection
+    - Soil moisture estimation
+
+
+    References
+    ----------
+    .. [1] Cloude, S. R., & Pottier, E. (1997). An Entropy Based Classification
+           Scheme for Land Applications of Polarimetric SAR.
+    .. [2] Lee, J. S., & Pottier, E. (2009). Polarimetric Radar Imaging: From
+           Basics to Applications.
+    .. [3] Cloude, S. R. (2010). Polarisation: Applications in Remote Sensing.
+    """
     input_filepaths = fp_c3t3files(infolder)
 
     output_filepaths = []
-    if outname is None:
+    if outType == "bin":
+        output_filepaths.append(os.path.join(infolder, "H_fp.bin"))
+        output_filepaths.append(os.path.join(infolder, "alpha_fp.bin"))
+        output_filepaths.append(os.path.join(infolder, "anisotropy_fp.bin"))
+        output_filepaths.append(os.path.join(infolder, "e1_norm.bin"))
+        output_filepaths.append(os.path.join(infolder, "e2_norm.bin"))
+        output_filepaths.append(os.path.join(infolder, "e3_norm.bin"))
+
+    else:
         output_filepaths.append(os.path.join(infolder, "H_fp.tif"))
         output_filepaths.append(os.path.join(infolder, "alpha_fp.tif"))
         output_filepaths.append(os.path.join(infolder, "anisotropy_fp.tif"))
@@ -18,10 +125,16 @@ def halphafp(infolder, outname=None,window_size=1,write_flag=True,max_workers=No
         output_filepaths.append(os.path.join(infolder, "e2_norm.tif"))
         output_filepaths.append(os.path.join(infolder, "e3_norm.tif"))
     
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-            processing_func=process_chunk_halphafp,
-            block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=6)
+
+    process_chunks_parallel(input_filepaths, list(output_filepaths), 
+                            window_size=window_size, write_flag=write_flag,
+                        processing_func=process_chunk_halphafp,block_size=block_size, 
+                        max_workers=max_workers,  num_outputs=len(output_filepaths),
+                        cog_flag=cog_flag,
+                        cog_overviews=cog_overviews,
+                        )
+
+
 
 def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
 

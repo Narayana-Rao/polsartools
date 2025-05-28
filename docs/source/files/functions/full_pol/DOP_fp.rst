@@ -1,11 +1,15 @@
 Degree of Polarization (``dopfp``)
 ==================================
-This functionality computes the 3D Barakat degree of polarization for full polarimetric SAR data. The required input and the computed output are as follows:
+.. This functionality computes the 3D Barakat degree of polarization for full polarimetric SAR data. The required input and the computed output are as follows:
 
-.. code-block:: python
+.. .. code-block:: python
 
-    input : input_T3/C3_folder, window_size
-    output: DOP_FP.bin
+..     input : input_T3/C3_folder, window_size
+..     output: DOP_FP.bin
+
+.. autofunction:: polsartools.dopfp
+   :noindex:
+
 
 .. math::
 

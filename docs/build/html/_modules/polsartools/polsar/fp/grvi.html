@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>polsartools.polsar.fp.grvi &#8212; PolSARtools 0.6.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=2bd037f0"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/fp/grvi';</script>
+    <link rel="icon" href="../../../../_static/icon.png"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/icon.png" class="logo__image only-light" alt=""/>
+    <img src="../../../../_static/icon.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PolSARtools</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.fp.grvi</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for polsartools.polsar.fp.grvi</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.convert_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">C3_T3_mat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.fp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">fp_c3t3files</span>
+<div class="viewcode-block" id="grvi">
+<a class="viewcode-back" href="../../../../files/functions/full_pol/GRVI.html#polsartools.grvi">[docs]</a>
+<span class="nd">@time_it</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grvi</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+          <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+          <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Generalized volume based Radar Vegetation Index (GRVI) from full-pol SAR data.</span>
+
+<span class="sd">    This function computes the Generalized volume based Radar Vegetation Index (GRVI) using</span>
+<span class="sd">    full-polarimetric SAR data from either coherency (T3) or covariance (C3) matrices.</span>
+<span class="sd">    GRVI is an advanced vegetation index that accounts for various scattering mechanisms</span>
+<span class="sd">    and is particularly effective for vegetation structure characterization.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Basic usage with default parameters</span>
+<span class="sd">    &gt;&gt;&gt; grvi(&quot;/path/to/fullpol_data&quot;)</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # Advanced usage with custom parameters</span>
+<span class="sd">    &gt;&gt;&gt; grvi(</span>
+<span class="sd">    ...     infolder=&quot;/path/to/fullpol_data&quot;,</span>
+<span class="sd">    ...     window_size=5,</span>
+<span class="sd">    ...     outType=&quot;tif&quot;,</span>
+<span class="sd">    ...     cog_flag=True,</span>
+<span class="sd">    ...     block_size=(1024, 1024)</span>
+<span class="sd">    ... )</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    infolder : str</span>
+<span class="sd">        Path to the input folder containing full-pol T3 or C3 matrix files.</span>
+<span class="sd">    window_size : int, default=1</span>
+<span class="sd">        Size of the spatial averaging window. Larger windows reduce speckle noise</span>
+<span class="sd">        but decrease spatial resolution.</span>
+<span class="sd">    outType : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">        Output file format:</span>
+<span class="sd">        - &#39;tif&#39;: GeoTIFF format with georeferencing information</span>
+<span class="sd">        - &#39;bin&#39;: Raw binary format</span>
+<span class="sd">    cog_flag : bool, default=False</span>
+<span class="sd">        If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling</span>
+<span class="sd">        and overviews for efficient web access.</span>
+<span class="sd">    cog_overviews : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">        Overview levels for COG creation. Each number represents the</span>
+<span class="sd">        decimation factor for that overview level.</span>
+<span class="sd">    write_flag : bool, default=True</span>
+<span class="sd">        If True, writes results to disk. If False, only processes data in memory.</span>
+<span class="sd">    max_workers : int | None, default=None</span>
+<span class="sd">        Maximum number of parallel processing workers. If None, uses</span>
+<span class="sd">        CPU count - 1 workers.</span>
+<span class="sd">    block_size : tuple[int, int], default=(512, 512)</span>
+<span class="sd">        Size of processing blocks (rows, cols) for parallel computation.</span>
+<span class="sd">        Larger blocks use more memory but may be more efficient.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Writes one output file to disk:</span>
+<span class="sd">        - &#39;grvi.tif&#39; or &#39;grvi.bin&#39;: GRVI image</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">input_filepaths</span> <span class="o">=</span> <span class="n">fp_c3t3files</span><span class="p">(</span><span class="n">infolder</span><span class="p">)</span>
+    
+    <span class="n">output_filepaths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">outType</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;grvi.bin&quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;grvi.tif&quot;</span><span class="p">))</span>
+
+    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> 
+                            <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
+                        <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_grvi</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
+                        <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
+                        <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                        <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_grvi</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">input_filepaths</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="s1">&#39;T11&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;T22&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;T33&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span>
+        <span class="n">t11_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">t12_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">t13_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">t21_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t12_T1</span><span class="p">)</span>
+        <span class="n">t22_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">t23_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+        <span class="n">t31_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t13_T1</span><span class="p">)</span>
+        <span class="n">t32_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t23_T1</span><span class="p">)</span>
+        <span class="n">t33_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+
+        <span class="c1"># T_T1 = np.array([[t11_T1, t12_T1, t13_T1], </span>
+        <span class="c1">#              [t21_T1, t22_T1, t23_T1], </span>
+        <span class="c1">#              [t31_T1, t32_T1, t33_T1]])</span>
+
+
+    <span class="k">if</span> <span class="s1">&#39;C11&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;C22&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;C33&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span>
+        <span class="n">C11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">C12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">C13</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">C21</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">C12</span><span class="p">)</span>
+        <span class="n">C22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">C23</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+        <span class="n">C31</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">C13</span><span class="p">)</span>
+        <span class="n">C32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">C23</span><span class="p">)</span>
+        <span class="n">C33</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+        <span class="n">C3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">C11</span><span class="p">,</span> <span class="n">C12</span><span class="p">,</span> <span class="n">C13</span><span class="p">],</span> 
+                         <span class="p">[</span><span class="n">C21</span><span class="p">,</span> <span class="n">C22</span><span class="p">,</span> <span class="n">C23</span><span class="p">],</span> 
+                         <span class="p">[</span><span class="n">C31</span><span class="p">,</span> <span class="n">C32</span><span class="p">,</span> <span class="n">C33</span><span class="p">]])</span>
+
+        <span class="n">T_T1</span> <span class="o">=</span> <span class="n">C3_T3_mat</span><span class="p">(</span><span class="n">C3</span><span class="p">)</span>
+
+        <span class="n">t11_T1</span> <span class="o">=</span> <span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,:,:]</span>
+        <span class="n">t12_T1</span> <span class="o">=</span> <span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,:,:]</span>
+        <span class="n">t13_T1</span> <span class="o">=</span> <span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,:,:]</span>
+        <span class="n">t21_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t12_T1</span><span class="p">)</span>
+        <span class="n">t22_T1</span> <span class="o">=</span> <span class="n">T_T1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,:,:]</span>
+        <span class="n">t23_T1</span> <span class="o">=</span> <span class="n">T_T1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,:,:]</span>
+        <span class="n">t31_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t13_T1</span><span class="p">)</span>
+        <span class="n">t32_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t23_T1</span><span class="p">)</span>
+        <span class="n">t33_T1</span> <span class="o">=</span> <span class="n">T_T1</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,:,:]</span>
+
+
+    <span class="c1"># if window_size&gt;1:</span>
+    <span class="c1">#     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)</span>
+
+    <span class="c1">#     t11f = conv2d(T_T1[0,0,:,:],kernel)</span>
+    <span class="c1">#     t12f = conv2d(T_T1[0,1,:,:],kernel)</span>
+    <span class="c1">#     t13f = conv2d(T_T1[0,2,:,:],kernel)</span>
+        
+    <span class="c1">#     t21f = conv2d(T_T1[1,0,:,:],kernel)</span>
+    <span class="c1">#     t22f = conv2d(T_T1[1,1,:,:],kernel)</span>
+    <span class="c1">#     t23f = conv2d(T_T1[1,2,:,:],kernel)</span>
+
+    <span class="c1">#     t31f = conv2d(T_T1[2,0,:,:],kernel)</span>
+    <span class="c1">#     t32f = conv2d(T_T1[2,1,:,:],kernel)</span>
+    <span class="c1">#     t33f = conv2d(T_T1[2,2,:,:],kernel)</span>
+
+    <span class="c1">#     T_T1 = np.array([[t11f, t12f, t13f], [t21f, t22f, t23f], [t31f, t32f, t33f]])</span>
+
+    <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">t11_T1</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">t11_T1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">span</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">rho_13_hhvv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="c1"># temp_rvi = np.zeros((ncols,nrows))</span>
+    <span class="n">fp22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">GD_t1_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">GD_t1_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">GD_t1_rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">GD_t1_nd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">GD_t1_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">GD_t1_lh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">GD_t1_rh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">beta_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">temp_gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    <span class="n">t_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">t_nd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">t_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">t_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">46</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">theta_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncols</span><span class="p">,</span><span class="n">nrows</span><span class="p">))</span>
+    
+    <span class="n">D</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="c1"># %% for window processing</span>
+    <span class="n">wsi</span><span class="o">=</span><span class="n">wsj</span><span class="o">=</span><span class="n">window_size</span>
+    
+    <span class="n">inci</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="n">wsi</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># Up &amp; down movement margin from the central row</span>
+    <span class="n">incj</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="n">wsj</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># Left &amp; right movement from the central column</span>
+    <span class="c1"># % Starting row and column fixed by the size of the patch extracted from the image of 21/10/1999</span>
+    
+    <span class="n">starti</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="n">wsi</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># Starting row for window processing</span>
+    <span class="n">startj</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="n">wsj</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span> <span class="c1"># Starting column for window processing</span>
+    
+    <span class="n">stopi</span><span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nrows</span><span class="o">-</span><span class="n">inci</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="c1"># Stop row for window processing</span>
+    <span class="n">stopj</span><span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ncols</span><span class="o">-</span><span class="n">incj</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="c1"># Stop column for window processing</span>
+            <span class="c1"># %% Elementary targets</span>
+    
+    <span class="n">M_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">M_nd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.625</span><span class="p">,</span><span class="mf">0.375</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mf">0.375</span><span class="p">,</span><span class="mf">0.625</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]])</span>
+    <span class="n">M_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">M_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.625</span><span class="p">,</span><span class="mf">0.375</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mf">0.375</span><span class="p">,</span><span class="mf">0.625</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">]])</span>
+    <span class="n">M_lh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">M_rh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+    
+    <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">startj</span><span class="p">,</span><span class="n">stopj</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">starti</span><span class="p">,</span><span class="n">stopi</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    
+            <span class="n">t11s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">t11_T1</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="n">inci</span><span class="p">:</span><span class="n">ii</span><span class="o">+</span><span class="n">inci</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">jj</span><span class="o">-</span><span class="n">incj</span><span class="p">:</span><span class="n">jj</span><span class="o">+</span><span class="n">incj</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="c1">#i sample</span>
+            <span class="n">t12s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">t12_T1</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="n">inci</span><span class="p">:</span><span class="n">ii</span><span class="o">+</span><span class="n">inci</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">jj</span><span class="o">-</span><span class="n">incj</span><span class="p">:</span><span class="n">jj</span><span class="o">+</span><span class="n">incj</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="c1">#i sample</span>
+            <span class="n">t13s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">t13_T1</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="n">inci</span><span class="p">:</span><span class="n">ii</span><span class="o">+</span><span class="n">inci</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">jj</span><span class="o">-</span><span class="n">incj</span><span class="p">:</span><span class="n">jj</span><span class="o">+</span><span class="n">incj</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="c1">#i sample</span>
+            
+            <span class="n">t21s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">t21_T1</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="n">inci</span><span class="p">:</span><span class="n">ii</span><span class="o">+</span><span class="n">inci</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">jj</span><span class="o">-</span><span class="n">incj</span><span class="p">:</span><span class="n">jj</span><span class="o">+</span><span class="n">incj</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="c1">#i sample</span>
+            <span class="n">t22s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">t22_T1</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="n">inci</span><span class="p">:</span><span class="n">ii</span><span class="o">+</span><span class="n">inci</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">jj</span><span class="o">-</span><span class="n">incj</span><span class="p">:</span><span class="n">jj</span><span class="o">+</span><span class="n">incj</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="c1">#i sample</span>
+            <span class="n">t23s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">t23_T1</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="n">inci</span><span class="p">:</span><span class="n">ii</span><span class="o">+</span><span class="n">inci</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">jj</span><span class="o">-</span><span class="n">incj</span><span class="p">:</span><span class="n">jj</span><span class="o">+</span><span class="n">incj</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="c1">#i sample</span>
+            
+            <span class="n">t31s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">t31_T1</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="n">inci</span><span class="p">:</span><span class="n">ii</span><span class="o">+</span><span class="n">inci</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">jj</span><span class="o">-</span><span class="n">incj</span><span class="p">:</span><span class="n">jj</span><span class="o">+</span><span class="n">incj</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="c1">#i sample</span>
+            <span class="n">t32s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">t32_T1</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="n">inci</span><span class="p">:</span><span class="n">ii</span><span class="o">+</span><span class="n">inci</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">jj</span><span class="o">-</span><span class="n">incj</span><span class="p">:</span><span class="n">jj</span><span class="o">+</span><span class="n">incj</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="c1">#i sample</span>
+            <span class="n">t33s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">t33_T1</span><span class="p">[</span><span class="n">ii</span><span class="o">-</span><span class="n">inci</span><span class="p">:</span><span class="n">ii</span><span class="o">+</span><span class="n">inci</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">jj</span><span class="o">-</span><span class="n">incj</span><span class="p">:</span><span class="n">jj</span><span class="o">+</span><span class="n">incj</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="c1">#i sample</span>
+    
+            <span class="n">T_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">t11s</span><span class="p">,</span> <span class="n">t12s</span><span class="p">,</span> <span class="n">t13s</span><span class="p">],</span> <span class="p">[</span><span class="n">t21s</span><span class="p">,</span> <span class="n">t22s</span><span class="p">,</span> <span class="n">t23s</span><span class="p">],</span> <span class="p">[</span><span class="n">t31s</span><span class="p">,</span> <span class="n">t32s</span><span class="p">,</span> <span class="n">t33s</span><span class="p">]])</span>
+    
+            <span class="c1">#Coherency matrix</span>
+            <span class="n">C_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">((</span><span class="n">D</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">T_T1</span><span class="p">),</span><span class="n">D</span><span class="p">);</span>
+            
+            <span class="n">span</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">t11s</span> <span class="o">+</span> <span class="n">t22s</span> <span class="o">+</span> <span class="n">t33s</span><span class="p">)</span>
+            <span class="n">temp_span</span> <span class="o">=</span> <span class="n">span</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span>
+            <span class="c1"># self.progress.emit(str(&#39;span Done&#39;))</span>
+            <span class="n">Temp_T1</span> <span class="o">=</span> <span class="n">T_T1</span>
+            
+            <span class="n">t11</span> <span class="o">=</span> <span class="n">Temp_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">];</span> <span class="n">t12</span> <span class="o">=</span> <span class="n">Temp_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span>        <span class="n">t13</span> <span class="o">=</span> <span class="n">Temp_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">t21</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t12</span><span class="p">);</span> <span class="n">t22</span> <span class="o">=</span> <span class="n">Temp_T1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span>        <span class="n">t23</span> <span class="o">=</span> <span class="n">Temp_T1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">t31</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t13</span><span class="p">);</span> <span class="n">t32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t23</span><span class="p">);</span>        <span class="n">t33</span> <span class="o">=</span> <span class="n">Temp_T1</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+            
+            <span class="c1"># %% Ratio of VV/HH (Used in Yamagichi Volume)</span>
+            
+            <span class="n">hh</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">t11</span> <span class="o">+</span> <span class="n">t22</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">t12</span><span class="p">));</span> <span class="c1">#HH</span>
+            <span class="n">hv</span> <span class="o">=</span> <span class="n">t33</span><span class="p">;</span> <span class="c1">#HV</span>
+            <span class="n">vv</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">t11</span> <span class="o">+</span> <span class="n">t22</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">t12</span><span class="p">));</span> <span class="c1">#VV</span>
+            <span class="n">vol_con</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">vv</span><span class="o">/</span><span class="n">hh</span><span class="p">);</span>
+    
+    
+            <span class="c1"># %% Kennaugh Matrix</span>
+            
+            <span class="n">m11</span> <span class="o">=</span> <span class="n">t11</span><span class="o">+</span><span class="n">t22</span><span class="o">+</span><span class="n">t33</span><span class="p">;</span> <span class="n">m12</span> <span class="o">=</span> <span class="n">t12</span><span class="o">+</span><span class="n">t21</span><span class="p">;</span> <span class="n">m13</span> <span class="o">=</span> <span class="n">t13</span><span class="o">+</span><span class="n">t31</span><span class="p">;</span> <span class="n">m14</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t23</span> <span class="o">-</span> <span class="n">t32</span><span class="p">);</span>
+            <span class="n">m21</span> <span class="o">=</span> <span class="n">t12</span><span class="o">+</span><span class="n">t21</span><span class="p">;</span> <span class="n">m22</span> <span class="o">=</span> <span class="n">t11</span><span class="o">+</span><span class="n">t22</span><span class="o">-</span><span class="n">t33</span><span class="p">;</span> <span class="n">m23</span> <span class="o">=</span> <span class="n">t23</span><span class="o">+</span><span class="n">t32</span><span class="p">;</span> <span class="n">m24</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t13</span><span class="o">-</span><span class="n">t31</span><span class="p">);</span>
+            <span class="n">m31</span> <span class="o">=</span> <span class="n">t13</span><span class="o">+</span><span class="n">t31</span><span class="p">;</span> <span class="n">m32</span> <span class="o">=</span> <span class="n">t23</span><span class="o">+</span><span class="n">t32</span><span class="p">;</span> <span class="n">m33</span> <span class="o">=</span> <span class="n">t11</span><span class="o">-</span><span class="n">t22</span><span class="o">+</span><span class="n">t33</span><span class="p">;</span> <span class="n">m34</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t12</span><span class="o">-</span><span class="n">t21</span><span class="p">);</span>
+            <span class="n">m41</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t23</span><span class="o">-</span><span class="n">t32</span><span class="p">);</span> <span class="n">m42</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t13</span><span class="o">-</span><span class="n">t31</span><span class="p">);</span> <span class="n">m43</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t12</span><span class="o">-</span><span class="n">t21</span><span class="p">);</span> <span class="n">m44</span> <span class="o">=</span> <span class="o">-</span><span class="n">t11</span><span class="o">+</span><span class="n">t22</span><span class="o">+</span><span class="n">t33</span><span class="p">;</span>
+            
+            <span class="n">M_T</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">m11</span><span class="p">,</span> <span class="n">m12</span><span class="p">,</span> <span class="n">m13</span><span class="p">,</span> <span class="n">m14</span><span class="p">],</span> <span class="p">[</span><span class="n">m21</span><span class="p">,</span> <span class="n">m22</span><span class="p">,</span> <span class="n">m23</span><span class="p">,</span> <span class="n">m24</span><span class="p">],</span> <span class="p">[</span><span class="n">m31</span><span class="p">,</span> <span class="n">m32</span><span class="p">,</span> <span class="n">m33</span><span class="p">,</span> <span class="n">m34</span><span class="p">],</span> <span class="p">[</span><span class="n">m41</span><span class="p">,</span> <span class="n">m42</span><span class="p">,</span> <span class="n">m43</span><span class="p">,</span> <span class="n">m44</span><span class="p">]]);</span>
+            
+            
+            <span class="n">M_T_theta</span> <span class="o">=</span> <span class="n">M_T</span><span class="p">;</span>
+            
+            <span class="c1"># %% GVSM</span>
+            
+            <span class="n">t011</span> <span class="o">=</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+            <span class="n">t012</span> <span class="o">=</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">M_T_theta</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+            <span class="n">t013</span> <span class="o">=</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">M_T_theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+            <span class="n">t021</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t012</span><span class="p">);</span>
+            <span class="n">t022</span> <span class="o">=</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+            <span class="n">t023</span> <span class="o">=</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">M_T_theta</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+            <span class="n">t031</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t013</span><span class="p">);</span>
+            <span class="n">t032</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t023</span><span class="p">);</span>
+            <span class="n">t033</span> <span class="o">=</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">M_T_theta</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+            
+            <span class="c1"># %% T to C</span>
+            
+            <span class="n">T0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">t011</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">t012</span><span class="p">,</span> <span class="n">t013</span><span class="p">],</span> <span class="p">[</span><span class="n">t021</span><span class="p">,</span> <span class="n">t022</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">t023</span><span class="p">],</span> <span class="p">[</span><span class="n">t031</span><span class="p">,</span> <span class="n">t032</span><span class="p">,</span> <span class="n">t033</span><span class="o">/</span><span class="mi">2</span><span class="p">]]);</span>
+            <span class="n">C0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">((</span><span class="n">D</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">T0</span><span class="p">),</span><span class="n">D</span><span class="p">);</span>
+    
+            <span class="c1"># %% Gamma/Rho</span>
+            
+            <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">C0</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]);</span> <span class="n">rho</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span>
+            <span class="n">temp_gamma</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">gamma</span><span class="p">);</span> <span class="c1">#% variable to save</span>
+            
+            <span class="c1"># %% Covariance matrix</span>
+            
+            <span class="n">c11</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">;</span> <span class="n">c12</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">c13</span> <span class="o">=</span> <span class="n">rho</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">gamma</span><span class="p">);</span>
+            <span class="n">c21</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">c22</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">-</span> <span class="n">rho</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">gamma</span><span class="p">);</span> <span class="n">c23</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">c31</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">rho</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">gamma</span><span class="p">);</span> <span class="n">c32</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">c33</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+            
+            <span class="n">R</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">-</span> <span class="n">rho</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">gamma</span><span class="p">);</span>
+            <span class="n">C1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">R</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">c11</span><span class="p">,</span> <span class="n">c12</span><span class="p">,</span> <span class="n">c13</span><span class="p">],</span> <span class="p">[</span><span class="n">c21</span><span class="p">,</span> <span class="n">c22</span><span class="p">,</span> <span class="n">c23</span><span class="p">],</span> <span class="p">[</span><span class="n">c31</span><span class="p">,</span> <span class="n">c32</span><span class="p">,</span> <span class="n">c33</span><span class="p">]]);</span>
+            <span class="c1"># self.progress.emit(str(&#39;gamma and R Done&#39;))</span>
+            <span class="c1"># %% Coherency matrix</span>
+            
+            <span class="n">T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">C1</span><span class="p">),(</span><span class="n">D</span><span class="o">.</span><span class="n">T</span><span class="p">));</span>
+            
+            <span class="n">t11</span> <span class="o">=</span> <span class="n">T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">];</span> <span class="n">t12</span> <span class="o">=</span> <span class="n">T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span> <span class="n">t13</span> <span class="o">=</span> <span class="n">T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">];</span>
+            <span class="n">t21</span> <span class="o">=</span> <span class="n">T1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">];</span> <span class="n">t22</span> <span class="o">=</span> <span class="n">T1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span> <span class="n">t23</span> <span class="o">=</span> <span class="n">T1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">];</span>
+            <span class="n">t31</span> <span class="o">=</span> <span class="n">T1</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">];</span> <span class="n">t32</span> <span class="o">=</span> <span class="n">T1</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span> <span class="n">t33</span> <span class="o">=</span> <span class="n">T1</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">];</span>
+            
+            <span class="n">m11</span> <span class="o">=</span> <span class="n">t11</span><span class="o">+</span><span class="n">t22</span><span class="o">+</span><span class="n">t33</span><span class="p">;</span> <span class="n">m12</span> <span class="o">=</span> <span class="n">t12</span><span class="o">+</span><span class="n">t21</span><span class="p">;</span> <span class="n">m13</span> <span class="o">=</span> <span class="n">t13</span><span class="o">+</span><span class="n">t31</span><span class="p">;</span> <span class="n">m14</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t23</span> <span class="o">-</span> <span class="n">t32</span><span class="p">);</span>
+            <span class="n">m21</span> <span class="o">=</span> <span class="n">t12</span><span class="o">+</span><span class="n">t21</span><span class="p">;</span> <span class="n">m22</span> <span class="o">=</span> <span class="n">t11</span><span class="o">+</span><span class="n">t22</span><span class="o">-</span><span class="n">t33</span><span class="p">;</span> <span class="n">m23</span> <span class="o">=</span> <span class="n">t23</span><span class="o">+</span><span class="n">t32</span><span class="p">;</span> <span class="n">m24</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t13</span><span class="o">-</span><span class="n">t31</span><span class="p">);</span>
+            <span class="n">m31</span> <span class="o">=</span> <span class="n">t13</span><span class="o">+</span><span class="n">t31</span><span class="p">;</span> <span class="n">m32</span> <span class="o">=</span> <span class="n">t23</span><span class="o">+</span><span class="n">t32</span><span class="p">;</span> <span class="n">m33</span> <span class="o">=</span> <span class="n">t11</span><span class="o">-</span><span class="n">t22</span><span class="o">+</span><span class="n">t33</span><span class="p">;</span> <span class="n">m34</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t12</span><span class="o">-</span><span class="n">t21</span><span class="p">);</span>
+            <span class="n">m41</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t23</span><span class="o">-</span><span class="n">t32</span><span class="p">);</span> <span class="n">m42</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t13</span><span class="o">-</span><span class="n">t31</span><span class="p">);</span> <span class="n">m43</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">t12</span><span class="o">-</span><span class="n">t21</span><span class="p">);</span> <span class="n">m44</span> <span class="o">=</span> <span class="o">-</span><span class="n">t11</span><span class="o">+</span><span class="n">t22</span><span class="o">+</span><span class="n">t33</span><span class="p">;</span>
+            
+            <span class="c1"># %% Generalized Random Volume (Antropov et al.)</span>
+            
+            <span class="n">M_rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">m11</span><span class="p">,</span> <span class="n">m12</span><span class="p">,</span> <span class="n">m13</span><span class="p">,</span> <span class="n">m14</span><span class="p">],</span> <span class="p">[</span><span class="n">m21</span><span class="p">,</span> <span class="n">m22</span><span class="p">,</span> <span class="n">m23</span><span class="p">,</span> <span class="n">m24</span><span class="p">],</span> <span class="p">[</span><span class="n">m31</span><span class="p">,</span> <span class="n">m32</span><span class="p">,</span> <span class="n">m33</span><span class="p">,</span> <span class="n">m34</span><span class="p">],</span> <span class="p">[</span><span class="n">m41</span><span class="p">,</span> <span class="n">m42</span><span class="p">,</span> <span class="n">m43</span><span class="p">,</span> <span class="n">m44</span><span class="p">]]));</span>
+            
+            <span class="n">f</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    
+            <span class="c1"># %% GD Volume</span>
+            
+            <span class="n">num1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_rv</span><span class="p">);</span> <span class="c1">#% volume</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">num1</span><span class="p">);</span>
+            <span class="n">den1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_T_theta</span><span class="p">))));</span>
+            <span class="n">den2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_rv</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_rv</span><span class="p">))));</span>
+            <span class="n">den</span> <span class="o">=</span> <span class="n">den1</span><span class="o">*</span><span class="n">den2</span><span class="p">;</span>
+            <span class="n">temp_aa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">den</span><span class="p">)</span><span class="o">*</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">);</span>
+            <span class="n">GD_t1_rv</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">temp_aa</span><span class="o">/</span><span class="mi">180</span><span class="p">);</span>
+            <span class="c1"># self.progress.emit(str(&#39;GD volume Done&#39;))</span>
+            <span class="c1"># %% GD ALL</span>
+            
+            <span class="n">num1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_c</span><span class="p">);</span> <span class="c1">#% cylinder</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">num1</span><span class="p">);</span>
+            <span class="n">den1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_T_theta</span><span class="p">))));</span>
+            <span class="n">den2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_c</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_c</span><span class="p">))));</span>
+            <span class="n">den</span> <span class="o">=</span> <span class="n">den1</span><span class="o">*</span><span class="n">den2</span><span class="p">;</span>
+            <span class="n">temp_aa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">den</span><span class="p">)</span><span class="o">*</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">);</span>
+            <span class="n">GD_t1_c</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">temp_aa</span><span class="o">/</span><span class="mi">180</span><span class="p">);</span>
+            <span class="c1"># self.progress.emit(str(&#39;GD cylider Done&#39;))</span>
+            
+            <span class="n">num1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_t</span><span class="p">);</span> <span class="c1">#% trihedral</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">num1</span><span class="p">);</span>
+            <span class="n">den1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_T_theta</span><span class="p">))));</span>
+            <span class="n">den2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_t</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_t</span><span class="p">))));</span>
+            <span class="n">den</span> <span class="o">=</span> <span class="n">den1</span><span class="o">*</span><span class="n">den2</span><span class="p">;</span>
+            <span class="n">temp_aa</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">den</span><span class="p">)</span><span class="o">*</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">;</span>
+            <span class="n">GD_t1_t</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">temp_aa</span><span class="o">/</span><span class="mi">180</span><span class="p">);</span>
+            <span class="c1"># self.progress.emit(str(&#39;GD trihedral Done&#39;))</span>
+            
+            <span class="n">num1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_d</span><span class="p">);</span> <span class="c1">#% dihedral</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">num1</span><span class="p">);</span>
+            <span class="n">den1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_T_theta</span><span class="p">))));</span>
+            <span class="n">den2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_d</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_d</span><span class="p">))));</span>
+            <span class="n">den</span> <span class="o">=</span> <span class="n">den1</span><span class="o">*</span><span class="n">den2</span><span class="p">;</span>
+            <span class="n">temp_aa</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">den</span><span class="p">)</span><span class="o">*</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">;</span>
+            <span class="n">GD_t1_d</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">temp_aa</span><span class="o">/</span><span class="mi">180</span><span class="p">);</span>
+            <span class="c1"># self.progress.emit(str(&#39;GD dihedral Done&#39;))</span>
+            
+            <span class="n">num1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_nd</span><span class="p">);</span> <span class="c1">#% n-dihedral</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">num1</span><span class="p">);</span>
+            <span class="n">den1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_T_theta</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_T_theta</span><span class="p">))));</span>
+            <span class="n">den2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(((</span><span class="n">M_nd</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">),</span><span class="n">M_nd</span><span class="p">))));</span>
+            <span class="n">den</span> <span class="o">=</span> <span class="n">den1</span><span class="o">*</span><span class="n">den2</span><span class="p">;</span>
+            <span class="n">temp_aa</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">den</span><span class="p">)</span><span class="o">*</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">;</span>
+            <span class="n">GD_t1_nd</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">temp_aa</span><span class="o">/</span><span class="mi">180</span><span class="p">);</span>
+            <span class="c1"># self.progress.emit(str(&#39;GD n-dihedral Done&#39;))</span>
+            
+            <span class="c1"># %% VI</span>
+            
+            <span class="n">t_t</span> <span class="o">=</span> <span class="n">GD_t1_t</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">];</span>
+            <span class="n">t_d</span> <span class="o">=</span> <span class="n">GD_t1_d</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">];</span>
+            <span class="n">t_c</span> <span class="o">=</span> <span class="n">GD_t1_c</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">];</span>
+            <span class="n">t_nd</span> <span class="o">=</span> <span class="n">GD_t1_nd</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">];</span>
+            
+            <span class="n">a</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">([</span><span class="n">t_t</span><span class="p">,</span> <span class="n">t_d</span><span class="p">,</span> <span class="n">t_c</span><span class="p">,</span> <span class="n">t_nd</span><span class="p">]);</span>
+            <span class="n">b</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">([</span><span class="n">t_t</span><span class="p">,</span> <span class="n">t_d</span><span class="p">,</span> <span class="n">t_c</span><span class="p">,</span> <span class="n">t_nd</span><span class="p">]);</span>
+            <span class="n">beta</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">]</span><span class="o">/</span><span class="n">a</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">;</span>
+            
+    <span class="c1"># %% GRVI</span>
+    <span class="n">f</span><span class="p">[</span><span class="n">f</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">vi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">GD_t1_rv</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">f</span><span class="p">)</span><span class="o">*</span><span class="n">GD_t1_rv</span><span class="p">);</span>
+    
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">GD_t1_rv</span><span class="p">);</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">GD_t1_rv</span><span class="p">);</span>
+    
+    <span class="n">f</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">idx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">GD_t1_rv</span><span class="o">&gt;</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">vi</span><span class="p">[</span><span class="n">idx1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">vi</span><span class="p">[</span><span class="o">~</span><span class="n">idx1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vi</span><span class="p">[</span><span class="o">~</span><span class="n">idx1</span><span class="p">];</span>
+    <span class="n">vi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">vi</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Narayanarao Bhogapurapu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

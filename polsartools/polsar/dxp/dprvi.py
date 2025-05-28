@@ -5,44 +5,57 @@ from polsartools.utils.utils import conv2d,time_it,eig22
 from .dxp_infiles import dxpc2files
 @time_it
 def dprvi(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
-    """
-        
-        Computes  dual-pol Radar vegetation index from the input dual-polarization (dual-pol) C2 matrix data, and writes
-        the output in various formats (GeoTIFF or binary). The computation is performed in parallel for efficiency.
+    """Compute dual-pol Radar Vegetation Index (DpRVI) from C2 matrix data.
 
-        Example:
-        --------
-        >>> dprvi("path_to_C2_folder", window_size=5, outType="tif", cog_flag=True)
-        This will compute dual-pol Radar vegetation index from the C2 matrix in the specified folder,
-        generating output in Geotiff format with Cloud Optimized GeoTIFF settings enabled.
-        
-        Parameters:
-        -----------
-        infolder : str
-            Path to the input folder containing C2 matrix data.
-        window_size : int, optional
-            Size of the processing window (default is 1).
-        outType : str, optional
-            Output format of the files; can be "tif" (GeoTIFF) or "bin" (binary) (default is "tif").
-        cog_flag : bool, optional
-            If True, outputs Cloud Optimized GeoTIFF (COG) (default is False).
-        cog_overviews : list of int, optional
-            List of overview levels to be used for COGs (default is [2, 4, 8, 16]).
-        write_flag : bool, optional
-            Whether to write the computed output files (default is True).
-        max_workers : int, optional
-            Number of parallel workers for processing (default is None, which uses one less than the number of available CPU cores).
-        block_size : tuple of int, optional
-            Size of each processing block (default is (512, 512)), defining the spatial chunk dimensions used in parallel computation.
+    This function processes dual-polarization SAR data to generate the DpRVI, which is useful
+    for vegetation monitoring and biomass estimation. The processing is done in parallel
+    blocks for improved performance.
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> dprvi("/path/to/c2_data")
     
-        Returns:
-        --------
-        None
-            The function writes the computed dual-pol  Radar vegetation index to the specified output format.
+    >>> # Advanced usage with custom parameters
+    >>> dprvi(
+    ...     infolder="/path/to/c2_data",
+    ...     window_size=3,
+    ...     outType="tif",
+    ...     cog_flag=True,
+    ...     block_size=(1024, 1024)
+    ... )
+    
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing C2 matrix files.
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows reduce speckle noise
+        but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
 
-        Output Files:
-        -------------
-        - "dprvi.tif" or "dprvi.bin"
+    Returns
+    -------
+    None
+        Results are written to disk as either 'dprvi.tif' or 'dprvi.bin'
+        in the input folder.
 
     """
     input_filepaths = dxpc2files(infolder)

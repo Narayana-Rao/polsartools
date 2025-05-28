@@ -342,44 +342,57 @@
 <a class="viewcode-back" href="../../../../files/functions/dual_pol/DpRVI.html#polsartools.dprvi">[docs]</a>
 <span class="nd">@time_it</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">dprvi</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        </span>
-<span class="sd">        Computes  dual-pol Radar vegetation index from the input dual-polarization (dual-pol) C2 matrix data, and writes</span>
-<span class="sd">        the output in various formats (GeoTIFF or binary). The computation is performed in parallel for efficiency.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute dual-pol Radar Vegetation Index (DpRVI) from C2 matrix data.</span>
 
-<span class="sd">        Example:</span>
-<span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt; dprvi(&quot;path_to_C2_folder&quot;, window_size=5, outType=&quot;tif&quot;, cog_flag=True)</span>
-<span class="sd">        This will compute dual-pol Radar vegetation index from the C2 matrix in the specified folder,</span>
-<span class="sd">        generating output in Geotiff format with Cloud Optimized GeoTIFF settings enabled.</span>
-<span class="sd">        </span>
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
-<span class="sd">        infolder : str</span>
-<span class="sd">            Path to the input folder containing C2 matrix data.</span>
-<span class="sd">        window_size : int, optional</span>
-<span class="sd">            Size of the processing window (default is 1).</span>
-<span class="sd">        outType : str, optional</span>
-<span class="sd">            Output format of the files; can be &quot;tif&quot; (GeoTIFF) or &quot;bin&quot; (binary) (default is &quot;tif&quot;).</span>
-<span class="sd">        cog_flag : bool, optional</span>
-<span class="sd">            If True, outputs Cloud Optimized GeoTIFF (COG) (default is False).</span>
-<span class="sd">        cog_overviews : list of int, optional</span>
-<span class="sd">            List of overview levels to be used for COGs (default is [2, 4, 8, 16]).</span>
-<span class="sd">        write_flag : bool, optional</span>
-<span class="sd">            Whether to write the computed output files (default is True).</span>
-<span class="sd">        max_workers : int, optional</span>
-<span class="sd">            Number of parallel workers for processing (default is None, which uses one less than the number of available CPU cores).</span>
-<span class="sd">        block_size : tuple of int, optional</span>
-<span class="sd">            Size of each processing block (default is (512, 512)), defining the spatial chunk dimensions used in parallel computation.</span>
+<span class="sd">    This function processes dual-polarization SAR data to generate the DpRVI, which is useful</span>
+<span class="sd">    for vegetation monitoring and biomass estimation. The processing is done in parallel</span>
+<span class="sd">    blocks for improved performance.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Basic usage with default parameters</span>
+<span class="sd">    &gt;&gt;&gt; dprvi(&quot;/path/to/c2_data&quot;)</span>
 <span class="sd">    </span>
-<span class="sd">        Returns:</span>
-<span class="sd">        --------</span>
-<span class="sd">        None</span>
-<span class="sd">            The function writes the computed dual-pol  Radar vegetation index to the specified output format.</span>
+<span class="sd">    &gt;&gt;&gt; # Advanced usage with custom parameters</span>
+<span class="sd">    &gt;&gt;&gt; dprvi(</span>
+<span class="sd">    ...     infolder=&quot;/path/to/c2_data&quot;,</span>
+<span class="sd">    ...     window_size=3,</span>
+<span class="sd">    ...     outType=&quot;tif&quot;,</span>
+<span class="sd">    ...     cog_flag=True,</span>
+<span class="sd">    ...     block_size=(1024, 1024)</span>
+<span class="sd">    ... )</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    infolder : str</span>
+<span class="sd">        Path to the input folder containing C2 matrix files.</span>
+<span class="sd">    window_size : int, default=1</span>
+<span class="sd">        Size of the spatial averaging window. Larger windows reduce speckle noise</span>
+<span class="sd">        but decrease spatial resolution.</span>
+<span class="sd">    outType : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">        Output file format:</span>
+<span class="sd">        - &#39;tif&#39;: GeoTIFF format with georeferencing information</span>
+<span class="sd">        - &#39;bin&#39;: Raw binary format</span>
+<span class="sd">    cog_flag : bool, default=False</span>
+<span class="sd">        If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling</span>
+<span class="sd">        and overviews for efficient web access.</span>
+<span class="sd">    cog_overviews : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">        Overview levels for COG creation. Each number represents the</span>
+<span class="sd">        decimation factor for that overview level.</span>
+<span class="sd">    write_flag : bool, default=True</span>
+<span class="sd">        If True, writes results to disk. If False, only processes data in memory.</span>
+<span class="sd">    max_workers : int | None, default=None</span>
+<span class="sd">        Maximum number of parallel processing workers. If None, uses</span>
+<span class="sd">        CPU count - 1 workers.</span>
+<span class="sd">    block_size : tuple[int, int], default=(512, 512)</span>
+<span class="sd">        Size of processing blocks (rows, cols) for parallel computation.</span>
+<span class="sd">        Larger blocks use more memory but may be more efficient.</span>
 
-<span class="sd">        Output Files:</span>
-<span class="sd">        -------------</span>
-<span class="sd">        - &quot;dprvi.tif&quot; or &quot;dprvi.bin&quot;</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Results are written to disk as either &#39;dprvi.tif&#39; or &#39;dprvi.bin&#39;</span>
+<span class="sd">        in the input folder.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">input_filepaths</span> <span class="o">=</span> <span class="n">dxpc2files</span><span class="p">(</span><span class="n">infolder</span><span class="p">)</span>

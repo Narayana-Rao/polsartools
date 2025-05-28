@@ -1,13 +1,16 @@
 Generalized volume based Radar Vegetation Index (``grvi``)
 ===========================================================
-This functionality computes the generalized volume based radar vegetation index for full polarimetric SAR data. The required input and the computed output are as follows:
+.. This functionality computes the generalized volume based radar vegetation index for full polarimetric SAR data. The required input and the computed output are as follows:
 
-.. code-block:: python
+.. .. code-block:: python
 
-    input : input_T3/C3_folder, window_size
-    output : GRVI.bin
+..     input : input_T3/C3_folder, window_size
+..     output : GRVI.bin
 
-    
+.. autofunction:: polsartools.grvi
+   :noindex:
+
+
 The formulation of GRVI is as follows:
 
 .. math::

@@ -6,21 +6,89 @@ from polsartools.utils.convert_matrices import C3_T3_mat
 from .fp_infiles import fp_c3t3files
 
 @time_it
-def mf3cf(infolder, outname=None,window_size=1,write_flag=True,max_workers=None):
+def mf3cf(infolder,  window_size=1, outType="tif", cog_flag=False, 
+          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+          max_workers=None,block_size=(512, 512)):
+    """Perform Model-Free 3-Component Decomposition for full-pol SAR data.
 
+    This function implements the model-free three-component decomposition for
+    full-polarimetric SAR data, decomposing the total scattered power into surface (Ps),
+    double-bounce (Pd), and volume (Pv) scattering components, along with the
+    scattering type parameter (Theta_FP). Unlike model-based decompositions, this
+    approach doesn't assume specific scattering models.
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> mf3cf("/path/to/fullpol_data")
+    
+    >>> # Advanced usage with custom parameters
+    >>> mf3cf(
+    ...     infolder="/path/to/fullpol_data",
+    ...     window_size=5,
+    ...     outType="tif",
+    ...     cog_flag=True,
+    ...     block_size=(1024, 1024)
+    ... )
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing full-pol T3 or C3 matrix files.
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows reduce speckle noise
+        but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
+
+    Returns
+    -------
+    None
+        Writes four output files to disk:
+        1. Ps_mf3cf: Surface scattering power component
+        2. Pd_mf3cf: Double-bounce scattering power component
+        3. Pv_mf3cf: Volume scattering power component
+        4. Theta_FP_mf3cf: Scattering type parameter
+
+    """
     input_filepaths = fp_c3t3files(infolder)
 
     output_filepaths = []
-    if outname is None:
+    if outType == "bin":
+        output_filepaths.append(os.path.join(infolder, "Ps_mf3cf.bin"))
+        output_filepaths.append(os.path.join(infolder, "Pd_mf3cf.bin"))
+        output_filepaths.append(os.path.join(infolder, "Pv_mf3cf.bin"))
+        output_filepaths.append(os.path.join(infolder, "Theta_FP_mf3cf.bin"))
+        
+    else: 
         output_filepaths.append(os.path.join(infolder, "Ps_mf3cf.tif"))
         output_filepaths.append(os.path.join(infolder, "Pd_mf3cf.tif"))
         output_filepaths.append(os.path.join(infolder, "Pv_mf3cf.tif"))
         output_filepaths.append(os.path.join(infolder, "Theta_FP_mf3cf.tif"))
-    
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-            processing_func=process_chunk_mf3cf,
-            block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=4)
+
+    process_chunks_parallel(input_filepaths, list(output_filepaths), 
+                            window_size=window_size, write_flag=write_flag,
+                        processing_func=process_chunk_mf3cf,block_size=block_size, 
+                        max_workers=max_workers,  num_outputs=len(output_filepaths),
+                        cog_flag=cog_flag,
+                        cog_overviews=cog_overviews,
+                        )
 
 def process_chunk_mf3cf(chunks, window_size, input_filepaths, *args):
 
