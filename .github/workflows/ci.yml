@@ -61,11 +61,15 @@ jobs:
         brew install gdal
         brew upgrade gdal
 
-    - name: Install Microsoft C++ Build Tools
+    - name: Set up MSVC environment for Pybind11
       if: runner.os == 'Windows'
-      run: |
-        choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --quiet" -y
-        refreshenv
+      uses: ilammy/msvc-dev-cmd@v1
+      
+        # - name: Install Microsoft C++ Build Tools
+    #   if: runner.os == 'Windows'
+    #   run: |
+    #     choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --quiet" -y
+    #     refreshenv
         
     - name: Install GDAL with Conda (Windows)
       if: runner.os == 'Windows'
