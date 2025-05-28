@@ -124,16 +124,38 @@ def nisar_gslc(inFile,azlks=20,rglks=10):
 
     try:
         h5File = h5py.File(inFile,"r")
+    except:
+        raise('Invalid .h5 file !!')
+    
+    
+    if '/science/LSAR' in h5File:
         xCoordinateSpacing = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/xCoordinateSpacing'])
         yCoordinateSpacing = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/yCoordinateSpacing'])
         xCoordinates = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/xCoordinates'])
         yCoordinates = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/yCoordinates'])
         projection = np.array(h5File['/science/LSAR/GSLC/metadata/radarGrid/projection'])
-    except:
-        raise('Invalid GSLC file !!')
+        S11 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
+        S12 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
+        
+        print("Detected L-band data ")
 
-    S11 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
-    S12 = np.array(h5File['/science/LSAR/GSLC/grids/frequencyA/HH'])
+    elif '/science/SSAR' in h5File:
+        xCoordinateSpacing = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/xCoordinateSpacing'])
+        yCoordinateSpacing = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/yCoordinateSpacing'])
+        xCoordinates = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/xCoordinates'])
+        yCoordinates = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/yCoordinates'])
+        projection = np.array(h5File['/science/SSAR/GSLC/metadata/radarGrid/projection'])
+        S11 = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/HH'])
+        S12 = np.array(h5File['/science/SSAR/GSLC/grids/frequencyA/HH'])
+        print(" Detected S-band data")
+
+    else:
+        print("Neither LSAR nor SSAR data found in the file.")
+        
+
+    
+    
+    
     
     C11 = np.abs(S11)**2
     C22 = np.abs(S12)**2
