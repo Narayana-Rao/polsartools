@@ -15,6 +15,7 @@ requirements:
     - python
     - pip
     - pybind11
+    - h5py
     - setuptools
     - wheel
   run:

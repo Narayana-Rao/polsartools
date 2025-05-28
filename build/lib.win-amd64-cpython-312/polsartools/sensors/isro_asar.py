@@ -99,7 +99,7 @@ def isro_asar(inFile,matrix='T3',azlks=20,rglks=10,calibration_constant = 42):
             print("Detected L-band data ")
         elif '/science/SSAR' in h5File:
             freq_band = 'S'
-            print(" Detected S-band data")
+            print("Detected S-band data")
         else:
             print("Neither LSAR nor SSAR data found in the file.")
             h5File.close()
