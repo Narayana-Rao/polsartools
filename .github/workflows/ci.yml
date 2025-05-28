@@ -52,7 +52,7 @@ jobs:
     - name: Create Conda environment
       shell: bash -l {0}
       run: |
-        conda env create -f environment.yml -n pst-env
+        conda env update -n pst-env -f environment.yml --prune
 
     # Install OS-specific GDAL dependencies
     - name: Install GDAL system dependencies (Ubuntu)
