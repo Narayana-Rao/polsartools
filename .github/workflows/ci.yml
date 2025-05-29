@@ -92,7 +92,7 @@ jobs:
       run: |
         conda activate pst-env
         conda install -y conda-build
-        conda build ./conda-recipe
+        conda build ./conda-recipe --test
 
     - name: Run tests
       shell: bash -l {0}
