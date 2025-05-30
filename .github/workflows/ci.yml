@@ -19,10 +19,10 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -83,7 +83,7 @@ jobs:
     - name: Build Conda package
       run: |
         conda build ./conda-recipe  
-        
+
     - name: Get Conda package path
       id: conda_path
       run: echo "path=$(conda build ./conda-recipe --output)" >> $GITHUB_OUTPUT
