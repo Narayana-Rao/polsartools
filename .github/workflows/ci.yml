@@ -72,7 +72,7 @@ jobs:
       if: runner.os != 'Windows'
       run: |
         cd tests
-        python -m pytest -v tests/tests.py
+        python -m pytest -v ../tests/tests.py
 
 
     - name: Build Python wheel
