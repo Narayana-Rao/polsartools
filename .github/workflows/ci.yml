@@ -13,16 +13,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
-        # os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -63,10 +63,45 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install -r requirements.txt
         python -m pip install .  
+
+    - name: Test with pytest on Linux/macOS
+      if: runner.os != 'Windows'
+      shell: bash -l {0}
+      run: |
+        conda activate base
+        cd tests
+        python -m pytest -v tests.py
+
+    - name: Test with pytest on Windows
+      if: runner.os == 'Windows'
+      shell: powershell
+      run: |
+        conda activate base
+        cd tests
+        python -m pytest -v tests.py
+
     - name: Build Conda package
       run: |
         conda build ./conda-recipe  
-    - name: Test with pytest
-      run: |
-        cd tests
-        python -m pytest -v tests.py
+        
+    - name: Get Conda package path
+      id: conda_path
+      run: echo "path=$(conda build ./conda-recipe --output)" >> $GITHUB_OUTPUT
+
+    - name: Upload Conda package artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: conda-package-${{ matrix.os }}-py${{ matrix.python-version }}
+        path: ${{ steps.conda_path.outputs.path }}
+
+    - name: Build wheel package
+      run: python setup.py bdist_wheel
+
+    - name: Upload wheel artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: wheel-${{ matrix.os }}-py${{ matrix.python-version }}
+        path: dist/*.whl
+
+
+
