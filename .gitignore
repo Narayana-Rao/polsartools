@@ -7,4 +7,5 @@
 /build/
 /wheelhouse/
 /condapackages/
+/dist/
 /polsartools/*.pyd
