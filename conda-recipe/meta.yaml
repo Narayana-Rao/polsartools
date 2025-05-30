@@ -1,5 +1,3 @@
-# {% set version = load_file_data("polsartools/version.json")["version"] %}
-{% set linux = target_platform.startswith('linux') %}
 
 package:
   name: polsartools
@@ -9,26 +7,17 @@ source:
   path: ..  
 
 build:
-  number: 0
   script: "{{ PYTHON }} -m pip install . --no-deps -vv"
 
 requirements:
-  build:
-    - python {{ python }}
-    {% if linux %}
-    - {{ compiler('cxx') }}
-    - libstdcxx-ng >=13
-    {% endif %}
   host:
-    - python {{ python }}
+    - python
     - pip
     - pybind11
-    - h5py
-    {% if linux %}
-    - libstdcxx-ng >=13
-    {% endif %}
+    - setuptools
+    - wheel
   run:
-    - python  {{ python }}
+    - python
     - pip
     - numpy
     - scipy
@@ -39,9 +28,6 @@ requirements:
     - h5py
     - scikit-image
     - gdal
-    {% if linux %}
-    - libstdcxx-ng >=13
-    {% endif %}
 
 test:
   # Include tests to validate the build
@@ -52,3 +38,8 @@ about:
   home: https://github.com/Narayana-Rao/polsartools
   license: GPL-3.0
   summary: "A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data."
+
+# platforms:
+#   - linux
+#   - osx
+#   - win
