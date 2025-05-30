@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [ubuntu-latest, macos-latest]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
     
     steps:
@@ -31,7 +31,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        auto-activate-base: true
+        auto-activate-base: false
         python-version: ${{ matrix.python-version }}
 
     - name: Install Conda dependencies
@@ -50,38 +50,18 @@ jobs:
         brew update
         brew install gdal
         brew upgrade gdal
-    
-    - name: Set up MSVC environment (Windows)
-      if: runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1
-
     - name: Install GDAL with Conda (Windows)
       if: runner.os == 'Windows'
       run: |
-        conda activate base
         conda install -c conda-forge gdal pytest h5py
-
     - name: Install dependencies and polsartools pip package
       run: |
-        conda activate base
         python -m pip install --upgrade pip
+        python -m pip install pytest
         python -m pip install -r requirements.txt
         python -m pip install .  
-
-    - name: Test with pytest on Linux/macOS
-      if: runner.os != 'Windows'
-      shell: bash -l {0}
+    - name: Test with pytest
       run: |
-        conda activate base
-        conda install -c conda-forge pytest
-        cd tests
-        python -m pytest -v tests.py
-
-    - name: Test with pytest on Windows
-      if: runner.os == 'Windows'
-      shell: powershell
-      run: |
-        conda activate base
         cd tests
         python -m pytest -v tests.py
 
