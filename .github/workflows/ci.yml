@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [windows-latest]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
     
     steps:
@@ -31,7 +31,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         miniconda-version: "latest"
-        auto-activate-base: false
+        auto-activate-base: true
         python-version: ${{ matrix.python-version }}
 
     - name: Install Conda dependencies
@@ -50,6 +50,7 @@ jobs:
         brew update
         brew install gdal
         brew upgrade gdal
+    
     - name: Set up MSVC environment (Windows)
       if: runner.os == 'Windows'
       uses: ilammy/msvc-dev-cmd@v1
@@ -84,25 +85,3 @@ jobs:
     - name: Build Conda package
       run: |
         conda build ./conda-recipe  
-
-    # - name: Get Conda package path
-    #   id: conda_path
-    #   run: echo "path=$(conda build ./conda-recipe --output)" >> $GITHUB_OUTPUT
-
-    # - name: Upload Conda package artifact
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: conda-package-${{ matrix.os }}-py${{ matrix.python-version }}
-    #     path: ${{ steps.conda_path.outputs.path }}
-
-    # - name: Build wheel package
-    #   run: python setup.py bdist_wheel
-
-    # - name: Upload wheel artifact
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: wheel-${{ matrix.os }}-py${{ matrix.python-version }}
-    #     path: dist/*.whl
-
-
-
