@@ -62,10 +62,18 @@ jobs:
         python -m pip install -r requirements.txt
         python -m pip install .  
 
-    - name: Test with pytest
+    - name: Test with pytest (Windows)
+      if: runner.os == 'Windows'
       run: |
         cd tests
-        conda run -n base python -m pytest -v tests/tests.py
+        python -m pytest -v tests/tests.py
+
+    - name: Test with pytest (Linux/MacOS)
+      if: runner.os != 'Windows'
+      run: |
+        cd tests
+        python -m pytest -v tests/tests.py
+
 
     - name: Build Conda package
       run: |
