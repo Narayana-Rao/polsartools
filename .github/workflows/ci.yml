@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        # os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
     
     steps:
@@ -58,9 +58,12 @@ jobs:
     - name: Install GDAL with Conda (Windows)
       if: runner.os == 'Windows'
       run: |
+        conda activate base
         conda install -c conda-forge gdal pytest h5py
+
     - name: Install dependencies and polsartools pip package
       run: |
+        conda activate base
         python -m pip install --upgrade pip
         python -m pip install -r requirements.txt
         python -m pip install .  
