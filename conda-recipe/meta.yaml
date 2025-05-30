@@ -1,5 +1,5 @@
 # {% set version = load_file_data("polsartools/version.json")["version"] %}
-{% set is_linux = target_platform.startswith('linux') %}
+# {% set is_linux = target_platform.startswith('linux') %}
 
 package:
   name: polsartools
@@ -14,7 +14,7 @@ build:
 requirements:
   build:
     - python {{ python }}
-    - {{ compiler('cxx') }}  # C++ compiler
+    # - {{ compiler('cxx') }}  # C++ compiler
   host:
     - python {{ python }}
     - pip
@@ -22,9 +22,9 @@ requirements:
     - h5py
     - setuptools
     - wheel
-    {% if linux %}
-    - libstdcxx-ng >=13
-    {% endif %}
+    # {% if linux %}
+    # - libstdcxx-ng >=13
+    # {% endif %}
   run:
     - python  {{ python }}
     - pip
@@ -37,9 +37,9 @@ requirements:
     - h5py
     - scikit-image
     - gdal
-    {% if linux %}
-    - libstdcxx-ng >=13
-    {% endif %}
+    # {% if linux %}
+    # - libstdcxx-ng >=13
+    # {% endif %}
 
 test:
   # Include tests to validate the build
