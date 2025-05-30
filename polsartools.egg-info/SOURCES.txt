@@ -420,6 +420,7 @@ polsartools/utils/convert_S2_C3T3.py
 polsartools/utils/convert_T3_C3.py
 polsartools/utils/convert_matrices.py
 polsartools/utils/dxpRGB.py
+polsartools/utils/geo_utils.py
 polsartools/utils/io_utils.py
 polsartools/utils/pauliRGB.py
 polsartools/utils/proc_utils.py
