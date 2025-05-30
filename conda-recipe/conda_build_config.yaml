@@ -17,5 +17,5 @@ platform:
 
 cxx_compiler:
   - vs2019  # [win]
-  # - gcc     # [linux]
-  # - clang   # [osx]
+  - gcc     # [linux]
+  - clang   # [osx]
