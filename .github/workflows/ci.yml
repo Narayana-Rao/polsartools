@@ -69,6 +69,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda activate base
+        conda install -c conda-forge pytest
         cd tests
         python -m pytest -v tests.py
 
