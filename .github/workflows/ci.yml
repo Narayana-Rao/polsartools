@@ -81,17 +81,37 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y gdal-bin libgdal-dev
 
+     
     - name: Install GDAL system dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
         brew update
         brew install gdal
-        brew upgrade gdal
+        bre upgrade gdal
 
+    - name: Cache Homebrew dependencies (macOS)
+      if: runner.os == 'macOS'
+      uses: actions/cache@v4.2.3
+      with:
+        path: |
+          /opt/homebrew
+          /usr/local
+        key: ${{ runner.os }}-homebrew-${{ hashFiles('**/Brewfile') }}
+        restore-keys: |
+          ${{ runner.os }}-homebrew-
+            
     - name: Set up MSVC environment (Windows)
       if: runner.os == 'Windows'
       uses: ilammy/msvc-dev-cmd@v1
-        
+      
+
+    - name: Cache Conda environment
+      uses: actions/cache@v4.2.3
+      with:
+        path: ${{ runner.home }}/.conda  # OS-independent way to specify the home directory
+        key: ${{ runner.os }}-conda-${{ hashFiles('**/env-template.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-conda-
 
 ##################################################################################
             # Build and install polsartools pip package
