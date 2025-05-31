@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [macos-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.12"]
 
@@ -95,7 +95,7 @@ jobs:
         # python -m pip install -r requirements.txt
         python -m pip install . 
 
-    - name: Test with pytest (Linux/macOS)
+    - name: Test with pytest (Windows)
       if: runner.os == 'Windows'
       run: |
         conda init cmd.exe  # Initialize Conda for Windows
