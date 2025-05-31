@@ -143,24 +143,39 @@ jobs:
 
     - name: Create Conda environment
       run: |
-        conda create -n build-env python=${{ matrix.python-version }} conda-build anaconda-client -y
-        conda init bash  # For Linux and macOS (to enable `conda activate` in bash)
-        conda init powershell  # For Windows (to enable `conda activate` in PowerShell)
-        conda activate build-env
-      shell: |
-        bash -l {0}  # For Linux and macOS
-        pwsh -Command {0}  # For Windows PowerShell
+        if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "macOS" ]]; then
+          # Linux/macOS: Create Conda environment, initialize, and activate
+          conda create -n build-env python=${{ matrix.python-version }} conda-build anaconda-client -y
+          conda init bash  # Initialize Conda for bash (Linux/macOS)
+          source ~/.bashrc  # Ensure Conda is loaded into the current shell session
+          conda activate build-env  # Activate the environment
+        elif [[ "$RUNNER_OS" == "Windows" ]]; then
+          # Windows: Initialize Conda for PowerShell and activate environment
+          conda create -n build-env python=${{ matrix.python-version }} conda-build anaconda-client -y
+          conda init powershell  # Initialize Conda for PowerShell
+          # Ensure Conda is loaded in the current PowerShell session
+          $Env:PATH = [System.Environment]::GetEnvironmentVariable('PATH', [System.EnvironmentVariableTarget]::User)
+          conda activate build-env  # Activate the environment in PowerShell
+        fi
 
     - name: Install dependencies and build the package
       run: |
-        conda init bash  # For Linux and macOS (to enable `conda activate` in bash)
-        conda init powershell  # For Windows (to enable `conda activate` in PowerShell)
-        conda activate build-env
-        conda install --yes pip  # Ensure pip is installed in the environment
-        python -m pip install --upgrade pip
-        python -m pip install -r requirements.txt  # Optional: if you have additional pip dependencies
-        python -m pip install .  # Install your package locally
-        conda build ./conda-recipe --output-folder output  # Build the Conda package
+        if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "macOS" ]]; then
+          # Linux/macOS: Install pip and dependencies
+          conda install --yes pip
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install .
+          conda build ./conda-recipe --output-folder output
+        elif [[ "$RUNNER_OS" == "Windows" ]]; then
+          # Windows: Install pip and dependencies
+          conda install --yes pip
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install .
+          conda build ./conda-recipe --output-folder output
+        fi
+
 
     - name: Upload conda package
       uses: actions/upload-artifact@v4.6.0
