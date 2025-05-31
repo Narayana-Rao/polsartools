@@ -202,8 +202,26 @@ jobs:
     - name: Clean build artifacts (Windows)
       if: runner.os == 'Windows'
       run: |
-        Remove-Item -Recurse -Force "*.so"
-        Remove-Item -Recurse -Force "build", "dist", "*.egg-info", "wheelhouse"
+        Remove-Item -Recurse -Force "*.so" -ErrorAction SilentlyContinue
+
+        # Clean directories if they exist
+        if (Test-Path "build") {
+          Remove-Item -Recurse -Force "build"
+        }
+
+        if (Test-Path "dist") {
+          Remove-Item -Recurse -Force "dist"
+        }
+
+        if (Test-Path "*.egg-info") {
+          Remove-Item -Recurse -Force "*.egg-info"
+        }
+
+        if (Test-Path "wheelhouse") {
+          Remove-Item -Recurse -Force "wheelhouse"
+        }
+
+
 
     - name: Build wheels with cibuildwheel (Linux)
       if: runner.os == 'Linux'
