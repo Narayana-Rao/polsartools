@@ -340,23 +340,22 @@ jobs:
         # Detect the architecture of the runner (ARM or Intel) on macOS 
         if [[ "$(uname -m)" == "x86_64" ]]; then
           # Intel architecture (x86_64) - macOS Intel
-          ARCH="macosx_x86_64"
+          ARCH="osx-x86_64"
         elif [[ "$(uname -m)" == "arm64" ]]; then
           # ARM architecture (arm64) - macOS Apple Silicon
-          ARCH="macosx_arm64"
+          ARCH="osx-arm64"
         else
           echo "Unsupported architecture: $(uname -m)"
           exit 1
         fi
 
         echo "Building for $ARCH architecture"
-        # conda build ./conda-recipe --output-folder output --python 3.7 --no-anaconda-upload --subdir $ARCH 
+ 
+        # conda install --yes python=3.7 -c conda-forge  # Change Python version to 3.7
+        conda build ./conda-recipe --output-folder output --python 3.7 --subdir $ARCH 
 
-        conda install --yes python=3.7 -c conda-forge  # Change Python version to 3.7
-        conda build ./conda-recipe --output-folder output --python 3.7 --no-deps --use-local --subdir $ARCH 
-
-        conda install --yes python=3.8  -c conda-forge # Change Python version to 3.8
-        conda build ./conda-recipe --output-folder output --python 3.8 --no-deps --use-local --subdir $ARCH 
+        # conda install --yes python=3.8  -c conda-forge # Change Python version to 3.8
+        # conda build ./conda-recipe --output-folder output --python 3.8 --no-deps --use-local --subdir $ARCH 
 
 
     - name: Build Conda package (Linux)
