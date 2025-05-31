@@ -10,19 +10,13 @@ jobs:
   build:
     if: contains(github.event.head_commit.message, 'build') || contains(github.event.pull_request.title, 'build')
     name: Build ${{ matrix.os }} ${{ matrix.python-version }}
-    # name: Build ${{ matrix.os }} ${{ matrix.python-version }}${{ matrix.architecture && format(' ({0})', matrix.architecture) || '' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.9","3.10"]
-        # include:
-        #   - os: macos-latest  # Default macOS runner (arm64)
-        #     architecture: arm64
-        #   - os: macos-latest
-        #     architecture: x86_64
-    
+        python-version: ["3.9"]
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -36,7 +30,9 @@ jobs:
     - name: Set up Miniconda
       uses: conda-incubator/setup-miniconda@v3
       with:
-        miniconda-version: "latest"
+        # miniconda-version: "latest"
+        activate-environment: pst-env
+        environment-file: env-template.yml
         auto-activate-base: false
         python-version: ${{ matrix.python-version }}
 
@@ -97,76 +93,47 @@ jobs:
     #     CIBW_OUTPUT_DIR: wheelhouse
     #   run: python -m cibuildwheel --output-dir wheelhouse
 
-    - name: Build wheels with cibuildwheel (macOS arm64)
-      if: runner.os == 'macOS'
-      env:
-        CIBW_BUILD: "cp39-macosx_arm64"
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: python -m cibuildwheel --output-dir wheelhouse
-
-    # - name: Build wheels with cibuildwheel (macOS x86_64)
-    #   if: runner.os == 'macOS' && matrix.architecture == 'x86_64'
+    # - name: Build wheels with cibuildwheel (macOS arm64)
+    #   if: runner.os == 'macOS'
     #   env:
-    #     CIBW_BUILD: "cp39-macosx_x86_64"
+    #     CIBW_BUILD: "cp39-macosx_arm64"
     #     CIBW_OUTPUT_DIR: wheelhouse
     #   run: python -m cibuildwheel --output-dir wheelhouse
 
 
-    - name: Build wheels with cibuildwheel (Windows)
-      if: runner.os == 'Windows'
-      env:
-        CIBW_BUILD: "cp39-win_amd64"  # For Windows x86_64
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: python -m cibuildwheel --output-dir wheelhouse
+    # - name: Build wheels with cibuildwheel (Windows)
+    #   if: runner.os == 'Windows'
+    #   env:
+    #     CIBW_BUILD: "cp39-win_amd64"  # For Windows x86_64
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: python -m cibuildwheel --output-dir wheelhouse
 
 
 ##########################################################################
 
-    # - name: Upload wheel artifacts
-    #   uses: actions/upload-artifact@v4.6.0
-    #   with:
-    #     name: python-wheels
-    #     path: wheelhouse/*.whl
-
-    # - name: Build Conda package
-    #   run: |
-    #     conda build ./conda-recipe  --output-folder output
-
-    # - name: Upload conda package artifact
-    #   uses: actions/upload-artifact@v4.6.0
-    #   with:
-    #     name: conda-package
-    #     path: |
-    #       output/**/*.tar.bz2
-    #       output/**/*.conda
-
     - name: Create Conda environment (Linux/macOS)
       if: runner.os != 'Windows'
       run: |
-          conda create -n build-env python=${{ matrix.python-version }} conda-build anaconda-client -y
+          # conda create -n build-env python=${{ matrix.python-version }} conda-build anaconda-client -y
           conda init bash 
           source ~/.bashrc 
-          conda activate build-env  # Activate the environment
-          
+          conda activate pst-env  # Activate the environment
+
+          conda install --yes pip
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install .
+          conda build ./conda-recipe --output-folder output
+
     - name: Create Conda environment (Linux/macOS)
       if: runner.os == 'Windows'
       run: |
           # Windows: Initialize Conda for PowerShell and activate environment
-          conda create -n build-env python=${{ matrix.python-version }} conda-build anaconda-client -y
           conda init powershell  # Initialize Conda for PowerShell
           # Ensure Conda is loaded in the current PowerShell session
           $Env:PATH = [System.Environment]::GetEnvironmentVariable('PATH', [System.EnvironmentVariableTarget]::User)
-          conda activate build-env  # Activate the environment in PowerShell
+          conda activate pst-env  # Activate the environment in PowerShell
       shell: pwsh -Command {0}  # Use PowerShell Core for Windows (pwsh)
-
-    - name: Install dependencies and build the package
-      run: |
-            conda install --yes pip
-            python -m pip install --upgrade pip
-            python -m pip install -r requirements.txt
-            python -m pip install .
-            conda build ./conda-recipe --output-folder output
-
 
 
     - name: Upload conda package

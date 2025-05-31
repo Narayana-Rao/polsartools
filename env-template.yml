@@ -13,5 +13,5 @@ dependencies:
   - pytest
   - pip
   - pip:
-      - polsartools
+      - git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
       - pytest
