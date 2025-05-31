@@ -9,14 +9,19 @@ on:
 jobs:
   build:
     if: contains(github.event.head_commit.message, 'build') || contains(github.event.pull_request.title, 'build')
-    name: Build ${{ matrix.os }} ${{ matrix.python-version }}
+    # name: Build ${{ matrix.os }} ${{ matrix.python-version }}
+    name: Build ${{ matrix.os }} ${{ matrix.python-version }}${{ matrix.architecture && format(' ({0})', matrix.architecture) || '' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest]
-        # os: [ubuntu-latest, windows-latest,macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
-        # architecture: [x86_64, arm64] 
+        include:
+          - os: macos-latest  # Default macOS runner (arm64)
+            architecture: arm64
+          - os: macos-latest
+            architecture: x86_64
     
     steps:
     - name: Checkout repository
@@ -84,11 +89,6 @@ jobs:
         find . -name '*.so' -delete
         rm -rf build/ dist/ *.egg-info wheelhouse
 
-    # - name: Build wheels with cibuildwheel
-    #   env:
-    #     CIBW_BUILD: "cp38-* cp39-*"
-    #     CIBW_OUTPUT_DIR: wheelhouse
-    #   run: python -m cibuildwheel --output-dir wheelhouse
 ##########################################################################
     - name: Build wheels with cibuildwheel (Linux)
       if: runner.os == 'Linux'
@@ -97,21 +97,20 @@ jobs:
         CIBW_OUTPUT_DIR: wheelhouse
       run: python -m cibuildwheel --output-dir wheelhouse
 
-    #   # Build for macOS x86_64
-    # - name: Build wheels for macOS x86_64
-    #   if: runner.os == 'macOS'
-    #   env:
-    #     CIBW_BUILD: "cp39-macosx_x86_64"  # Only for x86_64
-    #     CIBW_OUTPUT_DIR: wheelhouse
-    #   run: python -m cibuildwheel --output-dir wheelhouse
-
-    # Build for macOS arm64
-    - name: Build wheels for macOS arm64
-      if: runner.os == 'macOS'
+    - name: Build wheels with cibuildwheel (macOS arm64)
+      if: runner.os == 'macOS' && matrix.architecture == 'arm64'
       env:
-        CIBW_BUILD: "cp39-macosx_arm64"  # Only for arm64
+        CIBW_BUILD: "cp39-macosx_arm64"
         CIBW_OUTPUT_DIR: wheelhouse
       run: python -m cibuildwheel --output-dir wheelhouse
+
+    - name: Build wheels with cibuildwheel (macOS x86_64)
+      if: runner.os == 'macOS' && matrix.architecture == 'x86_64'
+      env:
+        CIBW_BUILD: "cp39-macosx_x86_64"
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: python -m cibuildwheel --output-dir wheelhouse
+
 
     - name: Build wheels with cibuildwheel (Windows)
       if: runner.os == 'Windows'
