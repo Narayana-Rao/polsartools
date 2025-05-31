@@ -97,13 +97,13 @@ jobs:
         CIBW_OUTPUT_DIR: wheelhouse
       run: python -m cibuildwheel --output-dir wheelhouse
 
-      # Build for macOS x86_64
-    - name: Build wheels for macOS x86_64
-      if: runner.os == 'macOS'
-      env:
-        CIBW_BUILD: "cp39-macosx_x86_64"  # Only for x86_64
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: python -m cibuildwheel --output-dir wheelhouse
+    #   # Build for macOS x86_64
+    # - name: Build wheels for macOS x86_64
+    #   if: runner.os == 'macOS'
+    #   env:
+    #     CIBW_BUILD: "cp39-macosx_x86_64"  # Only for x86_64
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: python -m cibuildwheel --output-dir wheelhouse
 
     # Build for macOS arm64
     - name: Build wheels for macOS arm64
