@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
-        # os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.12"]
 
     steps:
@@ -103,15 +103,39 @@ jobs:
     - name: Set up MSVC environment (Windows)
       if: runner.os == 'Windows'
       uses: ilammy/msvc-dev-cmd@v1
-      
 
-    - name: Cache Conda environment
+    
+
+###############################################################################
+      # Cache Conda packages
+################################################################################
+
+    - name: Cache Conda packages on Windows
+      if: runner.os == 'Windows'
       uses: actions/cache@v4.2.3
       with:
-        path: ${{ runner.home }}/.conda  # OS-independent way to specify the home directory
-        key: ${{ runner.os }}-conda-${{ hashFiles('**/env-template.yml') }}
+        path: C:\Miniconda\pkgs
+        key: windows-conda-pkgs-${{ hashFiles('**/env-template.yml') }}
         restore-keys: |
-          ${{ runner.os }}-conda-
+          windows-conda-pkgs-
+
+    - name: Cache Conda packages on macOS
+      if: runner.os == 'macOS'
+      uses: actions/cache@v4.2.3
+      with:
+        path: /Users/runner/miniconda3/pkgs
+        key: macos-conda-pkgs-${{ hashFiles('**/env-template.yml') }}
+        restore-keys: |
+          macos-conda-pkgs-
+
+    - name: Cache Conda packages on Linux
+      if: runner.os == 'Linux'
+      uses: actions/cache@v4.2.3
+      with:
+        path: /usr/share/miniconda/pkgs
+        key: linux-conda-pkgs-${{ hashFiles('**/env-template.yml') }}
+        restore-keys: |
+          linux-conda-pkgs-
 
 ##################################################################################
             # Build and install polsartools pip package
