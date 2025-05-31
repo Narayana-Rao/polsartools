@@ -59,7 +59,6 @@ jobs:
       if: runner.os != 'Windows'
       run: |
         conda init bash 
-        # source ~/.bashrc
 
         # Check if ~/.bashrc exists. If not, use ~/.bash_profile
         if [ -f ~/.bashrc ]; then
@@ -67,7 +66,7 @@ jobs:
         else
           source ~/.bash_profile  # Fallback to .bash_profile
         fi
-        
+
         conda activate pst-env  # Activate the environment
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
@@ -106,8 +105,6 @@ jobs:
         conda activate pst-env  # Activate the Conda environment
         conda info --envs
         python -m pip install --upgrade pip
-        # python -m pip install pytest
-        # python -m pip install -r requirements.txt
         python -m pip install . 
 
     - name: Test with pytest (Windows)
@@ -125,22 +122,32 @@ jobs:
       if: runner.os != 'Windows'
       run: |
         conda init bash 
-        source ~/.bashrc
+
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
         conda activate pst-env  # Activate the environment
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
         conda list  # List all installed packages in the active environment
 
         python -m pip install --upgrade pip
-        # python -m pip install pytest
-        # python -m pip install -r requirements.txt
         python -m pip install .  
 
     - name: Test with pytest (Linux/macOS)
       if: runner.os != 'Windows'
       run: |
         conda init bash 
-        source ~/.bashrc
+
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
         conda activate pst-env  # Activate the environment
         cd tests
         python -m pytest -v ../tests/tests.py
