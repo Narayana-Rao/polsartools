@@ -71,6 +71,13 @@ jobs:
 
     - name: Install polsartools pip package
       run: |
+        conda init bash 
+        source ~/.bashrc
+        conda activate pst-env  # Activate the environment
+        echo "Active Conda Environment:"
+        conda info --envs  # Print the list of Conda environments and show the active one
+        conda list  # List all installed packages in the active environment
+
         python -m pip install --upgrade pip
         # python -m pip install pytest
         # python -m pip install -r requirements.txt
