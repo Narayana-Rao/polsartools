@@ -74,26 +74,30 @@ jobs:
         cd tests
         python -m pytest -v ../tests/tests.py
 
+    
+    - name: Install cibuildwheel
+      run: python -m pip install --upgrade pip cibuildwheel
 
-    - name: Build Python wheel
-      run: |
-        python -m pip install --upgrade build
-        python -m build --wheel --outdir dist
+    - name: Build wheels with cibuildwheel
+      env:
+        CIBW_BUILD: "cp38-* cp39-*"
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: python -m cibuildwheel --output-dir wheelhouse
 
-    - name: Upload wheel artifact
+    - name: Upload wheel artifacts
       uses: actions/upload-artifact@v4.6.0
       with:
-        name: python-wheel
-        path: dist/*.whl
+        name: python-wheels
+        path: wheelhouse/*.whl
 
-    - name: Build Conda package
-      run: |
-        conda build ./conda-recipe  --output-folder output
+    # - name: Build Conda package
+    #   run: |
+    #     conda build ./conda-recipe  --output-folder output
 
-    - name: Upload conda package artifact
-      uses: actions/upload-artifact@v4.6.0
-      with:
-        name: conda-package
-        path: |
-          output/**/*.tar.bz2
-          output/**/*.conda
+    # - name: Upload conda package artifact
+    #   uses: actions/upload-artifact@v4.6.0
+    #   with:
+    #     name: conda-package
+    #     path: |
+    #       output/**/*.tar.bz2
+    #       output/**/*.conda
