@@ -13,10 +13,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest,macos-latest]
         # os: [ubuntu-latest, windows-latest,macos-latest]
         python-version: ["3.9"]
-        architecture: [x86_64, arm64] 
+        # architecture: [x86_64, arm64] 
     
     steps:
     - name: Checkout repository
@@ -97,17 +97,10 @@ jobs:
         CIBW_OUTPUT_DIR: wheelhouse
       run: python -m cibuildwheel --output-dir wheelhouse
 
-    - name: Build wheels with cibuildwheel (macOS x86_64)
-      if: runner.os == 'macOS' && matrix.architecture == 'x86_64'
+    - name: Build wheels with cibuildwheel (macOS)
+      if: runner.os == 'macOS' 
       env:
-        CIBW_BUILD: "cp39-macosx_x86_64"  # For macOS x86_64
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: python -m cibuildwheel --output-dir wheelhouse
-
-    - name: Build wheels with cibuildwheel (macOS arm64)
-      if: runner.os == 'macOS' && matrix.architecture == 'arm64'
-      env:
-        CIBW_BUILD: "cp39-macosx_arm64"  # For macOS arm64 (Apple Silicon)
+        CIBW_BUILD: "cp39-macosx_x86_64 cp39-macosx_arm64"  # For macOS x86_64
         CIBW_OUTPUT_DIR: wheelhouse
       run: python -m cibuildwheel --output-dir wheelhouse
 
@@ -118,7 +111,7 @@ jobs:
         CIBW_OUTPUT_DIR: wheelhouse
       run: python -m cibuildwheel --output-dir wheelhouse
 
-      
+
 ##########################################################################
 
     - name: Upload wheel artifacts
