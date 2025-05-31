@@ -15,3 +15,4 @@ dependencies:
   - pip:
       - git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
       - pytest
+      - cibuildwheel

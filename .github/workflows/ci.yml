@@ -152,7 +152,6 @@ jobs:
         conda activate pst-env  # Activate the environment
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
-        conda list  # List all installed packages in the active environment
 
         python -m pip install --upgrade pip
         python -m pip install .  
@@ -175,36 +174,80 @@ jobs:
 ##########################################################################
 # Build wheels with cibuildwheel
 ##########################################################################
+    # - name: Install polsartools pip package (Linux/macOS)
+    #   if: runner.os != 'Windows'
+    #   run: |
+    #     conda init bash 
+
+    #     # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+    #     if [ -f ~/.bashrc ]; then
+    #       source ~/.bashrc  # Use .bashrc if it exists
+    #     else
+    #       source ~/.bash_profile  # Fallback to .bash_profile
+    #     fi
+    #     conda activate pst-env  # Activate the environment
+    #     echo "Active Conda Environment:"
+    #     conda info --envs  # Print the list of Conda environments and show the active one
+    #     python -m pip install --upgrade pip cibuildwheel
+
     # - name: Install cibuildwheel
     #   run: python -m pip install --upgrade pip cibuildwheel
 
-    # - name: Clean build artifacts
-    #   run: |
-    #     find . -name '*.so' -delete
-    #     rm -rf build/ dist/ *.egg-info wheelhouse
+    - name: Clean build artifacts
+      run: |
+        find . -name '*.so' -delete
+        rm -rf build/ dist/ *.egg-info wheelhouse
 
 
-    # - name: Build wheels with cibuildwheel (Linux)
-    #   if: runner.os == 'Linux'
-    #   env:
-    #     CIBW_BUILD: "cp39-manylinux_x86_64"  # Only for Linux (manylinux_x86_64)
-    #     CIBW_OUTPUT_DIR: wheelhouse
-    #   run: python -m cibuildwheel --output-dir wheelhouse
+    - name: Build wheels with cibuildwheel (Linux)
+      if: runner.os == 'Linux'
+      env:
+        CIBW_BUILD: "cp39-manylinux_x86_64"  
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: |
+        conda init bash 
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
+        conda activate pst-env  
+        echo "Active Conda Environment:"
 
-    # - name: Build wheels with cibuildwheel (macOS arm64)
-    #   if: runner.os == 'macOS'
-    #   env:
-    #     CIBW_BUILD: "cp39-macosx_arm64"
-    #     CIBW_OUTPUT_DIR: wheelhouse
-    #   run: python -m cibuildwheel --output-dir wheelhouse
+        python -m cibuildwheel --output-dir wheelhouse
+
+    - name: Build wheels with cibuildwheel (macOS arm64)
+      if: runner.os == 'macOS'
+      env:
+        CIBW_BUILD: "cp39-macosx_arm64"
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: |
+        conda init bash 
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
+        conda activate pst-env  
+        echo "Active Conda Environment:"
+
+        python -m cibuildwheel --output-dir wheelhouse
 
 
-    # - name: Build wheels with cibuildwheel (Windows)
-    #   if: runner.os == 'Windows'
-    #   env:
-    #     CIBW_BUILD: "cp39-win_amd64"  # For Windows x86_64
-    #     CIBW_OUTPUT_DIR: wheelhouse
-    #   run: python -m cibuildwheel --output-dir wheelhouse
+    - name: Build wheels with cibuildwheel (Windows)
+      if: runner.os == 'Windows'
+      env:
+        CIBW_BUILD: "cp39-win_amd64"  # For Windows x86_64
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: |
+        conda init cmd.exe  # Initialize Conda for Windows
+        refreshenv  # Refresh environment variables (needed on Windows)
+        conda activate pst-env  # Activate the Conda environment
+        echo "Active Conda Environment:"
+
+        python -m cibuildwheel --output-dir wheelhouse
 
     # - name: Upload wheel artifacts
     #   uses: actions/upload-artifact@v4.6.0
@@ -219,36 +262,36 @@ jobs:
 # Build conda packages with conda-build
 ##########################################################################
 
-    # - name: Build Conda package (Linux/macOS)
-    #   if: runner.os != 'Windows'
-    #   run: |
-    #       # conda activate pst-env  # Activate the environment
-    #       # source ~/miniconda3/etc/profile.d/conda.sh  # Ensure Conda is available in non-interactive shell
-    #       conda init bash 
-    #       source ~/.bashrc 
-    #       conda activate pst-env  # Activate the environment
-    #       echo "Active Conda Environment:"
-    #       conda info --envs  # Print the list of Conda environments and show the active one
-    #       conda list  # List all installed packages in the active environment
+    - name: Build Conda package (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        conda init bash 
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
+        conda activate pst-env  
+        echo "Active Conda Environment:"
+        conda info --envs  # Print the list of Conda environments and show the active one
 
-    #       conda install --yes pip
-    #       python -m pip install --upgrade pip
-    #       # python -m pip install -r requirements.txt
-    #       # python -m pip install .
-    #       # conda build ./conda-recipe --output-folder output
-    #       conda build ./conda-recipe --output-folder output --python 3.8
-    #       # conda build ./conda-recipe --output-folder output --python 3.9
+        conda install --yes pip
+        python -m pip install --upgrade pip
+        conda build ./conda-recipe --output-folder output --python 3.8
+        # conda build ./conda-recipe --output-folder output --python 3.9
 
-    # - name:  Build Conda package (Windows)
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #       # Windows: Initialize Conda for PowerShell and activate environment
-    #       conda init powershell  # Initialize Conda for PowerShell
-    #       # Ensure Conda is loaded in the current PowerShell session
-    #       $Env:PATH = [System.Environment]::GetEnvironmentVariable('PATH', [System.EnvironmentVariableTarget]::User)
-    #       conda activate pst-env  # Activate the environment in PowerShell
-    #   shell: pwsh -Command {0}  # Use PowerShell Core for Windows (pwsh)
-
+    - name:  Build Conda package (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        conda init cmd.exe  # Initialize Conda for Windows
+        refreshenv  # Refresh environment variables (needed on Windows)
+        conda activate pst-env  # Activate the Conda environment
+        echo "Active Conda Environment:"
+        conda info --envs  # Print the list of Conda environments and show the active one
+        python -m pip install --upgrade pip
+        conda build ./conda-recipe --output-folder output --python 3.8
+        # conda build ./conda-recipe --output-folder output --python 3.9
 
     # - name: Upload conda package
     #   uses: actions/upload-artifact@v4.6.0
