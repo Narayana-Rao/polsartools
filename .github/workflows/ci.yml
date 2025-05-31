@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [windows-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.12"]
 
@@ -40,14 +40,23 @@ jobs:
         auto-activate-base: false
         python-version: ${{ matrix.python-version }}
 
-    - name: Install Conda dependencies
+    - name: Install Conda dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+            conda init cmd.exe  # Initialize Conda for Windows
+            refreshenv  # Refresh environment variables (needed on Windows)
+            conda activate pst-env  # Activate the Conda environment
+            conda info --envs
+            conda install -y conda-build anaconda-client
+
+    - name: Install Conda dependencies (Linux/macOS)
+      if: runner.os != 'Windows'
       run: |
         conda init bash 
         source ~/.bashrc
         conda activate pst-env  # Activate the environment
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
-        conda list  # List all installed packages in the active environment
         conda install -y conda-build anaconda-client  # Install Conda build tools into pst-env
 
     # Install GDAL system dependencies based on the OS
@@ -57,6 +66,7 @@ jobs:
         sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
         sudo apt-get update
         sudo apt-get install -y gdal-bin libgdal-dev
+
     - name: Install GDAL system dependencies (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -67,29 +77,32 @@ jobs:
     # - name: Install GDAL with Conda (Windows)
     #   if: runner.os == 'Windows'
     #   run: |
-    #     conda install -y -c conda-forge gdal pytest hdf5  h5py
+    #         conda init cmd.exe  # Initialize Conda for Windows
+    #         refreshenv  # Refresh environment variables (needed on Windows)
+    #         conda activate pst-env  # Activate the Conda environment
+    #         conda info --envs
 
-    - name: Install polsartools pip package
-      run: |
-        conda init bash 
-        source ~/.bashrc
-        conda activate pst-env  # Activate the environment
-        echo "Active Conda Environment:"
-        conda info --envs  # Print the list of Conda environments and show the active one
-        conda list  # List all installed packages in the active environment
+    # - name: Install polsartools pip package
+    #   run: |
+    #     conda init bash 
+    #     source ~/.bashrc
+    #     conda activate pst-env  # Activate the environment
+    #     echo "Active Conda Environment:"
+    #     conda info --envs  # Print the list of Conda environments and show the active one
+    #     conda list  # List all installed packages in the active environment
 
-        python -m pip install --upgrade pip
-        # python -m pip install pytest
-        # python -m pip install -r requirements.txt
-        python -m pip install .  
+    #     python -m pip install --upgrade pip
+    #     # python -m pip install pytest
+    #     # python -m pip install -r requirements.txt
+    #     python -m pip install .  
 
-    - name: Test with pytest
-      run: |
-        conda init bash 
-        source ~/.bashrc
-        conda activate pst-env  # Activate the environment
-        cd tests
-        python -m pytest -v ../tests/tests.py
+    # - name: Test with pytest
+    #   run: |
+    #     conda init bash 
+    #     source ~/.bashrc
+    #     conda activate pst-env  # Activate the environment
+    #     cd tests
+    #     python -m pytest -v ../tests/tests.py
     
 
 
@@ -140,35 +153,35 @@ jobs:
 # Build conda packages with conda-build
 ##########################################################################
 
-    - name: Build Conda package (Linux/macOS)
-      if: runner.os != 'Windows'
-      run: |
-          # conda activate pst-env  # Activate the environment
-          # source ~/miniconda3/etc/profile.d/conda.sh  # Ensure Conda is available in non-interactive shell
-          conda init bash 
-          source ~/.bashrc 
-          conda activate pst-env  # Activate the environment
-          echo "Active Conda Environment:"
-          conda info --envs  # Print the list of Conda environments and show the active one
-          conda list  # List all installed packages in the active environment
+    # - name: Build Conda package (Linux/macOS)
+    #   if: runner.os != 'Windows'
+    #   run: |
+    #       # conda activate pst-env  # Activate the environment
+    #       # source ~/miniconda3/etc/profile.d/conda.sh  # Ensure Conda is available in non-interactive shell
+    #       conda init bash 
+    #       source ~/.bashrc 
+    #       conda activate pst-env  # Activate the environment
+    #       echo "Active Conda Environment:"
+    #       conda info --envs  # Print the list of Conda environments and show the active one
+    #       conda list  # List all installed packages in the active environment
 
-          conda install --yes pip
-          python -m pip install --upgrade pip
-          # python -m pip install -r requirements.txt
-          # python -m pip install .
-          # conda build ./conda-recipe --output-folder output
-          conda build ./conda-recipe --output-folder output --python 3.8
-          # conda build ./conda-recipe --output-folder output --python 3.9
+    #       conda install --yes pip
+    #       python -m pip install --upgrade pip
+    #       # python -m pip install -r requirements.txt
+    #       # python -m pip install .
+    #       # conda build ./conda-recipe --output-folder output
+    #       conda build ./conda-recipe --output-folder output --python 3.8
+    #       # conda build ./conda-recipe --output-folder output --python 3.9
 
-    - name:  Build Conda package (Windows)
-      if: runner.os == 'Windows'
-      run: |
-          # Windows: Initialize Conda for PowerShell and activate environment
-          conda init powershell  # Initialize Conda for PowerShell
-          # Ensure Conda is loaded in the current PowerShell session
-          $Env:PATH = [System.Environment]::GetEnvironmentVariable('PATH', [System.EnvironmentVariableTarget]::User)
-          conda activate pst-env  # Activate the environment in PowerShell
-      shell: pwsh -Command {0}  # Use PowerShell Core for Windows (pwsh)
+    # - name:  Build Conda package (Windows)
+    #   if: runner.os == 'Windows'
+    #   run: |
+    #       # Windows: Initialize Conda for PowerShell and activate environment
+    #       conda init powershell  # Initialize Conda for PowerShell
+    #       # Ensure Conda is loaded in the current PowerShell session
+    #       $Env:PATH = [System.Environment]::GetEnvironmentVariable('PATH', [System.EnvironmentVariableTarget]::User)
+    #       conda activate pst-env  # Activate the environment in PowerShell
+    #   shell: pwsh -Command {0}  # Use PowerShell Core for Windows (pwsh)
 
 
     # - name: Upload conda package

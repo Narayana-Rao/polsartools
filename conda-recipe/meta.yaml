@@ -18,6 +18,7 @@ requirements:
     - wheel
     - conda-build  # If you want to ensure conda-build is available
     - gdal         # If gdal is needed at build time (compiling C++ extensions, for example)
+    - anaconda-client
   run:
     - python
     - pip
