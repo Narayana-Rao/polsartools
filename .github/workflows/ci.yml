@@ -153,6 +153,8 @@ jobs:
 
     - name: Install dependencies and build the package
       run: |
+        conda init bash  # For Linux and macOS (to enable `conda activate` in bash)
+        conda init powershell  # For Windows (to enable `conda activate` in PowerShell)
         conda activate build-env
         conda install --yes pip  # Ensure pip is installed in the environment
         python -m pip install --upgrade pip
