@@ -352,10 +352,10 @@ jobs:
         echo "Building for $ARCH architecture"
         # conda build ./conda-recipe --output-folder output --python 3.7 --no-anaconda-upload --subdir $ARCH 
 
-        conda install --yes python=3.7  # Change Python version to 3.7
+        conda install --yes python=3.7 -c conda-forge  # Change Python version to 3.7
         conda build ./conda-recipe --output-folder output --python 3.7 --no-deps --use-local --subdir $ARCH 
 
-        conda install --yes python=3.7  # Change Python version to 3.8
+        conda install --yes python=3.8  -c conda-forge # Change Python version to 3.8
         conda build ./conda-recipe --output-folder output --python 3.8 --no-deps --use-local --subdir $ARCH 
 
 
