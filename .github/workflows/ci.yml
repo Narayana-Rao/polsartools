@@ -59,11 +59,20 @@ jobs:
       if: runner.os != 'Windows'
       run: |
         conda init bash 
-        source ~/.bashrc
+        # source ~/.bashrc
+
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
+        
         conda activate pst-env  # Activate the environment
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
         conda install -y conda-build anaconda-client  # Install Conda build tools into pst-env
+        
 
     # Install GDAL system dependencies based on the OS
     - name: Install GDAL system dependencies (Ubuntu)
