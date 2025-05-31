@@ -9,19 +9,19 @@ on:
 jobs:
   build:
     if: contains(github.event.head_commit.message, 'build') || contains(github.event.pull_request.title, 'build')
-    # name: Build ${{ matrix.os }} ${{ matrix.python-version }}
-    name: Build ${{ matrix.os }} ${{ matrix.python-version }}${{ matrix.architecture && format(' ({0})', matrix.architecture) || '' }}
+    name: Build ${{ matrix.os }} ${{ matrix.python-version }}
+    # name: Build ${{ matrix.os }} ${{ matrix.python-version }}${{ matrix.architecture && format(' ({0})', matrix.architecture) || '' }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
-        include:
-          - os: macos-latest  # Default macOS runner (arm64)
-            architecture: arm64
-          - os: macos-latest
-            architecture: x86_64
+        # include:
+        #   - os: macos-latest  # Default macOS runner (arm64)
+        #     architecture: arm64
+        #   - os: macos-latest
+        #     architecture: x86_64
     
     steps:
     - name: Checkout repository
@@ -98,18 +98,18 @@ jobs:
       run: python -m cibuildwheel --output-dir wheelhouse
 
     - name: Build wheels with cibuildwheel (macOS arm64)
-      if: runner.os == 'macOS' && matrix.architecture == 'arm64'
+      if: runner.os == 'macOS'
       env:
         CIBW_BUILD: "cp39-macosx_arm64"
         CIBW_OUTPUT_DIR: wheelhouse
       run: python -m cibuildwheel --output-dir wheelhouse
 
-    - name: Build wheels with cibuildwheel (macOS x86_64)
-      if: runner.os == 'macOS' && matrix.architecture == 'x86_64'
-      env:
-        CIBW_BUILD: "cp39-macosx_x86_64"
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: python -m cibuildwheel --output-dir wheelhouse
+    # - name: Build wheels with cibuildwheel (macOS x86_64)
+    #   if: runner.os == 'macOS' && matrix.architecture == 'x86_64'
+    #   env:
+    #     CIBW_BUILD: "cp39-macosx_x86_64"
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: python -m cibuildwheel --output-dir wheelhouse
 
 
     - name: Build wheels with cibuildwheel (Windows)
@@ -128,14 +128,14 @@ jobs:
         name: python-wheels
         path: wheelhouse/*.whl
 
-    # - name: Build Conda package
-    #   run: |
-    #     conda build ./conda-recipe  --output-folder output
+    - name: Build Conda package
+      run: |
+        conda build ./conda-recipe  --output-folder output
 
-    # - name: Upload conda package artifact
-    #   uses: actions/upload-artifact@v4.6.0
-    #   with:
-    #     name: conda-package
-    #     path: |
-    #       output/**/*.tar.bz2
-    #       output/**/*.conda
+    - name: Upload conda package artifact
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        name: conda-package
+        path: |
+          output/**/*.tar.bz2
+          output/**/*.conda
