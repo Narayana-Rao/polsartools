@@ -232,7 +232,7 @@ jobs:
     - name: Build wheels with cibuildwheel (Linux)
       if: runner.os == 'Linux'
       env:
-        CIBW_BUILD: "cp36-manylinux_x86_64"  
+        CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64"  
         # CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64 cp38-manylinux_x86_64 cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp311-manylinux_x86_64 cp312-manylinux_x86_64 cp313-manylinux_x86_64"   
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
@@ -251,8 +251,8 @@ jobs:
     - name: Build wheels with cibuildwheel (macOS arm64)
       if: runner.os == 'macOS'
       env:
-        CIBW_BUILD: "cp37-macosx_arm64"
-        # CIBW_BUILD: "cp37-macosx_arm64 cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
+        CIBW_BUILD: "cp38-macosx_arm64 cp39-macosx_arm64"
+        # CIBW_BUILD: "cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
         conda init bash 
@@ -271,7 +271,7 @@ jobs:
     - name: Build wheels with cibuildwheel (Windows)
       if: runner.os == 'Windows'
       env:
-        CIBW_BUILD: "cp36-win_amd64"  # For Windows x86_64
+        CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64"  # For Windows x86_64
         # CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64 cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
@@ -313,7 +313,7 @@ jobs:
         python -m pip install --upgrade pip
         conda build ./conda-recipe --output-folder output --python 3.6
 
-        # conda build ./conda-recipe --output-folder output --python 3.7
+        conda build ./conda-recipe --output-folder output --python 3.7
         # conda build ./conda-recipe --output-folder output --python 3.8
         # conda build ./conda-recipe --output-folder output --python 3.9
         # conda build ./conda-recipe --output-folder output --python 3.10
@@ -332,7 +332,7 @@ jobs:
         python -m pip install --upgrade pip
         conda build ./conda-recipe --output-folder output --python 3.6
 
-        # conda build ./conda-recipe --output-folder output --python 3.7
+        conda build ./conda-recipe --output-folder output --python 3.7
         # conda build ./conda-recipe --output-folder output --python 3.8
         # conda build ./conda-recipe --output-folder output --python 3.9
         # conda build ./conda-recipe --output-folder output --python 3.10
