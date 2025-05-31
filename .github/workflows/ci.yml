@@ -251,8 +251,8 @@ jobs:
     - name: Build wheels with cibuildwheel (macOS arm64)
       if: runner.os == 'macOS'
       env:
-        CIBW_BUILD: "cp36-macosx_arm64"
-        # CIBW_BUILD: "cp36-macosx_arm64 cp37-macosx_arm64 cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
+        CIBW_BUILD: "cp37-macosx_arm64"
+        # CIBW_BUILD: "cp37-macosx_arm64 cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
         conda init bash 
