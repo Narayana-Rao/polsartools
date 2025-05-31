@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.9"]
+        python-version: ["3.12"]
 
     steps:
     - name: Checkout repository
@@ -136,7 +136,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
           python -m pip install .
-          conda build ./conda-recipe --output-folder output
+          # conda build ./conda-recipe --output-folder output
+          conda build ./conda-recipe --output-folder output --python 3.8
+          conda build ./conda-recipe --output-folder output --python 3.9
 
     - name: Create Conda environment (Linux/macOS)
       if: runner.os == 'Windows'
