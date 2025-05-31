@@ -85,6 +85,9 @@ jobs:
 
     - name: Test with pytest
       run: |
+        conda init bash 
+        source ~/.bashrc
+        conda activate pst-env  # Activate the environment
         cd tests
         python -m pytest -v ../tests/tests.py
     
