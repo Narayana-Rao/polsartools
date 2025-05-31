@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [macos-latest]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.12"]
 
     steps:
@@ -193,11 +193,17 @@ jobs:
     # - name: Install cibuildwheel
     #   run: python -m pip install --upgrade pip cibuildwheel
 
-    - name: Clean build artifacts
+    - name: Clean build artifacts (Linux/macOS)
+      if: runner.os != 'Windows'
       run: |
         find . -name '*.so' -delete
         rm -rf build/ dist/ *.egg-info wheelhouse
 
+    - name: Clean build artifacts (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        Remove-Item -Recurse -Force "*.so"
+        Remove-Item -Recurse -Force "build", "dist", "*.egg-info", "wheelhouse"
 
     - name: Build wheels with cibuildwheel (Linux)
       if: runner.os == 'Linux'
@@ -262,36 +268,36 @@ jobs:
 # Build conda packages with conda-build
 ##########################################################################
 
-    - name: Build Conda package (Linux/macOS)
-      if: runner.os != 'Windows'
-      run: |
-        conda init bash 
-        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
-        if [ -f ~/.bashrc ]; then
-          source ~/.bashrc  # Use .bashrc if it exists
-        else
-          source ~/.bash_profile  # Fallback to .bash_profile
-        fi
-        conda activate pst-env  
-        echo "Active Conda Environment:"
-        conda info --envs  # Print the list of Conda environments and show the active one
+    # - name: Build Conda package (Linux/macOS)
+    #   if: runner.os != 'Windows'
+    #   run: |
+    #     conda init bash 
+    #     # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+    #     if [ -f ~/.bashrc ]; then
+    #       source ~/.bashrc  # Use .bashrc if it exists
+    #     else
+    #       source ~/.bash_profile  # Fallback to .bash_profile
+    #     fi
+    #     conda activate pst-env  
+    #     echo "Active Conda Environment:"
+    #     conda info --envs  # Print the list of Conda environments and show the active one
 
-        conda install --yes pip
-        python -m pip install --upgrade pip
-        conda build ./conda-recipe --output-folder output --python 3.8
-        # conda build ./conda-recipe --output-folder output --python 3.9
+    #     conda install --yes pip
+    #     python -m pip install --upgrade pip
+    #     conda build ./conda-recipe --output-folder output --python 3.8
+    #     # conda build ./conda-recipe --output-folder output --python 3.9
 
-    - name:  Build Conda package (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        conda init cmd.exe  # Initialize Conda for Windows
-        refreshenv  # Refresh environment variables (needed on Windows)
-        conda activate pst-env  # Activate the Conda environment
-        echo "Active Conda Environment:"
-        conda info --envs  # Print the list of Conda environments and show the active one
-        python -m pip install --upgrade pip
-        conda build ./conda-recipe --output-folder output --python 3.8
-        # conda build ./conda-recipe --output-folder output --python 3.9
+    # - name:  Build Conda package (Windows)
+    #   if: runner.os == 'Windows'
+    #   run: |
+    #     conda init cmd.exe  # Initialize Conda for Windows
+    #     refreshenv  # Refresh environment variables (needed on Windows)
+    #     conda activate pst-env  # Activate the Conda environment
+    #     echo "Active Conda Environment:"
+    #     conda info --envs  # Print the list of Conda environments and show the active one
+    #     python -m pip install --upgrade pip
+    #     conda build ./conda-recipe --output-folder output --python 3.8
+    #     # conda build ./conda-recipe --output-folder output --python 3.9
 
     # - name: Upload conda package
     #   uses: actions/upload-artifact@v4.6.0
