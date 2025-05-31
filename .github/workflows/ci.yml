@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
-        # os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.12"]
 
     steps:
@@ -87,7 +87,7 @@ jobs:
       run: |
         brew update
         brew install gdal
-        bre upgrade gdal
+        brew upgrade gdal
 
     - name: Cache Homebrew dependencies (macOS)
       if: runner.os == 'macOS'
