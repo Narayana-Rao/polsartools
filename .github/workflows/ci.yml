@@ -16,7 +16,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.9"]
+        python-version: ["3.9","3.10"]
         # include:
         #   - os: macos-latest  # Default macOS runner (arm64)
         #     architecture: arm64
