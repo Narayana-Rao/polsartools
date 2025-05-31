@@ -117,7 +117,17 @@ jobs:
     #     CIBW_OUTPUT_DIR: wheelhouse
     #   run: python -m cibuildwheel --output-dir wheelhouse
 
+    # - name: Upload wheel artifacts
+    #   uses: actions/upload-artifact@v4.6.0
+    #   with:
+    #     name: python-wheels
+    #     path: wheelhouse/*.whl
 
+##########################################################################
+
+
+##########################################################################
+# Build conda packages with conda-build
 ##########################################################################
 
     - name: Build Conda package (Linux/macOS)
@@ -140,7 +150,7 @@ jobs:
           conda build ./conda-recipe --output-folder output --python 3.8
           # conda build ./conda-recipe --output-folder output --python 3.9
 
-    - name:  Build Conda package (Linux/macOS)
+    - name:  Build Conda package (Windows)
       if: runner.os == 'Windows'
       run: |
           # Windows: Initialize Conda for PowerShell and activate environment
@@ -158,3 +168,4 @@ jobs:
     #     path: |
     #       output/**/*.tar.bz2
     #       output/**/*.conda
+  ###########################################################################

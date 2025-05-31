@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
   - python
-  - gdal
+  -gdal==3.9.0
   - numpy
   - h5py
   - matplotlib
