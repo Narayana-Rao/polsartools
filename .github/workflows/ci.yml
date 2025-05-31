@@ -42,7 +42,7 @@ jobs:
 
     - name: Install Conda dependencies
       run: |
-        source ~/miniconda3/etc/profile.d/conda.sh  # Ensure Conda is available in non-interactive shell
+        # source ~/miniconda3/etc/profile.d/conda.sh  # Ensure Conda is available in non-interactive shell
         conda activate pst-env  # Activate the environment
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
@@ -123,7 +123,7 @@ jobs:
           # conda init bash 
           # source ~/.bashrc 
           # conda activate pst-env  # Activate the environment
-          source ~/miniconda3/etc/profile.d/conda.sh  # Ensure Conda is available in non-interactive shell
+          # source ~/miniconda3/etc/profile.d/conda.sh  # Ensure Conda is available in non-interactive shell
           conda activate pst-env  # Activate the environment
           echo "Active Conda Environment:"
           conda info --envs  # Print the list of Conda environments and show the active one
