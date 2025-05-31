@@ -128,11 +128,39 @@ jobs:
     #     name: python-wheels
     #     path: wheelhouse/*.whl
 
-    - name: Build Conda package
-      run: |
-        conda build ./conda-recipe  --output-folder output
+    # - name: Build Conda package
+    #   run: |
+    #     conda build ./conda-recipe  --output-folder output
 
-    - name: Upload conda package artifact
+    # - name: Upload conda package artifact
+    #   uses: actions/upload-artifact@v4.6.0
+    #   with:
+    #     name: conda-package
+    #     path: |
+    #       output/**/*.tar.bz2
+    #       output/**/*.conda
+
+
+    - name: Create Conda environment
+      run: |
+        conda create -n build-env python=${{ matrix.python-version }} conda-build anaconda-client -y
+        conda init bash  # For Linux and macOS (to enable `conda activate` in bash)
+        conda init powershell  # For Windows (to enable `conda activate` in PowerShell)
+        conda activate build-env
+      shell: |
+        bash -l {0}  # For Linux and macOS
+        pwsh -Command {0}  # For Windows PowerShell
+
+    - name: Install dependencies and build the package
+      run: |
+        conda activate build-env
+        conda install --yes pip  # Ensure pip is installed in the environment
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt  # Optional: if you have additional pip dependencies
+        python -m pip install .  # Install your package locally
+        conda build ./conda-recipe --output-folder output  # Build the Conda package
+
+    - name: Upload conda package
       uses: actions/upload-artifact@v4.6.0
       with:
         name: conda-package

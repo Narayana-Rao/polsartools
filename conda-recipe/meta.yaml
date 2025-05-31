@@ -10,12 +10,15 @@ build:
   script: "{{ PYTHON }} -m pip install . --no-deps -vv"
 
 requirements:
+requirements:
   host:
     - python
     - pip
     - pybind11
     - setuptools
     - wheel
+    - conda-build  # If you want to ensure conda-build is available
+    - gdal         # If gdal is needed at build time (compiling C++ extensions, for example)
   run:
     - python
     - pip
@@ -24,10 +27,10 @@ requirements:
     - click
     - tqdm
     - matplotlib
-    - pybind11
+    - pybind11  # pybind11 should only be here if it’s needed at runtime
     - h5py
     - scikit-image
-    - gdal
+    - gdal  # Keep this here for runtime if you need gdal's Python bindings
 
 test:
   # Include tests to validate the build
