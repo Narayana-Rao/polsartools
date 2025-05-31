@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.9"]
         # include:
@@ -90,12 +90,12 @@ jobs:
         rm -rf build/ dist/ *.egg-info wheelhouse
 
 ##########################################################################
-    - name: Build wheels with cibuildwheel (Linux)
-      if: runner.os == 'Linux'
-      env:
-        CIBW_BUILD: "cp39-manylinux_x86_64"  # Only for Linux (manylinux_x86_64)
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: python -m cibuildwheel --output-dir wheelhouse
+    # - name: Build wheels with cibuildwheel (Linux)
+    #   if: runner.os == 'Linux'
+    #   env:
+    #     CIBW_BUILD: "cp39-manylinux_x86_64"  # Only for Linux (manylinux_x86_64)
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: python -m cibuildwheel --output-dir wheelhouse
 
     - name: Build wheels with cibuildwheel (macOS arm64)
       if: runner.os == 'macOS'
@@ -122,11 +122,11 @@ jobs:
 
 ##########################################################################
 
-    - name: Upload wheel artifacts
-      uses: actions/upload-artifact@v4.6.0
-      with:
-        name: python-wheels
-        path: wheelhouse/*.whl
+    # - name: Upload wheel artifacts
+    #   uses: actions/upload-artifact@v4.6.0
+    #   with:
+    #     name: python-wheels
+    #     path: wheelhouse/*.whl
 
     - name: Build Conda package
       run: |
