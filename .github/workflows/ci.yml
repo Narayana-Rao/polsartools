@@ -272,8 +272,8 @@ jobs:
         # Detect the architecture of the runner (ARM or Intel) on macOS
         if [[ "$(uname -m)" == "x86_64" ]]; then
           # Intel architecture (x86_64) - macOS
-          ARCH="macosx_64"
-          export CIBW_BUILD="cp38-macosx_64 cp39-macosx_64"
+          ARCH="macosx_x86_64"
+          export CIBW_BUILD="cp38-macosx_x86_64 cp39-macosx_x86_64"
         elif [[ "$(uname -m)" == "arm64" ]]; then
           # ARM architecture (arm64) - macOS Apple Silicon
           ARCH="macosx_arm64"
