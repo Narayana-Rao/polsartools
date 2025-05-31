@@ -13,9 +13,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [macos-13]
+        os: [macos-13, macos-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        os: [ubuntu-latest, windows-latest]
+        # os: [ubuntu-latest, windows-latest]
+
         python-version: ["3.12"]
 
     steps:
@@ -248,25 +249,65 @@ jobs:
         echo "Active Conda Environment:"
 
         python -m cibuildwheel --output-dir wheelhouse
-
+    
+    
     - name: Build wheels with cibuildwheel (macOS arm64)
       if: runner.os == 'macOS'
       env:
-        CIBW_BUILD: "cp38-macosx_arm64 cp39-macosx_arm64"
-        # CIBW_BUILD: "cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
+        # Initially, leave CIBW_BUILD unset to be configured dynamically
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
-        conda init bash 
+        conda init bash
+
         # Check if ~/.bashrc exists. If not, use ~/.bash_profile
         if [ -f ~/.bashrc ]; then
           source ~/.bashrc  # Use .bashrc if it exists
         else
           source ~/.bash_profile  # Fallback to .bash_profile
         fi
-        conda activate pst-env  
+
+        conda activate pst-env
         echo "Active Conda Environment:"
 
+        # Detect the architecture of the runner (ARM or Intel) on macOS
+        if [[ "$(uname -m)" == "x86_64" ]]; then
+          # Intel architecture (x86_64) - macOS
+          ARCH="macosx_64"
+          export CIBW_BUILD="cp38-macosx_64 cp39-macosx_64"
+        elif [[ "$(uname -m)" == "aarch64" ]]; then
+          # ARM architecture (arm64) - macOS Apple Silicon
+          ARCH="macosx_arm64"
+          export CIBW_BUILD="cp38-macosx_arm64 cp39-macosx_arm64"
+        else
+          echo "Unsupported architecture: $(uname -m)"
+          exit 1
+        fi
+
+        echo "Building for architecture: $ARCH"
+        echo "CIBW_BUILD: $CIBW_BUILD"
+
+        # Run cibuildwheel to build the wheels
         python -m cibuildwheel --output-dir wheelhouse
+
+
+    # - name: Build wheels with cibuildwheel (macOS arm64)
+    #   if: runner.os == 'macOS'
+    #   env:
+    #     CIBW_BUILD: "cp38-macosx_arm64 cp39-macosx_arm64"
+    #     # CIBW_BUILD: "cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: |
+    #     conda init bash 
+    #     # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+    #     if [ -f ~/.bashrc ]; then
+    #       source ~/.bashrc  # Use .bashrc if it exists
+    #     else
+    #       source ~/.bash_profile  # Fallback to .bash_profile
+    #     fi
+    #     conda activate pst-env  
+    #     echo "Active Conda Environment:"
+
+    #     python -m cibuildwheel --output-dir wheelhouse
 
 
     - name: Build wheels with cibuildwheel (Windows)
@@ -300,60 +341,75 @@ jobs:
 # Build conda packages with conda-build
 ##########################################################################
 
-    - name: Build Conda package (Linux/macOS)
-      if: runner.os != 'Windows'
-      run: |
-        conda init bash 
-        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
-        if [ -f ~/.bashrc ]; then
-          source ~/.bashrc  # Use .bashrc if it exists
-        else
-          source ~/.bash_profile  # Fallback to .bash_profile
-        fi
-        conda activate pst-env  
-        echo "Active Conda Environment:"
-        conda info --envs  # Print the list of Conda environments and show the active one
+    # - name: Build Conda package (Linux/macOS)
+    #   if: runner.os != 'Windows'
+    #   run: |
+    #     conda init bash 
+    #     # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+    #     if [ -f ~/.bashrc ]; then
+    #       source ~/.bashrc  # Use .bashrc if it exists
+    #     else
+    #       source ~/.bash_profile  # Fallback to .bash_profile
+    #     fi
+    #     conda activate pst-env  
+    #     echo "Active Conda Environment:"
+    #     conda info --envs  # Print the list of Conda environments and show the active one
 
-        conda install --yes pip
-        python -m pip install --upgrade pip
-        conda build ./conda-recipe --output-folder output --python 3.6
+    #     conda install --yes pip
+    #     python -m pip install --upgrade pip
 
-        conda build ./conda-recipe --output-folder output --python 3.7
-        # conda build ./conda-recipe --output-folder output --python 3.8
-        # conda build ./conda-recipe --output-folder output --python 3.9
-        # conda build ./conda-recipe --output-folder output --python 3.10
-        # conda build ./conda-recipe --output-folder output --python 3.11
-        # conda build ./conda-recipe --output-folder output --python 3.12
-        # conda build ./conda-recipe --output-folder output --python 3.13
+    #     # Detect the architecture of the runner (ARM or Intel) on both macOS and Linux
+    #     if [[ "$(uname -m)" == "x86_64" ]]; then
+    #       # Intel architecture (x86_64) - macOS or Linux
+    #       ARCH="linux-64"
+    #     elif [[ "$(uname -m)" == "aarch64" ]]; then
+    #       # ARM architecture (arm64) - Linux ARM (e.g., Raspberry Pi) or macOS Apple Silicon
+    #       ARCH="linux-arm64"
+    #     else
+    #       echo "Unsupported architecture: $(uname -m)"
+    #       exit 1
+    #     fi
 
-    - name:  Build Conda package (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        conda init cmd.exe  # Initialize Conda for Windows
-        refreshenv  # Refresh environment variables (needed on Windows)
-        conda activate pst-env  # Activate the Conda environment
-        echo "Active Conda Environment:"
-        conda info --envs  # Print the list of Conda environments and show the active one
-        python -m pip install --upgrade pip
-        conda build ./conda-recipe --output-folder output --python 3.6
+    #     echo "Building for $ARCH architecture"
+    #     conda build ./conda-recipe --output-folder output --python 3.6 --no-anaconda-upload --subdir $ARCH
 
-        conda build ./conda-recipe --output-folder output --python 3.7
-        # conda build ./conda-recipe --output-folder output --python 3.8
-        # conda build ./conda-recipe --output-folder output --python 3.9
-        # conda build ./conda-recipe --output-folder output --python 3.10
-        # conda build ./conda-recipe --output-folder output --python 3.11
-        # conda build ./conda-recipe --output-folder output --python 3.12
-        # conda build ./conda-recipe --output-folder output --python 3.13
+    #     # conda build ./conda-recipe --output-folder output --python 3.6
+    #     # conda build ./conda-recipe --output-folder output --python 3.7
+    #     # conda build ./conda-recipe --output-folder output --python 3.8
+    #     # conda build ./conda-recipe --output-folder output --python 3.9
+    #     # conda build ./conda-recipe --output-folder output --python 3.10
+    #     # conda build ./conda-recipe --output-folder output --python 3.11
+    #     # conda build ./conda-recipe --output-folder output --python 3.12
+    #     # conda build ./conda-recipe --output-folder output --python 3.13
 
-    - name: Upload conda package
-      uses: actions/upload-artifact@v4.6.0
-      with:
-        name: conda-package-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}
-        path: |
-          output/**/*.tar.bz2
-          output/**/*.conda
-        if-no-files-found: ignore
-        overwrite: false
-        include-hidden-files: false
+    # - name:  Build Conda package (Windows)
+    #   if: runner.os == 'Windows'
+    #   run: |
+    #     conda init cmd.exe  # Initialize Conda for Windows
+    #     refreshenv  # Refresh environment variables (needed on Windows)
+    #     conda activate pst-env  # Activate the Conda environment
+    #     echo "Active Conda Environment:"
+    #     conda info --envs  # Print the list of Conda environments and show the active one
+    #     python -m pip install --upgrade pip
+    #     conda build ./conda-recipe --output-folder output --python 3.6
+
+    #     conda build ./conda-recipe --output-folder output --python 3.7
+    #     # conda build ./conda-recipe --output-folder output --python 3.8
+    #     # conda build ./conda-recipe --output-folder output --python 3.9
+    #     # conda build ./conda-recipe --output-folder output --python 3.10
+    #     # conda build ./conda-recipe --output-folder output --python 3.11
+    #     # conda build ./conda-recipe --output-folder output --python 3.12
+    #     # conda build ./conda-recipe --output-folder output --python 3.13
+
+    # - name: Upload conda package
+    #   uses: actions/upload-artifact@v4.6.0
+    #   with:
+    #     name: conda-package-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}
+    #     path: |
+    #       output/**/*.tar.bz2
+    #       output/**/*.conda
+    #     if-no-files-found: ignore
+    #     overwrite: false
+    #     include-hidden-files: false
 
   ###########################################################################
