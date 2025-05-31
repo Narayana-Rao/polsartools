@@ -74,37 +74,61 @@ jobs:
         brew install gdal
         brew upgrade gdal
 
-    # - name: Install GDAL with Conda (Windows)
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #         conda init cmd.exe  # Initialize Conda for Windows
-    #         refreshenv  # Refresh environment variables (needed on Windows)
-    #         conda activate pst-env  # Activate the Conda environment
-    #         conda info --envs
+    - name: Set up MSVC environment (Windows)
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1
+        
 
-    # - name: Install polsartools pip package
-    #   run: |
-    #     conda init bash 
-    #     source ~/.bashrc
-    #     conda activate pst-env  # Activate the environment
-    #     echo "Active Conda Environment:"
-    #     conda info --envs  # Print the list of Conda environments and show the active one
-    #     conda list  # List all installed packages in the active environment
+##################################################################################
+            # Build and install polsartools pip package
+###################################################################################
 
-    #     python -m pip install --upgrade pip
-    #     # python -m pip install pytest
-    #     # python -m pip install -r requirements.txt
-    #     python -m pip install .  
+    - name: Install polsartools pip package (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        conda init cmd.exe  # Initialize Conda for Windows
+        refreshenv  # Refresh environment variables (needed on Windows)
+        conda activate pst-env  # Activate the Conda environment
+        conda info --envs
+        python -m pip install --upgrade pip
+        # python -m pip install pytest
+        # python -m pip install -r requirements.txt
+        python -m pip install . 
 
-    # - name: Test with pytest
-    #   run: |
-    #     conda init bash 
-    #     source ~/.bashrc
-    #     conda activate pst-env  # Activate the environment
-    #     cd tests
-    #     python -m pytest -v ../tests/tests.py
-    
+    - name: Test with pytest (Linux/macOS)
+      if: runner.os == 'Windows'
+      run: |
+        conda init cmd.exe  # Initialize Conda for Windows
+        refreshenv  # Refresh environment variables (needed on Windows)
+        conda activate pst-env  # Activate the Conda environment
+        conda info --envs
+        cd tests
+        python -m pytest -v ../tests/tests.py
 
+
+    - name: Install polsartools pip package (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        conda init bash 
+        source ~/.bashrc
+        conda activate pst-env  # Activate the environment
+        echo "Active Conda Environment:"
+        conda info --envs  # Print the list of Conda environments and show the active one
+        conda list  # List all installed packages in the active environment
+
+        python -m pip install --upgrade pip
+        # python -m pip install pytest
+        # python -m pip install -r requirements.txt
+        python -m pip install .  
+
+    - name: Test with pytest (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        conda init bash 
+        source ~/.bashrc
+        conda activate pst-env  # Activate the environment
+        cd tests
+        python -m pytest -v ../tests/tests.py
 
 ##########################################################################
 # Build wheels with cibuildwheel
