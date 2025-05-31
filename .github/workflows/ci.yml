@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest,macos-latest]
+        os: [macos-latest]
         # os: [ubuntu-latest, windows-latest,macos-latest]
         python-version: ["3.9"]
         # architecture: [x86_64, arm64] 
@@ -97,10 +97,19 @@ jobs:
         CIBW_OUTPUT_DIR: wheelhouse
       run: python -m cibuildwheel --output-dir wheelhouse
 
-    - name: Build wheels with cibuildwheel (macOS)
-      if: runner.os == 'macOS' 
+      # Build for macOS x86_64
+    - name: Build wheels for macOS x86_64
+      if: runner.os == 'macOS'
       env:
-        CIBW_BUILD: "cp39-macosx_x86_64 cp39-macosx_arm64"  # For macOS x86_64
+        CIBW_BUILD: "cp39-macosx_x86_64"  # Only for x86_64
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: python -m cibuildwheel --output-dir wheelhouse
+
+    # Build for macOS arm64
+    - name: Build wheels for macOS arm64
+      if: runner.os == 'macOS'
+      env:
+        CIBW_BUILD: "cp39-macosx_arm64"  # Only for arm64
         CIBW_OUTPUT_DIR: wheelhouse
       run: python -m cibuildwheel --output-dir wheelhouse
 
