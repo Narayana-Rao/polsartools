@@ -14,7 +14,8 @@ jobs:
     strategy:
       matrix:
         # os: [macos-13]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.12"]
 
     steps:
@@ -285,9 +286,11 @@ jobs:
     - name: Upload wheel artifacts
       uses: actions/upload-artifact@v4.6.0
       with:
-        name: python-wheels-${{ github.run_id }}  # Unique name based on run ID
+        name: python-wheels-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}  # Unique name based on run ID
         path: wheelhouse/*.whl
         if-no-files-found: ignore
+        overwrite: false
+        include-hidden-files: false
 
 
 ##########################################################################
@@ -345,10 +348,12 @@ jobs:
     - name: Upload conda package
       uses: actions/upload-artifact@v4.6.0
       with:
-        name: conda-package-${{ github.run_id }}
+        name: conda-package-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}
         path: |
           output/**/*.tar.bz2
           output/**/*.conda
         if-no-files-found: ignore
+        overwrite: false
+        include-hidden-files: false
 
   ###########################################################################
