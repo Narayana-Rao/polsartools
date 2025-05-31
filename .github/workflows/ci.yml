@@ -78,6 +78,11 @@ jobs:
     - name: Install cibuildwheel
       run: python -m pip install --upgrade pip cibuildwheel
 
+    - name: Clean build artifacts
+      run: |
+        find . -name '*.so' -delete
+        rm -rf build/ dist/ *.egg-info wheelhouse
+
     - name: Build wheels with cibuildwheel
       env:
         CIBW_BUILD: "cp38-* cp39-*"
