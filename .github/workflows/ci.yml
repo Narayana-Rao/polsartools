@@ -26,9 +26,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Replace Python version in env-template.yml
+    - name: update Python version in env-template.yml (windows/linux)
+      if: runner.os == 'Windows' || runner.os == 'Linux'
       run: |
         sed -i "s/python/python=${{ matrix.python-version }}/g" env-template.yml
+
+    - name: Replace Python version in env-template.yml (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        sed -i '' "s/python/python=${{ matrix.python-version }}/g" env-template.yml 
 
     # Set up Miniconda for Conda build
     - name: Set up Miniconda
