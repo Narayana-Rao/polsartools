@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python={{ PYTHON_VERSION }}
+  - python
   - gdal
   - numpy
   - h5py

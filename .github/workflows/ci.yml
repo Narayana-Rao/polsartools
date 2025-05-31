@@ -26,6 +26,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Replace Python version in env-template.yml
+      run: |
+        sed -i "s/python/python=${{ matrix.python-version }}/g" env-template.yml
+        
     # Set up Miniconda for Conda build
     - name: Set up Miniconda
       uses: conda-incubator/setup-miniconda@v3
