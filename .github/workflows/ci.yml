@@ -112,32 +112,38 @@ jobs:
       # Cache Conda packages
 ################################################################################
 
-    - name: Cache Conda packages on Windows
+    - name: Cache Conda packages and environments on Windows
       if: runner.os == 'Windows'
       uses: actions/cache@v4.2.3
       with:
-        path: C:\Miniconda\pkgs
+        path: |
+          C:\Miniconda\pkgs
+          C:\Miniconda\envs
         key: windows-conda-pkgs-${{ hashFiles('**/env-template.yml') }}
         restore-keys: |
-          windows-conda-pkgs-
+          windows-conda-
 
-    - name: Cache Conda packages on macOS
+    - name: Cache Conda packages and environments on macOS
       if: runner.os == 'macOS'
       uses: actions/cache@v4.2.3
       with:
-        path: /Users/runner/miniconda3/pkgs
+        path: |
+          /Users/runner/miniconda3/pkgs
+          /Users/runner/miniconda3/envs
         key: macos-conda-pkgs-${{ hashFiles('**/env-template.yml') }}
         restore-keys: |
-          macos-conda-pkgs-
+          macos-conda-
 
-    - name: Cache Conda packages on Linux
+    - name: Cache Conda packages and environments on Linux
       if: runner.os == 'Linux'
       uses: actions/cache@v4.2.3
       with:
-        path: /usr/share/miniconda/pkgs
+        path: |
+          /usr/share/miniconda/pkgs
+          /usr/share/miniconda/envs
         key: linux-conda-pkgs-${{ hashFiles('**/env-template.yml') }}
         restore-keys: |
-          linux-conda-pkgs-
+          linux-conda-
 
 ##################################################################################
             # Build and install polsartools pip package
@@ -350,9 +356,8 @@ jobs:
         fi
 
         echo "Building for $ARCH architecture"
- 
-        # conda install --yes python=3.7 -c conda-forge  # Change Python version to 3.7
-        conda build ./conda-recipe --output-folder output --python 3.8
+
+        conda build ./conda-recipe --output-folder output --python 3.8 --no-deps
 
 
     - name: Build Conda package (Linux)
@@ -372,15 +377,7 @@ jobs:
         conda install --yes pip
         python -m pip install --upgrade pip
 
-        conda build ./conda-recipe --output-folder output --python 3.7
-
-        # conda build ./conda-recipe --output-folder output --python 3.7
-        # conda build ./conda-recipe --output-folder output --python 3.8
-        # conda build ./conda-recipe --output-folder output --python 3.9
-        # conda build ./conda-recipe --output-folder output --python 3.10
-        # conda build ./conda-recipe --output-folder output --python 3.11
-        # conda build ./conda-recipe --output-folder output --python 3.12
-        # conda build ./conda-recipe --output-folder output --python 3.13
+        conda build ./conda-recipe --output-folder output --python 3.7 --no-deps
 
     - name:  Build Conda package (Windows)
       if: runner.os == 'Windows'
@@ -391,25 +388,18 @@ jobs:
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
         python -m pip install --upgrade pip
-        conda build ./conda-recipe --output-folder output --python 3.7
+        conda build ./conda-recipe --output-folder output --python 3.7 --no-deps
 
-        # conda build ./conda-recipe --output-folder output --python 3.7
-        # conda build ./conda-recipe --output-folder output --python 3.8
-        # conda build ./conda-recipe --output-folder output --python 3.9
-        # conda build ./conda-recipe --output-folder output --python 3.10
-        # conda build ./conda-recipe --output-folder output --python 3.11
-        # conda build ./conda-recipe --output-folder output --python 3.12
-        # conda build ./conda-recipe --output-folder output --python 3.13
 
-    - name: Upload conda package
-      uses: actions/upload-artifact@v4.6.0
-      with:
-        name: conda-package-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}
-        path: |
-          output/**/*.tar.bz2
-          output/**/*.conda
-        if-no-files-found: ignore
-        overwrite: false
-        include-hidden-files: false
+    # - name: Upload conda package
+    #   uses: actions/upload-artifact@v4.6.0
+    #   with:
+    #     name: conda-package-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}
+    #     path: |
+    #       output/**/*.tar.bz2
+    #       output/**/*.conda
+    #     if-no-files-found: ignore
+    #     overwrite: false
+    #     include-hidden-files: false
 
   ###########################################################################
