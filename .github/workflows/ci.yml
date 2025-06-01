@@ -357,7 +357,7 @@ jobs:
 
         echo "Building for $ARCH architecture"
 
-        conda build ./conda-recipe --output-folder output --python 3.8 --no-deps
+        conda build ./conda-recipe --output-folder output --python 3.8 
 
 
     - name: Build Conda package (Linux)
@@ -377,7 +377,7 @@ jobs:
         conda install --yes pip
         python -m pip install --upgrade pip
 
-        conda build ./conda-recipe --output-folder output --python 3.7 --no-deps
+        conda build ./conda-recipe --output-folder output --python 3.7 
 
     - name:  Build Conda package (Windows)
       if: runner.os == 'Windows'
@@ -388,7 +388,7 @@ jobs:
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
         python -m pip install --upgrade pip
-        conda build ./conda-recipe --output-folder output --python 3.7 --no-deps
+        conda build ./conda-recipe --output-folder output --python 3.7 
 
 
     # - name: Upload conda package
