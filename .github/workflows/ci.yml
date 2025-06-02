@@ -13,8 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [macos-13, macos-latest]
-        os: [ubuntu-latest, windows-latest, macos-latest,macos-13]
+        os: [macos-latest,macos-13]
+        # os: [ubuntu-latest, windows-latest, macos-latest,macos-13]
         # os: [ windows-latest]
 
         python-version: ["3.12"]
@@ -57,8 +57,26 @@ jobs:
             conda info --envs
             conda install -y conda-build anaconda-client
 
-    - name: Install Conda dependencies (Linux/macOS)
-      if: runner.os != 'Windows'
+    - name: Install Conda dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        conda init bash 
+
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
+
+        conda activate pst-env  # Activate the environment
+        echo "Active Conda Environment:"
+        conda info --envs  # Print the list of Conda environments and show the active one
+        conda install -y conda-build anaconda-client  # Install Conda build tools into pst-env
+
+
+    - name: Install Conda dependencies (macOS)
+      if: runner.os == 'macOS'
       run: |
         conda init bash 
 
@@ -170,8 +188,8 @@ jobs:
         python -m pytest -v ../tests/tests.py
 
 
-    - name: Install polsartools pip package (Linux/macOS)
-      if: runner.os != 'Windows'
+    - name: Install polsartools pip package (Linux)
+      if: runner.os == 'Linux'
       run: |
         conda init bash 
 
@@ -187,6 +205,26 @@ jobs:
 
         python -m pip install --upgrade pip
         python -m pip install .  
+
+    - name: Install polsartools pip package (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        conda init bash 
+
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
+        conda activate pst-env  # Activate the environment
+        echo "Active Conda Environment:"
+        conda info --envs  # Print the list of Conda environments and show the active one
+
+        python -m pip install --upgrade pip
+        python -m pip install .  
+
+
 
     - name: Test with pytest (Linux/macOS)
       if: runner.os != 'Windows'
