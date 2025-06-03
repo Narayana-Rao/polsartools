@@ -29,7 +29,7 @@ def time_it(func):
     return wrapper
 
 def conv2d(a, f):
-    filt = np.zeros(a.shape)
+    filt = np.zeros(a.shape).astype(np.complex64)
     wspad = int(f.shape[0]/2)
     s = f.shape + tuple(np.subtract(a.shape, f.shape) + 1)
     strd = np.lib.stride_tricks.as_strided

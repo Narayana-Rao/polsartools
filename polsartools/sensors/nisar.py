@@ -151,7 +151,8 @@ def nisar_gslc(inFile,azlks=22,rglks=10):
     projection = np.array(h5File[f'/science/{freq_band}SAR/GSLC/metadata/radarGrid/projection'])
     S11 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HH'])
     S12 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HH'])
-    
+    listOfPolarizations = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/listOfPolarizations']).astype(str)
+    len(listOfPolarizations)
     h5File.close()
 
     C11 = np.abs(S11)**2
@@ -272,7 +273,8 @@ def nisar_rslc(inFile,azlks=22,rglks=10):
     # xCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinates'])
     # yCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinates'])
     # projection = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/radarGrid/projection'])
-    
+    listOfPolarizations = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/listOfPolarizations']).astype(str)
+    len(listOfPolarizations)
     
     
     h5File.close()
