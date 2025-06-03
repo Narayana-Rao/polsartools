@@ -94,6 +94,79 @@ def write_C3(C3_list,folder):
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
     file.close()
 
+    
+def write_C4(C4_list,folder):
+    
+    out_file = folder +'/C11.bin'
+    write_bin(out_file,C4_list[0])
+    print("Saved file "+out_file)
+    out_file = folder +'/C12_real.bin'
+    write_bin(out_file,C4_list[1])
+    print("Saved file "+out_file)
+    out_file = folder +'/C12_imag.bin'
+    write_bin(out_file,C4_list[2])
+    print("Saved file "+out_file)
+    
+
+    
+    out_file = folder +'/C13_real.bin'
+    write_bin(out_file,C4_list[3])
+    print("Saved file "+out_file)
+    out_file = folder +'/C13_imag.bin'
+    write_bin(out_file,C4_list[4])
+    print("Saved file "+out_file)
+    
+    out_file = folder +'/C14_real.bin'
+    write_bin(out_file,C4_list[5])
+    print("Saved file "+out_file)
+    out_file = folder +'/C14_imag.bin'
+    write_bin(out_file,C4_list[6])
+    print("Saved file "+out_file)
+
+    out_file = folder +'/C22.bin'
+    write_bin(out_file,C4_list[7])
+    print("Saved file "+out_file)
+    out_file = folder +'/C23_real.bin'
+    write_bin(out_file,C4_list[8])
+    print("Saved file "+out_file)
+    out_file = folder +'/C23_imag.bin'
+    write_bin(out_file,C4_list[9])
+    print("Saved file "+out_file)
+    
+    out_file = folder +'/C24_real.bin'
+    write_bin(out_file,C4_list[10])
+    print("Saved file "+out_file)
+    out_file = folder +'/C24_imag.bin'
+    write_bin(out_file,C4_list[11])
+    print("Saved file "+out_file)
+    
+    
+    
+    out_file = folder +'/C33.bin'
+    write_bin(out_file,C4_list[12])
+    print("Saved file "+out_file)
+    
+    
+    out_file = folder +'/C34_real.bin'
+    write_bin(out_file,C4_list[13])
+    print("Saved file "+out_file)
+    out_file = folder +'/C34_imag.bin'
+    write_bin(out_file,C4_list[14])
+    print("Saved file "+out_file)    
+    
+    
+    out_file = folder +'/C44.bin'
+    write_bin(out_file,C4_list[15])
+    print("Saved file "+out_file)  
+    
+    
+    
+    rows, cols = np.shape(C4_list[0])
+    file = folder +'/config.txt'
+    file = open(file,"w+")
+    file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
+    file.close()
+    
 def write_bin_s2(file,wdata,refData):
     
     # ds = gdal.Open(refData)
