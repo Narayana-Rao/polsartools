@@ -2,11 +2,11 @@ from osgeo import gdal
 from scipy.interpolate import RegularGridInterpolator
 import numpy as np
 import xml.etree.ElementTree as ET
-def geocode_grid(input_vrt, output_file, filtype, dx, dy, bbox,resampleAlg="near"):
+def geocode_grid(input_vrt, output_file, filtype, dx, dy, bbox, dstSRS="EPSG:4326",resampleAlg="near"):
     if filtype=='bin':
         warp_options = gdal.WarpOptions(
             format="ENVI",
-            dstSRS="EPSG:4326",
+            dstSRS=dstSRS,
             geoloc=True,
             xRes=dx,
             yRes=dy,
@@ -18,7 +18,7 @@ def geocode_grid(input_vrt, output_file, filtype, dx, dy, bbox,resampleAlg="near
     else:
         warp_options = gdal.WarpOptions(
             format="GTiff",
-            dstSRS="EPSG:4326",
+            dstSRS=dstSRS,
             geoloc=True,
             xRes=dx,
             yRes=dy,

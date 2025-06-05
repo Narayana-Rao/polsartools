@@ -27,8 +27,10 @@ def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, window_size=None,
 
     matrix : str, optional, default='T3'
         The matrix type to generate. Options:
-        - 'T3' : Coherency matrix
-        - 'C3' : Covariance matrix
+        - 'T3' : 3x3 Coherency matrix
+        - 'C3' : 3x3 Covariance matrix
+        - 'T4' : 4x4 Coherency matrix
+        - 'C4' : 4x4 Covariance matrix
 
     azlks : int, optional, default=8
         Number of azimuth looks for multi-looking (averaging in the azimuth direction).
@@ -94,8 +96,46 @@ def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, window_size=None,
         output_filepaths.append(os.path.join(infolder,"C3","C23_real.bin"))
         output_filepaths.append(os.path.join(infolder,"C3","C23_imag.bin"))
         output_filepaths.append(os.path.join(infolder,"C3","C33.bin"))
+    elif matrix=="C4":
+        os.makedirs(os.path.join(infolder,"C4"), exist_ok=True)
+        output_filepaths.append(os.path.join(infolder,"C4", "C11.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C12_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C12_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C13_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C13_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C14_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C14_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C22.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C23_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C23_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C24_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C24_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C33.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C34_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C34_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"C4","C44.bin"))
+    elif matrix=="T4": 
+        os.makedirs(os.path.join(infolder,"T4"), exist_ok=True)
+        output_filepaths.append(os.path.join(infolder,"T4", "T11.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T12_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T12_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T13_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T13_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T14_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T14_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T22.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T23_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T23_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T24_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T24_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T33.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T34_real.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T34_imag.bin"))
+        output_filepaths.append(os.path.join(infolder,"T4","T44.bin"))
+        
+        
     else:
-        raise Exception(f"Invalid matrix type!! Available types: ['T3', 'C3']")
+        raise Exception(f"Invalid matrix type!! Available types: ['C4', 'T4', 'T3', 'C3']")
     
     """
     GET MULTI-LOOKED RASTER PROPERTIES
@@ -167,12 +207,56 @@ def process_chunk_s2ct(chunks, *args, **kwargs):
     
     s11 = np.array(chunks[0])
     s12 = np.array(chunks[1])
+    s21 = np.array(chunks[2])
     s22 = np.array(chunks[3])
     
-    if matrix == "T3":
-        Kp = (1/np.sqrt(2))*np.array([s11+s22, s11-s22, 2*s12])
+    if matrix == 'C4':
+        Kl = np.array([s11, s12, s21, s22])
 
-        del s11,s12,s22
+        del s11,s12,s21,s22
+        
+        C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+        C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+        C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+        C44 = mlook(np.abs(Kl[3])**2,azlks,rglks).astype(np.float32)
+
+        C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+        C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C14 = mlook(Kl[0]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+        C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C24 = mlook(Kl[1]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+        C34 = mlook(Kl[2]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+        
+        del Kl
+        return np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),np.real(C14),np.imag(C14), np.real(C22),np.real(C23),np.imag(C23),np.real(C24),np.imag(C24), np.real(C33),np.real(C34),np.imag(C34), np.real(C44)
+        
+        
+    elif matrix == "T4":
+        Kp = (1/np.sqrt(2))*np.array([s11+s22, s11-s22, s12+s21, 1j*(s12-s21)])
+
+        del s11,s12,s21,s22
+
+        # 4x4 Pauli Coherency Matrix elements
+        T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
+        T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
+        T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
+        T44 = mlook(np.abs(Kp[3])**2,azlks,rglks).astype(np.float32)
+
+        T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
+        T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T14 = mlook(Kp[0]*np.conj(Kp[3]),azlks,rglks).astype(np.complex64)
+        T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T24 = mlook(Kp[1]*np.conj(Kp[3]),azlks,rglks).astype(np.complex64)
+        T34 = mlook(Kp[2]*np.conj(Kp[3]),azlks,rglks).astype(np.complex64)  
+
+        del Kp
+        return np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13), np.real(T14),np.imag(T14),np.real(T22),np.real(T23),np.imag(T23), np.real(T24),np.imag(T24),np.real(T33),np.real(T34),np.imag(T34),np.real(T44)    
+
+
+    elif matrix == "T3":
+        Kp = (1/np.sqrt(2))*np.array([s11+s22, s11-s22, s12+s21])
+
+        del s11,s12,s21,s22
 
         # 3x3 Pauli Coherency Matrix elements
         T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
@@ -189,7 +273,7 @@ def process_chunk_s2ct(chunks, *args, **kwargs):
         
     elif matrix=='C3':
         # Kl- 3-D Lexicographic feature vector
-        Kl = np.array([s11, np.sqrt(2)*s12, s22])
+        Kl = np.array([s11, np.sqrt(2)*0.5*(s12+s21), s22])
         del s11,s12,s22
 
         # 3x3 COVARIANCE Matrix elements

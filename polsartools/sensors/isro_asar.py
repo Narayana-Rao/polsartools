@@ -683,7 +683,7 @@ def isro_asar(inFile,matrix='T3',azlks=8,rglks=6,geocode_flag=False,calibration_
         h5File.close()
         
         
-        rows,cols,_ = S11.shape
+        rows,cols = S11.shape
         inFolder = os.path.dirname(inFile)   
         if not inFolder:
             inFolder = "."

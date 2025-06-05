@@ -51,3 +51,8 @@ def eig22(c2):
     lambda2 = -(trace - sqdiscr) * 0.5
     return lambda1, lambda2
  
+def read_bin(file):
+    ds = gdal.Open(file,gdal.GA_ReadOnly)
+    band = ds.GetRasterBand(1)
+    arr = band.ReadAsArray()
+    return arr
