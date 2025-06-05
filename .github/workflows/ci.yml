@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest,macos-13]
         # os: [ windows-latest]
 
@@ -278,8 +278,8 @@ jobs:
     - name: Build wheels with cibuildwheel (Linux)
       if: runner.os == 'Linux'
       env:
-        CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64"  
-        # CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64 cp38-manylinux_x86_64 cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp311-manylinux_x86_64 cp312-manylinux_x86_64 cp313-manylinux_x86_64"   
+        # CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64"  
+        CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64 cp38-manylinux_x86_64 cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp311-manylinux_x86_64 cp312-manylinux_x86_64 cp313-manylinux_x86_64"   
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
         conda init bash 
@@ -317,11 +317,13 @@ jobs:
         if [[ "$(uname -m)" == "x86_64" ]]; then
           # Intel architecture (x86_64) - macOS
           ARCH="macosx_x86_64"
-          export CIBW_BUILD="cp38-macosx_x86_64 cp39-macosx_x86_64"
+          # export CIBW_BUILD="cp38-macosx_x86_64 cp39-macosx_x86_64"
+          export CIBW_BUILD="cp38-macosx_x86_64 cp39-macosx_x86_64 cp310-macosx_x86_64 cp311-macosx_x86_64 cp312-macosx_x86_64 cp313-macosx_x86_64"
         elif [[ "$(uname -m)" == "arm64" ]]; then
           # ARM architecture (arm64) - macOS Apple Silicon
           ARCH="macosx_arm64"
-          export CIBW_BUILD="cp38-macosx_arm64 cp39-macosx_arm64"
+          # export CIBW_BUILD="cp38-macosx_arm64 cp39-macosx_arm64"
+          export CIBW_BUILD="cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
         else
           echo "Unsupported architecture: $(uname -m)"
           exit 1
@@ -337,8 +339,8 @@ jobs:
     - name: Build wheels with cibuildwheel (Windows)
       if: runner.os == 'Windows'
       env:
-        CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64"  # For Windows x86_64
-        # CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64 cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
+        # CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64"  # For Windows x86_64
+        CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64 cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
         conda init cmd.exe  # Initialize Conda for Windows
@@ -348,14 +350,14 @@ jobs:
 
         python -m cibuildwheel --output-dir wheelhouse
 
-    # - name: Upload wheel artifacts
-    #   uses: actions/upload-artifact@v4.6.0
-    #   with:
-    #     name: python-wheels-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}  # Unique name based on run ID
-    #     path: wheelhouse/*.whl
-    #     if-no-files-found: ignore
-    #     overwrite: false
-    #     include-hidden-files: false
+    - name: Upload wheel artifacts
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        name: python-wheels-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}  # Unique name based on run ID
+        path: wheelhouse/*.whl
+        if-no-files-found: ignore
+        overwrite: false
+        include-hidden-files: false
 
 
 ##########################################################################
@@ -396,7 +398,12 @@ jobs:
         echo "Building for $ARCH architecture"
         conda config --add channels conda-forge
         conda config --set channel_priority strict
-        conda build ./conda-recipe --output-folder output --python 3.8 
+        conda build ./conda-recipe --output-folder output --python 3.8
+        conda build ./conda-recipe --output-folder output --python 3.9
+        conda build ./conda-recipe --output-folder output --python 3.10
+        conda build ./conda-recipe --output-folder output --python 3.11
+        conda build ./conda-recipe --output-folder output --python 3.12
+        conda build ./conda-recipe --output-folder output --python 3.13
 
 
     - name: Build Conda package (Linux)
@@ -417,7 +424,14 @@ jobs:
         python -m pip install --upgrade pip
         conda config --add channels conda-forge
         conda config --set channel_priority strict
-        conda build ./conda-recipe --output-folder output --python 3.7 
+        conda build ./conda-recipe --output-folder output --python 3.7
+        conda build ./conda-recipe --output-folder output --python 3.8
+        conda build ./conda-recipe --output-folder output --python 3.9
+        conda build ./conda-recipe --output-folder output --python 3.10
+        conda build ./conda-recipe --output-folder output --python 3.11
+        conda build ./conda-recipe --output-folder output --python 3.12
+        conda build ./conda-recipe --output-folder output --python 3.13  
+        
 
     - name:  Build Conda package (Windows)
       if: runner.os == 'Windows'
@@ -433,15 +447,15 @@ jobs:
         conda build ./conda-recipe --output-folder output --python 3.7 --debug
 
 
-    # - name: Upload conda package
-    #   uses: actions/upload-artifact@v4.6.0
-    #   with:
-    #     name: conda-package-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}
-    #     path: |
-    #       output/**/*.tar.bz2
-    #       output/**/*.conda
-    #     if-no-files-found: ignore
-    #     overwrite: false
-    #     include-hidden-files: false
+    - name: Upload conda package
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        name: conda-package-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}
+        path: |
+          output/**/*.tar.bz2
+          output/**/*.conda
+        if-no-files-found: ignore
+        overwrite: false
+        include-hidden-files: false
 
   ###########################################################################
