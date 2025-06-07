@@ -92,7 +92,7 @@ jobs:
         else
           source ~/.bash_profile  # Fallback to .bash_profile
         fi
-
+        echo "Installing for $ARCH architecture"
         conda activate pst-env  # Activate the environment
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
@@ -216,6 +216,13 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         conda init bash 
+        
+        ARCH=$(uname -m)
+        if [ "$ARCH" == "x86_64" ]; then
+          arch -x86_64 /bin/bash -c "conda config --set subdir osx-64"
+        else
+          conda config --set subdir osx-arm64
+        fi
 
         # Check if ~/.bashrc exists. If not, use ~/.bash_profile
         if [ -f ~/.bashrc ]; then
@@ -223,6 +230,8 @@ jobs:
         else
           source ~/.bash_profile  # Fallback to .bash_profile
         fi
+        
+        echo "Building for $ARCH architecture"
         conda activate pst-env  # Activate the environment
         echo "Active Conda Environment:"
         conda info --envs  # Print the list of Conda environments and show the active one
