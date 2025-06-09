@@ -6,3 +6,4 @@ from .convert_C3_T3 import convert_C3_T3
 from .pauliRGB import pauliRGB, read_bin
 from .dxpRGB import dxpRGB
 from .convert_S2_C3T3 import convert_S2_CT
+from .fp_sign import fp_sign

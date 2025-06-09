@@ -75,6 +75,8 @@ Following are the avaialble functions for dual-pol data:
     functions/dual_pol/halphadxp
     functions/dual_pol/shannon_h_dp
     functions/dual_pol/mf3cd
+    functions/dual_pol/dprvic
+    functions/dual_pol/dp_desc
 
 
     

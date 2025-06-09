@@ -328,7 +328,9 @@ polsartools/polsar/dcp/__pycache__/dcp_infiles.cpython-312.pyc
 polsartools/polsar/dcp/__pycache__/mf3cd.cpython-312.pyc
 polsartools/polsar/dxp/__init__.py
 polsartools/polsar/dxp/dopdp.py
+polsartools/polsar/dxp/dp_desc.py
 polsartools/polsar/dxp/dprvi.py
+polsartools/polsar/dxp/dprvic.py
 polsartools/polsar/dxp/dxp_infiles.py
 polsartools/polsar/dxp/halpha_plot_dp.py
 polsartools/polsar/dxp/halphadp.py
@@ -402,6 +404,7 @@ polsartools/utils/convert_S2_C3T3.py
 polsartools/utils/convert_T3_C3.py
 polsartools/utils/convert_matrices.py
 polsartools/utils/dxpRGB.py
+polsartools/utils/fp_sign.py
 polsartools/utils/geo_utils.py
 polsartools/utils/io_utils.py
 polsartools/utils/pauliRGB.py
