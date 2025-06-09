@@ -10,7 +10,7 @@
 [![](https://static.pepy.tech/badge/polsartools)](https://pepy.tech/project/polsartools)
 
 [![image](https://anaconda.org/bnarayanarao/polsartools/badges/version.svg)](https://anaconda.org/bnarayanarao/polsartools)
-[![](https://anaconda.org/bnarayanarao/polsartools/badges/downloads.svg)]([https://pepy.tech/project/polsartools](https://anaconda.org/bnarayanarao/polsartools/files))
+[![image](https://anaconda.org/bnarayanarao/polsartools/badges/downloads.svg)](https://anaconda.org/bnarayanarao/polsartools/files)
 
 [![GitHub commits](https://img.shields.io/github/commits-since/Narayana-Rao/polsartools/0.6.1.svg)](https://GitHub.com/Narayana-Rao/polsartools/commit/)
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
