@@ -1,7 +1,7 @@
 import numpy as np
 from osgeo import gdal 
 from skimage.util.shape import view_as_blocks
-
+import os
 def read_bin(file):
     ds = gdal.Open(file,gdal.GA_ReadOnly)
     band = ds.GetRasterBand(1)
@@ -273,3 +273,64 @@ def write_bin(file,wdata):
     outdata.GetRasterBand(1).WriteArray(wdata)
     # outdata.GetRasterBand(1).SetNoDataValue(np.NaN)##if you want these values transparent
     outdata.FlushCache() ##saves to disk!! 
+
+
+
+def write_s2_ct(matrix_type, matrixFolder, K, azlks, rglks):
+    """
+    Processes and saves C3, T3, C4, or T4 matrices.
+    
+    Args:
+        matrix_type (str): One of "C3", "T3", "C4", "T4".
+        inFile (str): Input file path.
+        K (np.ndarray): Covariance matrix elements.
+        azlks (int): Azimuth looks.
+        rglks (int): Range looks.
+
+    Saves:
+        Binary files for matrix elements in the appropriate directory.
+        Configuration file specifying matrix dimensions.
+    """
+    
+    if matrix_type not in ["C3", "T3", "C4", "T4"]:
+        raise ValueError("Invalid matrix type. Choose 'C3', 'T3', 'C4', or 'T4'.")
+
+    prefix = matrix_type[0]  # Extract first character ('C' or 'T')
+    
+
+    # Compute matrix elements
+    matrices = {
+        f'{prefix}11': mlook(np.abs(K[0])**2, azlks, rglks).astype(np.float32),
+        f'{prefix}22': mlook(np.abs(K[1])**2, azlks, rglks).astype(np.float32),
+        f'{prefix}33': mlook(np.abs(K[2])**2, azlks, rglks).astype(np.float32),
+        f'{prefix}12_real': mlook(np.real(K[0] * np.conj(K[1])), azlks, rglks).astype(np.float32),
+        f'{prefix}12_imag': mlook(np.imag(K[0] * np.conj(K[1])), azlks, rglks).astype(np.float32),
+        f'{prefix}13_real': mlook(np.real(K[0] * np.conj(K[2])), azlks, rglks).astype(np.float32),
+        f'{prefix}13_imag': mlook(np.imag(K[0] * np.conj(K[2])), azlks, rglks).astype(np.float32),
+        f'{prefix}23_real': mlook(np.real(K[1] * np.conj(K[2])), azlks, rglks).astype(np.float32),
+        f'{prefix}23_imag': mlook(np.imag(K[1] * np.conj(K[2])), azlks, rglks).astype(np.float32),
+    }
+
+    # Extend for C4/T4 processing if K has 4 elements
+    if len(K) == 4:
+        matrices.update({
+            f'{prefix}44': mlook(np.abs(K[3])**2, azlks, rglks).astype(np.float32),
+            f'{prefix}14_real': mlook(np.real(K[0] * np.conj(K[3])), azlks, rglks).astype(np.float32),
+            f'{prefix}14_imag': mlook(np.imag(K[0] * np.conj(K[3])), azlks, rglks).astype(np.float32),
+            f'{prefix}24_real': mlook(np.real(K[1] * np.conj(K[3])), azlks, rglks).astype(np.float32),
+            f'{prefix}24_imag': mlook(np.imag(K[1] * np.conj(K[3])), azlks, rglks).astype(np.float32),
+            f'{prefix}34_real': mlook(np.real(K[2] * np.conj(K[3])), azlks, rglks).astype(np.float32),
+            f'{prefix}34_imag': mlook(np.imag(K[2] * np.conj(K[3])), azlks, rglks).astype(np.float32),
+        })
+
+    # Save matrix components
+    for key, matrix in matrices.items():
+        out_file = os.path.join(matrixFolder, f"{key}.bin")
+        write_bin(out_file, matrix)
+        print(f"Saved file {out_file}")
+
+    # Write configuration file
+    rows, cols = matrices[f'{prefix}11'].shape
+    config_file_path = os.path.join(matrixFolder, 'config.txt')
+    with open(config_file_path, "w") as file:
+        file.write(f'Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull')

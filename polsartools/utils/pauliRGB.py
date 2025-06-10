@@ -22,103 +22,78 @@ def norm_data(data):
     data = (data - p5) / (p95 - p5)
 
     return data   
+def read_and_normalize(file_path):
+    """Reads binary data and normalizes it."""
+    return norm_data(read_bin(file_path)) if os.path.isfile(file_path) else None
 
-@time_it
-def pauliRGB(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
-    if os.path.isfile(os.path.join(infolder,"T11.bin")) and os.path.isfile(os.path.join(infolder,"T22.bin")) and os.path.isfile(os.path.join(infolder,"T33.bin")):
-        blue_ = norm_data(read_bin(os.path.join(infolder,"T11.bin")))
-        red_ = norm_data(read_bin(os.path.join(infolder,"T22.bin")))
-        green_ = norm_data(read_bin(os.path.join(infolder,"T33.bin")))
-
-        rgb_uint8 = (np.dstack((red_,green_,blue_)) * 255) .astype(np.uint8)
-        del blue_, red_, green_
-        alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
-        rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
-        del rgb_uint8, alpha_channel
-
-        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgba_uint8)       
-        print(f"Pauli RGB image saved as {os.path.join(infolder, 'PauliRGB.png')}")
-        
-        fig,ax = plt.subplots()
-        plt.imshow(rgba_uint8,vmin=0,vmax=255)
-        ax.axis('off')
-        plt.savefig(os.path.join(infolder,"PauliRGB_thumb.png"), format='png', bbox_inches='tight', pad_inches=0,transparent=True)
-
-    elif os.path.isfile(os.path.join(infolder,"C11.bin")) and os.path.isfile(os.path.join(infolder,"C22.bin")) and os.path.isfile(os.path.join(infolder,"C33.bin")) and os.path.isfile(os.path.join(infolder,"C44.bin")):
-        C11 = read_bin(os.path.join(infolder,"C11.bin"))  # S_hh * S_hh*
-        C22 = read_bin(os.path.join(infolder,"C22.bin")) # S_hv * S_hv*
-        C33 = read_bin(os.path.join(infolder,"C33.bin"))  # S_vh * S_vh*
-        C44 = read_bin(os.path.join(infolder,"C44.bin"))  # S_vv * S_vv*
-
-        C14_real = read_bin(os.path.join(infolder,"C14_real.bin"))  # Re(S_hh * S_vv*)
-
-        red_   = norm_data(C11 + C44 - 2 * C14_real)  # |S_hh - S_vv|^2
-        green_ = norm_data(C22 + C33)                # |S_hv|^2 + |S_vh|^2
-        blue_  = norm_data(C11 + C44 + 2 * C14_real)  # |S_hh + S_vv|^2
-
-        # blue_ = norm_data(0.5*(read_bin(os.path.join(infolder,'C11.bin'))+read_bin(os.path.join(infolder,'C33.bin'))+2*read_bin(os.path.join(infolder,'C13_real.bin'))))
-        # red_ = norm_data(0.5*(read_bin(os.path.join(infolder,'C11.bin'))+read_bin(os.path.join(infolder,'C33.bin'))-2*read_bin(os.path.join(infolder,'C13_real.bin'))))
-        # green_ = norm_data(read_bin(os.path.join(infolder,"C22.bin")))
-        
-        rgb_uint8 = (np.dstack((red_,green_,blue_)) * 255) .astype(np.uint8)
-        del blue_, red_, green_
-        alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
-        rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
-        del rgb_uint8, alpha_channel
-        
-        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgba_uint8)
-        print(f"Pauli RGB image saved as {os.path.join(infolder, 'PauliRGB.png')}")
-        fig,ax = plt.subplots()
-        plt.imshow(rgba_uint8,vmin=0,vmax=255)
-        ax.axis('off')
-        plt.savefig(os.path.join(infolder,"PauliRGB_thumb.png"), format='png', bbox_inches='tight', pad_inches=0,transparent=True)
-        
-
-    elif os.path.isfile(os.path.join(infolder,"C11.bin")) and os.path.isfile(os.path.join(infolder,"C22.bin")) and os.path.isfile(os.path.join(infolder,"C33.bin")):
-        blue_ = norm_data(0.5*(read_bin(os.path.join(infolder,'C11.bin'))+read_bin(os.path.join(infolder,'C33.bin'))+2*read_bin(os.path.join(infolder,'C13_real.bin'))))
-        red_ = norm_data(0.5*(read_bin(os.path.join(infolder,'C11.bin'))+read_bin(os.path.join(infolder,'C33.bin'))-2*read_bin(os.path.join(infolder,'C13_real.bin'))))
-        green_ = norm_data(read_bin(os.path.join(infolder,"C22.bin")))
-        
-        rgb_uint8 = (np.dstack((red_,green_,blue_)) * 255) .astype(np.uint8)
-        del blue_, red_, green_
-        alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
-        rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
-        del rgb_uint8, alpha_channel
-        
-        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgba_uint8)
-        print(f"Pauli RGB image saved as {os.path.join(infolder, 'PauliRGB.png')}")
-        fig,ax = plt.subplots()
-        plt.imshow(rgba_uint8,vmin=0,vmax=255)
-        ax.axis('off')
-        plt.savefig(os.path.join(infolder,"PauliRGB_thumb.png"), format='png', bbox_inches='tight', pad_inches=0,transparent=True)
+def generate_pauli_rgb(red, green, blue, output_path):
+    """Creates an RGBA image and saves it."""
+    rgb_uint8 = (np.dstack((red, green, blue)) * 255).astype(np.uint8)
+    alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
+    rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
     
-    elif os.path.isfile(os.path.join(infolder,"s11.bin")) and os.path.isfile(os.path.join(infolder,"s22.bin")) and os.path.isfile(os.path.join(infolder,"s12.bin")):
-        b_data =  (1/np.sqrt(2))*(read_bin(os.path.join(infolder,"s11.bin")) + read_bin(os.path.join(infolder,"s22.bin")))
-        blue_ = norm_data(np.abs(b_data)**2)
-        
-        b_data =  (1/np.sqrt(2))*(read_bin(os.path.join(infolder,"s11.bin")) - read_bin(os.path.join(infolder,"s22.bin")))
-        red_ = norm_data(np.abs(b_data)**2)
-        
-        b_data =  (2/np.sqrt(2))*read_bin(os.path.join(infolder,"s12.bin")) 
-        green_ = norm_data(np.abs(b_data)**2)
-        del b_data
+    plt.imsave(output_path, rgba_uint8)
+    print(f"Pauli RGB image saved as {output_path}")
+    
+    fig, ax = plt.subplots()
+    plt.imshow(rgba_uint8, vmin=0, vmax=255)
+    ax.axis('off')
+    plt.savefig(output_path.replace(".png", "_thumb.png"), format='png', 
+                bbox_inches='tight', pad_inches=0, transparent=True)
+@time_it
+def pauliRGB(infolder):
+    """
+    Generates a Pauli RGB image from full polarimetric datasets (`S2`,  `C4`, `T4`, `C3`, or `T3`).
+    
+    The function checks for the presence of specific binary data files in the given folder
+    and processes the available dataset into an RGB visualization using the Pauli decomposition.
+    
+    Example Usage:
+        ```python
+        polsartools.utils.pauliRGB("/path/to/data")
+        ```
+    Args:
+        infolder (str): Path to the folder containing the full polarimetric data files.
 
-        rgb_uint8 = (np.dstack((red_,green_,blue_)) * 255) .astype(np.uint8)
-        del blue_, red_, green_
-        alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
-        rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
-        del rgb_uint8, alpha_channel
+    Raises:
+        ValueError: If the folder does not contain a valid dataset (`S2`,  `C4`, `T4`, `C3`, or `T3`).
 
-        plt.imsave(os.path.join(infolder,"PauliRGB.png"),rgba_uint8)       
-        print(f"Pauli RGB image saved as {os.path.join(infolder, 'PauliRGB.png')}")
-        
-        fig,ax = plt.subplots()
-        plt.imshow(rgba_uint8,vmin=0,vmax=255)
-        ax.axis('off')
-        plt.savefig(os.path.join(infolder,"PauliRGB_thumb.png"), format='png', bbox_inches='tight', pad_inches=0,transparent=True)
+    Output:
+        - Saves `PauliRGB.png` and a thumbnail (`PauliRGB_thumb.png`) in `infolder`.
+        - The images represent a false-color visualization of polarization characteristics.
+
+    """
+    
+    # Check for C4 first, ensuring all required files exist
+    c4_files = [os.path.join(infolder, f"C{i}.bin") for i in [11, 22, 33, 44]]
+    if all(os.path.isfile(file) for file in c4_files):
+        C11, C22, C33, C44 = [read_bin(file) for file in c4_files]
+        C14_real = read_bin(os.path.join(infolder, "C14_real.bin"))
+        red = norm_data(C11 + C44 - 2 * C14_real)
+        green = norm_data(C22 + C33)
+        blue = norm_data(C11 + C44 + 2 * C14_real)
+
+    # If C4 is missing, check for C3
+    elif all(os.path.isfile(os.path.join(infolder, f"C{i}.bin")) for i in [11, 22, 33]):
+        C11, C22, C33 = [read_bin(os.path.join(infolder, f"C{i}.bin")) for i in [11, 22, 33]]
+        blue = norm_data(0.5 * (C11 + C33 + 2 * read_bin(os.path.join(infolder, "C13_real.bin"))))
+        red = norm_data(0.5 * (C11 + C33 - 2 * read_bin(os.path.join(infolder, "C13_real.bin"))))
+        green = norm_data(C22)
+
+    # Check for T3 next
+    elif all(os.path.isfile(os.path.join(infolder, f"T{i}.bin")) for i in [11, 22, 33]):
+        red = read_and_normalize(os.path.join(infolder, "T22.bin"))
+        green = read_and_normalize(os.path.join(infolder, "T33.bin"))
+        blue = read_and_normalize(os.path.join(infolder, "T11.bin"))
+
+    # Lastly, check for S2
+    elif all(os.path.isfile(os.path.join(infolder, f"s{i}.bin")) for i in [11, 12, 22]):
+        S11, S12, S22 = [read_bin(os.path.join(infolder, f"s{i}.bin")) for i in [11, 12, 22]]
+        blue = norm_data(np.abs((1 / np.sqrt(2)) * (S11 + S22))**2)
+        red = norm_data(np.abs((1 / np.sqrt(2)) * (S11 - S22))**2)
+        green = norm_data(np.abs((2 / np.sqrt(2)) * S12)**2)
 
     else:
-        raise ValueError("Invalid S2/C3/T3 folder!! \n Please provide a valid S2/C3/T3 folder")
-        
-        
-  
+        raise ValueError("Invalid S2/C3/T3/C4 folder! Provide a valid dataset.")
+    
+    generate_pauli_rgb(red, green, blue, os.path.join(infolder, "PauliRGB.png"))

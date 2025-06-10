@@ -7,6 +7,7 @@
 
 0.7.1
 added dprvic, dp_desc, fp_sign
+extend NISAR rslc,gslc to full pol
 
 
 # BUILD DOCS

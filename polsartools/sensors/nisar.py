@@ -4,13 +4,100 @@ from osgeo import gdal,osr
 import h5py,os,tempfile
 from skimage.util.shape import view_as_blocks
 from polsartools.utils.utils import time_it
-from polsartools.utils.io_utils import mlook, write_T3, write_C3,write_C4,write_s2_bin
+from polsartools.utils.io_utils import mlook, write_T3, write_C3,write_C4,write_s2_bin, write_s2_ct
 #%%
 def read_bin(file):
     ds = gdal.Open(file)
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
     return arr
+
+def nisar_gslc_s2(inFile, S11, S12, S21, S22, xCoordinates, yCoordinates, projection, xCoordinateSpacing, yCoordinateSpacing):
+    # Extract folder path
+    inFolder = os.path.dirname(inFile) or "."
+    S2Folder = os.path.join(inFolder, os.path.basename(inFile).split('.h5')[0], 'S2')
+    os.makedirs(S2Folder, exist_ok=True)
+
+    rows, cols = S11.shape  # Determine matrix dimensions
+
+    # Define the matrices to be saved
+    matrices = {
+        's11.bin': S11,
+        's12.bin': (S12 + S21) * 0.5,
+        's21.bin': (S12 + S21) * 0.5,
+        's22.bin': S22
+    }
+
+    for file_name, matrix in matrices.items():
+        out_file = os.path.join(S2Folder, file_name)
+        gslc_gtif(matrix, xCoordinates, yCoordinates, int(projection),
+                  xCoordinateSpacing, yCoordinateSpacing, out_file,
+                  gdal_driver='ENVI', dtype=gdal.GDT_CFloat64)
+        print(f"Saved file {out_file}")
+
+    # Write configuration file
+    config_file_path = os.path.join(S2Folder, 'config.txt')
+    with open(config_file_path, "w") as file:
+        file.write(f'Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull')
+
+def nisar_gslc_ct(matrix_type, matrixFolder, K, xCoordinates, yCoordinates, projection, xCoordinateSpacing, yCoordinateSpacing, azlks, rglks):
+    if matrix_type not in ["C3", "T3", "C4", "T4"]:
+        raise ValueError("Invalid matrix type. Choose 'C3', 'T3', 'C4', or 'T4'.")
+    
+    prefix = matrix_type[0]  # Extract first character (C or T)
+    
+    # # Extract folder path
+    # inFolder = os.path.dirname(inFile) or "."
+    # matrixFolder = os.path.join(inFolder, os.path.basename(inFile).split('.h5')[0], matrix_type)
+    # os.makedirs(matrixFolder, exist_ok=True)
+
+    # Compute matrix elements
+    matrices = {
+        f'{prefix}11': np.abs(K[0])**2,
+        f'{prefix}22': np.abs(K[1])**2,
+        f'{prefix}33': np.abs(K[2])**2,
+        f'{prefix}12_real': np.real(K[0] * np.conj(K[1])),
+        f'{prefix}12_imag': np.imag(K[0] * np.conj(K[1])),
+        f'{prefix}13_real': np.real(K[0] * np.conj(K[2])),
+        f'{prefix}13_imag': np.imag(K[0] * np.conj(K[2])),
+        f'{prefix}23_real': np.real(K[1] * np.conj(K[2])),
+        f'{prefix}23_imag': np.imag(K[1] * np.conj(K[2])),
+    }
+
+    # Extend for 4-element case (C4/T4)
+    if len(K) == 4:
+        matrices.update({
+            f'{prefix}44': np.abs(K[3])**2,
+            f'{prefix}14_real': np.real(K[0] * np.conj(K[3])),
+            f'{prefix}14_imag': np.imag(K[0] * np.conj(K[3])),
+            f'{prefix}24_real': np.real(K[1] * np.conj(K[3])),
+            f'{prefix}24_imag': np.imag(K[1] * np.conj(K[3])),
+            f'{prefix}34_real': np.real(K[2] * np.conj(K[3])),
+            f'{prefix}34_imag': np.imag(K[2] * np.conj(K[3])),
+        })
+
+    with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tempFile:
+        tempFilePath = tempFile.name
+
+    rows, cols = None, None
+    for key, matrix in matrices.items():
+        gslc_gtif(matrix.astype(np.float32 if 'real' not in key and 'imag' not in key else np.complex64),
+                  xCoordinates, yCoordinates, int(projection),
+                  xCoordinateSpacing, yCoordinateSpacing, tempFilePath, gdal_driver='GTiff')
+
+        rows, cols = mlook_geo(tempFilePath, azlks, rglks, os.path.join(matrixFolder, f"{key}.bin"),
+                               int(projection), gdal_driver='ENVI')
+
+        print(f"Saved file {matrixFolder}/{key}.bin")
+
+    # Write configuration file
+    config_file_path = os.path.join(matrixFolder, 'config.txt')
+    with open(config_file_path, "w") as file:
+        file.write(f'Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull')
+
+    os.remove(tempFilePath)
+
+
 def write_rslc_bin(file,wdata):
     
     # ds = gdal.Open(refData)
@@ -26,10 +113,10 @@ def write_rslc_bin(file,wdata):
     # outdata.GetRasterBand(1).SetNoDataValue(0)##if you want these values transparent
     outdata.FlushCache() ##saves to disk!!
 
-def gslc_gtif(data,x_coords,y_coords,projection_epsg,x_res,y_res,output_file,gdal_driver='GTiff'):
+def gslc_gtif(data,x_coords,y_coords,projection_epsg,x_res,y_res,output_file,gdal_driver='GTiff',dtype=gdal.GDT_Float32):
 
     driver = gdal.GetDriverByName(gdal_driver)
-    dataset = driver.Create(output_file, len(x_coords), len(y_coords), 1, gdal.GDT_Float32)
+    dataset = driver.Create(output_file, len(x_coords), len(y_coords), 1, dtype)
 
     x_min = x_coords[0]
     y_max = y_coords[0]
@@ -44,7 +131,7 @@ def gslc_gtif(data,x_coords,y_coords,projection_epsg,x_res,y_res,output_file,gda
     dataset.FlushCache()
     dataset = None
 
-def rst_mlook(input_raster, az, rg, output_raster,projection_epsg,
+def mlook_geo(input_raster, az, rg, output_raster,projection_epsg,
               gdal_driver='GTiff'):
     ds = gdal.Open(input_raster)
     band = ds.GetRasterBand(1)
@@ -77,7 +164,7 @@ def rst_mlook(input_raster, az, rg, output_raster,projection_epsg,
     return np.shape(result)[0],np.shape(result)[1]
 
 @time_it  
-def nisar_gslc(inFile,azlks=22,rglks=10):
+def nisar_gslc(inFile,azlks=22,rglks=10,matrixType='C3'):
     """
     Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
     and saves them into respective binary files.
@@ -131,11 +218,11 @@ def nisar_gslc(inFile,azlks=22,rglks=10):
     
     if '/science/LSAR' in h5File:
         freq_band = 'L' 
-        print("Detected L-band data ")
+        # print("Detected L-band data ")
 
     elif '/science/SSAR' in h5File:
         freq_band = 'S'
-        print(" Detected S-band data")
+        # print(" Detected S-band data")
 
     else:
         print("Neither LSAR nor SSAR data found in the file.")
@@ -148,61 +235,165 @@ def nisar_gslc(inFile,azlks=22,rglks=10):
     xCoordinates = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/xCoordinates'])
     yCoordinates = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/yCoordinates'])
     projection = np.array(h5File[f'/science/{freq_band}SAR/GSLC/metadata/radarGrid/projection'])
-    S11 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HH'])
-    S12 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HV'])
-    listOfPolarizations = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/listOfPolarizations']).astype(str)
-    len(listOfPolarizations)
-    h5File.close()
 
-    C11 = np.abs(S11)**2
-    C22 = np.abs(S12)**2
-    C12 = S11*np.conjugate(S12)
     
-    del S11,S12
+    listOfPolarizations = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/listOfPolarizations']).astype(str)
+    nchannels = len(listOfPolarizations)
+    print(f"Detected {freq_band}-band {listOfPolarizations} ")
     
-    # tempFile = 'temp.tif'    
-    with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tempFile:
-        tempFilePath = tempFile.name  # Get the file path
+    
+    # S11 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HH'])
+    # S12 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HV'])
+    
+    
+    if nchannels==2:
+        print("Extracting C2 matrix elements...")
+        if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
+            S11 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HH'])
+            S12 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HV'])
+        elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
+            S11 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/VV'])
+            S12 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/VH'])
+        elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
+            S11 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HH'])
+            S12 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/VV'])
+        else:
+            print("No HH, HV, VV, or VH polarizations found in the file.")
+            h5File.close()
+            return
 
-    os.makedirs(C2Folder,exist_ok=True)
-    
-    gslc_gtif(C11,xCoordinates,yCoordinates,int(projection),
-              xCoordinateSpacing,yCoordinateSpacing,tempFilePath,gdal_driver='GTiff')
-    del C11
-    rst_mlook(tempFilePath, azlks, rglks, os.path.join(C2Folder,'C11.bin'),
-              int(projection),gdal_driver='ENVI')
-    print(f"Saved file {C2Folder}/C11.bin")
-    
-    gslc_gtif(C22,xCoordinates,yCoordinates,int(projection),
-              xCoordinateSpacing,yCoordinateSpacing,tempFilePath,gdal_driver='GTiff')
-    del C22
-    rst_mlook(tempFilePath, azlks, rglks, os.path.join(C2Folder,'C22.bin'),
-              int(projection),gdal_driver='ENVI')
-    print(f"Saved file {C2Folder}/C22.bin")
-    
-    gslc_gtif(np.real(C12),xCoordinates,yCoordinates,int(projection),
-              xCoordinateSpacing,yCoordinateSpacing,tempFilePath,gdal_driver='GTiff')
-    
-    rst_mlook(tempFilePath, azlks, rglks, os.path.join(C2Folder,'C12_real.bin'),
-              int(projection),gdal_driver='ENVI')
-    
-    print(f"Saved file {C2Folder}/C12_real.bin")
-    gslc_gtif(np.imag(C12),xCoordinates,yCoordinates,int(projection),
-              xCoordinateSpacing,yCoordinateSpacing,tempFilePath,gdal_driver='GTiff')
-    
-    rows,cols = rst_mlook(tempFilePath, azlks, rglks, os.path.join(C2Folder,'C12_imag.bin'),
-              int(projection),gdal_driver='ENVI')
-    
-    print(f"Saved file {C2Folder}/C12_imag.bin")
-    
-    
-    file = open(C2Folder +'/config.txt',"w+")
-    file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1'%(rows,cols))
-    file.close()  
-    
-    os.remove(tempFilePath)
-    h5File.close()
-    
+        C11 = np.abs(S11)**2
+        C22 = np.abs(S12)**2
+        C12 = S11*np.conjugate(S12)
+        
+        del S11,S12
+        
+        # tempFile = 'temp.tif'    
+        with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tempFile:
+            tempFilePath = tempFile.name  # Get the file path
+
+        os.makedirs(C2Folder,exist_ok=True)
+        
+        gslc_gtif(C11,xCoordinates,yCoordinates,int(projection),
+                xCoordinateSpacing,yCoordinateSpacing,tempFilePath,gdal_driver='GTiff')
+        del C11
+        mlook_geo(tempFilePath, azlks, rglks, os.path.join(C2Folder,'C11.bin'),
+                int(projection),gdal_driver='ENVI')
+        print(f"Saved file {C2Folder}/C11.bin")
+        
+        gslc_gtif(C22,xCoordinates,yCoordinates,int(projection),
+                xCoordinateSpacing,yCoordinateSpacing,tempFilePath,gdal_driver='GTiff')
+        del C22
+        mlook_geo(tempFilePath, azlks, rglks, os.path.join(C2Folder,'C22.bin'),
+                int(projection),gdal_driver='ENVI')
+        print(f"Saved file {C2Folder}/C22.bin")
+        
+        gslc_gtif(np.real(C12),xCoordinates,yCoordinates,int(projection),
+                xCoordinateSpacing,yCoordinateSpacing,tempFilePath,gdal_driver='GTiff')
+        
+        mlook_geo(tempFilePath, azlks, rglks, os.path.join(C2Folder,'C12_real.bin'),
+                int(projection),gdal_driver='ENVI')
+        
+        print(f"Saved file {C2Folder}/C12_real.bin")
+        gslc_gtif(np.imag(C12),xCoordinates,yCoordinates,int(projection),
+                xCoordinateSpacing,yCoordinateSpacing,tempFilePath,gdal_driver='GTiff')
+        
+        rows,cols = mlook_geo(tempFilePath, azlks, rglks, os.path.join(C2Folder,'C12_imag.bin'),
+                int(projection),gdal_driver='ENVI')
+        
+        print(f"Saved file {C2Folder}/C12_imag.bin")
+        
+        
+        file = open(C2Folder +'/config.txt',"w+")
+        file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1'%(rows,cols))
+        file.close()  
+        
+        os.remove(tempFilePath)
+        h5File.close()
+    elif nchannels==4:
+        # print("Detected full polarimetric data")
+        S11 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HH'])
+        S12 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/HV'])        
+        S21 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/VH'])
+        S22 = np.array(h5File[f'/science/{freq_band}SAR/GSLC/grids/frequencyA/VV'])
+        
+        h5File.close()
+        if matrixType=='S2':
+            print("Extracting S2 matrix elements...")
+            nisar_gslc_s2(inFile, S11, S12, S21, S22,
+                          xCoordinates, yCoordinates, projection, 
+                          xCoordinateSpacing, yCoordinateSpacing)
+            
+        elif matrixType=='C3':
+            
+            print("Extracting C3 matrix elements...")
+            
+            inFolder = os.path.dirname(inFile)   
+            if not inFolder:
+                inFolder = "."
+            C3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
+            os.makedirs(C3Folder,exist_ok=True)
+            
+            # 3x3 covariance Matrix
+            nisar_gslc_ct("C3",C3Folder, np.array([S11, np.sqrt(2)*0.5*(S12+S21), S22]), 
+                        xCoordinates, yCoordinates, 
+                            projection, xCoordinateSpacing, yCoordinateSpacing, 
+                            azlks, rglks)
+            
+            # os.remove(tempFilePath)
+        elif matrixType=='T3':
+            print("Extracting T3 matrix elements...")
+            # 3x1 Pauli Coherency Matrix
+            # Kp = (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21])
+            inFolder = os.path.dirname(inFile)   
+            if not inFolder:
+                inFolder = "."
+            T3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
+            os.makedirs(T3Folder,exist_ok=True)
+            
+            nisar_gslc_ct("T3",T3Folder, (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21]), 
+            xCoordinates, yCoordinates, 
+                projection, xCoordinateSpacing, yCoordinateSpacing, 
+                azlks, rglks)
+            
+        elif matrixType=='C4':
+            print("Extracting C4 matrix elements...")
+            
+            inFolder = os.path.dirname(inFile)   
+            if not inFolder:
+                inFolder = "."
+            C4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
+            os.makedirs(C4Folder,exist_ok=True)
+            
+            # 4x4 covariance Matrix
+            nisar_gslc_ct("C4",C4Folder, np.array([S11, S12, S21, S22]), 
+            xCoordinates, yCoordinates, 
+                projection, xCoordinateSpacing, yCoordinateSpacing, 
+                azlks, rglks)
+            
+        elif matrixType=='T4':
+            print("Extracting T4 matrix elements...")
+            
+            inFolder = os.path.dirname(inFile)   
+            if not inFolder:
+                inFolder = "."
+            T4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4')
+            os.makedirs(T4Folder,exist_ok=True)
+            
+            # 4x4 covariance Matrix
+            nisar_gslc_ct("T4",T4Folder, (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21, 1j*(S12-S21)]), 
+            xCoordinates, yCoordinates, 
+                projection, xCoordinateSpacing, yCoordinateSpacing, 
+                azlks, rglks)
+           
+            
+        else:
+            raise ValueError(f"Unknown matrix type {matrixType} \n Valid options are 'S2', 'T3', 'C3'")
+    else:
+        print("No polarimetric data found in the file.")
+        h5File.close()
+        return
+        
 @time_it  
 def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
     """
@@ -323,7 +514,7 @@ def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
         S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])
         
         if matrixType=='S2':
-            print("Extracting T3 matrix elements...")
+            print("Extracting S2 matrix elements...")
             rows,cols = S11.shape
             inFolder = os.path.dirname(inFile)   
             if not inFolder:
@@ -352,74 +543,49 @@ def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
             file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
             file.close() 
         
-        if matrixType=='C3':
+        elif matrixType=='C3':
             print("Extracting C3 matrix elements...")
-            # Kl- 3-D Lexicographic feature vector
-            Kl = np.array([S11, np.sqrt(2)*0.5*(S12+S21), S22])
-            del S11, S12, S21, S22
-
-            # 3x3 COVARIANCE Matrix elements
-
-            C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-            C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-            C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
-
-            C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-            C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-            C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-
-
             inFolder = os.path.dirname(inFile)   
             if not inFolder:
                 inFolder = "."
             C3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
             os.makedirs(C3Folder,exist_ok=True)
             
-            if not os.path.isdir(C3Folder):
-                print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
-                os.mkdir(C3Folder)
-            
-            # write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)
-            write_C3([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),
-                        np.real(C22),np.real(C23),np.imag(C23),
-                        np.real(C33)],C3Folder)
+            write_s2_ct("C3", C3Folder, np.array([S11, np.sqrt(2)*0.5*(S12+S21), S22]), azlks, rglks)
 
-            
         elif matrixType=='T3':
             
             print("Extracting T3 matrix elements...")
-            # 3x1 Pauli Coherency Matrix
-            Kp = (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21])
-
-            del S11,S12,S21,S22
-
-            # 3x3 Pauli Coherency Matrix elements
-            T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
-            T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
-            T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
-
-            T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
-            T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-            T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-
-            del Kp
-            
             
             inFolder = os.path.dirname(inFile)   
             if not inFolder:
                 inFolder = "."
             T3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
             os.makedirs(T3Folder,exist_ok=True)
-
-            if not os.path.isdir(T3Folder):
-                print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
-                os.mkdir(T3Folder)
-                
-            # write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)
-            write_T3([np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13),
-                        np.real(T22),np.real(T23),np.imag(T23),
-                        np.real(T33)],T3Folder)
             
+            write_s2_ct("T3", T3Folder, (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21]), azlks, rglks)
+
+        elif matrixType=='C4':
+            print("Extracting C4 matrix elements...")
+            inFolder = os.path.dirname(inFile)   
+            if not inFolder:
+                inFolder = "."
+            C4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
+            os.makedirs(C4Folder,exist_ok=True)
+            
+            write_s2_ct("C4", C4Folder, np.array([S11, S12, S21, S22]), azlks, rglks)
+
+        elif matrixType=='T4':
+            
+            print("Extracting T4 matrix elements...")
+            
+            inFolder = os.path.dirname(inFile)   
+            if not inFolder:
+                inFolder = "."
+            T4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4')
+            os.makedirs(T4Folder,exist_ok=True)
+            
+            write_s2_ct("T4", T4Folder, (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21, 1j*(S12-S21)]), azlks, rglks)
             
     else:
         print("No polarimetric data found in the file.")
