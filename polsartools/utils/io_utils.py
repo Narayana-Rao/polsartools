@@ -14,7 +14,15 @@ def mlook(data,az,rg):
     flatten = blocks.reshape(blocks.shape[0], blocks.shape[1], -1)
     mean = np.nanmean(flatten, axis=2)
     return mean
- 
+
+def write_s2_bin(file,wdata):
+    [cols, rows] = wdata.shape
+    driver = gdal.GetDriverByName("ENVI")
+    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_CFloat32)
+    outdata.SetDescription(file)
+    outdata.GetRasterBand(1).WriteArray(wdata)
+    outdata.FlushCache()
+    
 def write_T3(T3_list,folder):
     
     out_file = folder +'/T11.bin'

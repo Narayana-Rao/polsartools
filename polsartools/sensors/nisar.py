@@ -4,8 +4,7 @@ from osgeo import gdal,osr
 import h5py,os,tempfile
 from skimage.util.shape import view_as_blocks
 from polsartools.utils.utils import time_it
-from polsartools.utils.io_utils import mlook
-
+from polsartools.utils.io_utils import mlook, write_T3, write_C3,write_C4,write_s2_bin
 #%%
 def read_bin(file):
     ds = gdal.Open(file)
@@ -205,39 +204,38 @@ def nisar_gslc(inFile,azlks=22,rglks=10):
     h5File.close()
     
 @time_it  
-def nisar_rslc(inFile,azlks=22,rglks=10):
+def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
     """
-    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR RSLC HDF5 file 
+    Extracts the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from a NISAR RSLC HDF5 file 
     and saves them into respective binary files.
     
     Example:
     --------
     >>> nisar_rslc("path_to_file.h5", azlks=30, rglks=15)
-    This will extract the C2 matrix elements from the specified NISAR RSLC file 
-    and save them in the 'C2' folder.
+    This will extract the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from the specified NISAR RSLC file 
+    and save them in the respective folders.
     
     Parameters:
     -----------
     inFile : str
         The path to the NISAR RSLC HDF5 file containing the radar data.
 
-    azlks : int, optional (default=20)
+    azlks : int, optional (default=22)
         The number of azimuth looks for multi-looking. 
 
     rglks : int, optional (default=10)
         The number of range looks for multi-looking. 
+        
+    matrixType : str, optional (default = C2 for dual-pol, C3 for full-pol)
+        Type of matrix to extract. Valid options are 'C2', 'S2', 'C3', and 'T3'.
+         
 
     Returns:
     --------
     None
         The function does not return any value. Instead, it creates a folder 
-        named `C2` (if not already present) and saves the following binary files:
-        
-        - `C11.bin`: Contains the C11 matrix elements.
-        - `C22.bin`: Contains the C22 matrix elements.
-        - `C12_real.bin`: Contains the real part of the C12 matrix.
-        - `C12_imag.bin`: Contains the imaginary part of the C12 matrix.
-        - `config.txt`: A text file containing grid dimensions and polarimetric configuration.
+        named `C2/S2/C3/T3` (if not already present) and saves the following binary files:
+
 
     Raises:
     -------
@@ -254,19 +252,14 @@ def nisar_rslc(inFile,azlks=22,rglks=10):
     h5File = h5py.File(inFile,"r")
     if '/science/LSAR' in h5File:
         freq_band = 'L' 
-        print("Detected L-band data ")
+        # print("Detected L-band data ")
     elif '/science/SSAR' in h5File:
         freq_band = 'S' 
-        print(" Detected S-band data")
+        # print(" Detected S-band data")
     else:
         print("Neither LSAR nor SSAR data found in the file.")
         h5File.close()
         return
-    
-    
-    
-    S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])
-    S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])
     
     # xCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinateSpacing'])
     # yCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinateSpacing'])
@@ -274,40 +267,168 @@ def nisar_rslc(inFile,azlks=22,rglks=10):
     # yCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinates'])
     # projection = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/radarGrid/projection'])
     listOfPolarizations = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/listOfPolarizations']).astype(str)
-    len(listOfPolarizations)
-    
-    
-    h5File.close()
-    
-    C11 = np.abs(S11)**2
-    C22 = np.abs(S12)**2
-    C12 = S11*np.conjugate(S12)
-    
-    del S11,S12
+    nchannels = len(listOfPolarizations)
 
-    os.makedirs(C2Folder,exist_ok=True)
-    C11 = mlook(C11,azlks,rglks)
-    rows,cols = C11.shape
-    write_rslc_bin( os.path.join(C2Folder,'C11.bin'), C11)
-    print(f"Saved file {C2Folder}/C11.bin")
-    del C11
+    print(f"Detected {freq_band}-band {listOfPolarizations} ")
     
-    C22 = mlook(C22,azlks,rglks)   
-    write_rslc_bin( os.path.join(C2Folder,'C22.bin'), C22)
-    print(f"Saved file {C2Folder}/C22.bin")
-    del C22
-    
-    C12 = mlook(C12,azlks,rglks)   
-    write_rslc_bin( os.path.join(C2Folder,'C12_real.bin'), np.real(C12))
-    print(f"Saved file {C2Folder}/C12_real.bin")
-    write_rslc_bin( os.path.join(C2Folder,'C12_imag.bin'), np.imag(C12))
-    print(f"Saved file {C2Folder}/C12_imag.bin")
-    del C12
-    
-    
-    file = open(C2Folder +'/config.txt',"w+")
-    file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1'%(rows,cols))
-    file.close()  
-    
+    if nchannels==2:
+        print("Extracting C2 matrix elements...")
+        if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
+            S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])
+            S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])
+        elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
+            S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])
+            S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])
+        elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
+            S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])
+            S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])
+        else:
+            print("No HH, HV, VV, or VH polarizations found in the file.")
+            h5File.close()
+            return
+        C11 = np.abs(S11)**2
+        C22 = np.abs(S12)**2
+        C12 = S11*np.conjugate(S12)
+        
+        del S11,S12
+
+        os.makedirs(C2Folder,exist_ok=True)
+        C11 = mlook(C11,azlks,rglks)
+        rows,cols = C11.shape
+        write_rslc_bin( os.path.join(C2Folder,'C11.bin'), C11)
+        print(f"Saved file {C2Folder}/C11.bin")
+        del C11
+        
+        C22 = mlook(C22,azlks,rglks)   
+        write_rslc_bin( os.path.join(C2Folder,'C22.bin'), C22)
+        print(f"Saved file {C2Folder}/C22.bin")
+        del C22
+        
+        C12 = mlook(C12,azlks,rglks)   
+        write_rslc_bin( os.path.join(C2Folder,'C12_real.bin'), np.real(C12))
+        print(f"Saved file {C2Folder}/C12_real.bin")
+        write_rslc_bin( os.path.join(C2Folder,'C12_imag.bin'), np.imag(C12))
+        print(f"Saved file {C2Folder}/C12_imag.bin")
+        del C12
+        
+        
+        file = open(C2Folder +'/config.txt',"w+")
+        file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1'%(rows,cols))
+        file.close()  
+    elif nchannels==4:
+        # print("Detected full polarimetric data")
+        S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])
+        S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])        
+        S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])
+        S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])
+        
+        if matrixType=='S2':
+            print("Extracting T3 matrix elements...")
+            rows,cols = S11.shape
+            inFolder = os.path.dirname(inFile)   
+            if not inFolder:
+                inFolder = "."
+            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2')
+            os.makedirs(out_dir,exist_ok=True)
+        
+            
+            out_file = os.path.join(out_dir,'s11.bin')
+            write_s2_bin(out_file,S11)
+            print("Saved file "+out_file)
+            
+            out_file = os.path.join(out_dir,'s12.bin')
+            write_s2_bin(out_file,(S12+S21)/2)
+            print("Saved file "+out_file)
+            
+            out_file = os.path.join(out_dir,'s21.bin')
+            write_s2_bin(out_file,(S12+S21)/2)
+            print("Saved file "+out_file)
+            
+            out_file = os.path.join(out_dir,'s22.bin')
+            write_s2_bin(out_file,S22)
+            print("Saved file "+out_file)
+            
+            file = open(out_dir +'/config.txt',"w+")
+            file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
+            file.close() 
+        
+        if matrixType=='C3':
+            print("Extracting C3 matrix elements...")
+            # Kl- 3-D Lexicographic feature vector
+            Kl = np.array([S11, np.sqrt(2)*0.5*(S12+S21), S22])
+            del S11, S12, S21, S22
+
+            # 3x3 COVARIANCE Matrix elements
+
+            C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+            C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+            C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+
+            C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+            C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+            C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+
+
+            inFolder = os.path.dirname(inFile)   
+            if not inFolder:
+                inFolder = "."
+            C3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
+            os.makedirs(C3Folder,exist_ok=True)
+            
+            if not os.path.isdir(C3Folder):
+                print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
+                os.mkdir(C3Folder)
+            
+            # write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)
+            write_C3([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),
+                        np.real(C22),np.real(C23),np.imag(C23),
+                        np.real(C33)],C3Folder)
+
+            
+        elif matrixType=='T3':
+            
+            print("Extracting T3 matrix elements...")
+            # 3x1 Pauli Coherency Matrix
+            Kp = (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21])
+
+            del S11,S12,S21,S22
+
+            # 3x3 Pauli Coherency Matrix elements
+            T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
+            T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
+            T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
+
+            T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
+            T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+            T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+
+            del Kp
+            
+            
+            inFolder = os.path.dirname(inFile)   
+            if not inFolder:
+                inFolder = "."
+            T3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
+            os.makedirs(T3Folder,exist_ok=True)
+
+            if not os.path.isdir(T3Folder):
+                print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
+                os.mkdir(T3Folder)
+                
+            # write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)
+            write_T3([np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13),
+                        np.real(T22),np.real(T23),np.imag(T23),
+                        np.real(T33)],T3Folder)
+            
+            
+    else:
+        print("No polarimetric data found in the file.")
+        h5File.close()
+        return
+        
     h5File.close()
+    
+
+    
+
     

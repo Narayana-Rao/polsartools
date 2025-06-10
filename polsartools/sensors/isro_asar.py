@@ -3,17 +3,8 @@ from osgeo import gdal
 import os,h5py
 import xml.etree.ElementTree as ET
 from polsartools.utils.utils import time_it
-from polsartools.utils.io_utils import mlook, write_T3, write_C3,write_C4
+from polsartools.utils.io_utils import mlook, write_T3, write_C3,write_C4,write_s2_bin
 from polsartools.utils.geo_utils import geocode_grid, intp_grid, update_vrt, write_latlon
-
-
-def write_s2_bin(file,wdata):
-    [cols, rows] = wdata.shape
-    driver = gdal.GetDriverByName("ENVI")
-    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_CFloat32)
-    outdata.SetDescription(file)
-    outdata.GetRasterBand(1).WriteArray(wdata)
-    outdata.FlushCache()
 
 
 
@@ -650,6 +641,45 @@ def asar_C4(inFile,azlks,rglks,cc_linear):
     
 @time_it
 def isro_asar(inFile,matrix='T3',azlks=8,rglks=6,geocode_flag=False,calibration_constant = 42):
+    """
+    Extracts the S2/C3/T3  matrix elements from a ASAR RSLC HDF5 file 
+    and saves them into respective binary files.
+    
+    Example:
+    --------
+    >>> nisar_rslc("path_to_file.h5", azlks=30, rglks=15)
+    This will extract T3 matrix elements from the specified ASAR RSLC file 
+    and save them in the respective folders.
+    
+    Parameters:
+    -----------
+    inFile : str
+        The path to the ASAR RSLC HDF5 file containing the radar data.
+
+    azlks : int, optional (default=8)
+        The number of azimuth looks for multi-looking. 
+
+    rglks : int, optional (default=6)
+        The number of range looks for multi-looking. 
+        
+    matrixType : str, optional (default = T3)
+        Type of matrix to extract. Valid options are 'S2', 'C3', and 'T3'.
+         
+
+    Returns:
+    --------
+    None
+        The function does not return any value. Instead, it creates a folder 
+        named `C2/S2/C3/T3` (if not already present) and saves the following binary files:
+
+
+    Raises:
+    -------
+    Exception
+        If the RSLC HDF5 file is invalid or cannot be read.
+
+
+    """
     
     cc_linear = np.sqrt(10**(calibration_constant/10))
 

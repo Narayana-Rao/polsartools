@@ -339,8 +339,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span><span class="o">,</span><span class="nn">os</span><span class="o">,</span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">skimage.util.shape</span><span class="w"> </span><span class="kn">import</span> <span class="n">view_as_blocks</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">mlook</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">mlook</span><span class="p">,</span> <span class="n">write_T3</span><span class="p">,</span> <span class="n">write_C3</span><span class="p">,</span><span class="n">write_C4</span><span class="p">,</span><span class="n">write_s2_bin</span>
 <span class="c1">#%%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">read_bin</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
@@ -545,39 +544,38 @@
 <div class="viewcode-block" id="nisar_rslc">
 <a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_rslc">[docs]</a>
 <span class="nd">@time_it</span>  
-<span class="k">def</span><span class="w"> </span><span class="nf">nisar_rslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">nisar_rslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR RSLC HDF5 file </span>
+<span class="sd">    Extracts the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from a NISAR RSLC HDF5 file </span>
 <span class="sd">    and saves them into respective binary files.</span>
 <span class="sd">    </span>
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; nisar_rslc(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
-<span class="sd">    This will extract the C2 matrix elements from the specified NISAR RSLC file </span>
-<span class="sd">    and save them in the &#39;C2&#39; folder.</span>
+<span class="sd">    This will extract the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from the specified NISAR RSLC file </span>
+<span class="sd">    and save them in the respective folders.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    inFile : str</span>
 <span class="sd">        The path to the NISAR RSLC HDF5 file containing the radar data.</span>
 
-<span class="sd">    azlks : int, optional (default=20)</span>
+<span class="sd">    azlks : int, optional (default=22)</span>
 <span class="sd">        The number of azimuth looks for multi-looking. </span>
 
 <span class="sd">    rglks : int, optional (default=10)</span>
 <span class="sd">        The number of range looks for multi-looking. </span>
+<span class="sd">        </span>
+<span class="sd">    matrixType : str, optional (default = C2 for dual-pol, C3 for full-pol)</span>
+<span class="sd">        Type of matrix to extract. Valid options are &#39;C2&#39;, &#39;S2&#39;, &#39;C3&#39;, and &#39;T3&#39;.</span>
+<span class="sd">         </span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    None</span>
 <span class="sd">        The function does not return any value. Instead, it creates a folder </span>
-<span class="sd">        named `C2` (if not already present) and saves the following binary files:</span>
-<span class="sd">        </span>
-<span class="sd">        - `C11.bin`: Contains the C11 matrix elements.</span>
-<span class="sd">        - `C22.bin`: Contains the C22 matrix elements.</span>
-<span class="sd">        - `C12_real.bin`: Contains the real part of the C12 matrix.</span>
-<span class="sd">        - `C12_imag.bin`: Contains the imaginary part of the C12 matrix.</span>
-<span class="sd">        - `config.txt`: A text file containing grid dimensions and polarimetric configuration.</span>
+<span class="sd">        named `C2/S2/C3/T3` (if not already present) and saves the following binary files:</span>
+
 
 <span class="sd">    Raises:</span>
 <span class="sd">    -------</span>
@@ -594,19 +592,14 @@
     <span class="n">h5File</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">&#39;/science/LSAR&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
         <span class="n">freq_band</span> <span class="o">=</span> <span class="s1">&#39;L&#39;</span> 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Detected L-band data &quot;</span><span class="p">)</span>
+        <span class="c1"># print(&quot;Detected L-band data &quot;)</span>
     <span class="k">elif</span> <span class="s1">&#39;/science/SSAR&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
         <span class="n">freq_band</span> <span class="o">=</span> <span class="s1">&#39;S&#39;</span> 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Detected S-band data&quot;</span><span class="p">)</span>
+        <span class="c1"># print(&quot; Detected S-band data&quot;)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither LSAR nor SSAR data found in the file.&quot;</span><span class="p">)</span>
         <span class="n">h5File</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span>
-    
-    
-    
-    <span class="n">S11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/HH&#39;</span><span class="p">])</span>
-    <span class="n">S12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/HV&#39;</span><span class="p">])</span>
     
     <span class="c1"># xCoordinateSpacing = np.array(h5File[f&#39;/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinateSpacing&#39;])</span>
     <span class="c1"># yCoordinateSpacing = np.array(h5File[f&#39;/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinateSpacing&#39;])</span>
@@ -614,42 +607,170 @@
     <span class="c1"># yCoordinates = np.array(h5File[f&#39;/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinates&#39;])</span>
     <span class="c1"># projection = np.array(h5File[f&#39;/science/{freq_band}SAR/RSLC/metadata/radarGrid/projection&#39;])</span>
     <span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/listOfPolarizations&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-    <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span>
-    
-    
-    <span class="n">h5File</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    
-    <span class="n">C11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S11</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-    <span class="n">C22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-    <span class="n">C12</span> <span class="o">=</span> <span class="n">S11</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">S12</span><span class="p">)</span>
-    
-    <span class="k">del</span> <span class="n">S11</span><span class="p">,</span><span class="n">S12</span>
+    <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">C11</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">C11</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span>
-    <span class="n">rows</span><span class="p">,</span><span class="n">cols</span> <span class="o">=</span> <span class="n">C11</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">write_rslc_bin</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="s1">&#39;C11.bin&#39;</span><span class="p">),</span> <span class="n">C11</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C11.bin&quot;</span><span class="p">)</span>
-    <span class="k">del</span> <span class="n">C11</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detected </span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">-band </span><span class="si">{</span><span class="n">listOfPolarizations</span><span class="si">}</span><span class="s2"> &quot;</span><span class="p">)</span>
     
-    <span class="n">C22</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">C22</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span>   
-    <span class="n">write_rslc_bin</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="s1">&#39;C22.bin&#39;</span><span class="p">),</span> <span class="n">C22</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C22.bin&quot;</span><span class="p">)</span>
-    <span class="k">del</span> <span class="n">C22</span>
-    
-    <span class="n">C12</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">C12</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span>   
-    <span class="n">write_rslc_bin</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="s1">&#39;C12_real.bin&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C12</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C12_real.bin&quot;</span><span class="p">)</span>
-    <span class="n">write_rslc_bin</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="s1">&#39;C12_imag.bin&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C12</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C12_imag.bin&quot;</span><span class="p">)</span>
-    <span class="k">del</span> <span class="n">C12</span>
-    
-    
-    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">C2Folder</span> <span class="o">+</span><span class="s1">&#39;/config.txt&#39;</span><span class="p">,</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span>
-    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Nrow</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">Ncol</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarCase</span><span class="se">\n</span><span class="s1">monostatic</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarType</span><span class="se">\n</span><span class="s1">pp1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">))</span>
-    <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  
-    
+    <span class="k">if</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C2 matrix elements...&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;HV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">S11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/HH&#39;</span><span class="p">])</span>
+            <span class="n">S12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/HV&#39;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">S11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/VV&#39;</span><span class="p">])</span>
+            <span class="n">S12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/VH&#39;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">S11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/HH&#39;</span><span class="p">])</span>
+            <span class="n">S12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/VV&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No HH, HV, VV, or VH polarizations found in the file.&quot;</span><span class="p">)</span>
+            <span class="n">h5File</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="n">C11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S11</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">C22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">C12</span> <span class="o">=</span> <span class="n">S11</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">S12</span><span class="p">)</span>
+        
+        <span class="k">del</span> <span class="n">S11</span><span class="p">,</span><span class="n">S12</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">C11</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">C11</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span>
+        <span class="n">rows</span><span class="p">,</span><span class="n">cols</span> <span class="o">=</span> <span class="n">C11</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">write_rslc_bin</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="s1">&#39;C11.bin&#39;</span><span class="p">),</span> <span class="n">C11</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C11.bin&quot;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">C11</span>
+        
+        <span class="n">C22</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">C22</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span>   
+        <span class="n">write_rslc_bin</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="s1">&#39;C22.bin&#39;</span><span class="p">),</span> <span class="n">C22</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C22.bin&quot;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">C22</span>
+        
+        <span class="n">C12</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">C12</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span>   
+        <span class="n">write_rslc_bin</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="s1">&#39;C12_real.bin&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C12</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C12_real.bin&quot;</span><span class="p">)</span>
+        <span class="n">write_rslc_bin</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span><span class="s1">&#39;C12_imag.bin&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C12</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C12_imag.bin&quot;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">C12</span>
+        
+        
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">C2Folder</span> <span class="o">+</span><span class="s1">&#39;/config.txt&#39;</span><span class="p">,</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Nrow</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">Ncol</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarCase</span><span class="se">\n</span><span class="s1">monostatic</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarType</span><span class="se">\n</span><span class="s1">pp1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">))</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  
+    <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Detected full polarimetric data&quot;)</span>
+        <span class="n">S11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/HH&#39;</span><span class="p">])</span>
+        <span class="n">S12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/HV&#39;</span><span class="p">])</span>        
+        <span class="n">S21</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/VH&#39;</span><span class="p">])</span>
+        <span class="n">S22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA/VV&#39;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">matrixType</span><span class="o">==</span><span class="s1">&#39;S2&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting T3 matrix elements...&quot;</span><span class="p">)</span>
+            <span class="n">rows</span><span class="p">,</span><span class="n">cols</span> <span class="o">=</span> <span class="n">S11</span><span class="o">.</span><span class="n">shape</span>
+            <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>   
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">inFolder</span><span class="p">:</span>
+                <span class="n">inFolder</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;S2&#39;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+            
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s11.bin&#39;</span><span class="p">)</span>
+            <span class="n">write_s2_bin</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">S11</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+            
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s12.bin&#39;</span><span class="p">)</span>
+            <span class="n">write_s2_bin</span><span class="p">(</span><span class="n">out_file</span><span class="p">,(</span><span class="n">S12</span><span class="o">+</span><span class="n">S21</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+            
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s21.bin&#39;</span><span class="p">)</span>
+            <span class="n">write_s2_bin</span><span class="p">(</span><span class="n">out_file</span><span class="p">,(</span><span class="n">S12</span><span class="o">+</span><span class="n">S21</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+            
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s22.bin&#39;</span><span class="p">)</span>
+            <span class="n">write_s2_bin</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">S22</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+            
+            <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_dir</span> <span class="o">+</span><span class="s1">&#39;/config.txt&#39;</span><span class="p">,</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Nrow</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">Ncol</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarCase</span><span class="se">\n</span><span class="s1">monostatic</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarType</span><span class="se">\n</span><span class="s1">full&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">))</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span> 
+        
+        <span class="k">if</span> <span class="n">matrixType</span><span class="o">==</span><span class="s1">&#39;C3&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C3 matrix elements...&quot;</span><span class="p">)</span>
+            <span class="c1"># Kl- 3-D Lexicographic feature vector</span>
+            <span class="n">Kl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">S11</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">S12</span><span class="o">+</span><span class="n">S21</span><span class="p">),</span> <span class="n">S22</span><span class="p">])</span>
+            <span class="k">del</span> <span class="n">S11</span><span class="p">,</span> <span class="n">S12</span><span class="p">,</span> <span class="n">S21</span><span class="p">,</span> <span class="n">S22</span>
+
+            <span class="c1"># 3x3 COVARIANCE Matrix elements</span>
+
+            <span class="n">C11</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">C22</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">C33</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+            <span class="n">C12</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+            <span class="n">C13</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+            <span class="n">C23</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+
+
+            <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>   
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">inFolder</span><span class="p">:</span>
+                <span class="n">inFolder</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+            <span class="n">C3Folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">C3Folder</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">C3Folder</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;C3 folder does not exist. </span><span class="se">\n</span><span class="s2">Creating folder </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">C3Folder</span><span class="p">))</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">C3Folder</span><span class="p">)</span>
+            
+            <span class="c1"># write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)</span>
+            <span class="n">write_C3</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C11</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C13</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C13</span><span class="p">),</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C22</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C23</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C23</span><span class="p">),</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C33</span><span class="p">)],</span><span class="n">C3Folder</span><span class="p">)</span>
+
+            
+        <span class="k">elif</span> <span class="n">matrixType</span><span class="o">==</span><span class="s1">&#39;T3&#39;</span><span class="p">:</span>
+            
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting T3 matrix elements...&quot;</span><span class="p">)</span>
+            <span class="c1"># 3x1 Pauli Coherency Matrix</span>
+            <span class="n">Kp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">S11</span><span class="o">+</span><span class="n">S22</span><span class="p">,</span> <span class="n">S11</span><span class="o">-</span><span class="n">S22</span><span class="p">,</span> <span class="n">S12</span><span class="o">+</span><span class="n">S21</span><span class="p">])</span>
+
+            <span class="k">del</span> <span class="n">S11</span><span class="p">,</span><span class="n">S12</span><span class="p">,</span><span class="n">S21</span><span class="p">,</span><span class="n">S22</span>
+
+            <span class="c1"># 3x3 Pauli Coherency Matrix elements</span>
+            <span class="n">T11</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">T22</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">T33</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+            <span class="n">T12</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+            <span class="n">T13</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+            <span class="n">T23</span> <span class="o">=</span> <span class="n">mlook</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+
+            <span class="k">del</span> <span class="n">Kp</span>
+            
+            
+            <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>   
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">inFolder</span><span class="p">:</span>
+                <span class="n">inFolder</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+            <span class="n">T3Folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;T3&#39;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">T3Folder</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">T3Folder</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;T3 folder does not exist. </span><span class="se">\n</span><span class="s2">Creating folder </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">T3Folder</span><span class="p">))</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">T3Folder</span><span class="p">)</span>
+                
+            <span class="c1"># write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)</span>
+            <span class="n">write_T3</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T11</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T13</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T13</span><span class="p">),</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T22</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T23</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T23</span><span class="p">),</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T33</span><span class="p">)],</span><span class="n">T3Folder</span><span class="p">)</span>
+            
+            
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No polarimetric data found in the file.&quot;</span><span class="p">)</span>
+        <span class="n">h5File</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span>
+        
     <span class="n">h5File</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+    
+
+    
 
     
 </pre></div>
