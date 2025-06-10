@@ -203,6 +203,9 @@ def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
                       T_T1[3,:,:],T_T1[4,:,:],T_T1[5,:,:],T_T1[6,:,:],T_T1[7,:,:],T_T1[8,:,:]))
     
     data = T_T1.reshape( T_T1.shape[0]*T_T1.shape[1], T_T1.shape[2]).reshape((-1,3,3))
+    
+    # infinity, nan handling
+    data = np.nan_to_num(data, nan=0.0, posinf=1e-6, neginf=-1e-6)
 
     evals_, evecs_ = np.linalg.eig(data.reshape(-1, 3, 3))
 
