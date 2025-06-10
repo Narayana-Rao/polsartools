@@ -3,7 +3,9 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size': 8})
-plt.rcParams["font.family"] = "arial"
+# plt.rcParams["font.family"] = "arial"
+plt.rcParams["font.family"] = "sans-serif"
+
 # plt.rcParams["mathtext.fontset"] = "dejavuserif"
 
 
