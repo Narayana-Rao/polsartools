@@ -79,7 +79,8 @@ def process_chunk_halphadp(chunks, window_size,*args):
 
     data = C2_stack.reshape( C2_stack.shape[0]*C2_stack.shape[1], C2_stack.shape[2] ).reshape((-1,2,2))
     # infinity, nan handling
-    data = np.nan_to_num(data, nan=0.0, posinf=1e-6, neginf=-1e-6)
+    data = np.nan_to_num(data, nan=0.0, posinf=0, neginf=0)
+    # data = np.nan_to_num(data, nan=np.nan, posinf=np.nan, neginf=np.nan)
     
     evals, evecs = np.linalg.eig(data)
     
