@@ -4,7 +4,7 @@ from osgeo import gdal,osr
 import h5py,os,tempfile
 from skimage.util.shape import view_as_blocks
 from polsartools.utils.utils import time_it
-from polsartools.utils.io_utils import mlook, write_T3, write_C3,write_C4,write_s2_bin, write_s2_ct
+from polsartools.utils.io_utils import mlook,write_s2_bin_ref, write_s2_ct_ref
 #%%
 def read_bin(file):
     ds = gdal.Open(file)
@@ -507,85 +507,137 @@ def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
         file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1'%(rows,cols))
         file.close()  
     elif nchannels==4:
-        # print("Detected full polarimetric data")
-        S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])
-        S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])        
-        S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])
-        S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])
         
-        if matrixType=='S2':
+        S11 = h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH']
+        S12 = h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV']
+        S21 = h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH']
+        S22 = h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV']
+
+        if matrixType == 'S2':
             print("Extracting S2 matrix elements...")
-            rows,cols = S11.shape
-            inFolder = os.path.dirname(inFile)   
-            if not inFolder:
-                inFolder = "."
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2')
-            os.makedirs(out_dir,exist_ok=True)
+            rows, cols = S11.shape
+            inFolder = os.path.dirname(inFile) or "."
+            out_dir = os.path.join(inFolder, os.path.basename(inFile).split('.h5')[0], 'S2')
+            os.makedirs(out_dir, exist_ok=True)
+
+            # Lazy loading: Extract data only at time of writing
+            write_s2_bin_ref(os.path.join(out_dir, 's11.bin'), S11[()])
+            write_s2_bin_ref(os.path.join(out_dir, 's12.bin'), (S12[()] + S21[()]) / 2)
+            write_s2_bin_ref(os.path.join(out_dir, 's21.bin'), (S12[()] + S21[()]) / 2)
+            write_s2_bin_ref(os.path.join(out_dir, 's22.bin'), S22[()])
+
+            # Save config file
+            with open(os.path.join(out_dir, 'config.txt'), "w") as file:
+                file.write(f'Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull')
+            print(f"Saved config file {out_dir}/config.txt")
+
+        elif matrixType in ["C3", "T3", "C4", "T4"]:
+            folder_name = matrixType
+            print(f"Extracting {matrixType} matrix elements...")
+
+            inFolder = os.path.dirname(inFile) or "."
+            matrixFolder = os.path.join(inFolder, os.path.basename(inFile).split('.h5')[0], folder_name)
+            os.makedirs(matrixFolder, exist_ok=True)
+
+            # Pass lazy-loaded datasets (do NOT convert them to NumPy arrays)
+            if matrixType == "C3":
+                write_s2_ct_ref("C3", matrixFolder, [S11, np.sqrt(2) * 0.5 * (S12[()] + S21[()]), S22], azlks, rglks)
+            elif matrixType == "T3":
+                write_s2_ct_ref("T3", matrixFolder, np.array([
+                                                                S11[()] + S22[()], 
+                                                                S11[()] - S22[()], 
+                                                                S12[()] + S21[()], 
+                                                            ]) * (1 / np.sqrt(2)), azlks, rglks)
+            elif matrixType == "C4":
+                write_s2_ct_ref("C4", matrixFolder, [S11, S12, S21, S22], azlks, rglks)
+            elif matrixType == "T4":
+                write_s2_ct_ref("T4", matrixFolder, np.array([
+                                                                S11[()] + S22[()], 
+                                                                S11[()] - S22[()], 
+                                                                S12[()] + S21[()], 
+                                                                1j * (np.array(S12[()]).astype(np.complex64) - np.array(S21[()]).astype(np.complex64))
+                                                            ]) * (1 / np.sqrt(2)), azlks, rglks)
+        
+        
+        # print("Detected full polarimetric data")
+        # S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])
+        # S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])        
+        # S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])
+        # S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])
+        
+        # if matrixType=='S2':
+        #     print("Extracting S2 matrix elements...")
+        #     rows,cols = S11.shape
+        #     inFolder = os.path.dirname(inFile)   
+        #     if not inFolder:
+        #         inFolder = "."
+        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2')
+        #     os.makedirs(out_dir,exist_ok=True)
         
             
-            out_file = os.path.join(out_dir,'s11.bin')
-            write_s2_bin(out_file,S11)
-            print("Saved file "+out_file)
+        #     out_file = os.path.join(out_dir,'s11.bin')
+        #     write_s2_bin(out_file,S11)
+        #     print("Saved file "+out_file)
             
-            out_file = os.path.join(out_dir,'s12.bin')
-            write_s2_bin(out_file,(S12+S21)/2)
-            print("Saved file "+out_file)
+        #     out_file = os.path.join(out_dir,'s12.bin')
+        #     write_s2_bin(out_file,(S12+S21)/2)
+        #     print("Saved file "+out_file)
             
-            out_file = os.path.join(out_dir,'s21.bin')
-            write_s2_bin(out_file,(S12+S21)/2)
-            print("Saved file "+out_file)
+        #     out_file = os.path.join(out_dir,'s21.bin')
+        #     write_s2_bin(out_file,(S12+S21)/2)
+        #     print("Saved file "+out_file)
             
-            out_file = os.path.join(out_dir,'s22.bin')
-            write_s2_bin(out_file,S22)
-            print("Saved file "+out_file)
+        #     out_file = os.path.join(out_dir,'s22.bin')
+        #     write_s2_bin(out_file,S22)
+        #     print("Saved file "+out_file)
             
-            file = open(out_dir +'/config.txt',"w+")
-            file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
-            file.close() 
+        #     file = open(out_dir +'/config.txt',"w+")
+        #     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
+        #     file.close() 
         
-        elif matrixType=='C3':
-            print("Extracting C3 matrix elements...")
-            inFolder = os.path.dirname(inFile)   
-            if not inFolder:
-                inFolder = "."
-            C3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
-            os.makedirs(C3Folder,exist_ok=True)
+        # elif matrixType=='C3':
+        #     print("Extracting C3 matrix elements...")
+        #     inFolder = os.path.dirname(inFile)   
+        #     if not inFolder:
+        #         inFolder = "."
+        #     C3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
+        #     os.makedirs(C3Folder,exist_ok=True)
             
-            write_s2_ct("C3", C3Folder, np.array([S11, np.sqrt(2)*0.5*(S12+S21), S22]), azlks, rglks)
+        #     write_s2_ct("C3", C3Folder, np.array([S11, np.sqrt(2)*0.5*(S12+S21), S22]), azlks, rglks)
 
-        elif matrixType=='T3':
+        # elif matrixType=='T3':
             
-            print("Extracting T3 matrix elements...")
+        #     print("Extracting T3 matrix elements...")
             
-            inFolder = os.path.dirname(inFile)   
-            if not inFolder:
-                inFolder = "."
-            T3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
-            os.makedirs(T3Folder,exist_ok=True)
+        #     inFolder = os.path.dirname(inFile)   
+        #     if not inFolder:
+        #         inFolder = "."
+        #     T3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
+        #     os.makedirs(T3Folder,exist_ok=True)
             
-            write_s2_ct("T3", T3Folder, (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21]), azlks, rglks)
+        #     write_s2_ct("T3", T3Folder, (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21]), azlks, rglks)
 
-        elif matrixType=='C4':
-            print("Extracting C4 matrix elements...")
-            inFolder = os.path.dirname(inFile)   
-            if not inFolder:
-                inFolder = "."
-            C4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
-            os.makedirs(C4Folder,exist_ok=True)
+        # elif matrixType=='C4':
+        #     print("Extracting C4 matrix elements...")
+        #     inFolder = os.path.dirname(inFile)   
+        #     if not inFolder:
+        #         inFolder = "."
+        #     C4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
+        #     os.makedirs(C4Folder,exist_ok=True)
             
-            write_s2_ct("C4", C4Folder, np.array([S11, S12, S21, S22]), azlks, rglks)
+        #     write_s2_ct("C4", C4Folder, np.array([S11, S12, S21, S22]), azlks, rglks)
 
-        elif matrixType=='T4':
+        # elif matrixType=='T4':
             
-            print("Extracting T4 matrix elements...")
+        #     print("Extracting T4 matrix elements...")
             
-            inFolder = os.path.dirname(inFile)   
-            if not inFolder:
-                inFolder = "."
-            T4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4')
-            os.makedirs(T4Folder,exist_ok=True)
+        #     inFolder = os.path.dirname(inFile)   
+        #     if not inFolder:
+        #         inFolder = "."
+        #     T4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4')
+        #     os.makedirs(T4Folder,exist_ok=True)
             
-            write_s2_ct("T4", T4Folder, (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21, 1j*(S12-S21)]), azlks, rglks)
+        #     write_s2_ct("T4", T4Folder, (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21, 1j*(S12-S21)]), azlks, rglks)
             
     else:
         print("No polarimetric data found in the file.")

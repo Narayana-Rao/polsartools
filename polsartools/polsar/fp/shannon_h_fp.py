@@ -205,6 +205,7 @@ def proc_shannon_h_fp(chunks, window_size, input_filepaths, *args):
     with np.errstate(divide='ignore', invalid='ignore'):
         HSI = 3 * np.log(np.exp(1) * np.pi * I / 3)
         HSI[np.isinf(HSI)] = np.nan
+        HSI[HSI==0] = np.nan
     
     HS = np.nansum(np.dstack((HSP, HSI)), 2)
 

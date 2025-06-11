@@ -18,11 +18,29 @@ def mlook(data,az,rg):
 def write_s2_bin(file,wdata):
     [cols, rows] = wdata.shape
     driver = gdal.GetDriverByName("ENVI")
-    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_CFloat32)
+    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_CFloat64)
     outdata.SetDescription(file)
     outdata.GetRasterBand(1).WriteArray(wdata)
     outdata.FlushCache()
+
+def write_s2_bin_ref(file, wdata_ref, chunk_size=1000):
+    """Writes large datasets lazily to an ENVI binary file using GDAL."""
     
+    rows, cols = wdata_ref.shape  # h5py.Dataset directly provides shape
+    driver = gdal.GetDriverByName("ENVI")
+    outdata = driver.Create(file, cols, rows, 1, gdal.GDT_CFloat64)  # Maintain correct order
+    outdata.SetDescription(file)
+    band = outdata.GetRasterBand(1)
+
+    # Process dataset in chunks instead of loading everything into RAM
+    for i in range(0, rows, chunk_size):
+        row_end = min(i + chunk_size, rows)
+        chunk = wdata_ref[i:row_end, :]
+        band.WriteArray(chunk, 0, i)  # Write at correct position
+
+    outdata.FlushCache()
+    print(f"Saved file {file}")
+
 def write_T3(T3_list,folder):
     
     out_file = folder +'/T11.bin'
@@ -276,66 +294,6 @@ def write_bin(file,wdata):
 
 
 
-def write_s2_ct_old(matrix_type, matrixFolder, K, azlks, rglks):
-    """
-    Processes and saves C3, T3, C4, or T4 matrices.
-    
-    Args:
-        matrix_type (str): One of "C3", "T3", "C4", "T4".
-        inFile (str): Input file path.
-        K (np.ndarray): Covariance matrix elements.
-        azlks (int): Azimuth looks.
-        rglks (int): Range looks.
-
-    Saves:
-        Binary files for matrix elements in the appropriate directory.
-        Configuration file specifying matrix dimensions.
-    """
-    
-    if matrix_type not in ["C3", "T3", "C4", "T4"]:
-        raise ValueError("Invalid matrix type. Choose 'C3', 'T3', 'C4', or 'T4'.")
-
-    prefix = matrix_type[0]  # Extract first character ('C' or 'T')
-    
-
-    # Compute matrix elements
-    matrices = {
-        f'{prefix}11': mlook(np.abs(K[0])**2, azlks, rglks).astype(np.float32),
-        f'{prefix}22': mlook(np.abs(K[1])**2, azlks, rglks).astype(np.float32),
-        f'{prefix}33': mlook(np.abs(K[2])**2, azlks, rglks).astype(np.float32),
-        f'{prefix}12_real': mlook(np.real(K[0] * np.conj(K[1])), azlks, rglks).astype(np.float32),
-        f'{prefix}12_imag': mlook(np.imag(K[0] * np.conj(K[1])), azlks, rglks).astype(np.float32),
-        f'{prefix}13_real': mlook(np.real(K[0] * np.conj(K[2])), azlks, rglks).astype(np.float32),
-        f'{prefix}13_imag': mlook(np.imag(K[0] * np.conj(K[2])), azlks, rglks).astype(np.float32),
-        f'{prefix}23_real': mlook(np.real(K[1] * np.conj(K[2])), azlks, rglks).astype(np.float32),
-        f'{prefix}23_imag': mlook(np.imag(K[1] * np.conj(K[2])), azlks, rglks).astype(np.float32),
-    }
-
-    # Extend for C4/T4 processing if K has 4 elements
-    if len(K) == 4:
-        matrices.update({
-            f'{prefix}44': mlook(np.abs(K[3])**2, azlks, rglks).astype(np.float32),
-            f'{prefix}14_real': mlook(np.real(K[0] * np.conj(K[3])), azlks, rglks).astype(np.float32),
-            f'{prefix}14_imag': mlook(np.imag(K[0] * np.conj(K[3])), azlks, rglks).astype(np.float32),
-            f'{prefix}24_real': mlook(np.real(K[1] * np.conj(K[3])), azlks, rglks).astype(np.float32),
-            f'{prefix}24_imag': mlook(np.imag(K[1] * np.conj(K[3])), azlks, rglks).astype(np.float32),
-            f'{prefix}34_real': mlook(np.real(K[2] * np.conj(K[3])), azlks, rglks).astype(np.float32),
-            f'{prefix}34_imag': mlook(np.imag(K[2] * np.conj(K[3])), azlks, rglks).astype(np.float32),
-        })
-
-    # Save matrix components
-    for key, matrix in matrices.items():
-        out_file = os.path.join(matrixFolder, f"{key}.bin")
-        write_bin(out_file, matrix)
-        print(f"Saved file {out_file}")
-
-    # Write configuration file
-    rows, cols = matrices[f'{prefix}11'].shape
-    config_file_path = os.path.join(matrixFolder, 'config.txt')
-    with open(config_file_path, "w") as file:
-        file.write(f'Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull')
-
-
 def write_s2_ct(matrix_type, matrixFolder, K, azlks, rglks):
     """
     Processes and saves C3, T3, C4, or T4 matrices sequentially.
@@ -384,6 +342,62 @@ def write_s2_ct(matrix_type, matrixFolder, K, azlks, rglks):
         process_and_write(f'{prefix}24_imag', mlook(np.imag(K[1] * np.conj(K[3])), azlks, rglks))
         process_and_write(f'{prefix}34_real', mlook(np.real(K[2] * np.conj(K[3])), azlks, rglks))
         process_and_write(f'{prefix}34_imag', mlook(np.imag(K[2] * np.conj(K[3])), azlks, rglks))
+
+    # Write configuration file
+    config_file_path = os.path.join(matrixFolder, 'config.txt')
+    with open(config_file_path, "w") as file:
+        file.write(f'Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull')
+    print(f"Saved config file {config_file_path}")
+
+
+def write_s2_ct_ref(matrix_type, matrixFolder, K_refs, azlks, rglks):
+    """
+    Processes and saves C3, T3, C4, or T4 matrices sequentially using lazy loading.
+
+    Args:
+        matrix_type (str): One of "C3", "T3", "C4", "T4".
+        K_refs (list): References to covariance matrix elements (`h5py.Dataset`).
+        azlks (int): Azimuth looks.
+        rglks (int): Range looks.
+
+    Saves:
+        Binary files for matrix elements in the appropriate directory.
+        Configuration file specifying matrix dimensions.
+    """
+
+    if matrix_type not in ["C3", "T3", "C4", "T4"]:
+        raise ValueError("Invalid matrix type. Choose 'C3', 'T3', 'C4', or 'T4'.")
+
+    prefix = matrix_type[0]  # Extract first character ('C' or 'T')
+
+    def process_and_write(key, computation):
+        """ Helper function to compute and write each element sequentially. """
+        matrix = computation.astype(np.float32)  # Ensure correct type
+        out_file = os.path.join(matrixFolder, f"{key}.bin")
+        write_bin(out_file, matrix)
+        print(f"Saved file {out_file}")
+        return matrix.shape  # Capture shape for config file
+
+    # Process each matrix element **lazily** by only loading required portions
+    rows, cols = process_and_write(f'{prefix}11', mlook(np.abs(K_refs[0][()])**2, azlks, rglks))
+    process_and_write(f'{prefix}22', mlook(np.abs(K_refs[1][()])**2, azlks, rglks))
+    process_and_write(f'{prefix}33', mlook(np.abs(K_refs[2][()])**2, azlks, rglks))
+    process_and_write(f'{prefix}12_real', mlook(np.real(K_refs[0][()] * np.conj(K_refs[1][()])), azlks, rglks))
+    process_and_write(f'{prefix}12_imag', mlook(np.imag(K_refs[0][()] * np.conj(K_refs[1][()])), azlks, rglks))
+    process_and_write(f'{prefix}13_real', mlook(np.real(K_refs[0][()] * np.conj(K_refs[2][()])), azlks, rglks))
+    process_and_write(f'{prefix}13_imag', mlook(np.imag(K_refs[0][()] * np.conj(K_refs[2][()])), azlks, rglks))
+    process_and_write(f'{prefix}23_real', mlook(np.real(K_refs[1][()] * np.conj(K_refs[2][()])), azlks, rglks))
+    process_and_write(f'{prefix}23_imag', mlook(np.imag(K_refs[1][()] * np.conj(K_refs[2][()])), azlks, rglks))
+
+    # Extend for C4/T4 processing if K has 4 elements
+    if len(K_refs) == 4:
+        process_and_write(f'{prefix}44', mlook(np.abs(K_refs[3][()])**2, azlks, rglks))
+        process_and_write(f'{prefix}14_real', mlook(np.real(K_refs[0][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}14_imag', mlook(np.imag(K_refs[0][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}24_real', mlook(np.real(K_refs[1][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}24_imag', mlook(np.imag(K_refs[1][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}34_real', mlook(np.real(K_refs[2][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}34_imag', mlook(np.imag(K_refs[2][()] * np.conj(K_refs[3][()])), azlks, rglks))
 
     # Write configuration file
     config_file_path = os.path.join(matrixFolder, 'config.txt')

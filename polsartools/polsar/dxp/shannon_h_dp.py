@@ -120,6 +120,7 @@ def process_chunk_shannondp(chunks, window_size,*args):
     with np.errstate(divide='ignore', invalid='ignore'):
         HSI = 2 * np.log(np.exp(1) * np.pi * I / 2)
         HSI[np.isinf(HSI)] = np.nan
+        HSI[HSI==0] = np.nan
     
     HS = np.nansum(np.dstack((HSP, HSI)), 2)
 
