@@ -419,6 +419,7 @@ polsartools/utils/convert_matrices.py
 polsartools/utils/dxpRGB.py
 polsartools/utils/fp_sign.py
 polsartools/utils/geo_utils.py
+polsartools/utils/geotiff_standard.py
 polsartools/utils/io_utils.py
 polsartools/utils/pauliRGB.py
 polsartools/utils/proc_utils.py

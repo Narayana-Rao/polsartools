@@ -22,7 +22,7 @@ copyright = '2025, Narayanarao Bhogapurapu'
 author = 'Narayanarao Bhogapurapu'
 
 
-release = '0.6.1'
+release = '0.7'
 
 
 # -- General configuration ---------------------------------------------------

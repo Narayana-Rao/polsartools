@@ -4,11 +4,12 @@
 #  __version__.py
 #  __init__.py
 # conda-recipe/meta.yaml
+# docs/source/conf.py
 
 0.7.1
 added dprvic, dp_desc, fp_sign
-extend NISAR rslc,gslc to full pol
-
+extend NISAR rslc, gslc to full pol
+fix rslc memory issue 
 
 # BUILD DOCS
 sphinx-build -M clean docs/source docs/build
