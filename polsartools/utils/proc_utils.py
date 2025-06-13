@@ -11,6 +11,7 @@ def process_chunks_parallel(
                             write_flag,
                             processing_func,
                             *proc_args,  # NEW
+                            bands_to_read=None,  # New argument
                             block_size=(512, 512),
                             max_workers=None,
                             num_outputs=1,
@@ -24,9 +25,12 @@ def process_chunks_parallel(
                         ):
 
 
-    if len(input_filepaths) not in [2, 4, 9]:
-        raise ValueError("This function only supports 2, 4, or 9 input rasters.")
-
+    # if len(input_filepaths) not in [2, 4, 9]:
+    #     raise ValueError("This function only supports 2, 4, or 9 input rasters.")
+    
+    if bands_to_read is None:
+        bands_to_read = [1] * len(input_filepaths) 
+        
     if max_workers is None:
         max_workers = os.cpu_count()-1  # Use all available CPUs
         # max_workers = 1
@@ -67,7 +71,7 @@ def process_chunks_parallel(
                 args_ = ( input_filepaths, x, y, read_block_width, read_block_height, window_size,  raster_width, raster_height, *proc_args )
                 
                 # print(f"Submitting task for chunk at ({x}, {y})")
-                tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, num_outputs, output_width,  output_height,**proc_kwargs))
+                tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, bands_to_read, num_outputs, output_width,  output_height,**proc_kwargs))
         # Initialize tqdm progress bar with the total number of tasks
         with tqdm(total=len(tasks), desc=f"Progress ", unit=" block") as pbar:
             temp_files = []
@@ -103,17 +107,17 @@ def process_chunks_parallel(
                 os.remove(temp_path)
                 
         if post_proc:
-            post_proc(output_filepaths)
+            post_proc(input_filepaths,output_filepaths)
     else:
         return merged_arrays
 
-def read_chunk_with_overlap(filepath, x_start, y_start, width, height, window_size):
+def read_chunk_with_overlap(filepath, band_index, x_start, y_start, width, height, window_size):
     dataset = gdal.Open(filepath, gdal.GA_ReadOnly)
     if dataset is None:
         raise FileNotFoundError(f"Cannot open {filepath}")
     
-    band = dataset.GetRasterBand(1)
-    
+    # band = dataset.GetRasterBand(1)
+    band = dataset.GetRasterBand(band_index)
     
     if not window_size:  # None or 0
         chunk = band.ReadAsArray(x_start, y_start, width, height)
@@ -322,11 +326,17 @@ def merge_temp_files(output_filepaths, temp_files, output_width, output_height, 
 
 
 
-def process_and_write_chunk(args, processing_func, num_outputs, output_width, output_height, **proc_kwargs):
+def process_and_write_chunk(args, processing_func, bands_to_read, num_outputs, output_width, output_height, **proc_kwargs):
     # try:
         (input_filepaths, x_start, y_start, read_block_width, read_block_height, window_size, raster_width, raster_height, *proc_args) = args
 
-        chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
+        # chunks = [read_chunk_with_overlap(fp, x_start, y_start, read_block_width, read_block_height, window_size) for fp in input_filepaths]
+        
+        chunks = []
+        for fp, bands in zip(input_filepaths, bands_to_read):
+            dataset_chunks = [read_chunk_with_overlap(fp, b, x_start, y_start, read_block_width, read_block_height, window_size)
+                            for b in range(1, bands+1)]
+            chunks.extend(dataset_chunks)  # Treat each band as a separate chunk
         # processed_chunks = processing_func(chunks, window_size, input_filepaths, chi_in,psi_in,model)
         processed_chunks = processing_func(
             # chunks, window_size, input_filepaths, *proc_args, **proc_kwargs
