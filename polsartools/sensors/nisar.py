@@ -457,7 +457,18 @@ def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
     # xCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinates'])
     # yCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinates'])
     # projection = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/radarGrid/projection'])
-    listOfPolarizations = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/listOfPolarizations']).astype(str)
+    
+    if f'/science/{freq_band}SAR/RSLC' in h5File:
+        base_path = f'/science/{freq_band}SAR/RSLC/swaths/frequencyA'
+    elif f'/science/{freq_band}SAR/SLC' in h5File:
+        base_path = f'/science/{freq_band}SAR/SLC/swaths/frequencyA'
+    else:
+        print("Neither RSLC nor SLC found in the HDF5 structure.")
+        h5File.close()
+        return
+    
+    
+    listOfPolarizations = np.array(h5File[f'{base_path}/listOfPolarizations']).astype(str)
     nchannels = len(listOfPolarizations)
 
     print(f"Detected {freq_band}-band {listOfPolarizations} ")
@@ -465,14 +476,14 @@ def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
     if nchannels==2:
         print("Extracting C2 matrix elements...")
         if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
-            S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])
-            S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])
+            S11 = np.array(h5File[f'{base_path}/HH'])
+            S12 = np.array(h5File[f'{base_path}/HV'])
         elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
-            S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])
-            S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])
+            S11 = np.array(h5File[f'{base_path}/VV'])
+            S12 = np.array(h5File[f'{base_path}/VH'])
         elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
-            S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])
-            S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])
+            S11 = np.array(h5File[f'{base_path}/HH'])
+            S12 = np.array(h5File[f'{base_path}/VV'])
         else:
             print("No HH, HV, VV, or VH polarizations found in the file.")
             h5File.close()
@@ -508,10 +519,10 @@ def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
         file.close()  
     elif nchannels==4:
         
-        S11 = h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH']
-        S12 = h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV']
-        S21 = h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH']
-        S22 = h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV']
+        S11 = h5File[f'{base_path}/HH']
+        S12 = h5File[f'{base_path}/HV']
+        S21 = h5File[f'{base_path}/VH']
+        S22 = h5File[f'{base_path}/VV']
 
         if matrixType == 'S2':
             print("Extracting S2 matrix elements...")
