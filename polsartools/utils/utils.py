@@ -2,7 +2,7 @@ import os, tempfile
 from osgeo import gdal
 import numpy as np
 from functools import wraps
-import time
+import time,h5py
 
 def time_it(func):
     @wraps(func)
@@ -56,3 +56,13 @@ def read_bin(file):
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
     return arr
+def h5_keys(obj):
+    "Recursively find all keys in an h5py.Group."
+    keys = (obj.name,)
+    if isinstance(obj, h5py.Group):
+        for key, value in obj.items():
+            if isinstance(value, h5py.Group):
+                keys = keys + h5_keys(value)
+            else:
+                keys = keys + (value.name,)
+    return keys

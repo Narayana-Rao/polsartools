@@ -12,18 +12,6 @@ def read_bin(file):
     arr = band.ReadAsArray()
     return arr
 
-def h5_keys(inFile):
-    "Recursively find all keys in an h5py.Group."
-    obj = h5py.File(inFile,"r")
-    keys = (obj.name,)
-    if isinstance(obj, h5py.Group):
-        for key, value in obj.items():
-            if isinstance(value, h5py.Group):
-                keys = keys + h5_keys(value)
-            else:
-                keys = keys + (value.name,)
-    return keys
-
 def nisar_gslc_s2(inFile, S11, S12, S21, S22, xCoordinates, yCoordinates, projection, xCoordinateSpacing, yCoordinateSpacing):
     # Extract folder path
     inFolder = os.path.dirname(inFile) or "."
