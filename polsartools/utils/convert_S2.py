@@ -65,54 +65,50 @@ def convert_S2(infolder, matrix='T3', azlks=4,rglks=2, cf = 1,
                   outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], 
                   write_flag=True, max_workers=None,block_size=(512, 512)):
     """
-    Converts Full-pol scattering matrix, S2 data into either the multi-looked T3 (coherency) or C3 (covariance) matrix format and saves them in PolSARpro format.
+    Convert full-polarimetric scattering (S2) matrix into multi-looked
+    coherency (T4, T3, T2) or covariance (C4, C3, C2) matrices.
+    It supports both GeoTIFF and PolSARpro-compatible output.
 
-    Example Usage:
-    --------------
-    >>> convert_S2('/path/to/S2_data', matrix='C3', azlks=10, rglks=5)
-
-    Parameters:
-    -----------
-    infolder : str
-        Path to the input folder scattering matrix data.
-
-    matrix : str, optional, default='T3'
-        The matrix type to generate. Options:
-        - 'T3' : 3x3 Coherency matrix
-        - 'C3' : 3x3 Covariance matrix
-        - 'T4' : 4x4 Coherency matrix
-        - 'C4' : 4x4 Covariance matrix
-        - 'C2HX' : 2x2 Covariance matrix
-        - 'C2VX' : 2x2 Covariance matrix
-        - 'C2HV' : 2x2 Covariance matrix
-        - 'T2HV' : 2x2 Coherency matrix
-
-    azlks : int, optional, default=8
-        Number of azimuth looks for multi-looking (averaging in the azimuth direction).
-
-    rglks : int, optional, default=2
-        Number of range looks for multi-looking (averaging in the range direction).
-
-    max_workers : int, optional, default=None
-        Number of workers for parallel processing.
-
-    block_size : tuple of (int, int), optional, default=(512, 512)
-        Block size for chunk-based parallel processing.
-
-    Returns:
+    Examples
     --------
-    None
-        The function processes raster data and writes outputs to the specified folder.
+    >>> # Convert to C3 matrix with 10x5 multi-looking
+    >>> convert_S2("/path/to/S2_data", matrix="C3", azlks=10, rglks=5)
 
-    Raises:
+    >>> # Output as tiled GeoTIFF with Cloud Optimized overviews
+    >>> convert_S2("/data/S2", matrix="T4", cog_flag=True)
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing S11, S12, S21, S22 scattering components.
+    matrix : str, default='T3'
+        Output matrix format. Supported values:
+        - 'T4', 'T3', 'T2HV' (Coherency)
+        - 'C4', 'C3', 'C2HX', 'C2VX', 'C2HV' (Covariance)
+    azlks : int, default=4
+        Number of looks in azimuth direction.
+    rglks : int, default=2
+        Number of looks in range direction.
+    cf : float, default=1
+        Calibration factor to adjust the amplitude of S2 data.
+    outType : {'tif', 'bin'}, default='tif'
+        Output format type.
+    cog_flag : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG).
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Levels of pyramid overviews for COG generation.
+    write_flag : bool, default=True
+        If False, skips writing output to disk.
+    max_workers : int | None, default=None
+        Number of parallel worker threads.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of chunks for processing.
+
+    Returns
     -------
-    FileNotFoundError
-        If the required Sentinel-2 input files are not found.
-    
-    Exception
-        If an invalid matrix type is provided.
+    None
+        Writes multi-looked polarimetric matrix to disk in the selected format.
 
-   
     """
     
     window_size=None

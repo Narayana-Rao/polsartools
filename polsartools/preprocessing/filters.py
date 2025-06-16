@@ -7,8 +7,49 @@ from polsartools.preprocessing.pre_utils import get_filter_io_paths
 from polsartools.preprocessing.rflee_filter import process_chunk_refined_lee
 from polsartools.rflee import process_chunk_rfleecpp
 @time_it
-def boxcar(infolder,  window_size=3, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
-    
+def boxcar(infolder,  window_size=3, outType="tif", 
+           cog_flag=False, cog_overviews = [2, 4, 8, 16], 
+           write_flag=True, max_workers=None,block_size=(512, 512)):
+    """
+    Apply a Boxcar speckle filter to polarimetric SAR data to reduce speckle noise.
+
+    The Boxcar filter performs a uniform mean filter over a square window, effectively 
+    smoothing the polarimetric matrix to enhance interpretability. It is a fast, 
+    straightforward speckle reduction technique suitable for preprocessing and 
+    visualization.
+
+    Examples
+    --------
+    >>> # Basic usage
+    >>> boxcar("/path/to/polSAR_data")
+
+    >>> # With custom window size and output as GeoTIFF
+    >>> boxcar("/path/to/polSAR_data", window_size=5, cog_flag=True)
+
+    Parameters
+    ----------
+    infolder : str
+        Input folder containing C4, T4, C3, T3, C2, or T2 matrix files (.bin or .tif).
+    window_size : int, default=3
+        Size of the spatial smoothing window (e.g., 3x3).
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format type.
+    cog_flag : bool, default=False
+        If True, generates a Cloud Optimized GeoTIFF.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG pyramids.
+    write_flag : bool, default=True
+        If False, processes data in memory without saving to disk.
+    max_workers : int | None, default=None
+        Maximum number of parallel workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Block size for chunked processing.
+
+    Returns
+    -------
+    None
+        Writes filtered output matrix files to disk.
+    """
     input_filepaths, output_filepaths = get_filter_io_paths(infolder, [window_size, window_size], outType=outType, filter_type="boxcar")
 
     # Process chunks in parallel
@@ -31,9 +72,51 @@ def process_chunk_boxcar(chunks, window_size, *args):
 
 
 @time_it
-def rlee(infolder,  window_size=3, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
+def rlee(infolder,  window_size=3, outType="tif", 
+         cog_flag=False, cog_overviews = [2, 4, 8, 16], 
+         write_flag=True, max_workers=None,block_size=(512, 512)):
 
+    """
+    Apply Refined Lee (RLee) speckle filter to polarimetric SAR data.
 
+    The Refined Lee filter is an adaptive speckle filter that preserves edges and 
+    structural details while reducing noise. Unlike Boxcar, RLee dynamically adjusts 
+    based on local statistics, making it more suitable for classification, 
+    segmentation, and biophysical retrieval tasks.
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> rlee("/path/to/polSAR_data")
+
+    >>> # Custom usage with large window and tiled COG output
+    >>> rlee("/path/to/polSAR_data", window_size=7, cog_flag=True)
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the folder with C4, T4, C3, T3, C2, or T2 matrix files.
+    window_size : int, default=3
+        Size of the adaptive filtering window.
+    outType : {'tif', 'bin'}, default='tif'
+        Desired output file format.
+    cog_flag : bool, default=False
+        Create Cloud Optimized GeoTIFF with overviews and internal tiling.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview pyramid levels for zoomable image access.
+    write_flag : bool, default=True
+        Write the output to disk if True.
+    max_workers : int | None, default=None
+        Number of threads for parallel processing.
+    block_size : tuple[int, int], default=(512, 512)
+        Block size used during chunked filtering.
+
+    Returns
+    -------
+    None
+        Output files are written to disk with the applied RLee filter.
+    """
+    
     input_filepaths, output_filepaths = get_filter_io_paths(infolder, [window_size, window_size], outType=outType, filter_type="rlee")
     num_outputs = len(output_filepaths)
     

@@ -23,6 +23,8 @@ from .sensors.rs2_fp import rs2_fp
 from .sensors.isro_asar import isro_asar
 from .utils import convert_T3_C3,convert_C3_T3, convert_S2
 from .utils import fp_sign
+from .utils import pauliRGB, dxpRGB
+
 from .preprocessing.filters import boxcar, rlee
 from .preprocessing.mlook import mlook
 
@@ -38,7 +40,7 @@ __all__ = [
     'nisar_gslc', 'nisar_rslc',
     'alos2_fbd_l11','alos2_hbq_l11', 'chyaan2_fp','rs2_fp',  
     #
-    'fp_sign',
+    'fp_sign','pauliRGB','dxpRGB',
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS

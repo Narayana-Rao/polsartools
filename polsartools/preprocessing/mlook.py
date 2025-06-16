@@ -5,13 +5,67 @@ from polsartools.utils.utils import time_it, mlook_arr
 from polsartools.preprocessing.pre_utils import get_filter_io_paths
 from osgeo import gdal
 @time_it
-def mlook(infolder,  azlks=2, rglks=2, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
+def mlook(infolder,  azlks=2, rglks=2, outType="tif", 
+          cog_flag=False, cog_overviews = [2, 4, 8, 16], 
+          write_flag=True, max_workers=None,block_size=(512, 512)):
     
+    """
+    Generate multilooked polarimetric matrix from C4, T4, C3, T3, C2, or T2 formats.
+
+    This function applies multilooking (spatial averaging) to reduce speckle noise 
+    and improve radiometric stability in polarimetric SAR datasets.
+
+    Examples
+    --------
+    >>> # Basic usage with default look factors
+    >>> mlook("/path/to/polSAR_data")
+
+    >>> # With 3 azimuth and 2 range looks, and COG GeoTIFF output
+    >>> mlook("/path/to/polSAR_data", azlks=3, rglks=2, outType="tif", cog_flag=True)
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing a supported polarimetric matrix.
+    azlks : int, default=2
+        Number of looks in azimuth (vertical) direction.
+    rglks : int, default=2
+        Number of looks in range (horizontal) direction.
+    outType : {'tif', 'bin'}, default='tif'
+        Output format:
+        - 'tif': Cloud-optimized GeoTIFF (if cog_flag is True)
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        Enable Cloud Optimized GeoTIFF output with internal overviews and tiling.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for pyramid generation (used with COGs).
+    write_flag : bool, default=True
+        Whether to write the multilooked data to disk or return only in-memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel worker threads (defaults to all available CPUs).
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks for chunked and parallel execution.
+
+    Returns
+    -------
+    None
+        The multilooked output matrix is saved to disk. Number and names of output
+        files depend on matrix type (e.g., C3 → C11.tif, C12_real.tif, etc.).
+
+    Notes
+    -----
+    - Supported polarimetric matrices: 'C4', 'T4', 'C3', 'T3', 'C2', 'T2'
+    - Automatically detects matrix type and file extension (.bin or .tif)
+    - Handles real and complex-valued data appropriately (e.g., multilooks real and imag separately)
+    - Output pixel spacing is updated in geotransform metadata based on look factors
+    """
+    
+    if azlks <= 0 or rglks <= 0:
+        raise ValueError("azlks and rglks must be positive integers")
   
     input_filepaths, output_filepaths = get_filter_io_paths(infolder, [azlks, rglks],
                                                             outType=outType, 
                                                             filter_type="ml")
-
 
     window_size=None
 
@@ -60,11 +114,6 @@ def mlook(infolder,  azlks=2, rglks=2, outType="tif", cog_flag=False, cog_overvi
     block_size = (block_x_size, block_y_size)
 
 
-
-
-    # Process chunks in parallel
-    num_outputs = len(output_filepaths)
-
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
                              window_size,
                             write_flag,
@@ -82,23 +131,13 @@ def mlook(infolder,  azlks=2, rglks=2, outType="tif", cog_flag=False, cog_overvi
                             azlks=azlks,
                             rglks=rglks
                             )
-    # process_chunks_parallel(input_filepaths, list(output_filepaths), 
-    #                         window_size=window_size, 
-    #                         write_flag=write_flag,
-    #                         processing_func=process_chunk_mlook,
-    #                         block_size=block_size, max_workers=max_workers,  
-    #                         num_outputs=num_outputs,
-    #                         cog_flag=cog_flag,
-    #                         cog_overviews=cog_overviews,
-    #                         )
 
 def process_chunk_mlook(chunks, window_size, *args, **kwargs):
     azlks=args[-2]
     rglks=args[-1]
     # print("mlook",azlks,rglks)
     mlook_chunks = []
-    # for i in range(len(chunks)):
-    #     mlook_chunks.append(mlook_arr(np.array(chunks[i]), azlks,rglks).astype(np.float32))
+
     for chunk in chunks:
         arr = np.array(chunk)
         if np.iscomplexobj(arr):

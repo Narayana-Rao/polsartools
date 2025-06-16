@@ -1,21 +1,31 @@
+
+multi-looking (``mlook``)
+-------------------------
+
+.. autofunction:: polsartools.mlook
+   :noindex:
+
+conver full-pol S2 (``convert_S2``)
+-----------------------------------
+
+.. autofunction:: polsartools.convert_S2
+   :noindex:
+
 Generate pauliRGB for FP data (``pauliRGB``)
 --------------------------------------------
+
+.. autofunction:: polsartools.pauliRGB
+   :noindex:
+
 
 Generate false color RGB for DP/CP data (``dxpRGB``)
 ----------------------------------------------------
 
-.. convert S2 to C3/T3/C2
-.. ----------------------
+.. autofunction:: polsartools.dxpRGB
+   :noindex:
 
 
-.. convert C3 to T3/C2
-.. -------------------
-
-.. convert T3 to C3/C2 (``convert_T3_C3``)
-.. ---------------------------------------
 
 
-.. multi-looking
-.. -------------
 
 

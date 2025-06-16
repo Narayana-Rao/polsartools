@@ -124,65 +124,34 @@ def create_pgw(reference_file, output_png_path):
 @time_it
 def pauliRGB(infolder,tif_flag=False):
     """
-    Generates a Pauli RGB image from full polarimetric datasets (`S2`,  `C4`, `T4`, `C3`, or `T3`).
-    
-    The function checks for the presence of specific binary data files in the given folder
-    and processes the available dataset into an RGB visualization using the Pauli decomposition.
-    
-    Example Usage:
-        ```python
-        polsartools.utils.pauliRGB("/path/to/data")
-        ```
-    Args:
-        infolder (str): Path to the folder containing the full polarimetric data files.
+    Generate Pauli RGB image from polarimetric SAR data (C4, C3, T4, T3, or S2 matrices).
 
-    Raises:
-        ValueError: If the folder does not contain a valid dataset (`S2`,  `C4`, `T4`, `C3`, or `T3`).
+    This function creates a Pauli decomposition RGB composite image from full polarimetric SAR data.
+    
+    Examples
+    --------
+    >>> # Generate Pauli RGB from a polarimetric folder
+    >>> pauliRGB("/path/to/polSAR_data")
 
-    Output:
-        - Saves `PauliRGB.png` and a thumbnail (`PauliRGB_thumb.png`) in `infolder`.
-        - The images represent a false-color visualization of polarization characteristics.
+    >>> # Output both PNG and GeoTIFF versions
+    >>> pauliRGB("/path/to/polSAR_data", tif_flag=True)
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the folder containing polarimetric matrix files (.bin or .tif). 
+        Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.
+    tif_flag : bool, default=False
+        If True, generates both PNG and GeoTIFF (.tif) versions of the Pauli RGB image.
+
+    Returns
+    -------
+    None
+        Writes output to:
+        - PauliRGB.png: RGB composite with world file for georeferencing
+        - PauliRGB.tif: Optional GeoTIFF output if `tif_flag=True`
 
     """
-    
-    # # Check for C4 first, ensuring all required files exist
-    # c4_files = [os.path.join(infolder, f"C{i}.bin") for i in [11, 22, 33, 44]]
-    # if all(os.path.isfile(file) for file in c4_files):
-    #     C11, C22, C33, C44 = [read_bin(file) for file in c4_files]
-    #     C14_real = read_bin(os.path.join(infolder, "C14_real.bin"))
-    #     red = norm_data(C11 + C44 - 2 * C14_real)
-    #     green = norm_data(C22 + C33)
-    #     blue = norm_data(C11 + C44 + 2 * C14_real)
-    #     georef_file = os.path.join(infolder, "C11.bin")
-
-    # # If C4 is missing, check for C3
-    # elif all(os.path.isfile(os.path.join(infolder, f"C{i}.bin")) for i in [11, 22, 33]):
-    #     C11, C22, C33 = [read_bin(os.path.join(infolder, f"C{i}.bin")) for i in [11, 22, 33]]
-    #     blue = norm_data(0.5 * (C11 + C33 + 2 * read_bin(os.path.join(infolder, "C13_real.bin"))))
-    #     red = norm_data(0.5 * (C11 + C33 - 2 * read_bin(os.path.join(infolder, "C13_real.bin"))))
-    #     green = norm_data(C22)
-    #     georef_file = os.path.join(infolder, "C11.bin")
-
-    # # Check for T3 next
-    # elif all(os.path.isfile(os.path.join(infolder, f"T{i}.bin")) for i in [11, 22, 33]):
-    #     red = read_and_normalize(os.path.join(infolder, "T22.bin"))
-    #     green = read_and_normalize(os.path.join(infolder, "T33.bin"))
-    #     blue = read_and_normalize(os.path.join(infolder, "T11.bin"))
-    #     georef_file = os.path.join(infolder, "T11.bin")
-
-    # # Lastly, check for S2
-    # elif all(os.path.isfile(os.path.join(infolder, f"s{i}.bin")) for i in [11, 12, 22]):
-    #     S11, S12, S22 = [read_bin(os.path.join(infolder, f"s{i}.bin")) for i in [11, 12, 22]]
-    #     blue = norm_data(np.abs((1 / np.sqrt(2)) * (S11 + S22))**2)
-    #     red = norm_data(np.abs((1 / np.sqrt(2)) * (S11 - S22))**2)
-    #     green = norm_data(np.abs((2 / np.sqrt(2)) * S12)**2)
-    #     georef_file = os.path.join(infolder, "s11.bin")
-
-    # else:
-    #     raise ValueError("Invalid S2/C3/T3/C4 folder! Provide a valid dataset.")
-    
-    # C4 detection
-    
     def find_file(infolder, base_name):
         for ext in [".bin", ".tif"]:
             path = os.path.join(infolder, f"{base_name}{ext}")
