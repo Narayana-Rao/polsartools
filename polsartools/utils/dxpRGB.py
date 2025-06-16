@@ -24,8 +24,34 @@ def norm_data(data):
 
     return data   
 
+def save_rgb_geotiff(red, green, blue, georef_file, output_path):
+    driver = gdal.GetDriverByName('GTiff')
+    height, width = red.shape
+    dataset = driver.Create(output_path, width, height, 4, gdal.GDT_Byte,options=['COMPRESS=DEFLATE','PREDICTOR=2','ZLEVEL=9', 'BIGTIFF=YES','TILED=YES'])
+
+    # Get geotransform and projection from reference file
+    ref = gdal.Open(georef_file)
+    dataset.SetGeoTransform(ref.GetGeoTransform())
+    dataset.SetProjection(ref.GetProjection())
+    # Prepare the image bands
+    red_uint8 = (red * 255).astype(np.uint8)
+    green_uint8 = (green * 255).astype(np.uint8)
+    blue_uint8 = (blue * 255).astype(np.uint8)
+    # alpha = np.where((red_uint8 == 0) & (green_uint8 == 0) & (blue_uint8 == 0), 0, 255).astype(np.uint8)
+    ref_band = ref.GetRasterBand(1).ReadAsArray()
+    alpha = np.where(ref_band == 0, 0, 255).astype(np.uint8)
+
+
+    dataset.GetRasterBand(1).WriteArray(red_uint8)
+    dataset.GetRasterBand(2).WriteArray(green_uint8)
+    dataset.GetRasterBand(3).WriteArray(blue_uint8)
+    dataset.GetRasterBand(4).WriteArray(alpha)
+
+    dataset.FlushCache()
+    ref = None
+    print(f"RGB GeoTIFF saved to {output_path}")
 @time_it
-def dxpRGB(infolder, type = 1,outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
+def dxpRGB(infolder, type = 1 , tif_flag = False):
     if os.path.isfile(os.path.join(infolder,"C11.bin")) and os.path.isfile(os.path.join(infolder,"C22.bin")):
         
         if type == 1:
@@ -66,6 +92,9 @@ def dxpRGB(infolder, type = 1,outname=None, chi_in=0, psi_in=0, window_size=1,wr
         plt.imshow(rgba_uint8,vmin=0,vmax=255)
         ax.axis('off')
         plt.savefig(os.path.join(infolder,f"RGB{type}_thumb.png"), format='png', bbox_inches='tight', pad_inches=0,transparent=True)
+        
+        if tif_flag:
+            save_rgb_geotiff(red_, green_, blue_, os.path.join(infolder,"C11.bin"), os.path.join(infolder,f"RGB{type}.tif"))
     else:
         raise ValueError("Invalid C2 folder!!")
         
