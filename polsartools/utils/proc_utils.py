@@ -193,15 +193,35 @@ def read_chunk_with_overlap(filepath, band_index, x_start, y_start, width, heigh
     dataset = None  # Close the dataset after reading
     return chunk
 
+def get_gdal_dtype(numpy_dtype):
+    """Map numpy dtype to GDAL data type."""
+    return {
+        np.uint8: gdal.GDT_Byte,
+        np.int16: gdal.GDT_Int16,
+        np.uint16: gdal.GDT_UInt16,
+        np.int32: gdal.GDT_Int32,
+        np.uint32: gdal.GDT_UInt32,
+        np.float32: gdal.GDT_Float32,
+        np.float64: gdal.GDT_Float64,
+        np.complex64: gdal.GDT_CFloat32,
+        np.complex128: gdal.GDT_CFloat64
+    }.get(numpy_dtype.type, gdal.GDT_Unknown)
+
 def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, block_height, window_size, output_width, output_height, num_outputs):
     temp_paths = []
     
     for i in range(num_outputs):
         temp_fd, temp_path = tempfile.mkstemp(suffix=f'_output_{i}.tif')
         os.close(temp_fd)
+        
+        chunk_dtype = get_gdal_dtype(processed_chunks[i].dtype)
+        if chunk_dtype == gdal.GDT_Unknown:
+            raise ValueError(f"Unsupported data type for chunk {i}: {processed_chunks[i].dtype}")
 
+        
         driver = gdal.GetDriverByName('GTiff')
-        temp_dataset = driver.Create(temp_path, block_width, block_height, 1, gdal.GDT_Float32)
+        # temp_dataset = driver.Create(temp_path, block_width, block_height, 1, gdal.GDT_Float32)
+        temp_dataset = driver.Create(temp_path, block_width, block_height, 1, chunk_dtype)
         geotransform = (x_start, 1, 0, y_start, 0, -1)
         temp_dataset.SetGeoTransform(geotransform)
         temp_dataset.SetProjection('')
@@ -270,15 +290,39 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
 def merge_temp_files(output_filepaths, temp_files, output_width, output_height, output_geotransform, output_projection, num_outputs,cog_flag,cog_overviews,azlks=1, rglks=1):
     for i in range(num_outputs):
-        if '.tif' in output_filepaths[0]:
+        # Infer dtype from first block
+        first_temp_path = temp_files[0][0][i]
+        temp_dataset = gdal.Open(first_temp_path, gdal.GA_ReadOnly)
+        temp_band = temp_dataset.GetRasterBand(1)
+        sample_chunk = temp_band.ReadAsArray(0, 0, 1, 1)
+        dtype = get_gdal_dtype(sample_chunk.dtype)
+        temp_dataset = None
+
+        if dtype == gdal.GDT_Unknown:
+            raise ValueError(f"Unsupported data type for merged output: {sample_chunk.dtype}")
+
+        # Choose format
+        if output_filepaths[i].endswith('.tif'):
             driver = gdal.GetDriverByName('GTiff')
             options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
             if cog_flag:
                 options.extend(['COG=YES', 'TFW=YES']) 
-            output_dataset = driver.Create(output_filepaths[i], output_width, output_height, 1, gdal.GDT_Float32, options=options)
-        elif '.bin' in output_filepaths[0]:
+            output_dataset = driver.Create(output_filepaths[i], output_width, output_height, 1, dtype, options=options)
+        elif output_filepaths[i].endswith('.bin'):
             driver = gdal.GetDriverByName('ENVI')
-            output_dataset = driver.Create(output_filepaths[i], output_width, output_height, 1, gdal.GDT_Float32)
+            output_dataset = driver.Create(output_filepaths[i], output_width, output_height, 1, dtype)
+        else:
+            raise ValueError(f"Unsupported output file format: {output_filepaths[i]}")
+
+        # if '.tif' in output_filepaths[0]:
+        #     driver = gdal.GetDriverByName('GTiff')
+        #     options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
+        #     if cog_flag:
+        #         options.extend(['COG=YES', 'TFW=YES']) 
+        #     output_dataset = driver.Create(output_filepaths[i], output_width, output_height, 1, gdal.GDT_Float32, options=options)
+        # elif '.bin' in output_filepaths[0]:
+        #     driver = gdal.GetDriverByName('ENVI')
+        #     output_dataset = driver.Create(output_filepaths[i], output_width, output_height, 1, gdal.GDT_Float32)
 
         output_dataset.SetGeoTransform(output_geotransform)
         output_dataset.SetProjection(output_projection)

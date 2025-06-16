@@ -7,8 +7,8 @@ from osgeo import gdal
 @time_it
 def mlook(infolder,  azlks=2, rglks=2, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
     
-    window_size = azlks
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, window_size, 
+  
+    input_filepaths, output_filepaths = get_filter_io_paths(infolder, [azlks, rglks],
                                                             outType=outType, 
                                                             filter_type="ml")
 
@@ -97,7 +97,16 @@ def process_chunk_mlook(chunks, window_size, *args, **kwargs):
     rglks=args[-1]
     # print("mlook",azlks,rglks)
     mlook_chunks = []
-    for i in range(len(chunks)):
-        mlook_chunks.append(mlook_arr(np.array(chunks[i]), azlks,rglks).astype(np.float32))
-
+    # for i in range(len(chunks)):
+    #     mlook_chunks.append(mlook_arr(np.array(chunks[i]), azlks,rglks).astype(np.float32))
+    for chunk in chunks:
+        arr = np.array(chunk)
+        if np.iscomplexobj(arr):
+            real_part = mlook_arr(arr.real, azlks, rglks)
+            imag_part = mlook_arr(arr.imag, azlks, rglks)
+            processed = (real_part + 1j * imag_part).astype(np.complex64)
+        else:
+            processed = mlook_arr(arr, azlks, rglks).astype(np.float32)
+        mlook_chunks.append(processed)
+        
     return mlook_chunks

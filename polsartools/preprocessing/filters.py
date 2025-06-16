@@ -9,7 +9,7 @@ from polsartools.rflee import process_chunk_rfleecpp
 @time_it
 def boxcar(infolder,  window_size=3, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
     
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, window_size, outType=outType, filter_type="boxcar")
+    input_filepaths, output_filepaths = get_filter_io_paths(infolder, [window_size, window_size], outType=outType, filter_type="boxcar")
 
     # Process chunks in parallel
     num_outputs = len(output_filepaths)
@@ -34,7 +34,7 @@ def process_chunk_boxcar(chunks, window_size, *args):
 def rlee(infolder,  window_size=3, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
 
 
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, window_size, outType=outType, filter_type="rlee")
+    input_filepaths, output_filepaths = get_filter_io_paths(infolder, [window_size, window_size], outType=outType, filter_type="rlee")
     num_outputs = len(output_filepaths)
     
     ### Python implementation

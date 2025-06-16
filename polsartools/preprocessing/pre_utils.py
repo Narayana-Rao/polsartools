@@ -118,7 +118,7 @@ def get_filter_io_paths(infolder, window_size, outType="tif", filter_type=None):
             "C33", "C34_real", "C34_imag", "C44"
         ]
     elif has_all(["s11", "s12", "s21", "s22"]):
-        matrix_type = "S2"
+        matrix_type = "s2"
         base_names = ["s11", "s12", "s21", "s22"]
     elif has_all(["T11", "T33"]):
         matrix_type = "T3"
@@ -142,12 +142,12 @@ def get_filter_io_paths(infolder, window_size, outType="tif", filter_type=None):
 
     if filter_type:
         outFolder = os.path.join(
-            os.path.dirname(infolder) + f"_{filter_type}_{window_size}x{window_size}",
+            os.path.dirname(infolder) + f"_{filter_type}_{window_size[0]}x{window_size[1]}",
             os.path.basename(infolder)
         )
     else:
         outFolder = os.path.join(
-            os.path.dirname(infolder) + f"_{window_size}x{window_size}",
+            os.path.dirname(infolder) + f"_{window_size[0]}x{window_size[1]}",
             os.path.basename(infolder)
         )
 
