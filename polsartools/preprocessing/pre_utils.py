@@ -1,48 +1,59 @@
 import os
 
-def get_filter_io_paths(infolder,  window_size, filter_type=None):
+
+def find_file(infolder, basename):
+    for ext in ['.bin', '.tif']:
+        path = os.path.join(infolder, basename + ext)
+        if os.path.isfile(path):
+            return path
+    return None
+
+def collect_input_files(infolder, basenames):
+    files = []
+    for name in basenames:
+        path = find_file(infolder, name)
+        if not path:
+            raise FileNotFoundError(f"Missing file for {name} (.bin or .tif)")
+        files.append(path)
+    return files
+
+
+
+def get_filter_io_paths(infolder,  window_size, outType="tif", filter_type=None):
     # Determine the input filepaths based on available matrix types
     input_filepaths = []
     matrix_type = None  # To identify if it's C2, C3, T2, or T3
 
-    if os.path.isfile(os.path.join(infolder, "T11.bin")) and os.path.isfile(os.path.join(infolder, "T33.bin")):
+
+    if find_file(infolder, "T11") and find_file(infolder, "T33"):
         matrix_type = "T3"
-        input_filepaths = [
-            os.path.join(infolder, "T11.bin"),
-            os.path.join(infolder, 'T12_real.bin'), os.path.join(infolder, 'T12_imag.bin'),
-            os.path.join(infolder, 'T13_real.bin'), os.path.join(infolder, 'T13_imag.bin'),
-            os.path.join(infolder, "T22.bin"),
-            os.path.join(infolder, 'T23_real.bin'), os.path.join(infolder, 'T23_imag.bin'),
-            os.path.join(infolder, "T33.bin"),
-        ]
-    elif os.path.isfile(os.path.join(infolder, "C11.bin")) and os.path.isfile(os.path.join(infolder, "C33.bin")):
+        input_filepaths = collect_input_files(infolder, [
+            "T11", "T12_real", "T12_imag",
+            "T13_real", "T13_imag", "T22",
+            "T23_real", "T23_imag", "T33"
+        ])
+    elif find_file(infolder, "C11") and find_file(infolder, "C33"):
         matrix_type = "C3"
-        input_filepaths = [
-            os.path.join(infolder, "C11.bin"),
-            os.path.join(infolder, 'C12_real.bin'), os.path.join(infolder, 'C12_imag.bin'),
-            os.path.join(infolder, 'C13_real.bin'), os.path.join(infolder, 'C13_imag.bin'),
-            os.path.join(infolder, "C22.bin"),
-            os.path.join(infolder, 'C23_real.bin'), os.path.join(infolder, 'C23_imag.bin'),
-            os.path.join(infolder, "C33.bin"),
-        ]
-    elif os.path.isfile(os.path.join(infolder, "C11.bin")) and os.path.isfile(os.path.join(infolder, "C22.bin")) \
-            and not os.path.isfile(os.path.join(infolder, "C33.bin")):
+        input_filepaths = collect_input_files(infolder, [
+            "C11", "C12_real", "C12_imag",
+            "C13_real", "C13_imag", "C22",
+            "C23_real", "C23_imag", "C33"
+        ])
+    elif find_file(infolder, "C11") and find_file(infolder, "C22") and not find_file(infolder, "C33"):
         matrix_type = "C2"
-        input_filepaths = [
-            os.path.join(infolder, "C11.bin"),
-            os.path.join(infolder, 'C12_real.bin'), os.path.join(infolder, 'C12_imag.bin'),
-            os.path.join(infolder, "C22.bin"),
-        ]
-    elif os.path.isfile(os.path.join(infolder, "T11.bin")) and os.path.isfile(os.path.join(infolder, "T22.bin")) \
-            and not os.path.isfile(os.path.join(infolder, "T33.bin")):
+        input_filepaths = collect_input_files(infolder, [
+            "C11", "C12_real", "C12_imag", "C22"
+        ])
+    elif find_file(infolder, "T11") and find_file(infolder, "T22") and not find_file(infolder, "T33"):
         matrix_type = "T2"
-        input_filepaths = [
-            os.path.join(infolder, "T11.bin"),
-            os.path.join(infolder, 'T12_real.bin'), os.path.join(infolder, 'T12_imag.bin'),
-            os.path.join(infolder, "T22.bin"),
-        ]
+        input_filepaths = collect_input_files(infolder, [
+            "T11", "T12_real", "T12_imag", "T22"
+        ])
     else:
         raise ValueError("Invalid C2/C3 or T2/T3 folder!")
+
+    if not input_filepaths:
+        raise ValueError("No input files found for C2/C3 or T2/T3 folder!")
 
     # Determine the output folder and filepaths
     output_filepaths = []
@@ -59,21 +70,26 @@ def get_filter_io_paths(infolder,  window_size, filter_type=None):
     
     # Only use the first letter of the matrix type (C for C3, T for T3)
     matrix_prefix = matrix_type[0]
+    ext = '.bin' if outType == 'bin' else '.tif'
 
-    if matrix_type == "C3" or matrix_type == "T3":
+    if matrix_type in ("C3", "T3"):
         output_filepaths = [
-            os.path.join(outFolder, f"{matrix_prefix}11.bin"),
-            os.path.join(outFolder, f"{matrix_prefix}12_real.bin"), os.path.join(outFolder, f"{matrix_prefix}12_imag.bin"),
-            os.path.join(outFolder, f"{matrix_prefix}13_real.bin"), os.path.join(outFolder, f"{matrix_prefix}13_imag.bin"),
-            os.path.join(outFolder, f"{matrix_prefix}22.bin"),
-            os.path.join(outFolder, f"{matrix_prefix}23_real.bin"), os.path.join(outFolder, f"{matrix_prefix}23_imag.bin"),
-            os.path.join(outFolder, f"{matrix_prefix}33.bin"),
+            os.path.join(outFolder, f"{matrix_prefix}11{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}12_real{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}12_imag{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}13_real{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}13_imag{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}22{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}23_real{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}23_imag{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}33{ext}"),
         ]
-    elif matrix_type == "C2" or matrix_type == "T2":
+    elif matrix_type in ("C2", "T2"):
         output_filepaths = [
-            os.path.join(outFolder, f"{matrix_prefix}11.bin"),
-            os.path.join(outFolder, f"{matrix_prefix}12_real.bin"), os.path.join(outFolder, f"{matrix_prefix}12_imag.bin"),
-            os.path.join(outFolder, f"{matrix_prefix}22.bin"),
+            os.path.join(outFolder, f"{matrix_prefix}11{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}12_real{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}12_imag{ext}"),
+            os.path.join(outFolder, f"{matrix_prefix}22{ext}"),
         ]
     
     return input_filepaths, output_filepaths

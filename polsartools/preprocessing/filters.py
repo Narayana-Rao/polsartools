@@ -7,9 +7,9 @@ from polsartools.preprocessing.pre_utils import get_filter_io_paths
 from polsartools.preprocessing.rflee_filter import process_chunk_refined_lee
 from polsartools.rflee import process_chunk_rfleecpp
 @time_it
-def boxcar(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
+def boxcar(infolder,  window_size=3, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
     
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, window_size, filter_type="boxcar")
+    input_filepaths, output_filepaths = get_filter_io_paths(infolder, window_size, outType=outType, filter_type="boxcar")
 
     # Process chunks in parallel
     num_outputs = len(output_filepaths)
@@ -40,10 +40,10 @@ def process_chunk_boxcar(chunks, window_size, *args):
 
 
 @time_it
-def rlee(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
+def rlee(infolder,  window_size=3, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
 
 
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, window_size, filter_type="rlee")
+    input_filepaths, output_filepaths = get_filter_io_paths(infolder, window_size, outType=outType, filter_type="rlee")
     num_outputs = len(output_filepaths)
     
     ### Python implementation
@@ -152,26 +152,6 @@ def process_chunk_rfl(chunks, window_size, *args):
         filtered_chunks.append(np.real(out_chunks[1]))
         filtered_chunks.append(np.imag(out_chunks[1]))
         filtered_chunks.append(np.real(out_chunks[3]))
-   
-   
-   
-    # if len(chunks) == 9:
-    #     filtered_chunks.append(np.where(np.real(out_chunks[0]) == 0, np.nan, np.real(out_chunks[0])))
-    #     filtered_chunks.append(np.where(np.real(out_chunks[1]) == 0, np.nan, np.real(out_chunks[1])))
-    #     filtered_chunks.append(np.where(np.imag(out_chunks[1]) == 0, np.nan, np.imag(out_chunks[1])))
-    #     filtered_chunks.append(np.where(np.real(out_chunks[2]) == 0, np.nan, np.real(out_chunks[2])))
-    #     filtered_chunks.append(np.where(np.imag(out_chunks[2]) == 0, np.nan, np.imag(out_chunks[2])))
-    #     filtered_chunks.append(np.where(np.real(out_chunks[4]) == 0, np.nan, np.real(out_chunks[4])))
-    #     filtered_chunks.append(np.where(np.real(out_chunks[5]) == 0, np.nan, np.real(out_chunks[5])))
-    #     filtered_chunks.append(np.where(np.imag(out_chunks[5]) == 0, np.nan, np.imag(out_chunks[5])))
-    #     filtered_chunks.append(np.where(np.real(out_chunks[8]) == 0, np.nan, np.real(out_chunks[8])))
-
-    # if len(chunks) == 4:
-    #     filtered_chunks.append(np.where(np.real(out_chunks[0]) == 0, np.nan, np.real(out_chunks[0])))
-    #     filtered_chunks.append(np.where(np.real(out_chunks[1]) == 0, np.nan, np.real(out_chunks[1])))
-    #     filtered_chunks.append(np.where(np.imag(out_chunks[1]) == 0, np.nan, np.imag(out_chunks[1])))
-    #     filtered_chunks.append(np.where(np.real(out_chunks[3]) == 0, np.nan, np.real(out_chunks[3])))
-   
    
     return filtered_chunks
     
