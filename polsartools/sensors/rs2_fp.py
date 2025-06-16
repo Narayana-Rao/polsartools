@@ -2,8 +2,8 @@ import numpy as np
 from osgeo import gdal
 import os
 import xml.etree.ElementTree as ET
-from polsartools.utils.utils import time_it
-from polsartools.utils.io_utils import write_T3, write_C3,mlook
+from polsartools.utils.utils import time_it,mlook_arr
+from polsartools.utils.io_utils import write_T3, write_C3
 
 def read_rs2_tif(file):
     ds = gdal.Open(file)
@@ -173,13 +173,13 @@ def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
         del s11,s12,s22
 
         # 3x3 Pauli Coherency Matrix elements
-        T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
-        T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
-        T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
+        T11 = mlook_arr(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
+        T22 = mlook_arr(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
+        T33 = mlook_arr(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
 
-        T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
-        T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-        T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T12 = mlook_arr(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
+        T13 = mlook_arr(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
 
         del Kp
         T3Folder = os.path.join(inFolder,'T3')
@@ -220,13 +220,13 @@ def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
 
         # 3x3 COVARIANCE Matrix elements
 
-        C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-        C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-        C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+        C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+        C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
 
-        C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-        C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-        C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+        C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
 
         C3Folder = os.path.join(inFolder,'C3')
 

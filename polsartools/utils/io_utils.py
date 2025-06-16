@@ -69,7 +69,7 @@ def write_rst(filepath, array, driver_name="ENVI", reference_path=None, nodata_v
     ds.FlushCache()
 
 
-def mlook(data,az,rg):
+def mlook_arr(data,az,rg):
     temp = data[0:data.shape[0]-data.shape[0]%az,0:data.shape[1]-data.shape[1]%rg]
     blocks = view_as_blocks(temp, block_shape=(az, rg))
     flatten = blocks.reshape(blocks.shape[0], blocks.shape[1], -1)

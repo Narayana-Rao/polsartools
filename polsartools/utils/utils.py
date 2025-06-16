@@ -1,8 +1,9 @@
-import os, tempfile
+
 from osgeo import gdal
 import numpy as np
 from functools import wraps
 import time,h5py
+from skimage.util.shape import view_as_blocks
 
 def time_it(func):
     @wraps(func)
@@ -66,3 +67,10 @@ def h5_keys(obj):
             else:
                 keys = keys + (value.name,)
     return keys
+
+def mlook_arr(data,az,rg):
+    temp = data[0:data.shape[0]-data.shape[0]%az,0:data.shape[1]-data.shape[1]%rg]
+    blocks = view_as_blocks(temp, block_shape=(az, rg))
+    flatten = blocks.reshape(blocks.shape[0], blocks.shape[1], -1)
+    mean = np.nanmean(flatten, axis=2)
+    return mean

@@ -21,16 +21,7 @@ def boxcar(infolder,  window_size=3, outType="tif", cog_flag=False, cog_overview
                             )
 
 def process_chunk_boxcar(chunks, window_size, *args):
-    
-    # for i in range(len(chunks)):
-    #     pad_top_left = window_size // 2 
-    #     pad_bottom_right = window_size // 2 +1
-    #     chunks[i] = np.pad(chunks[i], 
-    #                         ((pad_top_left, pad_bottom_right), 
-    #                         (pad_top_left, pad_bottom_right)), 
-    #                         mode='constant', constant_values=0)
 
-    
     filtered_chunks = []
     for i in range(len(chunks)):
         img = np.array(chunks[i])

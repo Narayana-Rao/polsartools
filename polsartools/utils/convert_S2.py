@@ -1,7 +1,7 @@
 
 
 from polsartools.utils.utils import time_it
-from polsartools.utils.io_utils import write_T3, write_C3,mlook,read_bin
+from polsartools.utils.io_utils import write_T3, write_C3,mlook_arr,read_bin
 from polsartools.utils.proc_utils import process_chunks_parallel
 import numpy as np
 import os
@@ -203,17 +203,17 @@ def process_chunk_s2ct(chunks, *args, **kwargs):
 
         del s11,s12,s21,s22
         
-        C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-        C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-        C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
-        C44 = mlook(np.abs(Kl[3])**2,azlks,rglks).astype(np.float32)
+        C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+        C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+        C44 = mlook_arr(np.abs(Kl[3])**2,azlks,rglks).astype(np.float32)
 
-        C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-        C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-        C14 = mlook(Kl[0]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
-        C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-        C24 = mlook(Kl[1]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
-        C34 = mlook(Kl[2]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+        C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+        C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C14 = mlook_arr(Kl[0]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+        C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C24 = mlook_arr(Kl[1]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+        C34 = mlook_arr(Kl[2]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
         
         del Kl
         return np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),np.real(C14),np.imag(C14), np.real(C22),np.real(C23),np.imag(C23),np.real(C24),np.imag(C24), np.real(C33),np.real(C34),np.imag(C34), np.real(C44)
@@ -225,17 +225,17 @@ def process_chunk_s2ct(chunks, *args, **kwargs):
         del s11,s12,s21,s22
 
         # 4x4 Pauli Coherency Matrix elements
-        T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
-        T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
-        T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
-        T44 = mlook(np.abs(Kp[3])**2,azlks,rglks).astype(np.float32)
+        T11 = mlook_arr(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
+        T22 = mlook_arr(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
+        T33 = mlook_arr(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
+        T44 = mlook_arr(np.abs(Kp[3])**2,azlks,rglks).astype(np.float32)
 
-        T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
-        T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-        T14 = mlook(Kp[0]*np.conj(Kp[3]),azlks,rglks).astype(np.complex64)
-        T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-        T24 = mlook(Kp[1]*np.conj(Kp[3]),azlks,rglks).astype(np.complex64)
-        T34 = mlook(Kp[2]*np.conj(Kp[3]),azlks,rglks).astype(np.complex64)  
+        T12 = mlook_arr(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
+        T13 = mlook_arr(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T14 = mlook_arr(Kp[0]*np.conj(Kp[3]),azlks,rglks).astype(np.complex64)
+        T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T24 = mlook_arr(Kp[1]*np.conj(Kp[3]),azlks,rglks).astype(np.complex64)
+        T34 = mlook_arr(Kp[2]*np.conj(Kp[3]),azlks,rglks).astype(np.complex64)  
 
         del Kp
         return np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13), np.real(T14),np.imag(T14),np.real(T22),np.real(T23),np.imag(T23), np.real(T24),np.imag(T24),np.real(T33),np.real(T34),np.imag(T34),np.real(T44)    
@@ -247,13 +247,13 @@ def process_chunk_s2ct(chunks, *args, **kwargs):
         del s11,s12,s21,s22
 
         # 3x3 Pauli Coherency Matrix elements
-        T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
-        T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
-        T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
+        T11 = mlook_arr(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
+        T22 = mlook_arr(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
+        T33 = mlook_arr(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
 
-        T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
-        T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-        T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T12 = mlook_arr(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
+        T13 = mlook_arr(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
 
         del Kp
         return np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13),np.real(T22),np.real(T23),np.imag(T23),np.real(T33)
@@ -266,38 +266,38 @@ def process_chunk_s2ct(chunks, *args, **kwargs):
 
         # 3x3 COVARIANCE Matrix elements
 
-        C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-        C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-        C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+        C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+        C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
 
-        C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-        C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-        C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+        C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
         return np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),np.real(C22),np.real(C23),np.imag(C23),np.real(C33)
 
     elif matrix=='C2HX':
-        C11 = mlook(np.abs(s11)**2,azlks,rglks).astype(np.float32)
-        C22 = mlook(np.abs(s12)**2,azlks,rglks).astype(np.float32)    
-        C12 = mlook(s11*np.conjugate(s12),azlks,rglks).astype(np.complex64)
+        C11 = mlook_arr(np.abs(s11)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(s12)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook_arr(s11*np.conjugate(s12),azlks,rglks).astype(np.complex64)
         
         return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)
     elif matrix=='C2VX':
-        C11 = mlook(np.abs(s22)**2,azlks,rglks).astype(np.float32)
-        C22 = mlook(np.abs(s21)**2,azlks,rglks).astype(np.float32)    
-        C12 = mlook(s22*np.conjugate(s21),azlks,rglks).astype(np.complex64)
+        C11 = mlook_arr(np.abs(s22)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(s21)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook_arr(s22*np.conjugate(s21),azlks,rglks).astype(np.complex64)
         
         return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)
     elif matrix=='C2HV':
-        C11 = mlook(np.abs(s11)**2,azlks,rglks).astype(np.float32)
-        C22 = mlook(np.abs(s22)**2,azlks,rglks).astype(np.float32)    
-        C12 = mlook(s11*np.conjugate(s22),azlks,rglks).astype(np.complex64)
+        C11 = mlook_arr(np.abs(s11)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(s22)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook_arr(s11*np.conjugate(s22),azlks,rglks).astype(np.complex64)
         
         return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)      
         
     elif matrix=='T2HV':
-        C11 = mlook(np.abs(s11+s22)**2,azlks,rglks).astype(np.float32)
-        C22 = mlook(np.abs(s11-s22)**2,azlks,rglks).astype(np.float32)    
-        C12 = mlook((s11+s22)*np.conjugate(s11-s22),azlks,rglks).astype(np.complex64)
+        C11 = mlook_arr(np.abs(s11+s22)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(s11-s22)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook_arr((s11+s22)*np.conjugate(s11-s22),azlks,rglks).astype(np.complex64)
         
         return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)         
     

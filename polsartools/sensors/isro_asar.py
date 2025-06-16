@@ -2,8 +2,8 @@ import numpy as np
 from osgeo import gdal
 import os,h5py,glob
 import xml.etree.ElementTree as ET
-from polsartools.utils.utils import time_it
-from polsartools.utils.io_utils import mlook, write_T3, write_C3,write_C4,write_s2_bin
+from polsartools.utils.utils import time_it, mlook_arr
+from polsartools.utils.io_utils import write_T3, write_C3,write_C4,write_s2_bin
 from polsartools.utils.geo_utils import geocode_grid, intp_grid, update_vrt, write_latlon
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
@@ -110,33 +110,33 @@ def asar_geo_T3(inFile,azlks,rglks,cc_linear):
         os.remove('data.hdr')
         
     # 3x3 Pauli Coherency Matrix elements
-    T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
+    T11 = mlook_arr(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
     write_element(T11,'T11.bin')
     print(f"Saved file {os.path.join(T3Folder,'T11.bin')}")
     del T11
-    T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
+    T22 = mlook_arr(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
     write_element(T22,'T22.bin')
     print(f"Saved file {os.path.join(T3Folder,'T22.bin')}")
     del T22
-    T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
+    T33 = mlook_arr(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
     write_element(T33,'T33.bin')
     print(f"Saved file {os.path.join(T3Folder,'T33.bin')}")
     del T33
-    T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
+    T12 = mlook_arr(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
     write_element(np.real(T12),'T12_real.bin') 
     print(f"Saved file {os.path.join(T3Folder,'T12_real.bin')}")
     write_element(np.imag(T12),'T12_imag.bin')
     print(f"Saved file {os.path.join(T3Folder,'T12_imag.bin')}")
     del T12
     
-    T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+    T13 = mlook_arr(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
     write_element(np.real(T13),'T13_real.bin')
     print(f"Saved file {os.path.join(T3Folder,'T13_real.bin')}")
     write_element(np.imag(T13),'T13_imag.bin')
     print(f"Saved file {os.path.join(T3Folder,'T13_imag.bin')}")
     del T13
     
-    T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+    T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
     write_element(np.real(T23),'T23_real.bin')
     print(f"Saved file {os.path.join(T3Folder,'T23_real.bin')}")
     write_element(np.imag(T23),'T23_imag.bin')
@@ -185,13 +185,13 @@ def asar_T3(inFile,azlks,rglks,cc_linear):
     del S11,S12,S21,S22
 
     # 3x3 Pauli Coherency Matrix elements
-    T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
-    T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
-    T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
+    T11 = mlook_arr(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
+    T22 = mlook_arr(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
+    T33 = mlook_arr(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
 
-    T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
-    T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-    T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+    T12 = mlook_arr(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
+    T13 = mlook_arr(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+    T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
 
     del Kp
     
@@ -304,32 +304,32 @@ def asar_geo_C3(inFile,azlks,rglks,cc_linear):
         
     # 3x3 COVARIANCE Matrix elements
 
-    C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+    C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
     write_element(C11,'C11.bin')
     print(f"Saved file {os.path.join(C3Folder,'C11.bin')}")
     del C11
-    C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+    C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
     write_element(C22,'C22.bin')
     print(f"Saved file {os.path.join(C3Folder,'C22.bin')}")
     del C22
-    C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+    C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
     write_element(C33,'C33.bin')
     print(f"Saved file {os.path.join(C3Folder,'C33.bin')}")
     del C33 
 
-    C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+    C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
     write_element(np.real(C12),'C12_real.bin')
     print(f"Saved file {os.path.join(C3Folder,'C12_real.bin')}")
     write_element(np.imag(C12),'C12_imag.bin')
     print(f"Saved file {os.path.join(C3Folder,'C12_imag.bin')}")
     del C12
-    C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+    C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
     write_element(np.real(C13),'C13_real.bin')
     print(f"Saved file {os.path.join(C3Folder,'C13_real.bin')}")
     write_element(np.imag(C13),'C13_imag.bin')
     print(f"Saved file {os.path.join(C3Folder,'C13_imag.bin')}")
     del C13
-    C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+    C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
     write_element(np.real(C23),'C23_real.bin')
     print(f"Saved file {os.path.join(C3Folder,'C23_real.bin')}")
     write_element(np.imag(C23),'C23_imag.bin')
@@ -384,13 +384,13 @@ def asar_C3(inFile,azlks,rglks,cc_linear):
 
     # 3x3 COVARIANCE Matrix elements
 
-    C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-    C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-    C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+    C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+    C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+    C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
 
-    C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-    C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+    C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+    C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+    C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
 
 
     inFolder = os.path.dirname(inFile)   
@@ -503,36 +503,36 @@ def asar_geo_C4(inFile,azlks,rglks,cc_linear):
         
     # 3x3 COVARIANCE Matrix elements
 
-    C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+    C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
     write_element(C11,'C11.bin')
     print(f"Saved file {os.path.join(C4Folder,'C11.bin')}")
     del C11
-    C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+    C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
     write_element(C22,'C22.bin')
     print(f"Saved file {os.path.join(C4Folder,'C22.bin')}")
     del C22
-    C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+    C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
     write_element(C33,'C33.bin')
     print(f"Saved file {os.path.join(C4Folder,'C33.bin')}")
     del C33 
-    C44 = mlook(np.abs(Kl[3])**2,azlks,rglks).astype(np.float32)
+    C44 = mlook_arr(np.abs(Kl[3])**2,azlks,rglks).astype(np.float32)
     write_element(C44,'C44.bin')
     print(f"Saved file {os.path.join(C4Folder,'C44.bin')}")
     del C44
 
-    C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+    C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
     write_element(np.real(C12),'C12_real.bin')
     print(f"Saved file {os.path.join(C4Folder,'C12_real.bin')}")
     write_element(np.imag(C12),'C12_imag.bin')
     print(f"Saved file {os.path.join(C4Folder,'C12_imag.bin')}")
     del C12
-    C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+    C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
     write_element(np.real(C13),'C13_real.bin')
     print(f"Saved file {os.path.join(C4Folder,'C13_real.bin')}")
     write_element(np.imag(C13),'C13_imag.bin')
     print(f"Saved file {os.path.join(C4Folder,'C13_imag.bin')}")
     del C13
-    C14 = mlook(Kl[0]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+    C14 = mlook_arr(Kl[0]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
     write_element(np.real(C14),'C14_real.bin')
     print(f"Saved file {os.path.join(C4Folder,'C14_real.bin')}")
     write_element(np.imag(C14),'C14_imag.bin')
@@ -541,21 +541,21 @@ def asar_geo_C4(inFile,azlks,rglks,cc_linear):
     
     
     
-    C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+    C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
     write_element(np.real(C23),'C23_real.bin')
     print(f"Saved file {os.path.join(C4Folder,'C23_real.bin')}")
     write_element(np.imag(C23),'C23_imag.bin')
     print(f"Saved file {os.path.join(C4Folder,'C23_imag.bin')}")
     del C23
     
-    C24 = mlook(Kl[1]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+    C24 = mlook_arr(Kl[1]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
     write_element(np.real(C24),'C24_real.bin')
     print(f"Saved file {os.path.join(C4Folder,'C24_real.bin')}")
     write_element(np.imag(C24),'C24_imag.bin')
     print(f"Saved file {os.path.join(C4Folder,'C24_imag.bin')}")
     del C24
     
-    C34 = mlook(Kl[2]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+    C34 = mlook_arr(Kl[2]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
     write_element(np.real(C34),'C34_real.bin')
     print(f"Saved file {os.path.join(C4Folder,'C34_real.bin')}")
     write_element(np.imag(C34),'C34_imag.bin')
@@ -610,19 +610,19 @@ def asar_C4(inFile,azlks,rglks,cc_linear):
 
     # 3x3 COVARIANCE Matrix elements
 
-    C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-    C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-    C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
-    C44 = mlook(np.abs(Kl[3])**2,azlks,rglks).astype(np.float32)
+    C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+    C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+    C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+    C44 = mlook_arr(np.abs(Kl[3])**2,azlks,rglks).astype(np.float32)
     
-    C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-    C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    C14 = mlook(Kl[0]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+    C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+    C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+    C14 = mlook_arr(Kl[0]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
 
-    C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    C24 = mlook(Kl[1]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+    C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+    C24 = mlook_arr(Kl[1]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
 
-    C34 = mlook(Kl[2]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
+    C34 = mlook_arr(Kl[2]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
 
 
     inFolder = os.path.dirname(inFile)   

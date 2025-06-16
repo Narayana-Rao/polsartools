@@ -2,20 +2,13 @@
 import numpy as np
 from osgeo import gdal
 import os, glob
-import matplotlib.pyplot as plt
-from skimage.util.shape import view_as_blocks
-from polsartools.utils.utils import time_it
+from polsartools.utils.utils import time_it, mlook_arr
+from polsartools.utils.io_utils import write_T3, write_C3
 def read_bin(file):
     ds = gdal.Open(file)
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
     return arr
-def mlook(data,az,rg): 
-    temp = data[0:data.shape[0]-data.shape[0]%az,0:data.shape[1]-data.shape[1]%rg]
-    blocks = view_as_blocks(temp, block_shape=(az, rg))
-    flatten = blocks.reshape(blocks.shape[0], blocks.shape[1], -1)
-    mean = np.nanmean(flatten, axis=2)
-    return mean
 
 def read_a2(file):
     
@@ -123,10 +116,10 @@ def alos2_fbd_l11(inFolder,azlks=3,rglks=2,calfac_dB=-83):
     S12 = read_a2(hv_file).astype(np.complex64)*calfac_linear 
     
     
-    C11 = mlook(np.abs(S11)**2,azlks,rglks).astype(np.float32)
-    C22 = mlook(np.abs(S12)**2,azlks,rglks).astype(np.float32)
+    C11 = mlook_arr(np.abs(S11)**2,azlks,rglks).astype(np.float32)
+    C22 = mlook_arr(np.abs(S12)**2,azlks,rglks).astype(np.float32)
     
-    C12 = mlook(S11*np.conjugate(S12),azlks,rglks).astype(np.complex64)
+    C12 = mlook_arr(S11*np.conjugate(S12),azlks,rglks).astype(np.complex64)
     rows,cols = C11.shape
     
     inFolder = os.path.dirname(hh_file)   
@@ -154,7 +147,7 @@ def alos2_fbd_l11(inFolder,azlks=3,rglks=2,calfac_dB=-83):
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1'%(rows,cols))
     file.close()  
 #################################################################################################
-from polsartools.utils.io_utils import write_T3, write_C3,mlook
+
 def write_s2_bin(file,wdata):
     [cols, rows] = wdata.shape
     driver = gdal.GetDriverByName("ENVI")
@@ -266,13 +259,13 @@ def alos2_hbq_l11(inFolder,matrix='T3', azlks=8,rglks=4,sym=True,calfac_dB=-83):
         del S11,S12,S21,S22
 
         # 3x3 Pauli Coherency Matrix elements
-        T11 = mlook(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
-        T22 = mlook(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
-        T33 = mlook(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
+        T11 = mlook_arr(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
+        T22 = mlook_arr(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
+        T33 = mlook_arr(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
 
-        T12 = mlook(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
-        T13 = mlook(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-        T23 = mlook(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T12 = mlook_arr(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
+        T13 = mlook_arr(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
+        T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
 
         del Kp
         
@@ -295,13 +288,13 @@ def alos2_hbq_l11(inFolder,matrix='T3', azlks=8,rglks=4,sym=True,calfac_dB=-83):
 
         # 3x3 COVARIANCE Matrix elements
 
-        C11 = mlook(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-        C22 = mlook(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-        C33 = mlook(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
+        C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
+        C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
 
-        C12 = mlook(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-        C13 = mlook(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-        C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
+        C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
+        C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
 
 
         C3Folder = os.path.join(inFolder,'C3')

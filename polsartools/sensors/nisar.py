@@ -3,8 +3,8 @@ import numpy as np
 from osgeo import gdal,osr
 import h5py,os,tempfile
 from skimage.util.shape import view_as_blocks
-from polsartools.utils.utils import time_it
-from polsartools.utils.io_utils import mlook,write_s2_bin_ref, write_s2_ct_ref
+from polsartools.utils.utils import time_it, mlook_arr
+from polsartools.utils.io_utils import write_s2_bin_ref, write_s2_ct_ref
 #%%
 def read_bin(file):
     ds = gdal.Open(file)
@@ -138,7 +138,7 @@ def mlook_geo(input_raster, az, rg, output_raster,projection_epsg,
     data = band.ReadAsArray()
     data[data==0]=np.nan
 
-    result = mlook(data, az, rg)
+    result = mlook_arr(data, az, rg)
     
     geo_transform = ds.GetGeoTransform()
     projection = ds.GetProjection()
@@ -495,18 +495,18 @@ def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
         del S11,S12
 
         os.makedirs(C2Folder,exist_ok=True)
-        C11 = mlook(C11,azlks,rglks)
+        C11 = mlook_arr(C11,azlks,rglks)
         rows,cols = C11.shape
         write_rslc_bin( os.path.join(C2Folder,'C11.bin'), C11)
         print(f"Saved file {C2Folder}/C11.bin")
         del C11
         
-        C22 = mlook(C22,azlks,rglks)   
+        C22 = mlook_arr(C22,azlks,rglks)   
         write_rslc_bin( os.path.join(C2Folder,'C22.bin'), C22)
         print(f"Saved file {C2Folder}/C22.bin")
         del C22
         
-        C12 = mlook(C12,azlks,rglks)   
+        C12 = mlook_arr(C12,azlks,rglks)   
         write_rslc_bin( os.path.join(C2Folder,'C12_real.bin'), np.real(C12))
         print(f"Saved file {C2Folder}/C12_real.bin")
         write_rslc_bin( os.path.join(C2Folder,'C12_imag.bin'), np.imag(C12))
