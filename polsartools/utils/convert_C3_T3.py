@@ -7,22 +7,8 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import C3_T3_mat
 
 @time_it
-def convert_C3_T3(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,write_flag=True,max_workers=None):
+def convert_C3_T3(infolder, outType="tif", window_size=1, write_flag=True, max_workers=None):
 
-    # if os.path.isfile(os.path.join(infolder,"T11.bin")):
-        
-    #     ds = gdal.Open(os.path.join(infolder,"T11.bin"))
-    #     rows,cols = ds.RasterYSize, ds.RasterXSize 
-    #     ds = None
-    #     input_filepaths = [
-    #     os.path.join(infolder,"T11.bin"),
-    #     os.path.join(infolder,'T12_real.bin'), os.path.join(infolder,'T12_imag.bin'),  
-    #     os.path.join(infolder,'T13_real.bin'), os.path.join(infolder,'T13_imag.bin'),
-    #     os.path.join(infolder,"T22.bin"),
-    #     os.path.join(infolder,'T23_real.bin'), os.path.join(infolder,'T23_imag.bin'),  
-    #     os.path.join(infolder,"T33.bin"),
-    #     ]
-       
     if os.path.isfile(os.path.join(infolder,"C11.bin")):
         ds = gdal.Open(os.path.join(infolder,"C11.bin"))
         rows,cols = ds.RasterYSize, ds.RasterXSize 
@@ -37,11 +23,27 @@ def convert_C3_T3(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,writ
         os.path.join(infolder,"C33.bin"),
         ]
         os.makedirs(os.path.join(os.path.dirname(infolder), "T3"), exist_ok=True)
+        
+    elif os.path.isfile(os.path.join(infolder,"C11.tif")):
+        ds = gdal.Open(os.path.join(infolder,"C11.tif"))
+        rows,cols = ds.RasterYSize, ds.RasterXSize 
+        ds = None
+        
+        input_filepaths = [
+        os.path.join(infolder,"C11.tif"),
+        os.path.join(infolder,'C12_real.tif'), os.path.join(infolder,'C12_imag.tif'),          
+        os.path.join(infolder,'C13_real.tif'), os.path.join(infolder,'C13_imag.tif'),
+        os.path.join(infolder,"C22.tif"),
+        os.path.join(infolder,'C23_real.tif'), os.path.join(infolder,'C23_imag.tif'),          
+        os.path.join(infolder,"C33.tif"),
+        ]
+        os.makedirs(os.path.join(os.path.dirname(infolder), "T3"), exist_ok=True)
     else:
         raise Exception(f"Invalid C3 folder!!")
 
     output_filepaths = []
-    if outname is None:
+    
+    if outType == "bin":
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T11.bin"))
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T12_real.bin"))
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T12_imag.bin"))
@@ -51,6 +53,17 @@ def convert_C3_T3(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,writ
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T23_real.bin"))
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T23_imag.bin"))
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T33.bin"))
+        
+    else:
+        output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T11.tif"))
+        output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T12_real.tif"))
+        output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T12_imag.tif"))
+        output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T13_real.tif"))
+        output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T13_imag.tif"))
+        output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T22.tif"))
+        output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T23_real.tif"))
+        output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T23_imag.tif"))
+        output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T33.tif"))
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
             processing_func=process_chunk_C3T3,
@@ -62,26 +75,6 @@ def convert_C3_T3(infolder, outname=None, chi_in=0, psi_in=0, window_size=1,writ
     file.close()  
 
 def process_chunk_C3T3(chunks, window_size, input_filepaths, *args):
-
-    # additional_arg1 = args[0] if len(args) > 0 else None
-    # additional_arg2 = args[1] if len(args) > 1 else None
-
-    # if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
-        
-    #     t11_T1 = np.array(chunks[0])
-    #     t12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
-    #     t13_T1 = np.array(chunks[3])+1j*np.array(chunks[4])
-    #     t21_T1 = np.conj(t12_T1)
-    #     t22_T1 = np.array(chunks[5])
-    #     t23_T1 = np.array(chunks[6])+1j*np.array(chunks[7])
-    #     t31_T1 = np.conj(t13_T1)
-    #     t32_T1 = np.conj(t23_T1)
-    #     t33_T1 = np.array(chunks[8])
-
-    #     T3 = np.array([[t11_T1, t12_T1, t13_T1], 
-    #                  [t21_T1, t22_T1, t23_T1], 
-    #                  [t31_T1, t32_T1, t33_T1]])
-    #     T_T1 = T3_C3_mat(T3)
 
 
     if 'C11' in input_filepaths[0] and 'C22' in input_filepaths[5] and 'C33' in input_filepaths[8]:

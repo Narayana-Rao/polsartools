@@ -8,6 +8,67 @@ def read_bin(file):
     arr = band.ReadAsArray()
     return arr
 
+def write_bin(file,wdata):
+    
+    # ds = gdal.Open(refData)
+    [cols, rows] = wdata.shape
+
+    driver = gdal.GetDriverByName("ENVI")
+    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_Float32)
+    # outdata.SetGeoTransform(ds.GetGeoTransform())##sets same geotransform as input
+    # outdata.SetProjection(ds.GetProjection())##sets same projection as input
+    
+    outdata.SetDescription(file)
+    outdata.GetRasterBand(1).WriteArray(wdata)
+    # outdata.GetRasterBand(1).SetNoDataValue(np.NaN)##if you want these values transparent
+    outdata.FlushCache() ##saves to disk!! 
+
+def write_tif(filepath, array, reference_path=None):
+    driver = gdal.GetDriverByName("GTiff")
+    height, width = array.shape
+    ds = driver.Create(filepath, width, height, 1, gdal.GDT_Float32)
+
+    if reference_path:
+        ref = gdal.Open(reference_path)
+        ds.SetGeoTransform(ref.GetGeoTransform())
+        ds.SetProjection(ref.GetProjection())
+
+    ds.GetRasterBand(1).WriteArray(array)
+    ds.FlushCache()
+    
+    
+def write_rst(filepath, array, driver_name="ENVI", reference_path=None, nodata_value=None):
+    if array.ndim != 2:
+        raise ValueError("Only 2D arrays are supported.")
+    rows, cols = array.shape
+    driver = gdal.GetDriverByName(driver_name)
+    options = None
+    if driver_name == "GTiff":
+        options = [
+            "COMPRESS=DEFLATE",
+            "PREDICTOR=2",
+            "TILED=YES",
+            "ZLEVEL=9",
+            "BIGTIFF=YES",
+            # "BLOCKXSIZE=256",
+            # "BLOCKYSIZE=256"
+        ]
+
+    ds = driver.Create(filepath, cols, rows, 1, gdal.GDT_Float32, options=options)
+
+    if reference_path:
+        ref = gdal.Open(reference_path)
+        ds.SetGeoTransform(ref.GetGeoTransform())
+        ds.SetProjection(ref.GetProjection())
+        ref = None
+    band = ds.GetRasterBand(1)
+    band.WriteArray(array)
+    if nodata_value is not None:
+        band.SetNoDataValue(nodata_value)
+    ds.SetDescription(filepath)
+    ds.FlushCache()
+
+
 def mlook(data,az,rg):
     temp = data[0:data.shape[0]-data.shape[0]%az,0:data.shape[1]-data.shape[1]%rg]
     blocks = view_as_blocks(temp, block_shape=(az, rg))
@@ -41,45 +102,7 @@ def write_s2_bin_ref(file, wdata_ref, chunk_size=1000):
     outdata.FlushCache()
     print(f"Saved file {file}")
 
-def write_T3(T3_list,folder):
-    
-    out_file = folder +'/T11.bin'
-    write_bin(out_file,T3_list[0])
-    print("Saved file "+out_file)
-    
-    out_file = folder +'/T12_real.bin'
-    write_bin(out_file,T3_list[1])
-    print("Saved file "+out_file)
-    out_file = folder +'/T12_imag.bin'
-    write_bin(out_file,T3_list[2])
-    print("Saved file "+out_file)
-    
-    out_file = folder +'/T13_real.bin'
-    write_bin(out_file,T3_list[3])
-    print("Saved file "+out_file)
-    out_file = folder +'/T13_imag.bin'
-    write_bin(out_file,T3_list[4])
-    print("Saved file "+out_file)
-    
-    out_file = folder +'/T22.bin'
-    write_bin(out_file,T3_list[5])
-    print("Saved file "+out_file)
-    
-    out_file = folder +'/T23_real.bin'
-    write_bin(out_file,T3_list[6])
-    print("Saved file "+out_file)
-    out_file = folder +'/T23_imag.bin'
-    write_bin(out_file,T3_list[7])
-    print("Saved file "+out_file)
-    out_file = folder +'/T33.bin'
-    write_bin(out_file,T3_list[8])
-    print("Saved file "+out_file)
-    
-    rows, cols = np.shape(T3_list[0])
-    file = folder +'/config.txt'
-    file = open(file,"w+")
-    file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
-    file.close()   
+ 
 
 def write_C3(C3_list,folder):
     
@@ -193,74 +216,66 @@ def write_C4(C4_list,folder):
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
     file.close()
 
-def write_T4(T4_list,folder):
-    
-    out_file = folder +'/T11.bin'
-    write_bin(out_file,T4_list[0])
-    print("Saved file "+out_file)
-    
-    out_file = folder +'/T12_real.bin'
-    write_bin(out_file,T4_list[1])
-    print("Saved file "+out_file)
-    out_file = folder +'/T12_imag.bin'
-    write_bin(out_file,T4_list[2])
-    print("Saved file "+out_file)
-    
-    out_file = folder +'/T13_real.bin'
-    write_bin(out_file,T4_list[3])
-    print("Saved file "+out_file)
-    out_file = folder +'/T13_imag.bin'
-    write_bin(out_file,T4_list[4])
-    print("Saved file "+out_file)
-    
-    out_file = folder +'/T14_real.bin'
-    write_bin(out_file,T4_list[5])
-    print("Saved file "+out_file)
-    out_file = folder +'/T14_imag.bin'
-    write_bin(out_file,T4_list[6])
-    print("Saved file "+out_file)
 
-    out_file = folder +'/T22.bin'
-    write_bin(out_file,T4_list[7])
-    print("Saved file "+out_file)
-    out_file = folder +'/T23_real.bin'
-    write_bin(out_file,T4_list[8])
-    print("Saved file "+out_file)
-    out_file = folder +'/T23_imag.bin'
-    write_bin(out_file,T4_list[9])
-    print("Saved file "+out_file)
+def write_T3(t3_list, folder, outType="tif", reference_path=None):
+
+    os.makedirs(folder, exist_ok=True)
+
+    keys = [
+        "T11", "T12_real", "T12_imag", "T13_real", "T13_imag",
+        "T22", "T23_real", "T23_imag",
+        "T33"
+    ]
     
-    out_file = folder +'/T24_real.bin'
-    write_bin(out_file,T4_list[10])
-    print("Saved file "+out_file)
-    out_file = folder +'/T24_imag.bin'
-    write_bin(out_file,T4_list[11])
-    print("Saved file "+out_file)
+    ext = ".bin" if outType == "bin" else ".tif"
+    driver_name = "ENVI" if outType == "bin" else "GTiff"
     
+    for name, array in zip(keys, t3_list):
+        out_path = os.path.join(folder, f"{name}{ext}")
+        write_rst(out_path, array, driver_name, reference_path)
+        print(f"Saved file {out_path}")
     
+    rows, cols = t3_list[0].shape
+    config_path = os.path.join(folder, "config.txt")
+    with open(config_path, "w") as f:
+        f.write(
+            f"Nrow\n{rows}\n---------\n"
+            f"Ncol\n{cols}\n---------\n"
+            f"PolarCase\nmonostatic\n---------\n"
+            f"PolarType\nfull"
+        )
+
+def write_T4(t4_list, folder, outType="tif", reference_path=None):
+    """
+    Saves T4 matrix to the specified folder in .bin or .tif format.
+    Also writes a config.txt file with metadata.
+    """
+    os.makedirs(folder, exist_ok=True)
+
+    keys = [
+        "T11", "T12_real", "T12_imag", "T13_real", "T13_imag", "T14_real", "T14_imag",
+        "T22", "T23_real", "T23_imag", "T24_real", "T24_imag",
+        "T33", "T34_real", "T34_imag", "T44"
+    ]
     
-    out_file = folder +'/T33.bin'
-    write_bin(out_file,T4_list[12])
-    print("Saved file "+out_file)    
+    ext = ".bin" if outType == "bin" else ".tif"
+    driver_name = "ENVI" if outType == "bin" else "GTiff"
     
+    for name, array in zip(keys, t4_list):
+        out_path = os.path.join(folder, f"{name}{ext}")
+        write_rst(out_path, array, driver_name, reference_path)
+        print(f"Saved file {out_path}")
     
-    out_file = folder +'/T34_real.bin'
-    write_bin(out_file,T4_list[13])
-    print("Saved file "+out_file)    
-    out_file = folder +'/T34_imag.bin'
-    write_bin(out_file,T4_list[14])
-    print("Saved file "+out_file)    
-    out_file = folder +'/T44.bin'
-    write_bin(out_file,T4_list[15])
-    print("Saved file "+out_file)   
-    
-    
-    rows, cols = np.shape(T4_list[0])
-    file = folder +'/config.txt'
-    file = open(file,"w+")
-    file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
-    file.close()
-    
+    rows, cols = t4_list[0].shape
+    config_path = os.path.join(folder, "config.txt")
+    with open(config_path, "w") as f:
+        f.write(
+            f"Nrow\n{rows}\n---------\n"
+            f"Ncol\n{cols}\n---------\n"
+            f"PolarCase\nmonostatic\n---------\n"
+            f"PolarType\nfull"
+        )
+   
 def write_bin_s2(file,wdata,refData):
     
     # ds = gdal.Open(refData)
@@ -276,23 +291,6 @@ def write_bin_s2(file,wdata,refData):
     # outdata.GetRasterBand(1).SetNoDataValue(np.NaN)##if you want these values transparent
     outdata.FlushCache() ##saves to disk!!   
     
-
-def write_bin(file,wdata):
-    
-    # ds = gdal.Open(refData)
-    [cols, rows] = wdata.shape
-
-    driver = gdal.GetDriverByName("ENVI")
-    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_Float32)
-    # outdata.SetGeoTransform(ds.GetGeoTransform())##sets same geotransform as input
-    # outdata.SetProjection(ds.GetProjection())##sets same projection as input
-    
-    outdata.SetDescription(file)
-    outdata.GetRasterBand(1).WriteArray(wdata)
-    # outdata.GetRasterBand(1).SetNoDataValue(np.NaN)##if you want these values transparent
-    outdata.FlushCache() ##saves to disk!! 
-
-
 
 def write_s2_ct(matrix_type, matrixFolder, K, azlks, rglks):
     """
