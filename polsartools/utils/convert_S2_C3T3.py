@@ -57,7 +57,7 @@ def get_output_filepaths(infolder, matrix, outType):
     return [os.path.join(outfolder, f"{name}{ext}") for name in matrix_keys[matrix]]
 
 @time_it
-def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, window_size=None, 
+def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, cf = 1, 
                   outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], 
                   write_flag=True, max_workers=None,block_size=(512, 512)):
     """
@@ -160,7 +160,7 @@ def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, window_size=None,
                              window_size,
                             write_flag,
                             process_chunk_s2ct,
-                            *[matrix, azlks, rglks],
+                            *[cf, matrix, azlks, rglks],
                             block_size=block_size, 
                             max_workers=max_workers,  
                             num_outputs=len(output_filepaths),
@@ -176,14 +176,15 @@ def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, window_size=None,
 
 def process_chunk_s2ct(chunks, *args, **kwargs):
     # print(args[-1],args[-2],args[-3])
+    abs_cf = args[-4]
     matrix=args[-3]
     azlks=args[-2]
     rglks=args[-1]
     
-    s11 = np.array(chunks[0])
-    s12 = np.array(chunks[1])
-    s21 = np.array(chunks[2])
-    s22 = np.array(chunks[3])
+    s11 = np.array(chunks[0])*abs_cf
+    s12 = np.array(chunks[1])*abs_cf
+    s21 = np.array(chunks[2])*abs_cf
+    s22 = np.array(chunks[3])*abs_cf
     
     if matrix == 'C4':
         Kl = np.array([s11, s12, s21, s22])

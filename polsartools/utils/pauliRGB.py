@@ -209,7 +209,7 @@ def pauliRGB(infolder,tif_flag=False):
         blue = norm_data(0.5 * (C11 + C33 + 2 * C13_real))
         red = norm_data(0.5 * (C11 + C33 - 2 * C13_real))
         green = norm_data(C22)
-        georef_file = read_bin(infolder, "C11")
+        georef_file = find_file(infolder, "C11")
 
     # T3 fallback
     elif all(find_file(infolder, f"T{i}") for i in [11, 22, 33]):
