@@ -8,7 +8,7 @@
 
 0.7.1
 added .tif supportfor fp,dxp,cp
-updated convert_S2_CT for full pol
+updated convert_S2 for full pol
 added dprvic, dp_desc, fp_sign
 extend NISAR rslc, gslc to full pol
 fix rslc memory issue 
