@@ -44,7 +44,11 @@ def get_output_filepaths(infolder, matrix, outType):
                "C24_real", "C24_imag", "C33", "C34_real", "C34_imag", "C44"],
         "T4": ["T11", "T12_real", "T12_imag", "T13_real", "T13_imag",
                "T14_real", "T14_imag", "T22", "T23_real", "T23_imag",
-               "T24_real", "T24_imag", "T33", "T34_real", "T34_imag", "T44"]
+               "T24_real", "T24_imag", "T33", "T34_real", "T34_imag", "T44"],
+        "C2HX": ["C11", "C12_real", "C12_imag", "C22"],
+        "C2VX": ["C11", "C12_real", "C12_imag", "C22"],
+        "C2HV": ["C11", "C12_real", "C12_imag", "C22"],
+        "T2HV": ["T11", "T12_real", "T12_imag", "T22",],
     }
 
     if matrix not in matrix_keys:
@@ -57,7 +61,7 @@ def get_output_filepaths(infolder, matrix, outType):
     return [os.path.join(outfolder, f"{name}{ext}") for name in matrix_keys[matrix]]
 
 @time_it
-def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, cf = 1, 
+def convert_S2(infolder, matrix='T3', azlks=4,rglks=2, cf = 1, 
                   outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], 
                   write_flag=True, max_workers=None,block_size=(512, 512)):
     """
@@ -65,7 +69,7 @@ def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, cf = 1,
 
     Example Usage:
     --------------
-    >>> convert_S2_CT('/path/to/S2_data', matrix='C3', azlks=10, rglks=5)
+    >>> convert_S2('/path/to/S2_data', matrix='C3', azlks=10, rglks=5)
 
     Parameters:
     -----------
@@ -78,6 +82,10 @@ def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, cf = 1,
         - 'C3' : 3x3 Covariance matrix
         - 'T4' : 4x4 Coherency matrix
         - 'C4' : 4x4 Covariance matrix
+        - 'C2HX' : 2x2 Covariance matrix
+        - 'C2VX' : 2x2 Covariance matrix
+        - 'C2HV' : 2x2 Covariance matrix
+        - 'T2HV' : 2x2 Coherency matrix
 
     azlks : int, optional, default=8
         Number of azimuth looks for multi-looking (averaging in the azimuth direction).
@@ -111,7 +119,11 @@ def convert_S2_CT(infolder, matrix='T3', azlks=8,rglks=2, cf = 1,
     
     input_filepaths =  get_s2_input_filepaths(infolder)
     output_filepaths = get_output_filepaths(infolder, matrix, outType)
-  
+    
+    VALID_MATRICES = {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV'}
+    if matrix not in VALID_MATRICES:
+        raise Exception(f"Invalid matrix type '{matrix}' - please choose one of {', '.join(VALID_MATRICES)}")
+        
     """
     GET MULTI-LOOKED RASTER PROPERTIES
        
@@ -263,3 +275,31 @@ def process_chunk_s2ct(chunks, *args, **kwargs):
         C23 = mlook(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
         return np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),np.real(C22),np.real(C23),np.imag(C23),np.real(C33)
 
+    elif matrix=='C2HX':
+        C11 = mlook(np.abs(s11)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook(np.abs(s12)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook(s11*np.conjugate(s12),azlks,rglks).astype(np.complex64)
+        
+        return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)
+    elif matrix=='C2VX':
+        C11 = mlook(np.abs(s22)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook(np.abs(s21)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook(s22*np.conjugate(s21),azlks,rglks).astype(np.complex64)
+        
+        return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)
+    elif matrix=='C2HV':
+        C11 = mlook(np.abs(s11)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook(np.abs(s22)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook(s11*np.conjugate(s22),azlks,rglks).astype(np.complex64)
+        
+        return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)      
+        
+    elif matrix=='T2HV':
+        C11 = mlook(np.abs(s11+s22)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook(np.abs(s11-s22)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook((s11+s22)*np.conjugate(s11-s22),azlks,rglks).astype(np.complex64)
+        
+        return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)         
+    
+    else:
+        raise('Invalid matrix type !!')

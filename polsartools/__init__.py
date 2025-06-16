@@ -21,7 +21,7 @@ from .sensors.alos2 import alos2_fbd_l11,alos2_hbq_l11
 from .sensors.chyaan2 import chyaan2_fp
 from .sensors.rs2_fp import rs2_fp
 from .sensors.isro_asar import isro_asar
-from .utils import convert_T3_C3,convert_C3_T3, convert_S2_CT
+from .utils import convert_T3_C3,convert_C3_T3, convert_S2
 from .utils import fp_sign
 from .preprocessing.filters import boxcar,rlee
 # from .utils.pauliRGB import read_bin
@@ -40,7 +40,7 @@ __all__ = [
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS
-    'convert_T3_C3', 'convert_C3_T3', 'pauliRGB', 'convert_S2_CT', 
+    'convert_T3_C3', 'convert_C3_T3', 'pauliRGB', 'convert_S2', 
     # FULL-POL
     'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 
     'halphafp', 'shannon_h_fp','yam4cfp', 'halpha_plot_fp', 

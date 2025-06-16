@@ -43,7 +43,7 @@ def dxpRGB(infolder, type = 1 , tif_flag = False):
         else:
             raise ValueError("Invalid type!! Valid types are 1,2,3,4")
 
-        georef_file = os.path.join(infolder,"C11.bin")
+        georef_file = c11_path
         output_path = os.path.join(infolder, f'RGB{type}.png')
         generate_rgb_png(red, green, blue,georef_file, output_path)
         create_pgw(georef_file, output_path)
