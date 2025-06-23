@@ -2,6 +2,7 @@
 import numpy as np
 from osgeo import gdal,osr
 import h5py,os,tempfile
+import tables
 from skimage.util.shape import view_as_blocks
 from polsartools.utils.utils import time_it, mlook_arr
 from polsartools.utils.io_utils import write_s2_bin_ref, write_s2_ct_ref
@@ -656,7 +657,131 @@ def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
         return
         
     h5File.close()
+
+
+def nisar_rslc_tab(inFile, azlks=22, rglks=10, matrixType='C3'):
+    inFolder = os.path.dirname(inFile)
+    if not inFolder:
+        inFolder = "."
     
+    C2Folder = os.path.join(inFolder, os.path.basename(inFile).split('.h5')[0], 'C2')
+
+    # Open the HDF5 file using PyTables with read-only access
+    with tables.open_file(inFile, "r") as h5File:
+        if '/science/LSAR' in h5File:
+            freq_band = 'L'
+        elif '/science/SSAR' in h5File:
+            freq_band = 'S'
+        else:
+            print("Neither LSAR nor SSAR data found in the file.")
+            return
+        
+        # Base path logic (RSLC or SLC)
+        if f'/science/{freq_band}SAR/RSLC' in h5File:
+            base_path = f'/science/{freq_band}SAR/RSLC/swaths/frequencyA'
+        elif f'/science/{freq_band}SAR/SLC' in h5File:
+            base_path = f'/science/{freq_band}SAR/SLC/swaths/frequencyA'
+        else:
+            print("Neither RSLC nor SLC found in the HDF5 structure.")
+            return
+        
+        listOfPolarizations = np.array(h5File.getNode(base_path + '/listOfPolarizations')).astype(str)
+        nchannels = len(listOfPolarizations)
+
+        print(f"Detected {freq_band}-band {listOfPolarizations}")
+
+        if nchannels == 2:
+            print("Extracting C2 matrix elements...")
+            if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
+                S11 = h5File.getNode(f'{base_path}/HH').read()  # Memory-map the HH dataset
+                S12 = h5File.getNode(f'{base_path}/HV').read()  # Memory-map the HV dataset
+            elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
+                S11 = h5File.getNode(f'{base_path}/VV').read()  # Memory-map the VV dataset
+                S12 = h5File.getNode(f'{base_path}/VH').read()  # Memory-map the VH dataset
+            elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
+                S11 = h5File.getNode(f'{base_path}/HH').read()  # Memory-map the HH dataset
+                S12 = h5File.getNode(f'{base_path}/VV').read()  # Memory-map the VV dataset
+            else:
+                print("No HH, HV, VV, or VH polarizations found in the file.")
+                return
+
+            # Memory-mapped arrays
+            # S11 = np.array(S11)  # Convert to NumPy array (mmap)
+            # S12 = np.array(S12)  # Convert to NumPy array (mmap)
+
+            C11 = np.abs(S11)**2
+            C22 = np.abs(S12)**2
+            C12 = S11 * np.conjugate(S12)
+
+            del S11, S12
+
+            os.makedirs(C2Folder, exist_ok=True)
+
+            C11 = mlook_arr(C11, azlks, rglks)
+            rows, cols = C11.shape
+            write_rslc_bin(os.path.join(C2Folder, 'C11.bin'), C11)
+            print(f"Saved file {C2Folder}/C11.bin")
+            del C11
+
+            C22 = mlook_arr(C22, azlks, rglks)
+            write_rslc_bin(os.path.join(C2Folder, 'C22.bin'), C22)
+            print(f"Saved file {C2Folder}/C22.bin")
+            del C22
+
+            C12 = mlook_arr(C12, azlks, rglks)
+            write_rslc_bin(os.path.join(C2Folder, 'C12_real.bin'), np.real(C12))
+            print(f"Saved file {C2Folder}/C12_real.bin")
+            write_rslc_bin(os.path.join(C2Folder, 'C12_imag.bin'), np.imag(C12))
+            print(f"Saved file {C2Folder}/C12_imag.bin")
+            del C12
+
+            # Save config
+            with open(C2Folder + '/config.txt', "w+") as file:
+                file.write(f'Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1')
+
+        elif nchannels == 4:
+            # Memory map the S matrix elements
+            S11 = h5File.getNode(f'{base_path}/HH').read()  # Memory-map the HH dataset
+            S12 = h5File.getNode(f'{base_path}/HV').read()  # Memory-map the HV dataset
+            S21 = h5File.getNode(f'{base_path}/VH').read()  # Memory-map the VH dataset
+            S22 = h5File.getNode(f'{base_path}/VV').read()  # Memory-map the VV dataset
+
+            if matrixType == 'S2':
+                print("Extracting S2 matrix elements...")
+                rows, cols = S11.shape
+                out_dir = os.path.join(inFolder, os.path.basename(inFile).split('.h5')[0], 'S2')
+                os.makedirs(out_dir, exist_ok=True)
+
+                write_s2_bin_ref(os.path.join(out_dir, 's11.bin'), S11)
+                write_s2_bin_ref(os.path.join(out_dir, 's12.bin'), (S12 + S21) / 2)
+                write_s2_bin_ref(os.path.join(out_dir, 's21.bin'), (S12 + S21) / 2)
+                write_s2_bin_ref(os.path.join(out_dir, 's22.bin'), S22)
+
+                # Save config
+                with open(os.path.join(out_dir, 'config.txt'), "w") as file:
+                    file.write(f'Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull')
+
+            elif matrixType in ["C3", "T3", "C4", "T4"]:
+                folder_name = matrixType
+                print(f"Extracting {matrixType} matrix elements...")
+
+                matrixFolder = os.path.join(inFolder, os.path.basename(inFile).split('.h5')[0], folder_name)
+                os.makedirs(matrixFolder, exist_ok=True)
+
+                # Processing matrix elements with memory mapping
+                if matrixType == "C3":
+                    write_s2_ct_ref("C3", matrixFolder, [S11, np.sqrt(2) * 0.5 * (S12 + S21), S22], azlks, rglks)
+                elif matrixType == "T3":
+                    write_s2_ct_ref("T3", matrixFolder, np.array([S11 + S22, S11 - S22, S12 + S21]) * (1 / np.sqrt(2)), azlks, rglks)
+                elif matrixType == "C4":
+                    write_s2_ct_ref("C4", matrixFolder, [S11, S12, S21, S22], azlks, rglks)
+                elif matrixType == "T4":
+                    write_s2_ct_ref("T4", matrixFolder, np.array([
+                                                                S11 + S22, 
+                                                                S11 - S22, 
+                                                                S12 + S21, 
+                                                                1j * (S12 - S21)
+                                                            ]) * (1 / np.sqrt(2)), azlks, rglks)
 
     
 
