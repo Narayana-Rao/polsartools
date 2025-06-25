@@ -95,6 +95,7 @@ setup(
         'matplotlib',
         'pybind11',
         'h5py',
+        'tables',
         'scikit-image',
         
     ],

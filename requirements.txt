@@ -5,6 +5,7 @@ tqdm
 matplotlib
 pybind11
 h5py
+tables
 scikit-image
 pytest
 gdal==3.9.0
