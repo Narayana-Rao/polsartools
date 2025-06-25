@@ -337,7 +337,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span><span class="o">,</span><span class="nn">os</span><span class="o">,</span><span class="nn">tempfile</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tables</span>
+<span class="c1"># import tables</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">skimage.util.shape</span><span class="w"> </span><span class="kn">import</span> <span class="n">view_as_blocks</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span> <span class="n">mlook_arr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_s2_bin_ref</span><span class="p">,</span> <span class="n">write_s2_ct_ref</span>
@@ -1000,129 +1000,129 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">nisar_rslc_tab</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">):</span>
-    <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">inFolder</span><span class="p">:</span>
-        <span class="n">inFolder</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+<span class="c1"># def nisar_rslc_tab(inFile, azlks=22, rglks=10, matrixType=&#39;C3&#39;):</span>
+<span class="c1">#     inFolder = os.path.dirname(inFile)</span>
+<span class="c1">#     if not inFolder:</span>
+<span class="c1">#         inFolder = &quot;.&quot;</span>
     
-    <span class="n">C2Folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;C2&#39;</span><span class="p">)</span>
+<span class="c1">#     C2Folder = os.path.join(inFolder, os.path.basename(inFile).split(&#39;.h5&#39;)[0], &#39;C2&#39;)</span>
 
-    <span class="c1"># Open the HDF5 file using PyTables with read-only access</span>
-    <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5File</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s1">&#39;/science/LSAR&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
-            <span class="n">freq_band</span> <span class="o">=</span> <span class="s1">&#39;L&#39;</span>
-        <span class="k">elif</span> <span class="s1">&#39;/science/SSAR&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
-            <span class="n">freq_band</span> <span class="o">=</span> <span class="s1">&#39;S&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither LSAR nor SSAR data found in the file.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
+<span class="c1">#     # Open the HDF5 file using PyTables with read-only access</span>
+<span class="c1">#     with tables.open_file(inFile, &quot;r&quot;) as h5File:</span>
+<span class="c1">#         if &#39;/science/LSAR&#39; in h5File:</span>
+<span class="c1">#             freq_band = &#39;L&#39;</span>
+<span class="c1">#         elif &#39;/science/SSAR&#39; in h5File:</span>
+<span class="c1">#             freq_band = &#39;S&#39;</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             print(&quot;Neither LSAR nor SSAR data found in the file.&quot;)</span>
+<span class="c1">#             return</span>
         
-        <span class="c1"># Base path logic (RSLC or SLC)</span>
-        <span class="k">if</span> <span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
-            <span class="n">base_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/RSLC/swaths/frequencyA&#39;</span>
-        <span class="k">elif</span> <span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/SLC&#39;</span> <span class="ow">in</span> <span class="n">h5File</span><span class="p">:</span>
-            <span class="n">base_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/SLC/swaths/frequencyA&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither RSLC nor SLC found in the HDF5 structure.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
+<span class="c1">#         # Base path logic (RSLC or SLC)</span>
+<span class="c1">#         if f&#39;/science/{freq_band}SAR/RSLC&#39; in h5File:</span>
+<span class="c1">#             base_path = f&#39;/science/{freq_band}SAR/RSLC/swaths/frequencyA&#39;</span>
+<span class="c1">#         elif f&#39;/science/{freq_band}SAR/SLC&#39; in h5File:</span>
+<span class="c1">#             base_path = f&#39;/science/{freq_band}SAR/SLC/swaths/frequencyA&#39;</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             print(&quot;Neither RSLC nor SLC found in the HDF5 structure.&quot;)</span>
+<span class="c1">#             return</span>
         
-        <span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">base_path</span> <span class="o">+</span> <span class="s1">&#39;/listOfPolarizations&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-        <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span>
+<span class="c1">#         listOfPolarizations = np.array(h5File.getNode(base_path + &#39;/listOfPolarizations&#39;)).astype(str)</span>
+<span class="c1">#         nchannels = len(listOfPolarizations)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detected </span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">-band </span><span class="si">{</span><span class="n">listOfPolarizations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1">#         print(f&quot;Detected {freq_band}-band {listOfPolarizations}&quot;)</span>
 
-        <span class="k">if</span> <span class="n">nchannels</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C2 matrix elements...&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;HV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
-                <span class="n">S11</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/HH&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the HH dataset</span>
-                <span class="n">S12</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/HV&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the HV dataset</span>
-            <span class="k">elif</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
-                <span class="n">S11</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/VV&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the VV dataset</span>
-                <span class="n">S12</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/VH&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the VH dataset</span>
-            <span class="k">elif</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
-                <span class="n">S11</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/HH&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the HH dataset</span>
-                <span class="n">S12</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/VV&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the VV dataset</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No HH, HV, VV, or VH polarizations found in the file.&quot;</span><span class="p">)</span>
-                <span class="k">return</span>
+<span class="c1">#         if nchannels == 2:</span>
+<span class="c1">#             print(&quot;Extracting C2 matrix elements...&quot;)</span>
+<span class="c1">#             if &#39;HH&#39; in listOfPolarizations and &#39;HV&#39; in listOfPolarizations:</span>
+<span class="c1">#                 S11 = h5File.getNode(f&#39;{base_path}/HH&#39;).read()  # Memory-map the HH dataset</span>
+<span class="c1">#                 S12 = h5File.getNode(f&#39;{base_path}/HV&#39;).read()  # Memory-map the HV dataset</span>
+<span class="c1">#             elif &#39;VV&#39; in listOfPolarizations and &#39;VH&#39; in listOfPolarizations:</span>
+<span class="c1">#                 S11 = h5File.getNode(f&#39;{base_path}/VV&#39;).read()  # Memory-map the VV dataset</span>
+<span class="c1">#                 S12 = h5File.getNode(f&#39;{base_path}/VH&#39;).read()  # Memory-map the VH dataset</span>
+<span class="c1">#             elif &#39;HH&#39; in listOfPolarizations and &#39;VV&#39; in listOfPolarizations:</span>
+<span class="c1">#                 S11 = h5File.getNode(f&#39;{base_path}/HH&#39;).read()  # Memory-map the HH dataset</span>
+<span class="c1">#                 S12 = h5File.getNode(f&#39;{base_path}/VV&#39;).read()  # Memory-map the VV dataset</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 print(&quot;No HH, HV, VV, or VH polarizations found in the file.&quot;)</span>
+<span class="c1">#                 return</span>
 
-            <span class="c1"># Memory-mapped arrays</span>
-            <span class="c1"># S11 = np.array(S11)  # Convert to NumPy array (mmap)</span>
-            <span class="c1"># S12 = np.array(S12)  # Convert to NumPy array (mmap)</span>
+<span class="c1">#             # Memory-mapped arrays</span>
+<span class="c1">#             # S11 = np.array(S11)  # Convert to NumPy array (mmap)</span>
+<span class="c1">#             # S12 = np.array(S12)  # Convert to NumPy array (mmap)</span>
 
-            <span class="n">C11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S11</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-            <span class="n">C22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-            <span class="n">C12</span> <span class="o">=</span> <span class="n">S11</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">S12</span><span class="p">)</span>
+<span class="c1">#             C11 = np.abs(S11)**2</span>
+<span class="c1">#             C22 = np.abs(S12)**2</span>
+<span class="c1">#             C12 = S11 * np.conjugate(S12)</span>
 
-            <span class="k">del</span> <span class="n">S11</span><span class="p">,</span> <span class="n">S12</span>
+<span class="c1">#             del S11, S12</span>
 
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#             os.makedirs(C2Folder, exist_ok=True)</span>
 
-            <span class="n">C11</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">C11</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
-            <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">C11</span><span class="o">.</span><span class="n">shape</span>
-            <span class="n">write_rslc_bin</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span> <span class="s1">&#39;C11.bin&#39;</span><span class="p">),</span> <span class="n">C11</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C11.bin&quot;</span><span class="p">)</span>
-            <span class="k">del</span> <span class="n">C11</span>
+<span class="c1">#             C11 = mlook_arr(C11, azlks, rglks)</span>
+<span class="c1">#             rows, cols = C11.shape</span>
+<span class="c1">#             write_rslc_bin(os.path.join(C2Folder, &#39;C11.bin&#39;), C11)</span>
+<span class="c1">#             print(f&quot;Saved file {C2Folder}/C11.bin&quot;)</span>
+<span class="c1">#             del C11</span>
 
-            <span class="n">C22</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">C22</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
-            <span class="n">write_rslc_bin</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span> <span class="s1">&#39;C22.bin&#39;</span><span class="p">),</span> <span class="n">C22</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C22.bin&quot;</span><span class="p">)</span>
-            <span class="k">del</span> <span class="n">C22</span>
+<span class="c1">#             C22 = mlook_arr(C22, azlks, rglks)</span>
+<span class="c1">#             write_rslc_bin(os.path.join(C2Folder, &#39;C22.bin&#39;), C22)</span>
+<span class="c1">#             print(f&quot;Saved file {C2Folder}/C22.bin&quot;)</span>
+<span class="c1">#             del C22</span>
 
-            <span class="n">C12</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">C12</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
-            <span class="n">write_rslc_bin</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span> <span class="s1">&#39;C12_real.bin&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C12</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C12_real.bin&quot;</span><span class="p">)</span>
-            <span class="n">write_rslc_bin</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">C2Folder</span><span class="p">,</span> <span class="s1">&#39;C12_imag.bin&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C12</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">C2Folder</span><span class="si">}</span><span class="s2">/C12_imag.bin&quot;</span><span class="p">)</span>
-            <span class="k">del</span> <span class="n">C12</span>
+<span class="c1">#             C12 = mlook_arr(C12, azlks, rglks)</span>
+<span class="c1">#             write_rslc_bin(os.path.join(C2Folder, &#39;C12_real.bin&#39;), np.real(C12))</span>
+<span class="c1">#             print(f&quot;Saved file {C2Folder}/C12_real.bin&quot;)</span>
+<span class="c1">#             write_rslc_bin(os.path.join(C2Folder, &#39;C12_imag.bin&#39;), np.imag(C12))</span>
+<span class="c1">#             print(f&quot;Saved file {C2Folder}/C12_imag.bin&quot;)</span>
+<span class="c1">#             del C12</span>
 
-            <span class="c1"># Save config</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">C2Folder</span> <span class="o">+</span> <span class="s1">&#39;/config.txt&#39;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Nrow</span><span class="se">\n</span><span class="si">{</span><span class="n">rows</span><span class="si">}</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">Ncol</span><span class="se">\n</span><span class="si">{</span><span class="n">cols</span><span class="si">}</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarCase</span><span class="se">\n</span><span class="s1">monostatic</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarType</span><span class="se">\n</span><span class="s1">pp1&#39;</span><span class="p">)</span>
+<span class="c1">#             # Save config</span>
+<span class="c1">#             with open(C2Folder + &#39;/config.txt&#39;, &quot;w+&quot;) as file:</span>
+<span class="c1">#                 file.write(f&#39;Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1&#39;)</span>
 
-        <span class="k">elif</span> <span class="n">nchannels</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="c1"># Memory map the S matrix elements</span>
-            <span class="n">S11</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/HH&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the HH dataset</span>
-            <span class="n">S12</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/HV&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the HV dataset</span>
-            <span class="n">S21</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/VH&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the VH dataset</span>
-            <span class="n">S22</span> <span class="o">=</span> <span class="n">h5File</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s1">/VV&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>  <span class="c1"># Memory-map the VV dataset</span>
+<span class="c1">#         elif nchannels == 4:</span>
+<span class="c1">#             # Memory map the S matrix elements</span>
+<span class="c1">#             S11 = h5File.getNode(f&#39;{base_path}/HH&#39;).read()  # Memory-map the HH dataset</span>
+<span class="c1">#             S12 = h5File.getNode(f&#39;{base_path}/HV&#39;).read()  # Memory-map the HV dataset</span>
+<span class="c1">#             S21 = h5File.getNode(f&#39;{base_path}/VH&#39;).read()  # Memory-map the VH dataset</span>
+<span class="c1">#             S22 = h5File.getNode(f&#39;{base_path}/VV&#39;).read()  # Memory-map the VV dataset</span>
 
-            <span class="k">if</span> <span class="n">matrixType</span> <span class="o">==</span> <span class="s1">&#39;S2&#39;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting S2 matrix elements...&quot;</span><span class="p">)</span>
-                <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">S11</span><span class="o">.</span><span class="n">shape</span>
-                <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;S2&#39;</span><span class="p">)</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#             if matrixType == &#39;S2&#39;:</span>
+<span class="c1">#                 print(&quot;Extracting S2 matrix elements...&quot;)</span>
+<span class="c1">#                 rows, cols = S11.shape</span>
+<span class="c1">#                 out_dir = os.path.join(inFolder, os.path.basename(inFile).split(&#39;.h5&#39;)[0], &#39;S2&#39;)</span>
+<span class="c1">#                 os.makedirs(out_dir, exist_ok=True)</span>
 
-                <span class="n">write_s2_bin_ref</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;s11.bin&#39;</span><span class="p">),</span> <span class="n">S11</span><span class="p">)</span>
-                <span class="n">write_s2_bin_ref</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;s12.bin&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">S12</span> <span class="o">+</span> <span class="n">S21</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="n">write_s2_bin_ref</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;s21.bin&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">S12</span> <span class="o">+</span> <span class="n">S21</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="n">write_s2_bin_ref</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;s22.bin&#39;</span><span class="p">),</span> <span class="n">S22</span><span class="p">)</span>
+<span class="c1">#                 write_s2_bin_ref(os.path.join(out_dir, &#39;s11.bin&#39;), S11)</span>
+<span class="c1">#                 write_s2_bin_ref(os.path.join(out_dir, &#39;s12.bin&#39;), (S12 + S21) / 2)</span>
+<span class="c1">#                 write_s2_bin_ref(os.path.join(out_dir, &#39;s21.bin&#39;), (S12 + S21) / 2)</span>
+<span class="c1">#                 write_s2_bin_ref(os.path.join(out_dir, &#39;s22.bin&#39;), S22)</span>
 
-                <span class="c1"># Save config</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s1">&#39;config.txt&#39;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Nrow</span><span class="se">\n</span><span class="si">{</span><span class="n">rows</span><span class="si">}</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">Ncol</span><span class="se">\n</span><span class="si">{</span><span class="n">cols</span><span class="si">}</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarCase</span><span class="se">\n</span><span class="s1">monostatic</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarType</span><span class="se">\n</span><span class="s1">full&#39;</span><span class="p">)</span>
+<span class="c1">#                 # Save config</span>
+<span class="c1">#                 with open(os.path.join(out_dir, &#39;config.txt&#39;), &quot;w&quot;) as file:</span>
+<span class="c1">#                     file.write(f&#39;Nrow\n{rows}\n---------\nNcol\n{cols}\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull&#39;)</span>
 
-            <span class="k">elif</span> <span class="n">matrixType</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;C3&quot;</span><span class="p">,</span> <span class="s2">&quot;T3&quot;</span><span class="p">,</span> <span class="s2">&quot;C4&quot;</span><span class="p">,</span> <span class="s2">&quot;T4&quot;</span><span class="p">]:</span>
-                <span class="n">folder_name</span> <span class="o">=</span> <span class="n">matrixType</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting </span><span class="si">{</span><span class="n">matrixType</span><span class="si">}</span><span class="s2"> matrix elements...&quot;</span><span class="p">)</span>
+<span class="c1">#             elif matrixType in [&quot;C3&quot;, &quot;T3&quot;, &quot;C4&quot;, &quot;T4&quot;]:</span>
+<span class="c1">#                 folder_name = matrixType</span>
+<span class="c1">#                 print(f&quot;Extracting {matrixType} matrix elements...&quot;)</span>
 
-                <span class="n">matrixFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">folder_name</span><span class="p">)</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">matrixFolder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">#                 matrixFolder = os.path.join(inFolder, os.path.basename(inFile).split(&#39;.h5&#39;)[0], folder_name)</span>
+<span class="c1">#                 os.makedirs(matrixFolder, exist_ok=True)</span>
 
-                <span class="c1"># Processing matrix elements with memory mapping</span>
-                <span class="k">if</span> <span class="n">matrixType</span> <span class="o">==</span> <span class="s2">&quot;C3&quot;</span><span class="p">:</span>
-                    <span class="n">write_s2_ct_ref</span><span class="p">(</span><span class="s2">&quot;C3&quot;</span><span class="p">,</span> <span class="n">matrixFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">S11</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">S12</span> <span class="o">+</span> <span class="n">S21</span><span class="p">),</span> <span class="n">S22</span><span class="p">],</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">matrixType</span> <span class="o">==</span> <span class="s2">&quot;T3&quot;</span><span class="p">:</span>
-                    <span class="n">write_s2_ct_ref</span><span class="p">(</span><span class="s2">&quot;T3&quot;</span><span class="p">,</span> <span class="n">matrixFolder</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">S11</span> <span class="o">+</span> <span class="n">S22</span><span class="p">,</span> <span class="n">S11</span> <span class="o">-</span> <span class="n">S22</span><span class="p">,</span> <span class="n">S12</span> <span class="o">+</span> <span class="n">S21</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">matrixType</span> <span class="o">==</span> <span class="s2">&quot;C4&quot;</span><span class="p">:</span>
-                    <span class="n">write_s2_ct_ref</span><span class="p">(</span><span class="s2">&quot;C4&quot;</span><span class="p">,</span> <span class="n">matrixFolder</span><span class="p">,</span> <span class="p">[</span><span class="n">S11</span><span class="p">,</span> <span class="n">S12</span><span class="p">,</span> <span class="n">S21</span><span class="p">,</span> <span class="n">S22</span><span class="p">],</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">matrixType</span> <span class="o">==</span> <span class="s2">&quot;T4&quot;</span><span class="p">:</span>
-                    <span class="n">write_s2_ct_ref</span><span class="p">(</span><span class="s2">&quot;T4&quot;</span><span class="p">,</span> <span class="n">matrixFolder</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-                                                                <span class="n">S11</span> <span class="o">+</span> <span class="n">S22</span><span class="p">,</span> 
-                                                                <span class="n">S11</span> <span class="o">-</span> <span class="n">S22</span><span class="p">,</span> 
-                                                                <span class="n">S12</span> <span class="o">+</span> <span class="n">S21</span><span class="p">,</span> 
-                                                                <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">S12</span> <span class="o">-</span> <span class="n">S21</span><span class="p">)</span>
-                                                            <span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
+<span class="c1">#                 # Processing matrix elements with memory mapping</span>
+<span class="c1">#                 if matrixType == &quot;C3&quot;:</span>
+<span class="c1">#                     write_s2_ct_ref(&quot;C3&quot;, matrixFolder, [S11, np.sqrt(2) * 0.5 * (S12 + S21), S22], azlks, rglks)</span>
+<span class="c1">#                 elif matrixType == &quot;T3&quot;:</span>
+<span class="c1">#                     write_s2_ct_ref(&quot;T3&quot;, matrixFolder, np.array([S11 + S22, S11 - S22, S12 + S21]) * (1 / np.sqrt(2)), azlks, rglks)</span>
+<span class="c1">#                 elif matrixType == &quot;C4&quot;:</span>
+<span class="c1">#                     write_s2_ct_ref(&quot;C4&quot;, matrixFolder, [S11, S12, S21, S22], azlks, rglks)</span>
+<span class="c1">#                 elif matrixType == &quot;T4&quot;:</span>
+<span class="c1">#                     write_s2_ct_ref(&quot;T4&quot;, matrixFolder, np.array([</span>
+<span class="c1">#                                                                 S11 + S22, </span>
+<span class="c1">#                                                                 S11 - S22, </span>
+<span class="c1">#                                                                 S12 + S21, </span>
+<span class="c1">#                                                                 1j * (S12 - S21)</span>
+<span class="c1">#                                                             ]) * (1 / np.sqrt(2)), azlks, rglks)</span>
 
     
 

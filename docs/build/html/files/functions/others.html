@@ -399,15 +399,178 @@
                   
   <section id="multi-looking-mlook">
 <h1>multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)<a class="headerlink" href="#multi-looking-mlook" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">mlook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocessing/mlook.html#mlook"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate multilooked polarimetric matrix from C4, T4, C3, T3, C2, or T2 formats.</p>
+<p>This function applies multilooking (spatial averaging) to reduce speckle noise
+and improve radiometric stability in polarimetric SAR datasets.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage with default look factors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mlook</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># With 3 azimuth and 2 range looks, and COG GeoTIFF output</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mlook</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>infolder</strong> (<em>str</em>) – Path to the input folder containing a supported polarimetric matrix.</p></li>
+<li><p><strong>azlks</strong> (<em>int</em><em>, </em><em>default=2</em>) – Number of looks in azimuth (vertical) direction.</p></li>
+<li><p><strong>rglks</strong> (<em>int</em><em>, </em><em>default=2</em>) – Number of looks in range (horizontal) direction.</p></li>
+<li><p><strong>outType</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output format:
+- ‘tif’: Cloud-optimized GeoTIFF (if cog_flag is True)
+- ‘bin’: Raw binary format</p></li>
+<li><p><strong>cog_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Enable Cloud Optimized GeoTIFF output with internal overviews and tiling.</p></li>
+<li><p><strong>cog_overviews</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for pyramid generation (used with COGs).</p></li>
+<li><p><strong>write_flag</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Whether to write the multilooked data to disk or return only in-memory.</p></li>
+<li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Maximum number of parallel worker threads (defaults to all available CPUs).</p></li>
+<li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Size of processing blocks for chunked and parallel execution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The multilooked output matrix is saved to disk. Number and names of output
+files depend on matrix type (e.g., C3 → C11.tif, C12_real.tif, etc.).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Supported polarimetric matrices: ‘C4’, ‘T4’, ‘C3’, ‘T3’, ‘C2’, ‘T2’</p></li>
+<li><p>Automatically detects matrix type and file extension (.bin or .tif)</p></li>
+<li><p>Handles real and complex-valued data appropriately (e.g., multilooks real and imag separately)</p></li>
+<li><p>Output pixel spacing is updated in geotransform metadata based on look factors</p></li>
+</ul>
+</dd></dl>
+
 </section>
 <section id="conver-full-pol-s2-convert-s2">
 <h1>conver full-pol S2 (<code class="docutils literal notranslate"><span class="pre">convert_S2</span></code>)<a class="headerlink" href="#conver-full-pol-s2-convert-s2" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">convert_S2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/utils/convert_S2.html#convert_S2"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert full-polarimetric scattering (S2) matrix into multi-looked
+coherency (T4, T3, T2) or covariance (C4, C3, C2) matrices.
+It supports both GeoTIFF and PolSARpro-compatible output.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert to C3 matrix with 10x5 multi-looking</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_S2</span><span class="p">(</span><span class="s2">&quot;/path/to/S2_data&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s2">&quot;C3&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Output as tiled GeoTIFF with Cloud Optimized overviews</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_S2</span><span class="p">(</span><span class="s2">&quot;/data/S2&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s2">&quot;T4&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>infolder</strong> (<em>str</em>) – Path to the input folder containing S11, S12, S21, S22 scattering components.</p></li>
+<li><p><strong>matrix</strong> (<em>str</em><em>, </em><em>default='T3'</em>) – Output matrix format. Supported values:
+- ‘T4’, ‘T3’, ‘T2HV’ (Coherency)
+- ‘C4’, ‘C3’, ‘C2HX’, ‘C2VX’, ‘C2HV’ (Covariance)</p></li>
+<li><p><strong>azlks</strong> (<em>int</em><em>, </em><em>default=4</em>) – Number of looks in azimuth direction.</p></li>
+<li><p><strong>rglks</strong> (<em>int</em><em>, </em><em>default=2</em>) – Number of looks in range direction.</p></li>
+<li><p><strong>cf</strong> (<em>float</em><em>, </em><em>default=1</em>) – Calibration factor to adjust the amplitude of S2 data.</p></li>
+<li><p><strong>outType</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output format type.</p></li>
+<li><p><strong>cog_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, creates Cloud Optimized GeoTIFF (COG).</p></li>
+<li><p><strong>cog_overviews</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Levels of pyramid overviews for COG generation.</p></li>
+<li><p><strong>write_flag</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If False, skips writing output to disk.</p></li>
+<li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Number of parallel worker threads.</p></li>
+<li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Size of chunks for processing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Writes multi-looked polarimetric matrix to disk in the selected format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="generate-paulirgb-for-fp-data-paulirgb">
 <h1>Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)<a class="headerlink" href="#generate-paulirgb-for-fp-data-paulirgb" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">pauliRGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/utils/pauliRGB.html#pauliRGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate Pauli RGB image from polarimetric SAR data (C4, C3, T4, T3, or S2 matrices).</p>
+<p>This function creates a Pauli decomposition RGB composite image from full polarimetric SAR data.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate Pauli RGB from a polarimetric folder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pauliRGB</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Output both PNG and GeoTIFF versions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pauliRGB</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">tif_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>infolder</strong> (<em>str</em>) – Path to the folder containing polarimetric matrix files (.bin or .tif).
+Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.</p></li>
+<li><p><strong>tif_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates both PNG and GeoTIFF (.tif) versions of the Pauli RGB image.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Writes output to:
+- PauliRGB.png: RGB composite with world file for georeferencing
+- PauliRGB.tif: Optional GeoTIFF output if <cite>tif_flag=True</cite></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="generate-false-color-rgb-for-dp-cp-data-dxprgb">
 <h1>Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">dxpRGB</span></code>)<a class="headerlink" href="#generate-false-color-rgb-for-dp-cp-data-dxprgb" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">dxpRGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/utils/dxpRGB.html#dxpRGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate false-color RGB visualization from C2 dual-polarimetric SAR data.</p>
+<p>This function creates an RGB image from dual-pol (C2) covariance matrix inputs
+to enhance polarimetric contrast through various combinations of C11, C22, and
+C12_real. The output provides a quick-look visualization useful for interpreting
+scattering mechanisms and surface features.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate type-1 false-color RGB from C2 folder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dxpRGB</span><span class="p">(</span><span class="s2">&quot;/path/to/C2_data&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Output both PNG and GeoTIFF versions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dxpRGB</span><span class="p">(</span><span class="s2">&quot;/path/to/C2_data&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">tif_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>infolder</strong> (<em>str</em>) – Path to the input folder containing C2 matrix components (C11, C22, C12_real).</p></li>
+<li><p><strong>type</strong> (<em>int</em><em>, </em><em>{1</em><em>, </em><em>2</em><em>, </em><em>3</em><em>, </em><em>4}</em><em>, </em><em>default=1</em>) – RGB combination type:
+- 1: Blue=C11, Red=C22, Green=|C11 + C22 - 2·C12_real|
+- 2: Blue=C22, Red=C11, Green=|C11 + C22 - 2·C12_real|
+- 3: Blue=C11, Red=C22, Green=|C11 - C22|
+- 4: Blue=C22, Red=C11, Green=|C22 - C11|</p></li>
+<li><p><strong>tif_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates a GeoTIFF (.tif) file alongside the PNG image.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Writes RGB visualization to disk:
+- ‘RGB#.png’: False-color PNG image (with world file for georeferencing)
+- ‘RGB#.tif’: Optional GeoTIFF output if <cite>tif_flag=True</cite></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

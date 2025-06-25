@@ -1,4 +1,5 @@
 pytest
 sphinx
-doxygen
+sphinxcontrib-bibtex
+pydata-sphinx-theme
 # Other development tools

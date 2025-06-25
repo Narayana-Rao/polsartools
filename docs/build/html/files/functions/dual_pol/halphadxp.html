@@ -399,6 +399,56 @@
                   
   <section id="h-decomposition-halphadp">
 <h1>H/α decomposition (<code class="docutils literal notranslate"><span class="pre">halphadp</span></code>)<a class="headerlink" href="#h-decomposition-halphadp" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">halphadp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/dxp/halphadp.html#halphadp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Computes Entropy and alpha parameters from the input dual-polarization (dual-pol) C2 matrix data, and writes
+the output in various formats (GeoTIFF or binary). The computation is performed in parallel for efficiency.</p>
+<section id="example">
+<h2>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">halphadp</span><span class="p">(</span><span class="s2">&quot;path_to_C2_folder&quot;</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">This will compute Entropy and alpha parameters from the C2 matrix in the specified folder,</span>
+<span class="go">generating output in Geotiff format with Cloud Optimized GeoTIFF settings enabled.</span>
+</pre></div>
+</div>
+</section>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>infolder<span class="classifier">str</span></dt><dd><p>Path to the input folder containing C2 matrix data.</p>
+</dd>
+<dt>window_size<span class="classifier">int, optional</span></dt><dd><p>Size of the processing window (default is 1).</p>
+</dd>
+<dt>outType<span class="classifier">str, optional</span></dt><dd><p>Output format of the files; can be “tif” (GeoTIFF) or “bin” (binary) (default is “tif”).</p>
+</dd>
+<dt>cog_flag<span class="classifier">bool, optional</span></dt><dd><p>If True, outputs Cloud Optimized GeoTIFF (COG) (default is False).</p>
+</dd>
+<dt>cog_overviews<span class="classifier">list of int, optional</span></dt><dd><p>List of overview levels to be used for COGs (default is [2, 4, 8, 16]).</p>
+</dd>
+<dt>write_flag<span class="classifier">bool, optional</span></dt><dd><p>Whether to write the computed output files (default is True).</p>
+</dd>
+<dt>max_workers<span class="classifier">int, optional</span></dt><dd><p>Number of parallel workers for processing (default is None, which uses one less than the number of available CPU cores).</p>
+</dd>
+<dt>block_size<span class="classifier">tuple of int, optional</span></dt><dd><p>Size of each processing block (default is (512, 512)), defining the spatial chunk dimensions used in parallel computation.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>None</dt><dd><p>The function writes the computed entropy, alpha parameters to the specified output format.</p>
+</dd>
+</dl>
+</section>
+<section id="output-files">
+<h2>Output Files:<a class="headerlink" href="#output-files" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>“Hdp.tif” or “Hdp.bin”</p></li>
+<li><p>“alphadp.tif” or “alphadp.bin”</p></li>
+</ul>
+</section>
+</dd></dl>
+
 </section>
 
 

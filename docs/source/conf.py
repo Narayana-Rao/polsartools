@@ -35,7 +35,7 @@ latex_elements = {
 	'figure_align': 'htbp'
 }
 
-autodoc_mock_imports = ["tables", "numpy"]
+# autodoc_mock_imports = ["tables", "numpy"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

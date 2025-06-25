@@ -399,6 +399,62 @@
                   
   <section id="full-pol-h-alpha-plot-halpha-plot-fp">
 <h1>Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)<a class="headerlink" href="#full-pol-h-alpha-plot-halpha-plot-fp" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">halpha_plot_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grey_region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_line_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/fp/halpha_plot_fp.html#halpha_plot_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generates and saves a hexbin density plot of entropy (H) versus alpha (degrees) for full-pol data,
+including optional zone lines, zone IDs, and grey regions.</p>
+<section id="example">
+<h2>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">halpha_plot_fp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;HA_plot.png&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="go">This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the &#39;jet&#39; colormap and logarithmic normalization</span>
+</pre></div>
+</div>
+</section>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>h<span class="classifier">array-like</span></dt><dd><p>Array representing entropy values.</p>
+</dd>
+<dt>alpha<span class="classifier">array-like</span></dt><dd><p>Array representing alpha values in degrees.</p>
+</dd>
+<dt>path<span class="classifier">str, optional</span></dt><dd><p>Path to save the generated plot. If a folder is given, the plot is saved as ‘halpha_plot_fp.png’ inside that folder.
+If the file already exists, it will be overwritten.</p>
+</dd>
+<dt>cmap<span class="classifier">str, optional</span></dt><dd><p>Colormap used for the hexbin plot. Defaults to ‘viridis’.</p>
+</dd>
+<dt>colorbar<span class="classifier">bool, optional</span></dt><dd><p>If True, displays a colorbar representing sample count. Defaults to True.</p>
+</dd>
+<dt>norm<span class="classifier">str, optional</span></dt><dd><p>If set to ‘log’, applies logarithmic normalization to the hexbin plot.</p>
+</dd>
+<dt>grey_region<span class="classifier">bool, optional</span></dt><dd><p>If True, fills non-feasible regions of the plot with a grey color to indicate feasible boundaries. Defaults to True.</p>
+</dd>
+<dt>zone_lines<span class="classifier">bool, optional</span></dt><dd><p>If True, adds dashed lines to mark different entropy-alpha zones. Defaults to True.</p>
+</dd>
+<dt>zone_line_color<span class="classifier">str, optional</span></dt><dd><p>Color used for zone boundary lines. Defaults to ‘k’ (black).</p>
+</dd>
+<dt>zone_ids<span class="classifier">bool, optional</span></dt><dd><p>If True, labels predefined zones with numerical identifiers. Defaults to True.</p>
+</dd>
+<dt>gridsize<span class="classifier">int, optional</span></dt><dd><p>Number of hexagonal bins used in the plot. Higher values result in finer binning. Defaults to 300.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>None</dt><dd><p>Displays the plot and optionally saves it to the specified location.</p>
+</dd>
+</dl>
+</section>
+<section id="notes">
+<h2>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Uses <cite>get_feas_bounds()</cite> to obtain feasible boundary curves for plotting.</p></li>
+<li><p>If <cite>norm</cite> is ‘log’, a <cite>LogNorm()</cite> normalization is applied.</p></li>
+</ul>
+</section>
+</dd></dl>
+
 </section>
 
 
