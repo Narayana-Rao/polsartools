@@ -400,63 +400,6 @@
                   
   <section id="model-free-3-component-decomposition-mf3cf">
 <h1>Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)<a class="headerlink" href="#model-free-3-component-decomposition-mf3cf" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">mf3cf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/fp/mf3cf.html#mf3cf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Perform Model-Free 3-Component Decomposition for full-pol SAR data.</p>
-<p>This function implements the model-free three-component decomposition for
-full-polarimetric SAR data, decomposing the total scattered power into surface (Ps),
-double-bounce (Pd), and volume (Pv) scattering components, along with the
-scattering type parameter (Theta_FP). Unlike model-based decompositions, this
-approach doesn’t assume specific scattering models.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage with default parameters</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mf3cf</span><span class="p">(</span><span class="s2">&quot;/path/to/fullpol_data&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Advanced usage with custom parameters</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mf3cf</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">infolder</span><span class="o">=</span><span class="s2">&quot;/path/to/fullpol_data&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">window_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">cog_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
-<span class="gp">... </span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>infolder</strong> (<em>str</em>) – Path to the input folder containing full-pol T3 or C3 matrix files.</p></li>
-<li><p><strong>window_size</strong> (<em>int</em><em>, </em><em>default=1</em>) – Size of the spatial averaging window. Larger windows reduce speckle noise
-but decrease spatial resolution.</p></li>
-<li><p><strong>outType</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output file format:
-- ‘tif’: GeoTIFF format with georeferencing information
-- ‘bin’: Raw binary format</p></li>
-<li><p><strong>cog_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
-and overviews for efficient web access.</p></li>
-<li><p><strong>cog_overviews</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for COG creation. Each number represents the
-decimation factor for that overview level.</p></li>
-<li><p><strong>write_flag</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, writes results to disk. If False, only processes data in memory.</p></li>
-<li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Maximum number of parallel processing workers. If None, uses
-CPU count - 1 workers.</p></li>
-<li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Size of processing blocks (rows, cols) for parallel computation.
-Larger blocks use more memory but may be more efficient.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Writes four output files to disk:
-1. Ps_mf3cf: Surface scattering power component
-2. Pd_mf3cf: Double-bounce scattering power component
-3. Pv_mf3cf: Volume scattering power component
-4. Theta_FP_mf3cf: Scattering type parameter</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
 <p>The formulation of the scattering powers (<span class="math notranslate nohighlight">\(P_s\)</span> : Surface, <span class="math notranslate nohighlight">\(P_d\)</span> : Double bounce, <span class="math notranslate nohighlight">\(P_v\)</span> : volume) is as follows:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}P_{d}^{\text{FP}}=\frac{m_{\text{FP}}{\text{Span}}}{2}{\left(1-\sin2\theta_{\text{FP}}\right)}\\P_{v}^{\text{FP}}={\text{Span}}\left(1-m_{\text{FP}}\right)\\P_{s}^{\text{FP}}=\frac{m_{\text{FP}}{\text{Span}}}{2}\left(1+\sin2\theta_{\text{FP}}\right)\end{split}\]</div>

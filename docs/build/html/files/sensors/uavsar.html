@@ -359,108 +359,10 @@
 <section id="grd-uavsar-grd">
 <h2>GRD (<code class="docutils literal notranslate"><span class="pre">uavsar_grd</span></code>)<a class="headerlink" href="#grd-uavsar-grd" title="Link to this heading">#</a></h2>
 <p>The <cite>uavsar_grd</cite> function extracts matrix elements (C3 or T3) from the given UAVSAR <cite>.ann</cite> file and saves them into respective directories (C3 or T3).</p>
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">uavsar_grd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C3'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/uavsar.html#uavsar_grd"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them
-into respective directories (C3 or T3).</p>
-<section id="example">
-<h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uavsar_grd</span><span class="p">(</span><span class="s2">&quot;path_to_file.ann&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
-<span class="go">This will extract the C3 matrix elements from the specified .ann file and</span>
-<span class="go">save them in the &#39;C3&#39; directory.</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uavsar_grd</span><span class="p">(</span><span class="s2">&quot;path_to_file.ann&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">)</span>
-<span class="go">This will extract the T3 matrix elements and save them in the &#39;T3&#39; directory.</span>
-</pre></div>
-</div>
-</section>
-<section id="parameters">
-<h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>annFile<span class="classifier">str</span></dt><dd><p>The path to the UAVSAR annotation file (.ann) that contains the radar data metadata.</p>
-</dd>
-<dt>matrix<span class="classifier">str, optional (default=’C3’)</span></dt><dd><p>The type of matrix to extract. Can either be ‘C3’ or ‘T3’.</p>
-<ul class="simple">
-<li><p>‘C3’ will extract the C3 matrix elements.</p></li>
-<li><p>‘T3’ will extract the T3 matrix elements.</p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>None</dt><dd><p>The function does not return any value. Instead, it creates a directory (C3 or T3)
-and populates it with the corresponding matrix elements.</p>
-</dd>
-</dl>
-</section>
-<section id="raises">
-<h3>Raises:<a class="headerlink" href="#raises" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>FileNotFoundError</dt><dd><p>If the specified .ann file does not exist or cannot be found.</p>
-</dd>
-<dt>ValueError</dt><dd><p>If the matrix argument is not one of ‘C3’ or ‘T3’.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
 </section>
 <section id="mlc-uavsar-mlc">
 <h2>MLC (<code class="docutils literal notranslate"><span class="pre">uavsar_mlc</span></code>)<a class="headerlink" href="#mlc-uavsar-mlc" title="Link to this heading">#</a></h2>
 <p>The <cite>uavsar_mlc</cite> function extracts matrix elements (C3 or T3) from the given UAVSAR <cite>.ann</cite> file and saves them into respective directories (C3 or T3).</p>
-<dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">uavsar_mlc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C3'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/uavsar.html#uavsar_mlc"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them
-into respective directories (C3 or T3).</p>
-<section id="id1">
-<h3>Example:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uavsar_mlc</span><span class="p">(</span><span class="s2">&quot;path_to_file.ann&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
-<span class="go">This will extract the C3 matrix elements from the specified .ann file and</span>
-<span class="go">save them in the &#39;C3&#39; directory.</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uavsar_mlc</span><span class="p">(</span><span class="s2">&quot;path_to_file.ann&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">)</span>
-<span class="go">This will extract the T3 matrix elements and save them in the &#39;T3&#39; directory.</span>
-</pre></div>
-</div>
-</section>
-<section id="id2">
-<h3>Parameters:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>annFile<span class="classifier">str</span></dt><dd><p>The path to the UAVSAR annotation file (.ann) that contains the radar data metadata.</p>
-</dd>
-<dt>matrix<span class="classifier">str, optional (default=’C3’)</span></dt><dd><p>The type of matrix to extract. Can either be ‘C3’ or ‘T3’.</p>
-<ul class="simple">
-<li><p>‘C3’ will extract the C3 matrix elements.</p></li>
-<li><p>‘T3’ will extract the T3 matrix elements.</p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<section id="id3">
-<h3>Returns:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>None</dt><dd><p>The function does not return any value. Instead, it creates a directory (C3 or T3)
-and populates it with the corresponding matrix elements.</p>
-</dd>
-</dl>
-</section>
-<section id="id4">
-<h3>Raises:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>FileNotFoundError</dt><dd><p>If the specified .ann file does not exist or cannot be found.</p>
-</dd>
-<dt>ValueError</dt><dd><p>If the matrix argument is not one of ‘C3’ or ‘T3’.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
 </section>
 </section>
 
