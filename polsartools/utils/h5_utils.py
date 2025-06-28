@@ -81,6 +81,7 @@ def compute_c3(chunks, azlks, rglks, apply_multilook):
 
 
 def get_chunk_jobs(h5_file, dataset_path, chunk_size_x, chunk_size_y):
+    import tables
     jobs = []
     with tables.open_file(h5_file, 'r') as h5:
         arr = h5.get_node(dataset_path)
@@ -88,10 +89,13 @@ def get_chunk_jobs(h5_file, dataset_path, chunk_size_x, chunk_size_y):
         for y in range(0, height, chunk_size_y):
             for x in range(0, width, chunk_size_x):
                 jobs.append({
-                    "x_start": x, "x_end": min(x + chunk_size_x, width),
-                    "y_start": y, "y_end": min(y + chunk_size_y, height)
+                    "x_start": x,
+                    "x_end": min(x + chunk_size_x, width),
+                    "y_start": y,
+                    "y_end": min(y + chunk_size_y, height)
                 })
     return jobs
+
 
 
 def process_and_write_tile(job, h5_file, dataset_paths,  azlks, rglks, matrix_type,apply_multilook, temp_dir,
@@ -111,31 +115,29 @@ def process_and_write_tile(job, h5_file, dataset_paths,  azlks, rglks, matrix_ty
         save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
                   start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=epsg)
 
-
 def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
-              start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326):
+              start_x=0, start_y=0, xres=1.0, yres=1.0, epsg=4326):
+    from osgeo import gdal, osr
+    import os
+
     h_out, w_out = data.shape
     out_path = os.path.join(temp_dir, f"{name}_{y0}_{x0}.tif")
     driver = gdal.GetDriverByName('GTiff')
     dst = driver.Create(out_path, w_out, h_out, 1, gdal.GDT_Float32)
 
-    # Adjust resolution if multilooked
-    res_x = xres * rglks if apply_multilook else xres
-    res_y = yres * azlks if apply_multilook else yres
+    if not apply_multilook:
+        azlks = rglks = 1
+    res_x = xres * rglks
+    res_y = yres * azlks
 
-    # Default origin if not specified
-    origin_x = start_x if start_x is not None else 0
-    origin_y = start_y if start_y is not None else 0
-
-    gt_x = origin_x + x0 * xres
-    gt_y = origin_y - y0 * abs(yres)  # common convention: north-up image
+    gt_x = start_x + (x0 // rglks) * res_x
+    gt_y = start_y - (y0 // azlks) * res_y
 
     dst.SetGeoTransform([gt_x, res_x, 0, gt_y, 0, -res_y])
-
     srs = osr.SpatialReference(); srs.ImportFromEPSG(epsg)
     dst.SetProjection(srs.ExportToWkt())
-
     dst.GetRasterBand(1).WriteArray(data)
+    dst.GetRasterBand(1).SetNoDataValue(0)
     dst.SetMetadata({
         'AzimuthLooks': str(azlks),
         'RangeLooks': str(rglks),
@@ -146,76 +148,66 @@ def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
 
 def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y, 
                   azlks, rglks, apply_multilook,
-                  start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
-                  outType = 'tif',
-                  dtype = np.float32
-                  ):
-    
+                  start_x=0, start_y=0, xres=1.0, yres=1.0, epsg=4326,
+                  outType='tif', dtype=np.float32):
+
     dtype = get_dtype(dtype)
     os.makedirs(output_dir, exist_ok=True)
-    chunk_files = sorted(glob.glob(os.path.join(temp_dir, f"{element_name}_*.tif")),
-                         key=lambda f: (int(f.split("_")[-2]), int(f.split("_")[-1].split(".")[0])))
+    chunk_files = sorted(glob.glob(os.path.join(temp_dir, f"{element_name}_*.tif")))
     if not chunk_files:
         print(f"⚠️ No chunks found for {element_name}")
         return
 
-    tile = gdal.Open(chunk_files[0])
-    w, h = tile.RasterXSize, tile.RasterYSize
-    grid_x = len(set(f.split("_")[-1].split(".")[0] for f in chunk_files))
-    grid_y = len(chunk_files) // grid_x
-    
-    
-    if outType=='bin':
-        driver = gdal.GetDriverByName('ENVI')
-        out_path = os.path.join(output_dir, f"{element_name}.bin")
-        dst = driver.Create(out_path, w * grid_x, h * grid_y, 1, dtype)
-        
-    else:
-        driver = gdal.GetDriverByName('GTiff')
-        options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
-        out_path = os.path.join(output_dir, f"{element_name}.tif")
-        dst = driver.Create(out_path, w * grid_x, h * grid_y, 1, dtype, options=options)
-
-
-    # Adjust resolution for multilooking
     if not apply_multilook:
-        rglks = 1
-        azlks = 1
+        azlks = rglks = 1
     res_x = xres * rglks
     res_y = yres * azlks
 
-    # Compute origin
-    origin_x = start_x if start_x is not None else 0
-    origin_y = start_y if start_y is not None else 0
+    max_x = 0
+    max_y = 0
+    offsets = []
 
-    gt = [origin_x, res_x, 0, origin_y, 0, -abs(res_y)]
-    dst.SetGeoTransform(gt)
+    for f in chunk_files:
+        y0 = int(f.split("_")[-2])
+        x0 = int(f.split("_")[-1].split(".")[0])
+        x_ml = x0 // rglks
+        y_ml = y0 // azlks
+        tile = gdal.Open(f)
+        h, w = tile.RasterYSize, tile.RasterXSize
+        max_x = max(max_x, x_ml + w)
+        max_y = max(max_y, y_ml + h)
+        offsets.append((f, x_ml, y_ml))
+        tile = None
 
+    driver = gdal.GetDriverByName('ENVI') if outType == 'bin' else gdal.GetDriverByName('GTiff')
+    options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES'] if outType == 'tif' else []
+    out_path = os.path.join(output_dir, f"{element_name}.{outType}")
+    dst = driver.Create(out_path, max_x, max_y, 1, dtype, options=options)
+
+    dst.SetGeoTransform([start_x, res_x, 0, start_y, 0, -abs(res_y)])
     srs = osr.SpatialReference(); srs.ImportFromEPSG(epsg)
     dst.SetProjection(srs.ExportToWkt())
-    
-    
-    for f in chunk_files:
-        x0 = int(f.split("_")[-1].split(".")[0])
-        y0 = int(f.split("_")[-2])
-        x_off = (x0 // chunk_size_x) * w
-        y_off = (y0 // chunk_size_y) * h
+
+    for f, x_ml, y_ml in offsets:
         tile = gdal.Open(f)
         data = tile.GetRasterBand(1).ReadAsArray()
-        # data[data==0]=np.nan
-        dst.GetRasterBand(1).WriteArray(data, x_off, y_off)
-        dst.GetRasterBand(1).SetNoDataValue(0)
-        dst.SetDescription('')
-        tile = None
         
+        # flipped_y = max_y - (y_ml + data.shape[0])
+        # dst.GetRasterBand(1).WriteArray(data, x_ml, flipped_y)
+        
+        
+        dst.GetRasterBand(1).WriteArray(data, x_ml, y_ml)
+        tile = None
+
+    dst.GetRasterBand(1).SetNoDataValue(0)
     dst.SetMetadata({
         'AzimuthLooks': str(azlks),
         'RangeLooks': str(rglks),
-        # 'Multilooked': str(apply_multilook)
+        'Multilooked': str(apply_multilook)
     })
     dst = None
-    print(f"File saved: {os.path.join(output_dir,element_name)}.{outType}")
-    
+    print(f"✅ Mosaic saved: {out_path}")
+
 
 def cleanup_temp_files(temp_dir):
     for f in glob.glob(os.path.join(temp_dir, "*.tif")):
