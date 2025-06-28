@@ -143,6 +143,7 @@ def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
     })
     dst = None
 
+
 def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y, 
                   azlks, rglks, apply_multilook,
                   start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
@@ -192,7 +193,8 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
 
     srs = osr.SpatialReference(); srs.ImportFromEPSG(epsg)
     dst.SetProjection(srs.ExportToWkt())
-
+    
+    
     for f in chunk_files:
         x0 = int(f.split("_")[-1].split(".")[0])
         y0 = int(f.split("_")[-2])
@@ -261,34 +263,34 @@ if __name__ == "__main__":
     temp_dir = r'C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\RSLC_QP_tab\C3\temp'
     azlks = 22
     rglks = 10
-    h5_polsar(
-        h5_file=inFile,
-        dataset_paths={
-            "HH": "/science/LSAR/RSLC/swaths/frequencyA/HH",
-            "HV": "/science/LSAR/RSLC/swaths/frequencyA/HV",
-            "VH": "/science/LSAR/RSLC/swaths/frequencyA/VH",
-            "VV": "/science/LSAR/RSLC/swaths/frequencyA/VV"
-        },
-        output_dir=output_dir,
-        temp_dir=temp_dir,
-        azlks=azlks,
-        rglks=rglks,
-        matrix_type = 'C3',
-        apply_multilook=True,
-        chunk_size_x=500,
-        chunk_size_y=528,
-        max_workers=10,
-        # start_x=None, start_y=None, xres=0.0002/rglks, yres=0.0002/azlks, epsg=4326,
-        start_x=None, start_y=None, xres=1/rglks, yres=1/azlks, epsg=4326,
-        outType='tif',
-        dtype = np.float32
+    # h5_polsar(
+    #     h5_file=inFile,
+    #     dataset_paths={
+    #         "HH": "/science/LSAR/RSLC/swaths/frequencyA/HH",
+    #         "HV": "/science/LSAR/RSLC/swaths/frequencyA/HV",
+    #         "VH": "/science/LSAR/RSLC/swaths/frequencyA/VH",
+    #         "VV": "/science/LSAR/RSLC/swaths/frequencyA/VV"
+    #     },
+    #     output_dir=output_dir,
+    #     temp_dir=temp_dir,
+    #     azlks=azlks,
+    #     rglks=rglks,
+    #     matrix_type = 'C3',
+    #     apply_multilook=True,
+    #     chunk_size_x=500,
+    #     chunk_size_y=528,
+    #     max_workers=10,
+    #     # start_x=None, start_y=None, xres=0.0002/rglks, yres=0.0002/azlks, epsg=4326,
+    #     start_x=None, start_y=None, xres=1/rglks, yres=1/azlks, epsg=4326,
+    #     outType='tif',
+    #     dtype = np.float32
         
-    )
+    # )
     
     inFile = r"C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\GSLC_QP.h5"
     freq_band  ='L'
-    output_dir = r'C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\GSLC_QP\C3'
-    temp_dir = r'C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\GSLC_QP\C3\temp'
+    output_dir = r'C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\GSLC_QP_tab\C3'
+    temp_dir = r'C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\GSLC_QP_tab\C3\temp'
     
     
     
