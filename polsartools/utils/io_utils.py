@@ -321,25 +321,25 @@ def write_s2_ct(matrix_type, matrixFolder, K, azlks, rglks):
         return matrix.shape  # Capture shape for config file
 
     # Process each matrix element one by one
-    rows, cols = process_and_write(f'{prefix}11', mlook(np.abs(K[0])**2, azlks, rglks))
-    process_and_write(f'{prefix}22', mlook(np.abs(K[1])**2, azlks, rglks))
-    process_and_write(f'{prefix}33', mlook(np.abs(K[2])**2, azlks, rglks))
-    process_and_write(f'{prefix}12_real', mlook(np.real(K[0] * np.conj(K[1])), azlks, rglks))
-    process_and_write(f'{prefix}12_imag', mlook(np.imag(K[0] * np.conj(K[1])), azlks, rglks))
-    process_and_write(f'{prefix}13_real', mlook(np.real(K[0] * np.conj(K[2])), azlks, rglks))
-    process_and_write(f'{prefix}13_imag', mlook(np.imag(K[0] * np.conj(K[2])), azlks, rglks))
-    process_and_write(f'{prefix}23_real', mlook(np.real(K[1] * np.conj(K[2])), azlks, rglks))
-    process_and_write(f'{prefix}23_imag', mlook(np.imag(K[1] * np.conj(K[2])), azlks, rglks))
+    rows, cols = process_and_write(f'{prefix}11', mlook_arr(np.abs(K[0])**2, azlks, rglks))
+    process_and_write(f'{prefix}22', mlook_arr(np.abs(K[1])**2, azlks, rglks))
+    process_and_write(f'{prefix}33', mlook_arr(np.abs(K[2])**2, azlks, rglks))
+    process_and_write(f'{prefix}12_real', mlook_arr(np.real(K[0] * np.conj(K[1])), azlks, rglks))
+    process_and_write(f'{prefix}12_imag', mlook_arr(np.imag(K[0] * np.conj(K[1])), azlks, rglks))
+    process_and_write(f'{prefix}13_real', mlook_arr(np.real(K[0] * np.conj(K[2])), azlks, rglks))
+    process_and_write(f'{prefix}13_imag', mlook_arr(np.imag(K[0] * np.conj(K[2])), azlks, rglks))
+    process_and_write(f'{prefix}23_real', mlook_arr(np.real(K[1] * np.conj(K[2])), azlks, rglks))
+    process_and_write(f'{prefix}23_imag', mlook_arr(np.imag(K[1] * np.conj(K[2])), azlks, rglks))
 
     # Extend for C4/T4 processing if K has 4 elements
     if len(K) == 4:
-        process_and_write(f'{prefix}44', mlook(np.abs(K[3])**2, azlks, rglks))
-        process_and_write(f'{prefix}14_real', mlook(np.real(K[0] * np.conj(K[3])), azlks, rglks))
-        process_and_write(f'{prefix}14_imag', mlook(np.imag(K[0] * np.conj(K[3])), azlks, rglks))
-        process_and_write(f'{prefix}24_real', mlook(np.real(K[1] * np.conj(K[3])), azlks, rglks))
-        process_and_write(f'{prefix}24_imag', mlook(np.imag(K[1] * np.conj(K[3])), azlks, rglks))
-        process_and_write(f'{prefix}34_real', mlook(np.real(K[2] * np.conj(K[3])), azlks, rglks))
-        process_and_write(f'{prefix}34_imag', mlook(np.imag(K[2] * np.conj(K[3])), azlks, rglks))
+        process_and_write(f'{prefix}44', mlook_arr(np.abs(K[3])**2, azlks, rglks))
+        process_and_write(f'{prefix}14_real', mlook_arr(np.real(K[0] * np.conj(K[3])), azlks, rglks))
+        process_and_write(f'{prefix}14_imag', mlook_arr(np.imag(K[0] * np.conj(K[3])), azlks, rglks))
+        process_and_write(f'{prefix}24_real', mlook_arr(np.real(K[1] * np.conj(K[3])), azlks, rglks))
+        process_and_write(f'{prefix}24_imag', mlook_arr(np.imag(K[1] * np.conj(K[3])), azlks, rglks))
+        process_and_write(f'{prefix}34_real', mlook_arr(np.real(K[2] * np.conj(K[3])), azlks, rglks))
+        process_and_write(f'{prefix}34_imag', mlook_arr(np.imag(K[2] * np.conj(K[3])), azlks, rglks))
 
     # Write configuration file
     config_file_path = os.path.join(matrixFolder, 'config.txt')
@@ -377,25 +377,25 @@ def write_s2_ct_ref(matrix_type, matrixFolder, K_refs, azlks, rglks):
         return matrix.shape  # Capture shape for config file
 
     # Process each matrix element **lazily** by only loading required portions
-    rows, cols = process_and_write(f'{prefix}11', mlook(np.abs(K_refs[0][()])**2, azlks, rglks))
-    process_and_write(f'{prefix}22', mlook(np.abs(K_refs[1][()])**2, azlks, rglks))
-    process_and_write(f'{prefix}33', mlook(np.abs(K_refs[2][()])**2, azlks, rglks))
-    process_and_write(f'{prefix}12_real', mlook(np.real(K_refs[0][()] * np.conj(K_refs[1][()])), azlks, rglks))
-    process_and_write(f'{prefix}12_imag', mlook(np.imag(K_refs[0][()] * np.conj(K_refs[1][()])), azlks, rglks))
-    process_and_write(f'{prefix}13_real', mlook(np.real(K_refs[0][()] * np.conj(K_refs[2][()])), azlks, rglks))
-    process_and_write(f'{prefix}13_imag', mlook(np.imag(K_refs[0][()] * np.conj(K_refs[2][()])), azlks, rglks))
-    process_and_write(f'{prefix}23_real', mlook(np.real(K_refs[1][()] * np.conj(K_refs[2][()])), azlks, rglks))
-    process_and_write(f'{prefix}23_imag', mlook(np.imag(K_refs[1][()] * np.conj(K_refs[2][()])), azlks, rglks))
+    rows, cols = process_and_write(f'{prefix}11', mlook_arr(np.abs(K_refs[0][()])**2, azlks, rglks))
+    process_and_write(f'{prefix}22', mlook_arr(np.abs(K_refs[1][()])**2, azlks, rglks))
+    process_and_write(f'{prefix}33', mlook_arr(np.abs(K_refs[2][()])**2, azlks, rglks))
+    process_and_write(f'{prefix}12_real', mlook_arr(np.real(K_refs[0][()] * np.conj(K_refs[1][()])), azlks, rglks))
+    process_and_write(f'{prefix}12_imag', mlook_arr(np.imag(K_refs[0][()] * np.conj(K_refs[1][()])), azlks, rglks))
+    process_and_write(f'{prefix}13_real', mlook_arr(np.real(K_refs[0][()] * np.conj(K_refs[2][()])), azlks, rglks))
+    process_and_write(f'{prefix}13_imag', mlook_arr(np.imag(K_refs[0][()] * np.conj(K_refs[2][()])), azlks, rglks))
+    process_and_write(f'{prefix}23_real', mlook_arr(np.real(K_refs[1][()] * np.conj(K_refs[2][()])), azlks, rglks))
+    process_and_write(f'{prefix}23_imag', mlook_arr(np.imag(K_refs[1][()] * np.conj(K_refs[2][()])), azlks, rglks))
 
     # Extend for C4/T4 processing if K has 4 elements
     if len(K_refs) == 4:
-        process_and_write(f'{prefix}44', mlook(np.abs(K_refs[3][()])**2, azlks, rglks))
-        process_and_write(f'{prefix}14_real', mlook(np.real(K_refs[0][()] * np.conj(K_refs[3][()])), azlks, rglks))
-        process_and_write(f'{prefix}14_imag', mlook(np.imag(K_refs[0][()] * np.conj(K_refs[3][()])), azlks, rglks))
-        process_and_write(f'{prefix}24_real', mlook(np.real(K_refs[1][()] * np.conj(K_refs[3][()])), azlks, rglks))
-        process_and_write(f'{prefix}24_imag', mlook(np.imag(K_refs[1][()] * np.conj(K_refs[3][()])), azlks, rglks))
-        process_and_write(f'{prefix}34_real', mlook(np.real(K_refs[2][()] * np.conj(K_refs[3][()])), azlks, rglks))
-        process_and_write(f'{prefix}34_imag', mlook(np.imag(K_refs[2][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}44', mlook_arr(np.abs(K_refs[3][()])**2, azlks, rglks))
+        process_and_write(f'{prefix}14_real', mlook_arr(np.real(K_refs[0][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}14_imag', mlook_arr(np.imag(K_refs[0][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}24_real', mlook_arr(np.real(K_refs[1][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}24_imag', mlook_arr(np.imag(K_refs[1][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}34_real', mlook_arr(np.real(K_refs[2][()] * np.conj(K_refs[3][()])), azlks, rglks))
+        process_and_write(f'{prefix}34_imag', mlook_arr(np.imag(K_refs[2][()] * np.conj(K_refs[3][()])), azlks, rglks))
 
     # Write configuration file
     config_file_path = os.path.join(matrixFolder, 'config.txt')
