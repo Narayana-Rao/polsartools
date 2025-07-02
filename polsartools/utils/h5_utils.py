@@ -157,7 +157,7 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
     os.makedirs(output_dir, exist_ok=True)
     chunk_files = sorted(glob.glob(os.path.join(temp_dir, f"{element_name}_*.tif")))
     if not chunk_files:
-        print(f"⚠️ No chunks found for {element_name}")
+        print(f"No chunks found for {element_name}")
         return
 
     if not apply_multilook:
@@ -168,7 +168,7 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
     
     # print(res_x,res_y)
     
-    if apply_multilook:
+    if apply_multilook and (inshape is not None) and (outshape is not None):
         old_width = inshape[0]
         old_height = inshape[1]
         ml_width = outshape[0]
@@ -221,7 +221,7 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
         'Multilooked': str(apply_multilook)
     })
     dst = None
-    print(f"Mosaic saved: {out_path}")
+    print(f"Saved file {out_path}")
 
 
 def cleanup_temp_files(temp_dir):
@@ -271,29 +271,29 @@ if __name__ == "__main__":
     temp_dir = r'C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\RSLC_QP_tab\C3\temp'
     azlks = 22
     rglks = 10
-    # h5_polsar(
-    #     h5_file=inFile,
-    #     dataset_paths={
-    #         "HH": "/science/LSAR/RSLC/swaths/frequencyA/HH",
-    #         "HV": "/science/LSAR/RSLC/swaths/frequencyA/HV",
-    #         "VH": "/science/LSAR/RSLC/swaths/frequencyA/VH",
-    #         "VV": "/science/LSAR/RSLC/swaths/frequencyA/VV"
-    #     },
-    #     output_dir=output_dir,
-    #     temp_dir=temp_dir,
-    #     azlks=azlks,
-    #     rglks=rglks,
-    #     matrix_type = 'C3',
-    #     apply_multilook=True,
-    #     chunk_size_x=500,
-    #     chunk_size_y=528,
-    #     max_workers=10,
-    #     # start_x=None, start_y=None, xres=0.0002/rglks, yres=0.0002/azlks, epsg=4326,
-    #     start_x=None, start_y=None, xres=1/rglks, yres=1/azlks, epsg=4326,
-    #     outType='tif',
-    #     dtype = np.float32
+    h5_polsar(
+        h5_file=inFile,
+        dataset_paths={
+            "HH": "/science/LSAR/RSLC/swaths/frequencyA/HH",
+            "HV": "/science/LSAR/RSLC/swaths/frequencyA/HV",
+            "VH": "/science/LSAR/RSLC/swaths/frequencyA/VH",
+            "VV": "/science/LSAR/RSLC/swaths/frequencyA/VV"
+        },
+        output_dir=output_dir,
+        temp_dir=temp_dir,
+        azlks=azlks,
+        rglks=rglks,
+        matrix_type = 'C3',
+        apply_multilook=True,
+        chunk_size_x=500,
+        chunk_size_y=528,
+        max_workers=10,
+        # start_x=None, start_y=None, xres=0.0002/rglks, yres=0.0002/azlks, epsg=4326,
+        start_x=0, start_y=0, xres=1/rglks, yres=1/azlks, epsg=4326,
+        outType='tif',
+        dtype = np.float32
         
-    # )
+    )
     
     inFile = r"C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\GSLC_QP.h5"
     freq_band  ='L'
