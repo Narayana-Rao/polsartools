@@ -2,7 +2,7 @@
 from osgeo import gdal
 import numpy as np
 from functools import wraps
-import time,h5py
+import time
 from skimage.util.shape import view_as_blocks
 
 def time_it(func):
@@ -57,16 +57,16 @@ def read_bin(file):
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
     return arr
-def h5_keys(obj):
-    "Recursively find all keys in an h5py.Group."
-    keys = (obj.name,)
-    if isinstance(obj, h5py.Group):
-        for key, value in obj.items():
-            if isinstance(value, h5py.Group):
-                keys = keys + h5_keys(value)
-            else:
-                keys = keys + (value.name,)
-    return keys
+# def h5_keys(obj):
+#     "Recursively find all keys in an h5py.Group."
+#     keys = (obj.name,)
+#     if isinstance(obj, h5py.Group):
+#         for key, value in obj.items():
+#             if isinstance(value, h5py.Group):
+#                 keys = keys + h5_keys(value)
+#             else:
+#                 keys = keys + (value.name,)
+#     return keys
 
 def mlook_arr(data,az,rg):
     temp = data[0:data.shape[0]-data.shape[0]%az,0:data.shape[1]-data.shape[1]%rg]

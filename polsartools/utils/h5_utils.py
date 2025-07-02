@@ -117,8 +117,7 @@ def process_and_write_tile(job, h5_file, dataset_paths,  azlks, rglks, matrix_ty
 
 def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
               start_x=0, start_y=0, xres=1.0, yres=1.0, epsg=4326):
-    from osgeo import gdal, osr
-    import os
+
 
     h_out, w_out = data.shape
     out_path = os.path.join(temp_dir, f"{name}_{y0}_{x0}.tif")
@@ -149,7 +148,10 @@ def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
 def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y, 
                   azlks, rglks, apply_multilook,
                   start_x=0, start_y=0, xres=1.0, yres=1.0, epsg=4326,
-                  outType='tif', dtype=np.float32):
+                  outType='tif', dtype=np.float32,
+                  inshape=None,outshape=None
+                  
+                  ):
 
     dtype = get_dtype(dtype)
     os.makedirs(output_dir, exist_ok=True)
@@ -160,8 +162,22 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
 
     if not apply_multilook:
         azlks = rglks = 1
+        
     res_x = xres * rglks
     res_y = yres * azlks
+    
+    # print(res_x,res_y)
+    
+    if apply_multilook:
+        old_width = inshape[0]
+        old_height = inshape[1]
+        ml_width = outshape[0]
+        ml_height = outshape[1]
+        res_x = (xres * old_width) / ml_width
+        res_y = (yres * old_height) / ml_height
+        
+        # print(res_x,res_y)
+    
 
     max_x = 0
     max_y = 0
@@ -185,15 +201,14 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
     dst = driver.Create(out_path, max_x, max_y, 1, dtype, options=options)
 
     dst.SetGeoTransform([start_x, res_x, 0, start_y, 0, -abs(res_y)])
+   
+    # print(start_x, start_y, res_x, -abs(res_y))
     srs = osr.SpatialReference(); srs.ImportFromEPSG(epsg)
     dst.SetProjection(srs.ExportToWkt())
 
     for f, x_ml, y_ml in offsets:
         tile = gdal.Open(f)
         data = tile.GetRasterBand(1).ReadAsArray()
-        
-        # flipped_y = max_y - (y_ml + data.shape[0])
-        # dst.GetRasterBand(1).WriteArray(data, x_ml, flipped_y)
         
         
         dst.GetRasterBand(1).WriteArray(data, x_ml, y_ml)
@@ -206,7 +221,7 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
         'Multilooked': str(apply_multilook)
     })
     dst = None
-    print(f"✅ Mosaic saved: {out_path}")
+    print(f"Mosaic saved: {out_path}")
 
 
 def cleanup_temp_files(temp_dir):
@@ -221,7 +236,8 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
                             chunk_size_x=512, chunk_size_y=512,
                             max_workers=8,
                             start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
-                            outType='tif',dtype=np.float32):
+                            outType='tif',dtype=np.float32,
+                            inshape=None,outshape=None):
 
     jobs = get_chunk_jobs(h5_file, dataset_paths["HH"], chunk_size_x, chunk_size_y)
 
@@ -242,7 +258,7 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
         mosaic_chunks(name, temp_dir, output_dir, chunk_size_x, chunk_size_y,
                       azlks, rglks, apply_multilook, 
                       start_x, start_y, xres, yres, epsg, 
-                      outType, dtype)
+                      outType, dtype,inshape,outshape)
 
     cleanup_temp_files(temp_dir)
 
@@ -283,7 +299,8 @@ if __name__ == "__main__":
     freq_band  ='L'
     output_dir = r'C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\GSLC_QP_tab\C3'
     temp_dir = r'C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\GSLC_QP_tab\C3\temp'
-    
+    azlks = 2
+    rglks = 2
     
     
     with tables.open_file(inFile, "r") as h5File:
@@ -301,15 +318,19 @@ if __name__ == "__main__":
                    .groups["grids"].groups["frequencyA"] \
                    .variables["yCoordinates"][:]
     
+    inshape = [len(xcoords),len(ycoords)]
+    outshape = [len(xcoords)//rglks,len(ycoords)//azlks]
     
     start_x = min(xcoords)
     start_y = max(ycoords)
+    
+    
     xres = xCoordinateSpacing[0]
     yres = yCoordinateSpacing[0]
     projection =int( projection[0])
     ds=None
-    # print(projection,start_x,start_y,xres,yres)
-
+    # print(projection,start_x,start_y,xres,yres,inshape,outshape)
+    # print(min(ycoords),max(ycoords), min(ycoords)+np.abs(yres)*(inshape[1]-1))
     h5_polsar(
         h5_file=inFile,
         dataset_paths={
@@ -322,16 +343,18 @@ if __name__ == "__main__":
         },
         output_dir=output_dir,
         temp_dir=temp_dir,
-        azlks=2,
-        rglks=2,
+        azlks=azlks,
+        rglks=rglks,
         matrix_type = 'C3',
         apply_multilook=True,
         chunk_size_x=512,
         chunk_size_y=512,
         max_workers=10,
         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        outType='bin',
-        dtype = np.float32
+        outType='tif',
+        dtype = np.float32,
+        inshape=inshape,
+        outshape=outshape
         
     )
     

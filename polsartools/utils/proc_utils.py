@@ -4,36 +4,139 @@ import numpy as np
 from concurrent.futures import ProcessPoolExecutor,as_completed
 from tqdm import tqdm
 
-def process_chunks_parallel(
-                            input_filepaths,
-                            output_filepaths,
-                            window_size,
-                            write_flag,
-                            processing_func,
-                            *proc_args,  # NEW
-                            bands_to_read=None,  # New argument
-                            block_size=(512, 512),
-                            max_workers=None,
-                            num_outputs=1,
-                            cog_flag=False,
-                            cog_overviews=[2, 4, 8, 16],
-                            post_proc=None,  # NEW
-                            out_x_size=None, out_y_size=None,
-                            out_geotransform=None,
-                            out_projection=None,
-                            **proc_kwargs  # NEW
-                        ):
+# def process_chunks_parallel(
+#                             input_filepaths,
+#                             output_filepaths,
+#                             window_size,
+#                             write_flag,
+#                             processing_func,
+#                             *proc_args,  # NEW
+#                             bands_to_read=None,  # New argument
+#                             block_size=(512, 512),
+#                             max_workers=None,
+#                             num_outputs=1,
+#                             cog_flag=False,
+#                             cog_overviews=[2, 4, 8, 16],
+#                             post_proc=None,  # NEW
+#                             out_x_size=None, out_y_size=None,
+#                             out_geotransform=None,
+#                             out_projection=None,
+#                             **proc_kwargs  # NEW
+#                         ):
 
 
-    # if len(input_filepaths) not in [2, 4, 9]:
-    #     raise ValueError("This function only supports 2, 4, or 9 input rasters.")
+#     # if len(input_filepaths) not in [2, 4, 9]:
+#     #     raise ValueError("This function only supports 2, 4, or 9 input rasters.")
     
+#     if bands_to_read is None:
+#         bands_to_read = [1] * len(input_filepaths) 
+        
+#     if max_workers is None:
+#         max_workers = os.cpu_count()-1  # Use all available CPUs
+#         # max_workers = 1
+#     input_datasets = [gdal.Open(fp, gdal.GA_ReadOnly) for fp in input_filepaths]
+#     if any(ds is None for ds in input_datasets):
+#         raise FileNotFoundError("One or more input files could not be opened.")
+
+#     raster_width = input_datasets[0].RasterXSize
+#     raster_height = input_datasets[0].RasterYSize
+#     geotransform = input_datasets[0].GetGeoTransform()
+#     projection = input_datasets[0].GetProjection()
+
+
+
+#     # # Override if resized output is requested
+#     output_width = out_x_size if out_x_size else raster_width
+#     output_height = out_y_size if out_y_size else raster_height
+#     output_geotransform = out_geotransform if out_geotransform else geotransform
+#     output_projection = out_projection if out_projection else projection
+
+#     # Ensure block_size does not exceed raster dimensions
+#     adjusted_block_size_x = min(block_size[0], raster_width)
+#     adjusted_block_size_y = min(block_size[1], raster_height)
+
+#     merged_arrays = [np.zeros((output_height, output_width), dtype=np.float32) for _ in range(num_outputs)] if not write_flag else None
+
+#     tasks = []
+
+#     """ with progress bar"""
+#     with ProcessPoolExecutor(max_workers=max_workers) as executor:
+#     # with ThreadPoolExecutor(max_workers=max_workers) as executor:
+#         tasks = []
+#         for y in range(0, raster_height, adjusted_block_size_y):
+#             for x in range(0, raster_width, adjusted_block_size_x):
+#                 read_block_width = min(adjusted_block_size_x, raster_width - x)
+#                 read_block_height = min(adjusted_block_size_y, raster_height - y)
+#                 # args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in,model)
+#                 args_ = ( input_filepaths, x, y, read_block_width, read_block_height, window_size,  raster_width, raster_height, *proc_args )
+                
+#                 # print(f"Submitting task for chunk at ({x}, {y})")
+#                 tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, bands_to_read, num_outputs, output_width,  output_height,**proc_kwargs))
+#         # Initialize tqdm progress bar with the total number of tasks
+#         with tqdm(total=len(tasks), desc=f"Progress ", unit=" block") as pbar:
+#             temp_files = []
+#             for future in as_completed(tasks):
+#                 # try:
+#                     result = future.result()
+#                     if result is None:
+#                         raise ValueError("Block processing returned None")
+#                     temp_paths, x_start, y_start = result
+#                     if write_flag:
+#                         temp_files.append((temp_paths, x_start, y_start))
+#                     else:
+#                         for i in range(num_outputs):
+#                             temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
+#                             temp_band = temp_dataset.GetRasterBand(1)
+#                             temp_chunk = temp_band.ReadAsArray()
+#                             print(type(temp_chunk))
+#                             temp_height, temp_width = temp_chunk.shape
+#                             merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
+#                             temp_dataset = None
+#                             os.remove(temp_paths[i])
+                    
+#                     pbar.update(1)
+#                 # except Exception as e:
+#                 #     print(f"Error in processing task: {e}")
+            
+#     azlks = proc_kwargs.get('azlks', 1)
+#     rglks = proc_kwargs.get('rglks', 1)
+#     if write_flag:
+#         merge_temp_files(output_filepaths, temp_files,  output_width, output_height,     output_geotransform, output_projection, num_outputs,cog_flag,cog_overviews,azlks=azlks, rglks=rglks )
+#         for temp_path_set, _, _ in temp_files:
+#             for temp_path in temp_path_set:
+#                 os.remove(temp_path)
+                
+#         if post_proc:
+#             post_proc(input_filepaths,output_filepaths)
+#     else:
+#         return merged_arrays
+    
+def process_chunks_parallel(
+    input_filepaths,
+    output_filepaths,
+    window_size,
+    write_flag,
+    processing_func,
+    *proc_args,
+    bands_to_read=None,
+    block_size=(512, 512),
+    max_workers=None,
+    num_outputs=1,
+    cog_flag=False,
+    cog_overviews=[2, 4, 8, 16],
+    post_proc=None,
+    out_x_size=None, out_y_size=None,
+    out_geotransform=None,
+    out_projection=None,
+    progress_callback=None,  # ✅ NEW
+    **proc_kwargs
+):
     if bands_to_read is None:
-        bands_to_read = [1] * len(input_filepaths) 
+        bands_to_read = [1] * len(input_filepaths)
         
     if max_workers is None:
-        max_workers = os.cpu_count()-1  # Use all available CPUs
-        # max_workers = 1
+        max_workers = os.cpu_count() - 1
+
     input_datasets = [gdal.Open(fp, gdal.GA_ReadOnly) for fp in input_filepaths]
     if any(ds is None for ds in input_datasets):
         raise FileNotFoundError("One or more input files could not be opened.")
@@ -43,71 +146,89 @@ def process_chunks_parallel(
     geotransform = input_datasets[0].GetGeoTransform()
     projection = input_datasets[0].GetProjection()
 
-
-
-    # # Override if resized output is requested
     output_width = out_x_size if out_x_size else raster_width
     output_height = out_y_size if out_y_size else raster_height
     output_geotransform = out_geotransform if out_geotransform else geotransform
     output_projection = out_projection if out_projection else projection
 
-    # Ensure block_size does not exceed raster dimensions
     adjusted_block_size_x = min(block_size[0], raster_width)
     adjusted_block_size_y = min(block_size[1], raster_height)
 
-    merged_arrays = [np.zeros((output_height, output_width), dtype=np.float32) for _ in range(num_outputs)] if not write_flag else None
+    merged_arrays = (
+        [np.zeros((output_height, output_width), dtype=np.float32) for _ in range(num_outputs)]
+        if not write_flag else None
+    )
 
     tasks = []
+    for y in range(0, raster_height, adjusted_block_size_y):
+        for x in range(0, raster_width, adjusted_block_size_x):
+            read_block_width = min(adjusted_block_size_x, raster_width - x)
+            read_block_height = min(adjusted_block_size_y, raster_height - y)
+            args_ = (
+                input_filepaths, x, y,
+                read_block_width, read_block_height,
+                window_size, raster_width, raster_height, *proc_args
+            )
+            tasks.append((args_, x, y))  # Save start coords for result merging
 
-    """ with progress bar"""
+    total_tasks = len(tasks)
+    completed = 0
+    temp_files = []
+
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
-    # with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        tasks = []
-        for y in range(0, raster_height, adjusted_block_size_y):
-            for x in range(0, raster_width, adjusted_block_size_x):
-                read_block_width = min(adjusted_block_size_x, raster_width - x)
-                read_block_height = min(adjusted_block_size_y, raster_height - y)
-                # args_ = (input_filepaths, x, y, read_block_width, read_block_height, window_size, raster_width, raster_height, chi_in, psi_in,model)
-                args_ = ( input_filepaths, x, y, read_block_width, read_block_height, window_size,  raster_width, raster_height, *proc_args )
-                
-                # print(f"Submitting task for chunk at ({x}, {y})")
-                tasks.append(executor.submit(process_and_write_chunk, args_, processing_func, bands_to_read, num_outputs, output_width,  output_height,**proc_kwargs))
-        # Initialize tqdm progress bar with the total number of tasks
-        with tqdm(total=len(tasks), desc=f"Progress ", unit=" block") as pbar:
-            temp_files = []
-            for future in as_completed(tasks):
-                # try:
-                    result = future.result()
-                    if result is None:
-                        raise ValueError("Block processing returned None")
-                    temp_paths, x_start, y_start = result
-                    if write_flag:
-                        temp_files.append((temp_paths, x_start, y_start))
-                    else:
-                        for i in range(num_outputs):
-                            temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
-                            temp_band = temp_dataset.GetRasterBand(1)
-                            temp_chunk = temp_band.ReadAsArray()
-                            print(type(temp_chunk))
-                            temp_height, temp_width = temp_chunk.shape
-                            merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
-                            temp_dataset = None
-                            os.remove(temp_paths[i])
-                    
-                    pbar.update(1)
-                # except Exception as e:
-                #     print(f"Error in processing task: {e}")
-            
+        futures = [
+            executor.submit(
+                process_and_write_chunk,
+                args, processing_func, bands_to_read, num_outputs,
+                output_width, output_height, **proc_kwargs
+            ) for args, _, _ in tasks
+        ]
+
+        # Use tqdm for CLI feedback when no callback is given
+        use_tqdm = progress_callback is None
+        pbar = tqdm(total=total_tasks, desc="Progress", unit="block") if use_tqdm else None
+
+        for future in as_completed(futures):
+            result = future.result()
+            if result is None:
+                raise ValueError("Block processing returned None")
+
+            temp_paths, x_start, y_start = result
+            if write_flag:
+                temp_files.append((temp_paths, x_start, y_start))
+            else:
+                for i in range(num_outputs):
+                    temp_dataset = gdal.Open(temp_paths[i], gdal.GA_ReadOnly)
+                    temp_chunk = temp_dataset.GetRasterBand(1).ReadAsArray()
+                    temp_dataset = None
+                    temp_height, temp_width = temp_chunk.shape
+                    merged_arrays[i][y_start:y_start + temp_height, x_start:x_start + temp_width] = temp_chunk
+                    os.remove(temp_paths[i])
+
+            completed += 1
+            if progress_callback:
+                progress_callback(completed / total_tasks)
+            elif use_tqdm:
+                pbar.update(1)
+
+        if pbar:
+            pbar.close()
+
     azlks = proc_kwargs.get('azlks', 1)
     rglks = proc_kwargs.get('rglks', 1)
+
     if write_flag:
-        merge_temp_files(output_filepaths, temp_files,  output_width, output_height,     output_geotransform, output_projection, num_outputs,cog_flag,cog_overviews,azlks=azlks, rglks=rglks )
+        merge_temp_files(
+            output_filepaths, temp_files, output_width, output_height,
+            output_geotransform, output_projection, num_outputs,
+            cog_flag, cog_overviews, azlks=azlks, rglks=rglks
+        )
         for temp_path_set, _, _ in temp_files:
             for temp_path in temp_path_set:
                 os.remove(temp_path)
-                
+
         if post_proc:
-            post_proc(input_filepaths,output_filepaths)
+            post_proc(input_filepaths, output_filepaths)
     else:
         return merged_arrays
 

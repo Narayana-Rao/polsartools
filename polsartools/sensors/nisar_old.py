@@ -1,7 +1,7 @@
 
 import numpy as np
 from osgeo import gdal,osr
-import os,tempfile
+import h5py,os,tempfile
 # import tables
 from skimage.util.shape import view_as_blocks
 from polsartools.utils.utils import time_it, mlook_arr
@@ -164,11 +164,8 @@ def mlook_geo(input_raster, az, rg, output_raster,projection_epsg,
     
     return np.shape(result)[0],np.shape(result)[1]
 
-def nisar_gslc(inFile,azlks=22,rglks=10,matrixType='C3'):
-    return 0
-
 @time_it  
-def nisar_gslc_old(inFile,azlks=22,rglks=10,matrixType='C3'):
+def nisar_gslc(inFile,azlks=22,rglks=10,matrixType='C3'):
     """
     Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
     and saves them into respective binary files.
@@ -398,11 +395,8 @@ def nisar_gslc_old(inFile,azlks=22,rglks=10,matrixType='C3'):
         h5File.close()
         return
         
-
-def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
-    return 0 
 @time_it  
-def nisar_rslc_old(inFile,azlks=22,rglks=10, matrixType='C3'):
+def nisar_rslc(inFile,azlks=22,rglks=10, matrixType='C3'):
     """
     Extracts the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from a NISAR RSLC HDF5 file 
     and saves them into respective binary files.

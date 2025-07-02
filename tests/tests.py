@@ -4,8 +4,7 @@ import os,shutil
 
 
 """
-cd to tests folder
-pytest -v tests.py
+pytest -v tests/tests.py
 
 """
 
@@ -59,10 +58,10 @@ def dual_cross_pol_processing(dxp_C2, window_size=3):
 # dxp_C2 = os.path.join(current_dir,'sample_data/dual_pol/C2_VVVH')
 
 
-T3_folder = './sample_data/full_pol/T3'
-compact_c2 = './sample_data/compact_pol/C2_RHV'
-full_T3 = './sample_data/full_pol/T3'
-dxp_C2 = './sample_data/dual_pol/C2_VVVH'
+T3_folder = './tests/sample_data/full_pol/T3'
+compact_c2 = './tests/sample_data/compact_pol/C2_RHV'
+full_T3 = './tests/sample_data/full_pol/T3'
+dxp_C2 = './tests/sample_data/dual_pol/C2_VVVH'
 
 window_size  = 5
 
@@ -76,9 +75,9 @@ def test_filters_processing():
     outFolder = os.path.join(os.path.dirname(T3_folder)+ f"_rlee_{window_size}x{window_size}", os.path.basename(T3_folder) )
     
     output_files = [
-        os.path.join(outFolder, 'T11.bin'),
-        os.path.join(outFolder, 'T22.bin'),
-        os.path.join(outFolder, 'T33.bin'),
+        os.path.join(outFolder, 'T11.tif'),
+        os.path.join(outFolder, 'T22.tif'),
+        os.path.join(outFolder, 'T33.tif'),
 
     ]
 

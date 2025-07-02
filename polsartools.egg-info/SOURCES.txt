@@ -14,7 +14,6 @@ pyproject.toml
 references.md
 requirements.txt
 setup.py
-tempCodeRunnerFile.shellscript
 .github/workflows/ci.yml
 .github/workflows/release.yml
 .vscode/settings.json
@@ -415,7 +414,9 @@ polsartools/sensors/basic_func.py
 polsartools/sensors/chyaan2.py
 polsartools/sensors/import_s1grd.py
 polsartools/sensors/isro_asar.py
+polsartools/sensors/isro_asar_old.py
 polsartools/sensors/nisar.py
+polsartools/sensors/nisar_old.py
 polsartools/sensors/rs2_fp.py
 polsartools/sensors/uavsar.py
 polsartools/sensors/__pycache__/__init__.cpython-310.pyc

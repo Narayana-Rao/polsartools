@@ -1,6 +1,6 @@
 import numpy as np
 from osgeo import gdal
-import os,glob
+import os,h5py,glob
 import xml.etree.ElementTree as ET
 from polsartools.utils.utils import time_it, mlook_arr
 from polsartools.utils.io_utils import write_T3, write_C3,write_C4,write_s2_bin
@@ -852,12 +852,9 @@ def process_chunk_gtif(chunks, window_size, *args):
         return np.real(hh),np.imag(hh),np.real(hv),np.imag(hv),np.real(vh),np.imag(vh),np.real(vv),np.imag(vv)
     else:
         return hh,hv,vh,vv
-
-def isro_asar(inFile,matrix='T3',azlks=8,rglks=6,geocode_flag=False,calibration_constant = 42):
-    return 0
     
 @time_it
-def isro_asar_old(inFile,matrix='T3',azlks=8,rglks=6,geocode_flag=False,calibration_constant = 42):
+def isro_asar(inFile,matrix='T3',azlks=8,rglks=6,geocode_flag=False,calibration_constant = 42):
     """
     Extracts the S2/C3/T3  matrix elements from a ASAR RSLC HDF5 file 
     and saves them into respective binary files.
