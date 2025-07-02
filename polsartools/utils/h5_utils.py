@@ -46,18 +46,24 @@ def mlook_arr(data, az, rg):
 
 
 def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook):
-    if matrix_type == "C3":
+    if matrix_type == "S2":
+        return compute_s2(chunks)     
+    elif matrix_type == "C4":
+        return compute_c4(chunks, azlks, rglks, apply_multilook)    
+    elif matrix_type == "C3":
         return compute_c3(chunks, azlks, rglks, apply_multilook)
-    elif matrix_type == "S2":
-        return compute_s2(chunks)  # You’ll define this next
-    elif matrix_type == "C2":
-        return compute_c2(chunks, azlks, rglks, apply_multilook)
     elif matrix_type == "T3":
         return compute_t3(chunks, azlks, rglks, apply_multilook)
     elif matrix_type == "T4":
-        return compute_t4(chunks, azlks, rglks, apply_multilook)
-    elif matrix_type == "C4":
-        return compute_c4(chunks, azlks, rglks, apply_multilook)
+        return compute_t4(chunks, azlks, rglks, apply_multilook)    
+    elif matrix_type == "C2HV":
+        return compute_c2hv(chunks, azlks, rglks, apply_multilook)
+    elif matrix_type == "C2HX":
+        return compute_c2hx(chunks, azlks, rglks, apply_multilook)
+    elif matrix_type == "C2VX":
+        return compute_c2vx(chunks, azlks, rglks, apply_multilook)
+
+
     else:
         raise ValueError(f"Unsupported matrix type: {matrix_type}")
         
@@ -77,6 +83,157 @@ def compute_c3(chunks, azlks, rglks, apply_multilook):
         "C23_real": opt_mlook(np.real(Kl[1]*np.conj(Kl[2]))),
         "C23_imag": opt_mlook(np.imag(Kl[1]*np.conj(Kl[2]))),
         "C33": opt_mlook(np.real(np.abs(Kl[2])**2))
+    }
+
+def compute_s2(chunks):
+
+    return {
+        "s11": chunks["HH"],
+        "s12": chunks["HV"],
+        "s21": chunks["VH"],
+        "s22": chunks["VV"],
+    }
+
+def compute_c4(chunks, azlks, rglks, apply_multilook):
+    def opt_mlook(data):
+        return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+    Kl = np.array([chunks["HH"], chunks["HV"], chunks["VH"], chunks["VV"]])
+
+    return {
+        "C11": opt_mlook(np.real(np.abs(Kl[0])**2)),
+        "C12_real": opt_mlook(np.real(Kl[0]*np.conj(Kl[1]))),
+        "C12_imag": opt_mlook(np.imag(Kl[0]*np.conj(Kl[1]))),
+        "C13_real": opt_mlook(np.real(Kl[0]*np.conj(Kl[2]))),
+        "C13_imag": opt_mlook(np.imag(Kl[0]*np.conj(Kl[2]))),
+        "C14_real": opt_mlook(np.real(Kl[0]*np.conj(Kl[3]))),
+        "C14_imag": opt_mlook(np.imag(Kl[0]*np.conj(Kl[3]))),
+        "C22": opt_mlook(np.real(np.abs(Kl[1])**2)),
+        "C23_real": opt_mlook(np.real(Kl[1]*np.conj(Kl[2]))),
+        "C23_imag": opt_mlook(np.imag(Kl[1]*np.conj(Kl[2]))),
+        "C24_real": opt_mlook(np.real(Kl[1]*np.conj(Kl[3]))),
+        "C24_imag": opt_mlook(np.imag(Kl[1]*np.conj(Kl[3]))),
+        "C33": opt_mlook(np.real(np.abs(Kl[2])**2)),
+        "C34_real": opt_mlook(np.real(Kl[2]*np.conj(Kl[3]))),
+        "C34_imag": opt_mlook(np.imag(Kl[2]*np.conj(Kl[3]))),
+        "C44": opt_mlook(np.real(np.abs(Kl[3])**2))
+    }
+
+def compute_c2hv(chunks, azlks, rglks, apply_multilook):
+    def opt_mlook(data):
+        return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+    C11 = opt_mlook(np.abs(chunks["HH"])**2).astype(np.float32)
+    C22 = opt_mlook(np.abs(chunks["VV"])**2).astype(np.float32)
+    C12 = opt_mlook(chunks["HH"] * np.conj(chunks["VV"])).astype(np.complex64)
+
+    return {
+        "C11": C11,
+        "C12_real": np.real(C12),
+        "C12_imag": np.imag(C12),
+        "C22": C22
+    }
+
+def compute_c2hx(chunks, azlks, rglks, apply_multilook):
+    def opt_mlook(data):
+        return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+    C11 = opt_mlook(np.abs(chunks["HH"])**2).astype(np.float32)
+    C22 = opt_mlook(np.abs(chunks["HV"])**2).astype(np.float32)
+    C12 = opt_mlook(chunks["HH"] * np.conj(chunks["HV"])).astype(np.complex64)
+
+    return {
+        "C11": C11,
+        "C12_real": np.real(C12),
+        "C12_imag": np.imag(C12),
+        "C22": C22
+    }
+
+def compute_c2vx(chunks, azlks, rglks, apply_multilook):
+    def opt_mlook(data):
+        return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+    C11 = opt_mlook(np.abs(chunks["VV"])**2).astype(np.float32)
+    C22 = opt_mlook(np.abs(chunks["VH"])**2).astype(np.float32)
+    C12 = opt_mlook(chunks["VV"] * np.conj(chunks["VH"])).astype(np.complex64)
+
+    return {
+        "C11": C11,
+        "C12_real": np.real(C12),
+        "C12_imag": np.imag(C12),
+        "C22": C22
+    }
+
+def compute_t2hv(chunks, azlks, rglks, apply_multilook):
+    def opt_mlook(data):
+        return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+    S1 = chunks["HH"] + chunks["VV"]
+    S2 = chunks["HH"] - chunks["VV"]
+
+    T11 = opt_mlook(np.abs(S1)**2).astype(np.float32)
+    T22 = opt_mlook(np.abs(S2)**2).astype(np.float32)
+    T12 = opt_mlook(S1 * np.conj(S2)).astype(np.complex64)
+
+    return {
+        "T11": T11,
+        "T12_real": np.real(T12),
+        "T12_imag": np.imag(T12),
+        "T22": T22
+    }
+
+def compute_t3(chunks, azlks, rglks, apply_multilook):
+    def opt_mlook(data):
+        return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+    # Pauli basis vector for T3: [S1+S2, S1−S2, S12+S21]
+    Kp = (1 / np.sqrt(2)) * np.array([
+        chunks["HH"] + chunks["VV"],
+        chunks["HH"] - chunks["VV"],
+        chunks["HV"] + chunks["VH"]
+    ])
+
+    return {
+        "T11": opt_mlook(np.real(np.abs(Kp[0])**2)),
+        "T12_real": opt_mlook(np.real(Kp[0]*np.conj(Kp[1]))),
+        "T12_imag": opt_mlook(np.imag(Kp[0]*np.conj(Kp[1]))),
+        "T13_real": opt_mlook(np.real(Kp[0]*np.conj(Kp[2]))),
+        "T13_imag": opt_mlook(np.imag(Kp[0]*np.conj(Kp[2]))),
+        "T22": opt_mlook(np.real(np.abs(Kp[1])**2)),
+        "T23_real": opt_mlook(np.real(Kp[1]*np.conj(Kp[2]))),
+        "T23_imag": opt_mlook(np.imag(Kp[1]*np.conj(Kp[2]))),
+        "T33": opt_mlook(np.real(np.abs(Kp[2])**2))
+    }
+
+def compute_t4(chunks, azlks, rglks, apply_multilook):
+    def opt_mlook(data):
+        return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+    # Extended Pauli basis vector for T4
+    Kp = (1 / np.sqrt(2)) * np.array([
+        chunks["HH"] + chunks["VV"],
+        chunks["HH"] - chunks["VV"],
+        chunks["HV"] + chunks["VH"],
+        1j * (chunks["HV"] - chunks["VH"])
+    ])
+
+    return {
+        "T11": opt_mlook(np.real(np.abs(Kp[0])**2)),
+        "T12_real": opt_mlook(np.real(Kp[0]*np.conj(Kp[1]))),
+        "T12_imag": opt_mlook(np.imag(Kp[0]*np.conj(Kp[1]))),
+        "T13_real": opt_mlook(np.real(Kp[0]*np.conj(Kp[2]))),
+        "T13_imag": opt_mlook(np.imag(Kp[0]*np.conj(Kp[2]))),
+        "T14_real": opt_mlook(np.real(Kp[0]*np.conj(Kp[3]))),
+        "T14_imag": opt_mlook(np.imag(Kp[0]*np.conj(Kp[3]))),
+        "T22": opt_mlook(np.real(np.abs(Kp[1])**2)),
+        "T23_real": opt_mlook(np.real(Kp[1]*np.conj(Kp[2]))),
+        "T23_imag": opt_mlook(np.imag(Kp[1]*np.conj(Kp[2]))),
+        "T24_real": opt_mlook(np.real(Kp[1]*np.conj(Kp[3]))),
+        "T24_imag": opt_mlook(np.imag(Kp[1]*np.conj(Kp[3]))),
+        "T33": opt_mlook(np.real(np.abs(Kp[2])**2)),
+        "T34_real": opt_mlook(np.real(Kp[2]*np.conj(Kp[3]))),
+        "T34_imag": opt_mlook(np.imag(Kp[2]*np.conj(Kp[3]))),
+        "T44": opt_mlook(np.real(np.abs(Kp[3])**2))
     }
 
 
@@ -137,11 +294,11 @@ def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
     dst.SetProjection(srs.ExportToWkt())
     dst.GetRasterBand(1).WriteArray(data)
     dst.GetRasterBand(1).SetNoDataValue(0)
-    dst.SetMetadata({
-        'AzimuthLooks': str(azlks),
-        'RangeLooks': str(rglks),
-        'Multilooked': str(apply_multilook)
-    })
+    # dst.SetMetadata({
+    #     'AzimuthLooks': str(azlks),
+    #     'RangeLooks': str(rglks),
+    #     'Multilooked': str(apply_multilook)
+    # })
     dst = None
 
 
@@ -209,17 +366,21 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
     for f, x_ml, y_ml in offsets:
         tile = gdal.Open(f)
         data = tile.GetRasterBand(1).ReadAsArray()
-        
-        
         dst.GetRasterBand(1).WriteArray(data, x_ml, y_ml)
         tile = None
 
     dst.GetRasterBand(1).SetNoDataValue(0)
-    dst.SetMetadata({
-        'AzimuthLooks': str(azlks),
-        'RangeLooks': str(rglks),
-        'Multilooked': str(apply_multilook)
-    })
+    if apply_multilook:
+        dst.SetMetadata({
+            'AzimuthLooks': str(azlks),
+            'RangeLooks': str(rglks),
+        })
+    # dst.SetDescription(f'{element_name}')
+    
+    dst.SetMetadataItem('Generated by','polsartools')
+    # dst.SetMetadataItem('TIFFTAG_DOCUMENTNAME', element_name)
+    # dst.SetMetadataItem('DESCRIPTION', element_name)
+    # dst.SetDescription(element_name)
     dst = None
     print(f"Saved file {out_path}")
 
@@ -271,29 +432,29 @@ if __name__ == "__main__":
     temp_dir = r'C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\RSLC_QP_tab\C3\temp'
     azlks = 22
     rglks = 10
-    h5_polsar(
-        h5_file=inFile,
-        dataset_paths={
-            "HH": "/science/LSAR/RSLC/swaths/frequencyA/HH",
-            "HV": "/science/LSAR/RSLC/swaths/frequencyA/HV",
-            "VH": "/science/LSAR/RSLC/swaths/frequencyA/VH",
-            "VV": "/science/LSAR/RSLC/swaths/frequencyA/VV"
-        },
-        output_dir=output_dir,
-        temp_dir=temp_dir,
-        azlks=azlks,
-        rglks=rglks,
-        matrix_type = 'C3',
-        apply_multilook=True,
-        chunk_size_x=500,
-        chunk_size_y=528,
-        max_workers=10,
-        # start_x=None, start_y=None, xres=0.0002/rglks, yres=0.0002/azlks, epsg=4326,
-        start_x=0, start_y=0, xres=1/rglks, yres=1/azlks, epsg=4326,
-        outType='tif',
-        dtype = np.float32
+    # h5_polsar(
+    #     h5_file=inFile,
+    #     dataset_paths={
+    #         "HH": "/science/LSAR/RSLC/swaths/frequencyA/HH",
+    #         "HV": "/science/LSAR/RSLC/swaths/frequencyA/HV",
+    #         "VH": "/science/LSAR/RSLC/swaths/frequencyA/VH",
+    #         "VV": "/science/LSAR/RSLC/swaths/frequencyA/VV"
+    #     },
+    #     output_dir=output_dir,
+    #     temp_dir=temp_dir,
+    #     azlks=azlks,
+    #     rglks=rglks,
+    #     matrix_type = 'C3',
+    #     apply_multilook=True,
+    #     chunk_size_x=500,
+    #     chunk_size_y=528,
+    #     max_workers=10,
+    #     # start_x=None, start_y=None, xres=0.0002/rglks, yres=0.0002/azlks, epsg=4326,
+    #     start_x=0, start_y=0, xres=1/rglks, yres=1/azlks, epsg=4326,
+    #     outType='tif',
+    #     dtype = np.float32
         
-    )
+    # )
     
     inFile = r"C:\Users\nbhogapurapu\Desktop\temp\pstdata\NISAR\GSLC_QP.h5"
     freq_band  ='L'
