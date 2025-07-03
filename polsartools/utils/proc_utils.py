@@ -3,6 +3,7 @@ from osgeo import gdal
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor,as_completed
 from tqdm import tqdm
+gdal.UseExceptions()
 
 # def process_chunks_parallel(
 #                             input_filepaths,
@@ -128,7 +129,7 @@ def process_chunks_parallel(
     out_x_size=None, out_y_size=None,
     out_geotransform=None,
     out_projection=None,
-    progress_callback=None,  # ✅ NEW
+    progress_callback=None,  # for QGIS plugin
     **proc_kwargs
 ):
     if bands_to_read is None:
@@ -169,7 +170,7 @@ def process_chunks_parallel(
                 read_block_width, read_block_height,
                 window_size, raster_width, raster_height, *proc_args
             )
-            tasks.append((args_, x, y))  # Save start coords for result merging
+            tasks.append((args_, x, y))  
 
     total_tasks = len(tasks)
     completed = 0
