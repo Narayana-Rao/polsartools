@@ -5,6 +5,7 @@ tqdm
 matplotlib
 pybind11
 tables
+netcdf4
 scikit-image
 pytest
 gdal==3.9.0

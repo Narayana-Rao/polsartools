@@ -5,7 +5,8 @@ click
 tqdm
 matplotlib
 pybind11
-h5py
+tables
+netcdf4
 scikit-image
 
 [dev]

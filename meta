@@ -6,15 +6,23 @@
 # conda-recipe/meta.yaml
 # docs/source/conf.py
 
-0.7.1
-added .tif supportfor fp,dxp,cp
-updated convert_S2 for full pol
+0.8
+added .tif for fp,dxp,cp,  
+added pwg (psuedo geotag) for RGB .png, added optional geotif RGB
 added dprvic, dp_desc, fp_sign
-extend NISAR rslc, gslc to full pol
-fix rslc memory issue 
-added .tif for fp,dxp,cp, RGBs, added .tif and pwg for RGBs
-isro_asar .tif support added
-moving h5py-> tables for qgis plugin support
+
+updated convert_S2 for full pol
+
+NISAR reader
+	added full-pol support rslc, gslc 
+	updated with chunk-based mem-load; 
+	parallel processing
+	fix rslc memory issue 
+
+added isro_asar Level-1 .tif support 
+
+replaced h5py package with tables for qgis plugin support
+updated functions for QGIS plugin support
 
 
 

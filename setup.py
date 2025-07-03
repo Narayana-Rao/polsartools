@@ -94,8 +94,8 @@ setup(
         'tqdm',
         'matplotlib',
         'pybind11',
-        'h5py',
-        # 'tables',
+        'tables',
+        'netcdf4',
         'scikit-image',
         
     ],

@@ -8,7 +8,9 @@ from .fp_infiles import fp_c3t3files
 @time_it
 def dopfp(infolder,  window_size=1, outType="tif", cog_flag=False, 
           cog_overviews = [2, 4, 8, 16], write_flag=True, 
-          max_workers=None,block_size=(512, 512)):
+          max_workers=None,block_size=(512, 512),
+          progress_callback=None,  # for QGIS plugin
+          ):
 
     """Calculate Barakat Degree of Polarization from full-pol SAR coherency/covariance matrix.
 
@@ -79,6 +81,7 @@ def dopfp(infolder,  window_size=1, outType="tif", cog_flag=False,
                         max_workers=max_workers,  num_outputs=1,
                         cog_flag=cog_flag,
                         cog_overviews=cog_overviews,
+                        progress_callback=progress_callback
                         )
 
 def process_chunk_dopfp(chunks, window_size,input_filepaths,*args):

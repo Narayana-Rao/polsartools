@@ -6,8 +6,8 @@ dependencies:
   - python
   - gdal==3.9.0
   - numpy
-  - h5py
-  # - tables
+  - tables
+  - netcdf4
   - matplotlib
   - scipy
   - scikit-image

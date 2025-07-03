@@ -3,13 +3,9 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-__version__ = "0.7"  
+__version__ = "0.8"  
 
-# Import submodules
-# from . import polsar
-# from . import preprocessing
-# from . import utils 
-# from . import sensors
+
 # Import functions from the submodules for direct access
 from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,halphafp,yam4cfp,shannon_h_fp,halpha_plot_fp
 from .polsar.cp import cprvi, dopcp, misomega, mf3cc
@@ -28,12 +24,7 @@ from .utils import pauliRGB, dxpRGB
 from .preprocessing.filters import boxcar, rlee
 from .preprocessing.mlook import mlook
 
-# from .utils.pauliRGB import read_bin
-## CPP functions
-# import polsartools.refined_lee
-# import polsartools.moving_average
-# import polsartools.sum_arrays
-# import polsartools.cprvicpp #process_chunk_cprvicpp
+
 __all__ = [
     # SENSORS
     'uavsar_grd', 'uavsar_mlc','isro_asar',  
