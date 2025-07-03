@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun 27 11:44:43 2025
 
-@author: nbhogapurapu
-"""
 
 import os
 import glob
@@ -15,6 +10,7 @@ from tqdm import tqdm
 import sys
 from netCDF4 import Dataset
 from osgeo import gdal, osr
+import multiprocessing
 gdal.UseExceptions()
 
 
@@ -55,7 +51,9 @@ def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook):
     elif matrix_type == "T3":
         return compute_t3(chunks, azlks, rglks, apply_multilook)
     elif matrix_type == "T4":
-        return compute_t4(chunks, azlks, rglks, apply_multilook)    
+        return compute_t4(chunks, azlks, rglks, apply_multilook) 
+    elif matrix_type == "T2HV":
+        return compute_t2hv(chunks, azlks, rglks, apply_multilook)   
     elif matrix_type == "C2HV":
         return compute_c2hv(chunks, azlks, rglks, apply_multilook)
     elif matrix_type == "C2HX":
@@ -395,12 +393,17 @@ def cleanup_temp_files(temp_dir):
 def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
                             azlks, rglks,matrix_type, apply_multilook,
                             chunk_size_x=512, chunk_size_y=512,
-                            max_workers=8,
+                            max_workers=None,
                             start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
                             outType='tif',dtype=np.float32,
                             inshape=None,outshape=None):
-
-    jobs = get_chunk_jobs(h5_file, dataset_paths["HH"], chunk_size_x, chunk_size_y)
+    if max_workers is None:
+        max_workers = max(multiprocessing.cpu_count() - 1, 1)
+    
+    polarization_key = 'HH' if 'HH' in dataset_paths else 'VV' if 'VV' in dataset_paths else None
+    
+    # jobs = get_chunk_jobs(h5_file, dataset_paths["HH"], chunk_size_x, chunk_size_y)
+    jobs = get_chunk_jobs(h5_file, dataset_paths[polarization_key], chunk_size_x, chunk_size_y)
 
     with ProcessPoolExecutor(max_workers=max_workers) as pool:
         futures = [pool.submit(process_and_write_tile, job, h5_file, dataset_paths,

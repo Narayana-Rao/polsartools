@@ -446,6 +446,7 @@ tests/__pycache__/test_functions.cpython-312-pytest-8.3.4.pyc
 tests/__pycache__/test_processing.cpython-312-pytest-8.3.4.pyc
 tests/__pycache__/tests.cpython-312-pytest-8.3.4.pyc
 tests/__pycache__/tests.cpython-312-pytest-8.3.5.pyc
+tests/__pycache__/tests.cpython-312-pytest-8.4.1.pyc
 tests/sample_data/compact_pol/C2_RHV/C11.bin
 tests/sample_data/compact_pol/C2_RHV/C11.bin.hdr
 tests/sample_data/compact_pol/C2_RHV/C12_imag.bin
@@ -496,6 +497,7 @@ tests/sample_data/full_pol/C3/mask_valid_pixels.bin.hdr
 tests/sample_data/full_pol/C3/mask_valid_pixels.bmp
 tests/sample_data/full_pol/C3/mask_valid_pixels.bmp.hdr
 tests/sample_data/full_pol/C3/metadata.xml
+tests/sample_data/full_pol/T3/PauliRGB.pgw
 tests/sample_data/full_pol/T3/T11.bin
 tests/sample_data/full_pol/T3/T11.bin.hdr
 tests/sample_data/full_pol/T3/T12_imag.bin
