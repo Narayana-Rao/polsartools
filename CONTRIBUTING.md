@@ -1,6 +1,6 @@
-# 🤝 Contributing to Polsartools
+# 🤝 Contributing to PolSARtools
 
-Thanks for your interest in contributing to **Polsartools**! We welcome contributions from everyone: whether you're fixing bugs, improving documentation, or adding new features.
+Thanks for your interest in contributing to **PolSARtools**! We welcome contributions from everyone: whether you're fixing bugs, improving documentation, or adding new features.
 
 ---
 
