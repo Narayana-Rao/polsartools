@@ -2,7 +2,7 @@
   <img src="logo.png" alt=""/>
 </p>
 
-# PolSARtools PyPI package
+## A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
 [![Build](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml/badge.svg)](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
 
@@ -42,6 +42,7 @@ If you encounter an error like "function not found" or need the latest version, 
 ```bash
 pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
 ```
+
 
 ## Example Usage
 
