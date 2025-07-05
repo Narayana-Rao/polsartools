@@ -67,6 +67,36 @@ def prepare_data(S2):
 
 
 def fp_sign(S2=None, title='',pname='',cmap='jet',plotType = 1):
+    """
+    Generates and visualizes polarimetric signatures from a given 2x2 scattering matrix (S2).
+    
+    Examples
+    --------
+    >>> S2 = np.array([[1, 0], [0, 1]]) # Trihedral
+    >>> fp_sign(S2, title='Trihedral', plotType=1)
+
+    Parameters
+    ----------
+    S2 : np.2darray (2x2) or None
+        Complex 2x2 scattering matrix representing polarimetric data.
+        Is None, for theoretical plot that don't require S2 will be generated.
+
+    title : str, optional
+        Title of the plot. Default is an empty string.
+
+    pname : str, optional
+        Name of the output file (*.png). Default is an empty string.
+
+    cmap : str, optional
+        Colormap used for visualizing the data. Default is 'jet'.
+
+    plotType : int, optional
+        Determines the type of plot to generate:
+            - 1: Standard polarimetric signature via `pol_sign`.
+            - 2: 2D polarimetric signature via `pol_sign2d`.
+            - 3: Poincaré sphere mapping via `poincare_plot`.
+            - 4: Render empty or canonical Poincaré sphere via `poincare_sphere` (S2 not required).
+    """
     if S2 is not None:
         cp_sign, xp_sign = prepare_data(S2)
     if plotType==4:

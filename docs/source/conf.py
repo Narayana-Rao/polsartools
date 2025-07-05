@@ -89,9 +89,9 @@ html_theme_options = {
 # ones.
 extensions = [
 	# 'sphinx_rtd_theme',
-#  "sphinxawesome_theme",
- "sphinxcontrib.bibtex",
- 'sphinx.ext.autodoc',    # Autodocumentation
+    # "sphinxawesome_theme",
+    "sphinxcontrib.bibtex",
+    'sphinx.ext.autodoc',    # Autodocumentation
     'sphinx.ext.intersphinx',  # Links to other documentation
     'sphinx.ext.viewcode',    # View source links
     'sphinx.ext.napoleon',

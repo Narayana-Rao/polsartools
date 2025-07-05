@@ -25,6 +25,13 @@ Generate false color RGB for DP/CP data (``dxpRGB``)
    :noindex:
 
 
+Generate polarimetric signatures for FP data (``fp_sign``)
+----------------------------------------------------------
+
+.. autofunction:: polsartools.fp_sign
+   :noindex:
+
+
 
 
 

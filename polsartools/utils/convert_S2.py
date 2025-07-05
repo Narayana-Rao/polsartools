@@ -90,7 +90,7 @@ def convert_S2(infolder, matrix='T3', azlks=4,rglks=2, cf = 1,
     rglks : int, default=2
         Number of looks in range direction.
     cf : float, default=1
-        Calibration factor to adjust the amplitude of S2 data.
+        Calibration factor (linear) to adjust the amplitude of S2 data.
     outType : {'tif', 'bin'}, default='tif'
         Output format type.
     cog_flag : bool, default=False
