@@ -400,63 +400,238 @@
                   
   <section id="full-pol-data-format">
 <h1>Full-pol data format<a class="headerlink" href="#full-pol-data-format" title="Link to this heading">#</a></h1>
-<p>Full-pol functionalities require the SAR data in the form of scattering (S2), covariance (C3) or coherency matrix (T3).
-A typical file structures of T3 and C3 matrices are as follows:</p>
+<p>The package supports full polarimetric SAR data in the following matrix representations:</p>
+<ul class="simple">
+<li><p><strong>S2</strong> (Scattering matrix)</p></li>
+<li><p><strong>C3 / C4</strong> (Covariance matrix)</p></li>
+<li><p><strong>T3 / T4</strong> (Coherency matrix)</p></li>
+</ul>
+<p>Each format can be provided as  <cite>.tif</cite> or <cite>.bin</cite>/ <cite>.hdr</cite> files with associated metadata.</p>
+<section id="s2-scattering-matrix">
+<h2>S2 – Scattering Matrix<a class="headerlink" href="#s2-scattering-matrix" title="Link to this heading">#</a></h2>
+<p>Note: All elements of the scattering matrix are in complex data type.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head" colspan="2"><p>C3 matrix files</p></th>
-<th class="head" colspan="2"><p>T3 matrix files</p></th>
+<tr class="row-odd"><th class="head"><p>Element</p></th>
+<th class="head"><p>.bin/.hdr Files</p></th>
+<th class="head"><p>.tif Files</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>C11.bin</p></td>
-<td><p>C11.hdr</p></td>
-<td><p>T11.bin</p></td>
-<td><p>T11.hdr</p></td>
+<tr class="row-even"><td><p>S_HH</p></td>
+<td><p>s11.bin/.hdr</p></td>
+<td><p>s11.tif</p></td>
 </tr>
-<tr class="row-odd"><td><p>C12_real.bin</p></td>
-<td><p>C12_real.hdr</p></td>
-<td><p>T12_real.bin</p></td>
-<td><p>T12_real.hdr</p></td>
+<tr class="row-odd"><td><p>S_HV</p></td>
+<td><p>s12.bin/.hdr</p></td>
+<td><p>s12.tif</p></td>
 </tr>
-<tr class="row-even"><td><p>C12_imag.bin</p></td>
-<td><p>C12_imag.hdr</p></td>
-<td><p>T12_imag.bin</p></td>
-<td><p>T12_imag.hdr</p></td>
+<tr class="row-even"><td><p>S_VH</p></td>
+<td><p>s21.bin/.hdr</p></td>
+<td><p>s21.tif</p></td>
 </tr>
-<tr class="row-odd"><td><p>C13_real.bin</p></td>
-<td><p>C13_real.hdr</p></td>
-<td><p>T13_real.bin</p></td>
-<td><p>T13_real.hdr</p></td>
-</tr>
-<tr class="row-even"><td><p>C13_imag.bin</p></td>
-<td><p>C13_imag.hdr</p></td>
-<td><p>T13_imag.bin</p></td>
-<td><p>T13_imag.hdr</p></td>
-</tr>
-<tr class="row-odd"><td><p>C22.bin</p></td>
-<td><p>C22.hdr</p></td>
-<td><p>T22.bin</p></td>
-<td><p>T22.hdr</p></td>
-</tr>
-<tr class="row-even"><td><p>C23_real.bin</p></td>
-<td><p>C23_real.hdr</p></td>
-<td><p>T23_real.bin</p></td>
-<td><p>T23_real.hdr</p></td>
-</tr>
-<tr class="row-odd"><td><p>C23_imag.bin</p></td>
-<td><p>C23_imag.hdr</p></td>
-<td><p>T23_imag.bin</p></td>
-<td><p>T23_imag.hdr</p></td>
-</tr>
-<tr class="row-even"><td><p>C33.bin</p></td>
-<td><p>C33.hdr</p></td>
-<td><p>T33.bin</p></td>
-<td><p>T33.hdr</p></td>
+<tr class="row-odd"><td><p>S_VV</p></td>
+<td><p>s22.bin/.hdr</p></td>
+<td><p>s22.tif</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</section>
+<section id="c3-c4-covariance-matrix">
+<h2>C3 / C4 – Covariance Matrix<a class="headerlink" href="#c3-c4-covariance-matrix" title="Link to this heading">#</a></h2>
+<p>Note: All elements of the covariance matrix are stored as float values. Complex-valued entries are separated into real and imaginary components. C4 includes additional terms compared to C3.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Element</p></th>
+<th class="head"><p>.bin/.hdr Files</p></th>
+<th class="head"><p>.tif Files</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>C11</p></td>
+<td><p>C11.bin / C11.hdr</p></td>
+<td><p>C11.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>C12 (Real)</p></td>
+<td><p>C12_real.bin / .hdr</p></td>
+<td><p>C12_real.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>C12 (Imag)</p></td>
+<td><p>C12_imag.bin / .hdr</p></td>
+<td><p>C12_imag.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>C13 (Real)</p></td>
+<td><p>C13_real.bin / .hdr</p></td>
+<td><p>C13_real.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>C13 (Imag)</p></td>
+<td><p>C13_imag.bin / .hdr</p></td>
+<td><p>C13_imag.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>C14 (Real)*</p></td>
+<td><p>C14_real.bin / .hdr</p></td>
+<td><p>C14_real.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>C14 (Imag)*</p></td>
+<td><p>C14_imag.bin / .hdr</p></td>
+<td><p>C14_imag.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>C22</p></td>
+<td><p>C22.bin / C22.hdr</p></td>
+<td><p>C22.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>C23 (Real)</p></td>
+<td><p>C23_real.bin / .hdr</p></td>
+<td><p>C23_real.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>C23 (Imag)</p></td>
+<td><p>C23_imag.bin / .hdr</p></td>
+<td><p>C23_imag.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>C24 (Real)*</p></td>
+<td><p>C24_real.bin / .hdr</p></td>
+<td><p>C24_real.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>C24 (Imag)*</p></td>
+<td><p>C24_imag.bin / .hdr</p></td>
+<td><p>C24_imag.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>C33</p></td>
+<td><p>C33.bin / C33.hdr</p></td>
+<td><p>C33.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>C34 (Real)*</p></td>
+<td><p>C34_real.bin / .hdr</p></td>
+<td><p>C34_real.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>C34 (Imag)*</p></td>
+<td><p>C34_imag.bin / .hdr</p></td>
+<td><p>C34_imag.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>C44*</p></td>
+<td><p>C44.bin / C44.hdr</p></td>
+<td><p>C44.tif</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>* Only applicable to C4 (4x4 covariance matrix).</p>
+</section>
+<section id="t3-t4-coherency-matrix">
+<h2>T3 / T4 – Coherency Matrix<a class="headerlink" href="#t3-t4-coherency-matrix" title="Link to this heading">#</a></h2>
+<p>Note: All elements of the coherency matrix are stored as float values (real and imaginary parts separated for complex entries).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Element</p></th>
+<th class="head"><p>.bin/.hdr Files</p></th>
+<th class="head"><p>.tif Files</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>T11</p></td>
+<td><p>T11.bin / T11.hdr</p></td>
+<td><p>T11.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>T12 (Real)</p></td>
+<td><p>T12_real.bin / .hdr</p></td>
+<td><p>T12_real.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>T12 (Imag)</p></td>
+<td><p>T12_imag.bin / .hdr</p></td>
+<td><p>T12_imag.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>T13 (Real)</p></td>
+<td><p>T13_real.bin / .hdr</p></td>
+<td><p>T13_real.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>T13 (Imag)</p></td>
+<td><p>T13_imag.bin / .hdr</p></td>
+<td><p>T13_imag.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>T14 (Real)*</p></td>
+<td><p>T14_real.bin / .hdr</p></td>
+<td><p>T14_real.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>T14 (Imag)*</p></td>
+<td><p>T14_imag.bin / .hdr</p></td>
+<td><p>T14_imag.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>T22</p></td>
+<td><p>T22.bin / T22.hdr</p></td>
+<td><p>T22.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>T23 (Real)</p></td>
+<td><p>T23_real.bin / .hdr</p></td>
+<td><p>T23_real.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>T23 (Imag)</p></td>
+<td><p>T23_imag.bin / .hdr</p></td>
+<td><p>T23_imag.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>T24 (Real)*</p></td>
+<td><p>T24_real.bin / .hdr</p></td>
+<td><p>T24_real.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>T24 (Imag)*</p></td>
+<td><p>T24_imag.bin / .hdr</p></td>
+<td><p>T24_imag.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>T33</p></td>
+<td><p>T33.bin / T33.hdr</p></td>
+<td><p>T33.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>T34 (Real)*</p></td>
+<td><p>T34_real.bin / .hdr</p></td>
+<td><p>T34_real.tif</p></td>
+</tr>
+<tr class="row-even"><td><p>T34 (Imag)*</p></td>
+<td><p>T34_imag.bin / .hdr</p></td>
+<td><p>T34_imag.tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>T44*</p></td>
+<td><p>T44.bin / T44.hdr</p></td>
+<td><p>T44.tif</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>* Only applicable to T4 (4x4 coherency matrix).</p>
+</section>
+<section id="matrix-compatibility-overview">
+<h2>Matrix Compatibility Overview<a class="headerlink" href="#matrix-compatibility-overview" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Format</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Supported File Types</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>S2</p></td>
+<td><p>2x2 Scattering matrix</p></td>
+<td><p>.bin/.hdr, .tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>C3</p></td>
+<td><p>3x3 Covariance matrix</p></td>
+<td><p>.bin/.hdr, .tif</p></td>
+</tr>
+<tr class="row-even"><td><p>C4</p></td>
+<td><p>4x4 Covariance matrix</p></td>
+<td><p>.bin/.hdr, .tif</p></td>
+</tr>
+<tr class="row-odd"><td><p>T3</p></td>
+<td><p>3x3 Coherency matrix</p></td>
+<td><p>.bin/.hdr, .tif</p></td>
+</tr>
+<tr class="row-even"><td><p>T4</p></td>
+<td><p>4x4 Coherency matrix</p></td>
+<td><p>.bin/.hdr, .tif</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 
 
@@ -497,6 +672,21 @@ A typical file structures of T3 and C3 matrices are as follows:</p>
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#s2-scattering-matrix">S2 – Scattering Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c3-c4-covariance-matrix">C3 / C4 – Covariance Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t3-t4-coherency-matrix">T3 / T4 – Coherency Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-compatibility-overview">Matrix Compatibility Overview</a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

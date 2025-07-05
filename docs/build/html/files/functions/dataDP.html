@@ -400,52 +400,70 @@
                   
   <section id="dual-pol-data-format">
 <h1>Dual-pol data format<a class="headerlink" href="#dual-pol-data-format" title="Link to this heading">#</a></h1>
+<section id="c2-dual-pol-covariance-matrix">
+<h2>C2 – Dual-pol Covariance Matrix<a class="headerlink" href="#c2-dual-pol-covariance-matrix" title="Link to this heading">#</a></h2>
 <p>Dual-pol functionalities require the SAR data in the form of 2x2 covariance matrix (C2).
 A typical file structures of C2 matrix is as follows:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head" colspan="2"><p>C2 matrix files</p></th>
+<tr class="row-odd"><th class="head"><p>Element</p></th>
+<th class="head"><p>.bin/.hdr Files</p></th>
+<th class="head"><p>.tif Files</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>C11.bin</p></td>
-<td><p>C11.hdr</p></td>
+<tr class="row-even"><td><p>C11</p></td>
+<td><p>C11.bin / C11.hdr</p></td>
+<td><p>C11.tif</p></td>
 </tr>
-<tr class="row-odd"><td><p>C12_real.bin</p></td>
-<td><p>C12_real.hdr</p></td>
+<tr class="row-odd"><td><p>C12 (Real)</p></td>
+<td><p>C12_real.bin / .hdr</p></td>
+<td><p>C12_real.tif</p></td>
 </tr>
-<tr class="row-even"><td><p>C12_imag.bin</p></td>
-<td><p>C12_imag.hdr</p></td>
+<tr class="row-even"><td><p>C12 (Imag)</p></td>
+<td><p>C12_imag.bin / .hdr</p></td>
+<td><p>C12_imag.tif</p></td>
 </tr>
-<tr class="row-odd"><td><p>C22.bin</p></td>
-<td><p>C22.hdr</p></td>
+<tr class="row-odd"><td><p>C22</p></td>
+<td><p>C22.bin / C22.hdr</p></td>
+<td><p>C22.tif</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</section>
+<section id="t2-dual-co-pol-coherency-matrix">
+<h2>T2 – Dual-co-pol Coherency Matrix<a class="headerlink" href="#t2-dual-co-pol-coherency-matrix" title="Link to this heading">#</a></h2>
 <p>Dual-co-pol functionalities require the SAR data in the form of 2x2 coherency matrix (T2).
 A typical file structures of T2 matrix is as follows:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head" colspan="2"><p>T2 matrix files</p></th>
+<tr class="row-odd"><th class="head"><p>Element</p></th>
+<th class="head"><p>.bin/.hdr Files</p></th>
+<th class="head"><p>.tif Files</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>T11.bin</p></td>
-<td><p>T11.hdr</p></td>
+<tr class="row-even"><td><p>T11</p></td>
+<td><p>T11.bin / T11.hdr</p></td>
+<td><p>T11.tif</p></td>
 </tr>
-<tr class="row-odd"><td><p>T12_real.bin</p></td>
-<td><p>T12_real.hdr</p></td>
+<tr class="row-odd"><td><p>T12 (Real)</p></td>
+<td><p>T12_real.bin / .hdr</p></td>
+<td><p>T12_real.tif</p></td>
 </tr>
-<tr class="row-even"><td><p>T12_imag.bin</p></td>
-<td><p>T12_imag.hdr</p></td>
+<tr class="row-even"><td><p>T12 (Imag)</p></td>
+<td><p>T12_imag.bin / .hdr</p></td>
+<td><p>T12_imag.tif</p></td>
 </tr>
-<tr class="row-odd"><td><p>T22.bin</p></td>
-<td><p>T22.hdr</p></td>
+<tr class="row-odd"><td><p>T22</p></td>
+<td><p>T22.bin / T22.hdr</p></td>
+<td><p>T22.tif</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</section>
 </section>
 
 
@@ -486,6 +504,19 @@ A typical file structures of T2 matrix is as follows:</p>
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c2-dual-pol-covariance-matrix">C2 – Dual-pol Covariance Matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t2-dual-co-pol-coherency-matrix">T2 – Dual-co-pol Coherency Matrix</a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
