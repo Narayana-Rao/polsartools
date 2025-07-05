@@ -70,9 +70,9 @@ def prepare_data(S2):
     x, y = np.mgrid[-90: 91 : 1, -45 : 46 : 1]
     
     xx = 0
-    for tilt in np.arange(-90,90,1):
+    for tilt in np.arange(-90,91,1):
         yy=0
-        for elep in np.arange(-45,45,1):
+        for elep in np.arange(-45,46,1):
             psi = tilt*np.pi/180
             tau = elep*np.pi/180
             
