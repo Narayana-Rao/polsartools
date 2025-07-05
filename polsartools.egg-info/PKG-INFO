@@ -40,7 +40,7 @@ Dynamic: summary
   <img src="logo.png" alt=""/>
 </p>
 
-# PolSARtools PyPI package
+## A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
 [![Build](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml/badge.svg)](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
 
@@ -80,6 +80,7 @@ If you encounter an error like "function not found" or need the latest version, 
 ```bash
 pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
 ```
+
 
 ## Example Usage
 
@@ -148,7 +149,7 @@ We welcome contributions! Whether it's fixing bugs, adding new features, or impr
     ```
 4. **Make changes** - Implement your changes or additions.
 
-5. **Test your changes** - Run the tests to ensure that your changes donâ€™t break anything.
+5. **Test your changes** - Run the tests to ensure that your changes don’t break anything.
 
 6. **Commit and push** - Commit your changes and push them to your fork:
     ```bash
@@ -166,7 +167,7 @@ If you encounter a bug or issue, please follow these steps to report it:
 
 1. Check the existing issues: Before submitting a new bug report, check if the issue has already been reported in the [Issues section](https://github.com/Narayana-Rao/polsartools/issues).
 
-2. Submit a bug report: If the issue hasnâ€™t been reported, please open a new issue and include the following information:
+2. Submit a bug report: If the issue hasn’t been reported, please open a new issue and include the following information:
     * A clear description of the problem.
     * Steps to reproduce the issue.
     * Expected vs actual behavior.
@@ -179,11 +180,11 @@ If you encounter a bug or issue, please follow these steps to report it:
 
 ## Feature Requests
 
-Weâ€™re always open to suggestions for new features or improvements!
+We’re always open to suggestions for new features or improvements!
 
 1. **Check existing feature requests:** Please make sure the feature request hasn't already been made in the [Issues section](https://github.com/Narayana-Rao/polsartools/issues).
 
-2. **Submit a feature request:** If it hasnâ€™t been requested already, please open a new issue with the following information:
+2. **Submit a feature request:** If it hasn’t been requested already, please open a new issue with the following information:
       * A clear description of the feature.
       * Why you think this feature would be beneficial.
       * Any specific use cases or examples.
