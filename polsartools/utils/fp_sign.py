@@ -1,6 +1,6 @@
 
 import numpy as np
-from polsartools.utils.plot_utils import pol_sign, pol_sign2d, poincare_plot
+from polsartools.utils.plot_utils import pol_sign, pol_sign2d, poincare_plot,poincare_sphere
 def prepare_data(S2):
     
     A0 = (1/4)*np.abs(S2[0,0]+S2[1,1])**2
@@ -66,11 +66,14 @@ def prepare_data(S2):
 
 
 
-def fp_sign(S2, title='',pname='',cmap='jet',plotType = 1):
-    cp_sign, xp_sign = prepare_data(S2)
-    if plotType==3:
+def fp_sign(S2=None, title='',pname='',cmap='jet',plotType = 1):
+    if S2 is not None:
+        cp_sign, xp_sign = prepare_data(S2)
+    if plotType==4:
+        poincare_sphere(pname=pname)
+    elif S2 is not None and plotType==3:
         poincare_plot(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap)
-    elif plotType==2:
+    elif S2 is not None and plotType==2:
         pol_sign2d(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap)
     else:
         pol_sign(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap)

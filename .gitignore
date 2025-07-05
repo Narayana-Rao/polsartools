@@ -6,6 +6,7 @@
 '/polsartools/sensors/__pycache__/*.pyc'
 '/polsartools/utils/__pycache__/*.pyc'
 
+/polsartools.egg-info/
 /build/
 /wheelhouse/
 /condapackages/

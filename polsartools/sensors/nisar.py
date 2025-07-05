@@ -6,13 +6,13 @@ import tables
 from skimage.util.shape import view_as_blocks
 from polsartools.utils.utils import time_it, mlook_arr
 from polsartools.utils.io_utils import write_s2_bin_ref, write_s2_ct_ref
-from polsartools.utils.h5_utils import h5_polsar
+from polsartools.utils.h5_utils import h5_polsar, get_ml_chunk
 from netCDF4 import Dataset
 #%%
 
-def get_ml_chunk(multiplier, default_size):
-    # Rounds up to the next multiple of `multiplier`
-    return ((default_size + multiplier - 1) // multiplier) * multiplier
+# def get_ml_chunk(multiplier, default_size):
+#     # Rounds up to the next multiple of `multiplier`
+#     return ((default_size + multiplier - 1) // multiplier) * multiplier
 
 def rslc_meta(inFile):
     band_table = [
@@ -470,7 +470,8 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
 
 
 @time_it  
-def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10, outType='tif',max_workers=None ):
+def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10, 
+               outType='tif',max_workers=None ):
     """
     Extracts the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from a NISAR RSLC HDF5 file 
     and saves them into respective binary files.

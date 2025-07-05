@@ -2,7 +2,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size': 8})
-plt.rcParams["font.family"] = "arial"
+# plt.rcParams["font.family"] = "arial"
 # plt.rcParams["font.family"] = "sans-serif"
 # plt.rcParams["mathtext.fontset"] = "dejavuserif"
 
@@ -98,17 +98,17 @@ def poincare_plot(cp_sign, xp_sign, title='', pname='',cmap='jet'):
     ax1.quiver(0, 0, 0, -1*arrow_length, 0, 0, color='k', arrow_length_ratio=0.1,zorder = 0)
     ax1.quiver(0, 0, 0, 0, -1*arrow_length, 0, color='k', arrow_length_ratio=0.1,zorder = 0)
     ax1.quiver(0, 0, 0, 0, 0, arrow_length, color='k', arrow_length_ratio=0.1,zorder = 0)
-    ax1.text(-1*arrow_length-0.3, 0, 0, 'S1', color='k', fontsize=12)
-    ax1.text(0, -1*arrow_length-0.15, -0.1, 'S2', color='k', fontsize=12)
-    ax1.text(-0.1, 0, arrow_length+0.2, 'S3', color='k', fontsize=12)
+    ax1.text(-1*arrow_length-0.3, 0, 0, 'S$_1$', color='k', fontsize=12)
+    ax1.text(0, -1*arrow_length-0.15, -0.1, 'S$_2$', color='k', fontsize=12)
+    ax1.text(-0.1, 0, arrow_length+0.2, 'S$_3$', color='k', fontsize=12)
     
     # Add axis arrows and labels for ax2
     ax2.quiver(0, 0, 0, arrow_length, 0, 0, color='k', arrow_length_ratio=0.1,zorder = 0)
     ax2.quiver(0, 0, 0, 0, arrow_length, 0, color='k', arrow_length_ratio=0.1,zorder = 0)
     ax2.quiver(0, 0, 0, 0, 0, arrow_length, color='k', arrow_length_ratio=0.1,zorder = 0)
-    ax2.text(arrow_length+0.3, 0, 0, 'S1', color='k', fontsize=12)
-    ax2.text(0, arrow_length+0.15, -0.1, 'S2', color='k', fontsize=12)
-    ax2.text(0.1, 0, arrow_length+0.2, 'S3', color='k', fontsize=12)
+    ax2.text(arrow_length+0.3, 0, 0, 'S$_1$', color='k', fontsize=12)
+    ax2.text(0, arrow_length+0.15, -0.1, 'S$_2$', color='k', fontsize=12)
+    ax2.text(0.1, 0, arrow_length+0.2, 'S$_3$', color='k', fontsize=12)
     
     plt.tight_layout()
     plt.suptitle(title)
@@ -145,3 +145,113 @@ def pol_sign2d(cp_sign, xp_sign, title='', pname='',cmap='jet'):
 
     if pname:
         plt.savefig(pname, dpi=300)
+
+
+def poincare_sphere(pname=''):
+     # Axii
+    stokes_vectors = np.array([
+        [1.8, 0, 0],   # Horizontal linear
+        [-1.8, 0, 0],  # Vertical linear
+        [0, 1.8, 0],   # 45° linear
+        [0, -1.8, 0],  # -45° linear
+        [0, 0, 1.8],   # Right circular
+        [0, 0, -1.8]   # Left circular
+        
+    ])
+    labels = ['S$_1$','',  '','S$_2$', '','S$_3$']
+    # dots
+    th_svect = np.array([
+    
+        [1, 0, 0],    # Horizontal linear
+        [-1, 0, 0],   # Vertical linear
+        [0, 0, 1],    # Right circular
+        [0, 0, -1],   # Left circular
+        [0, 1, 0],    # +45 deg linear
+        [0, -1, 0]    # -45 deg linear
+            
+    ])
+    # labels for dots
+    th_labels = ['H', 'V', 'RCP', 'LCP', '-45°', '+45°']
+    
+    # Plotting
+    fig = plt.figure(figsize=(4, 6),dpi=300)
+    ax = fig.add_subplot(111, projection='3d')
+    
+    # Create a wireframe Poincaré sphere
+    u, v = np.linspace(0, 2 * np.pi, 100), np.linspace(0, np.pi, 100)
+    x = np.outer(np.cos(u), np.sin(v))
+    y = np.outer(np.sin(u), np.sin(v))
+    z = np.outer(np.ones(np.size(u)), np.cos(v))
+    
+    
+    # Mask the octant: remove points where x > 0, y > 0, z > 0
+    mask = ~((x > 0) & (y < 0) & (z < 0))
+    
+    # Apply the mask: set those values to NaN
+    x_masked = np.where(mask, x, np.nan)
+    y_masked = np.where(mask, y, np.nan)
+    z_masked = np.where(mask, z, np.nan)
+    
+    # ax.plot_surface(x, y, z, color='lightblue', alpha=0.4, linewidth=0.2, edgecolor='gray')
+    ax.plot_surface(x_masked, y_masked, z_masked, color='skyblue', 
+                    alpha=0.3, 
+                    # edgecolor='gray', 
+                    edgecolor='none',
+                    linewidth=0.3)
+    
+    
+    theta = -90*np.pi/180  # azimuthal angle (0 to 2π)
+    phi = 150*np.pi/180    # polar angle (0 to π)
+    
+    # Convert to Cartesian coordinates (unit vector)
+    vx = np.sin(phi) * np.cos(theta)
+    vy = np.sin(phi) * np.sin(theta)
+    vz = np.cos(phi)
+    
+    ax.quiver(0, 0, 0, vx, vy, vz, color='r', linewidth=0.6, arrow_length_ratio=0.1)
+    ax.text(0, -0.02, -0.5, r'S$_0$', fontsize=8, color='r')  # S0
+    ax.text(0.45, -0.9, 0, r'$2\psi$', fontsize=8, color='g')  # azimuth
+    ax.text(0, -0.4, -0.4, r'$2\tau$', fontsize=8, color='b')    # polar
+    
+    # Draw azimuth arc in xy-plane
+    az_arc = np.linspace(0, theta, 50)
+    r = 0.5
+    x_arc = r * np.cos(az_arc)
+    y_arc = r * np.sin(az_arc)
+    z_arc = np.zeros_like(x_arc)
+    ax.plot(x_arc, y_arc, z_arc, 'g-', linewidth=0.5)
+    ax.plot([x_arc[-2], x_arc[-1]], [y_arc[-2], y_arc[-1]], [z_arc[-2], z_arc[-1]], color='k')
+    
+    # Draw polar arc in xz-plane aligned with theta
+    polar_arc = np.linspace(np.pi/2, phi, 50)
+    rp = 0.5
+    px = rp * np.sin(polar_arc) * np.cos(theta)
+    py = rp * np.sin(polar_arc) * np.sin(theta)
+    pz = rp * np.cos(polar_arc)
+    ax.plot(px, py, pz, 'b-', linewidth=0.5)
+    ax.plot([px[-2], px[-1]], [py[-2], py[-1]], [pz[-2], pz[-1]], color='k') 
+    
+    for vec, label in zip(stokes_vectors, labels):
+        if label:
+            ax.quiver(0, 0, 0, vec[0], vec[1], vec[2], color='k', linewidth = 0.7, arrow_length_ratio=0.1)
+        else:
+            ax.plot([0, vec[0]], [0, vec[1]], [0, vec[2]],  linewidth = 0.7, linestyle=':', color='gray')
+        ax.text(vec[0]*1.25, vec[1]*1.1, vec[2]*1.1, label, color='black', fontsize=8)
+    
+    for vec, label in zip(th_svect, th_labels):
+        ax.scatter(*vec* 1.05, color='k', s=5)
+        ax.text(*vec * 1.3, label, fontsize=8)
+    
+    ax.set_xlabel('')
+    ax.set_ylabel('')
+    ax.set_zlabel('')
+    ax.set_box_aspect([1, 1, 1])
+    ax.grid(False)
+    plt.axis('off')  
+    ax.view_init(elev=-18, azim=-45,roll=-180)
+    
+    plt.title('Poincaré sphere')
+    
+    plt.tight_layout()
+    if pname:
+        plt.savefig(pname,dpi=300)
