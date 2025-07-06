@@ -60,25 +60,28 @@ def stokes_parm(SxxFile,SxyFile,  window_size=3, outType="tif", cog_flag=False,
     Returns
     -------
     None
-        Writes stkokes and child parameters to disk:
-        - stokes_g0
-        - stokes_g1
-        - stokes_g2
-        - stokes_g3 
-        - stokes_e1
-        - stokes_e2
-        - stokes_e1norm
-        - stokes_e2norm 
-        - stokes_phi
-        - stokes_tau
-        - stokes_x_poincare
-        - stokes_y_poincare
-        - stokes_H
-        - stokes_A
-        - stokes_contrast
-        - stokes_DoLP
-        - stokes_DoCP
-        - stokes_LPR
+    
+    Writes stkokes and child parameters to disk:
+    
+        - stokes_g0 (.bin or .tif)
+        - stokes_g1 (.bin or .tif)
+        - stokes_g2 (.bin or .tif)
+        - stokes_g3 (.bin or .tif)
+        - stokes_e1 (.bin or .tif)
+        - stokes_e2 (.bin or .tif)
+        - stokes_e1norm (.bin or .tif)
+        - stokes_e2norm (.bin or .tif)
+        - stokes_phi (.bin or .tif)
+        - stokes_tau (.bin or .tif)
+        - stokes_x_poincare (.bin or .tif)
+        - stokes_y_poincare (.bin or .tif)
+        - stokes_H (.bin or .tif)
+        - stokes_A (.bin or .tif)
+        - stokes_contrast (.bin or .tif)
+        - stokes_DoL (.bin or .tif)
+        - stokes_DoCP (.bin or .tif)
+        - stokes_LPR (.bin or .tif)
+        - stokes_CPR (.bin or .tif)
 
     """
 

@@ -397,25 +397,28 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-<span class="sd">        Writes stkokes and child parameters to disk:</span>
-<span class="sd">        - stokes_g0</span>
-<span class="sd">        - stokes_g1</span>
-<span class="sd">        - stokes_g2</span>
-<span class="sd">        - stokes_g3 </span>
-<span class="sd">        - stokes_e1</span>
-<span class="sd">        - stokes_e2</span>
-<span class="sd">        - stokes_e1norm</span>
-<span class="sd">        - stokes_e2norm </span>
-<span class="sd">        - stokes_phi</span>
-<span class="sd">        - stokes_tau</span>
-<span class="sd">        - stokes_x_poincare</span>
-<span class="sd">        - stokes_y_poincare</span>
-<span class="sd">        - stokes_H</span>
-<span class="sd">        - stokes_A</span>
-<span class="sd">        - stokes_contrast</span>
-<span class="sd">        - stokes_DoLP</span>
-<span class="sd">        - stokes_DoCP</span>
-<span class="sd">        - stokes_LPR</span>
+<span class="sd">    </span>
+<span class="sd">    Writes stkokes and child parameters to disk:</span>
+<span class="sd">    </span>
+<span class="sd">        - stokes_g0 (.bin or .tif)</span>
+<span class="sd">        - stokes_g1 (.bin or .tif)</span>
+<span class="sd">        - stokes_g2 (.bin or .tif)</span>
+<span class="sd">        - stokes_g3 (.bin or .tif)</span>
+<span class="sd">        - stokes_e1 (.bin or .tif)</span>
+<span class="sd">        - stokes_e2 (.bin or .tif)</span>
+<span class="sd">        - stokes_e1norm (.bin or .tif)</span>
+<span class="sd">        - stokes_e2norm (.bin or .tif)</span>
+<span class="sd">        - stokes_phi (.bin or .tif)</span>
+<span class="sd">        - stokes_tau (.bin or .tif)</span>
+<span class="sd">        - stokes_x_poincare (.bin or .tif)</span>
+<span class="sd">        - stokes_y_poincare (.bin or .tif)</span>
+<span class="sd">        - stokes_H (.bin or .tif)</span>
+<span class="sd">        - stokes_A (.bin or .tif)</span>
+<span class="sd">        - stokes_contrast (.bin or .tif)</span>
+<span class="sd">        - stokes_DoL (.bin or .tif)</span>
+<span class="sd">        - stokes_DoCP (.bin or .tif)</span>
+<span class="sd">        - stokes_LPR (.bin or .tif)</span>
+<span class="sd">        - stokes_CPR (.bin or .tif)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -535,7 +538,11 @@
     <span class="n">CPR</span> <span class="o">=</span> <span class="p">(</span><span class="n">g0</span><span class="o">-</span><span class="n">g3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">g0</span><span class="o">+</span><span class="n">g3</span><span class="p">)</span>
     
 
-    <span class="k">return</span> <span class="n">g0</span><span class="p">,</span><span class="n">g1</span><span class="p">,</span><span class="n">g2</span><span class="p">,</span><span class="n">g3</span><span class="p">,</span><span class="n">e1</span><span class="p">,</span><span class="n">e2</span><span class="p">,</span><span class="n">e1norm</span><span class="p">,</span><span class="n">e2norm</span><span class="p">,</span><span class="n">phi</span><span class="p">,</span><span class="n">tau</span><span class="p">,</span><span class="n">Xp</span><span class="p">,</span><span class="n">Yp</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">Co</span><span class="p">,</span><span class="n">DoLP</span><span class="p">,</span><span class="n">DoCP</span><span class="p">,</span><span class="n">LPR</span><span class="p">,</span><span class="n">CPR</span>
+    <span class="k">return</span> <span class="n">g0</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">g1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">g2</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">g3</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>\
+        <span class="n">e1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">e2</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">e1norm</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">e2norm</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>\
+            <span class="n">phi</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">tau</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">Xp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">Yp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>\
+                <span class="n">H</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">A</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">Co</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>\
+                    <span class="n">DoLP</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">DoCP</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">LPR</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">CPR</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 
                 </article>
