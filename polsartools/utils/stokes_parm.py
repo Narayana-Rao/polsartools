@@ -202,6 +202,6 @@ def process_chunk_stokes(chunks, window_size,input_filepaths,*args):
 
     return g0.astype(np.float32),g1.astype(np.float32),g2.astype(np.float32),g3.astype(np.float32),\
         e1.astype(np.float32),e2.astype(np.float32),e1norm.astype(np.float32),e2norm.astype(np.float32),\
-            phi.astype(np.float32),tau.astype(np.float32),Xp.astype(np.float32),Yp.astype(np.float32),\
+            (phi*180/np.pi).astype(np.float32),(tau*180/np.pi).astype(np.float32),Xp.astype(np.float32),Yp.astype(np.float32),\
                 H.astype(np.float32),A.astype(np.float32),Co.astype(np.float32),\
                     DoLP.astype(np.float32),DoCP.astype(np.float32),LPR.astype(np.float32),CPR.astype(np.float32)
