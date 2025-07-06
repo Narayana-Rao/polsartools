@@ -23,7 +23,7 @@ from .utils import pauliRGB, dxpRGB
 
 from .preprocessing.filters import boxcar, rlee
 from .preprocessing.mlook import mlook
-
+from .utils.stokes_parm import stokes_parm
 
 __all__ = [
     # SENSORS
@@ -35,7 +35,7 @@ __all__ = [
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS
-    'mlook',
+    'mlook', 'stokes_parm',
     'convert_T3_C3', 'convert_C3_T3', 'pauliRGB', 'convert_S2', 
     # FULL-POL
     'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 

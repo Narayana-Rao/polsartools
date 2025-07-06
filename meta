@@ -10,7 +10,7 @@
 added .tif for all functions 
 added pwg (psuedo geotag) for RGB .png, added optional geotif RGB
 added dprvic, dp_desc, fp_sign (4 types of polarimetric signatures)
-
+added stokes_parm function
 updated convert_S2 for full pol
 
 NISAR reader

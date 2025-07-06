@@ -8,3 +8,4 @@ from .dxpRGB import dxpRGB
 from .convert_S2 import convert_S2
 from .fp_sign import fp_sign
 from .utils import time_it, conv2d
+from .stokes_parm import stokes_parm

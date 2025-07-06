@@ -164,8 +164,11 @@ INPUT C:\Program Files\MiKTeX\tex\latex\epstopdf-pkg\epstopdf-base.sty
 INPUT C:\Program Files\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
 INPUT C:\Program Files\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
 INPUT C:\Program Files\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
 OUTPUT flowchart.pdf
 INPUT C:\Users\nbhogapurapu\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
 INPUT flowchart.aux
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx10.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb

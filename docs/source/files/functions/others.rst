@@ -1,15 +1,22 @@
 
-multi-looking (``mlook``)
+Multi-looking (``mlook``)
 -------------------------
 
 .. autofunction:: polsartools.mlook
    :noindex:
 
-conver full-pol S2 (``convert_S2``)
+Conver full-pol S2 (``convert_S2``)
 -----------------------------------
 
 .. autofunction:: polsartools.convert_S2
    :noindex:
+
+Derive stokes parameters (``stokes_parm``)
+------------------------------------------
+
+.. autofunction:: polsartools.stokes_parm
+   :noindex:
+
 
 Generate pauliRGB for FP data (``pauliRGB``)
 --------------------------------------------
