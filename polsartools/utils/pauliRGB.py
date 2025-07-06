@@ -147,7 +147,9 @@ def pauliRGB(infolder,tif_flag=False):
     Returns
     -------
     None
-        Writes output to:
+    
+    Writes output to:
+        
         - PauliRGB.png: RGB composite with world file for georeferencing
         - PauliRGB.tif: Optional GeoTIFF output if `tif_flag=True`
 
