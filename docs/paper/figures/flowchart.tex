@@ -1,16 +1,36 @@
 % \documentclass{article}
-\documentclass[tikz]{standalone}
+\documentclass[tikz,border=0.1cm]{standalone}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta}
+% \usepackage{par_style}
+\usetikzlibrary{positioning}
 
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=4cm, minimum height=1cm, text centered, draw=black, fill=gray!20]
-\tikzstyle{process} = [rectangle, minimum width=4.3cm, minimum height=1cm, text centered, draw=black, fill=blue!10]
-\tikzstyle{cat} = [rectangle, minimum width=4.3cm, minimum height=1cm, text centered, draw=black, fill=white!10]
-\tikzstyle{parallel} = [rectangle, minimum width=4.3cm, minimum height=1cm, text centered, draw=black, fill=green!10]
-\tikzstyle{decision} = [diamond, aspect=2.2, text centered, draw=black, fill=orange!20]
+\newcommand{\stackednode}[5]{
+  \begin{scope}
+    % Background rectangles
+    \node[draw=black, rounded corners, fill=green!10, minimum width=#3, minimum height=#4] 
+      at ([shift={(0.4,0.2)}]#2) {};
+    \node[draw=black,rounded corners,  fill=green!10, minimum width=#3, minimum height=#4] 
+      at ([shift={(0.25,0.1)}]#2) {};
+
+    % Foreground named node with text
+    \node (#1) [draw=black,rounded corners,  fill=green!10, text width=#3, align=center, line width=1pt] 
+      at (#2) {#5};
+  \end{scope}
+}
+
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=4cm, minimum height=1cm, text centered, draw=black, fill=gray!20, line width=1pt ]
+\tikzstyle{process} = [rectangle, rounded corners,minimum width=4.3cm, minimum height=1cm, text centered, draw=black, fill=blue!10, line width=1pt ]
+\tikzstyle{cat} = [rectangle, rounded corners,minimum width=4.3cm, minimum height=1cm, text centered, draw=black, fill=white!10, line width=1pt ]
+% \tikzstyle{parallel} = [rectangle, minimum width=4.3cm, minimum height=1cm, text centered, draw=black, fill=green!10]
+
+\tikzstyle{decision} = [diamond, aspect=2.2, text centered, draw=black, fill=orange!20, line width=1pt ]
 \tikzstyle{arrow} = [thick,->,>=stealth]
 
 \begin{document}
+
+
 \begin{tikzpicture}
 
 % Nodes
@@ -24,16 +44,22 @@
 
 
 \node (processing) at (6.5,-4) [cat] {Processing};
-\node (chunk) at (6.5,-6) [parallel] {Read Data in Chunks};
-\node (parallelproc) at (6.5,-8) [parallel,text width=4.3cm, align=center] {Parallel Processing\\ of Chunks};
-\node (tempgeotiff)at (6.5,-10)  [parallel] {Write to Temp GeoTIFFs};
+\stackednode{chunk}{6.5,-6}{4.3cm}{1cm}{Read Data\\ in Chunks}
+\draw[->] (processing) -- (chunk);
+\stackednode{parallelproc}{6.5,-8}{4.3cm}{1cm}{Parallel Processing\\ of Chunks}
+\draw[->] (chunk) -- (parallelproc);
+\stackednode{tempgeotiff}{6.5,-10}{4.3cm}{1cm}{Write to\\Temp GeoTIFFs}
+\draw[->] (parallelproc) -- (tempgeotiff);
 \node (mosaic) at (6.5,-12) [process] {Mosaic All output Chunks};
 \node (save)at (6.5,-14)  [startstop,text width=4.3cm, align=center] {Save Final Raster Output(s)\\(.bin, .tif)};
 
+
 % Arrows
 \draw [arrow] (start) -- (decide);
-\draw [arrow] (decide.west)  -| (analysis.north);
-\draw [arrow] (decide.east)-|  (processing.north);
+% \draw [arrow] (decide.west)  -| (analysis.north);
+% \draw [arrow] (decide.east)-|  (processing.north);
+\draw [arrow, rounded corners] (decide.west)  -| (analysis.north);
+\draw [arrow, rounded corners] (decide.east) -| (processing.north);
 
 \draw [arrow] (analysis) -- (readplot);
 \draw [arrow] (analysis) -- (readplot);
@@ -55,51 +81,45 @@
     \tikz[baseline]{
     \node[inner sep=0pt] (legenditem) at (0,0) {
         \begin{tikzpicture}
-        \node[draw=black, fill=gray!20, minimum size=0.4cm] {};
+        \node[draw=black, rounded corners, fill=gray!20, minimum width=.6cm, minimum height=.4cm] {};
         \end{tikzpicture}
     };
-    \node[anchor=west] at (legenditem.east) {Input/Output Node};
+    \node[anchor=west] at (legenditem.east) {~Input/Output Node};
     } \\
 
     \tikz[baseline]{
     \node[inner sep=0pt] (legenditem) at (0,0) {
         \begin{tikzpicture}
-        \filldraw[fill=blue!10, draw=black] (0,0) rectangle (0.4,0.4);
+        \node[draw=black,  rounded corners, fill=blue!20, minimum width=.6cm, minimum height=.4cm] {};
         \end{tikzpicture}
     };
-    \node[anchor=west] at (legenditem.east) {Processing Step};
+    \node[anchor=west] at (legenditem.east) {~Processing Step};
     } \\ 
+    \tikz[baseline]{
+  \node[inner sep=0pt] (legenditem) at (0,0) {
+    \begin{tikzpicture}
+      % Back layer
+      \node[draw=black, rounded corners,  fill=green!10, minimum width=0.6cm, minimum height=0.4cm] 
+        at (0.1,0.1) {};
+      % Mid layer
+      \node[draw=black,rounded corners,  fill=green!10, minimum width=0.6cm, minimum height=0.4cm] 
+        at (0.05,0.05) {};
+      % Front layer
+      \node[draw=black, rounded corners,  fill=green!10, line width=0.6pt, minimum width=0.6cm, minimum height=0.4cm] 
+        at (0,0) {};
+    \end{tikzpicture}
+  };
+  \node[anchor=west] at (legenditem.east) {Parallel Task};
+    }\\
 
     \tikz[baseline]{
     \node[inner sep=0pt] (legenditem) at (0,0) {
         \begin{tikzpicture}
-        \filldraw[fill=green!10, draw=black] (0,0) rectangle (0.4,0.4);
+         \node[draw, diamond, aspect=2, inner sep=3pt, fill=orange!20, minimum height=.5cm] {};
         \end{tikzpicture}
     };
-    \node[anchor=west] at (legenditem.east) {Parallel Task};
-    } \\
-
-    \tikz[baseline]{
-    \node[inner sep=0pt] (legenditem) at (0,0) {
-        \begin{tikzpicture}
-         \node[draw, diamond, aspect=1, inner sep=3pt, fill=orange!20] {};
-        \end{tikzpicture}
-    };
-    \node[anchor=west] at (legenditem.east) {Decision};
+    \node[anchor=west] at (legenditem.east) {~Decision};
     } 
-
-%   \begin{tikzpicture}[baseline=-0.1ex]
-%     \filldraw[fill=gray!20, draw=black] (0,0) rectangle (0.4,0.4);
-%   \end{tikzpicture}~ Input/Output Node\\
-%   \begin{tikzpicture}[baseline=-0.1ex]
-%     \filldraw[fill=blue!10, draw=black] (0,0) rectangle (0.4,0.4);
-%   \end{tikzpicture}~ Processing Step\\
-%   \begin{tikzpicture}[baseline=-0.1ex]
-%     \filldraw[fill=green!10, draw=black] (0,0) rectangle (0.4,0.4);
-%   \end{tikzpicture}~ Parallel Task\\
-%   \begin{tikzpicture}[baseline=-0.7ex]
-%     \node[draw, diamond, aspect=1, inner sep=3pt, fill=orange!20] {};
-%   \end{tikzpicture}~ Decision
 };
 
 

@@ -1,0 +1,27 @@
+\tikzset{
+  parallel/.style={
+    minimum width=4.3cm,
+    minimum height=1cm,
+    align=center,
+    draw=none,
+    preaction={
+      draw,
+      fill=green!10,
+      fill opacity=1,
+      path picture={
+        \begin{scope}[shift={(0.2cm,-0.2cm)}]
+          \draw[fill=green!10,draw=black] 
+            (path picture bounding box.south west) rectangle 
+            (path picture bounding box.north east);
+        \end{scope}
+        \begin{scope}[shift={(0.1cm,-0.1cm)}]
+          \draw[fill=green!10,draw=black]
+            (path picture bounding box.south west) rectangle 
+            (path picture bounding box.north east);
+        \end{scope}
+      }
+    },
+    draw=black,
+    fill=green!10
+  }
+}
