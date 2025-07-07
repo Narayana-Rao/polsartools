@@ -343,25 +343,57 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_s2_input_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Searches for s11/s12/s21/s22 files in .bin or .tif format.</span>
-<span class="sd">    Returns input file paths or raises an exception if files are missing.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_file</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;.tif&quot;</span><span class="p">]:</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">path</span>
-        <span class="k">return</span> <span class="kc">None</span>
+<span class="c1"># def get_s2_input_filepaths(infolder):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Searches for s11/s12/s21/s22 files in .bin or .tif format.</span>
+<span class="c1">#     Returns input file paths or raises an exception if files are missing.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     def find_file(base):</span>
+<span class="c1">#         for ext in [&quot;.bin&quot;, &quot;.tif&quot;]:</span>
+<span class="c1">#             path = os.path.join(infolder, f&quot;{base}{ext}&quot;)</span>
+<span class="c1">#             if os.path.isfile(path):</span>
+<span class="c1">#                 return path</span>
+<span class="c1">#         return None</span>
 
-    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;s11&quot;</span><span class="p">,</span> <span class="s2">&quot;s12&quot;</span><span class="p">,</span> <span class="s2">&quot;s21&quot;</span><span class="p">,</span> <span class="s2">&quot;s22&quot;</span><span class="p">]</span>
-    <span class="n">input_filepaths</span> <span class="o">=</span> <span class="p">[</span><span class="n">find_file</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
+<span class="c1">#     keys = [&quot;s11&quot;, &quot;s12&quot;, &quot;s21&quot;, &quot;s22&quot;]</span>
+<span class="c1">#     input_filepaths = [find_file(k) for k in keys]</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Invalid S2 folder: missing s11/s12/s21/s22 files&quot;</span><span class="p">)</span>
+<span class="c1">#     if not all(input_filepaths):</span>
+<span class="c1">#         raise FileNotFoundError(&quot;Invalid S2 folder: missing s11/s12/s21/s22 files&quot;)</span>
     
-    <span class="k">return</span> <span class="n">input_filepaths</span>
+<span class="c1">#     return input_filepaths</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_file</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">infolder</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;.tif&quot;</span><span class="p">]:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">path</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="c1"># def get_s_input_filepaths(infolder):</span>
+<span class="c1">#     keys = [&quot;s11&quot;, &quot;s12&quot;, &quot;s21&quot;, &quot;s22&quot;]</span>
+<span class="c1">#     found_files = {k: find_file(k, infolder) for k in keys}</span>
+<span class="c1">#     available = {k: v for k, v in found_files.items() if v is not None}</span>
+
+<span class="c1">#     if len(available) in [2, 4]:</span>
+<span class="c1">#         print(f&quot;Found valid S-matrix set with {len(available)} files:&quot;)</span>
+<span class="c1">#         for k, path in available.items():</span>
+<span class="c1">#             print(f&quot;  {k}: {path}&quot;)</span>
+<span class="c1">#         return available</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         raise FileNotFoundError</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_s_input_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">):</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;s11&quot;</span><span class="p">,</span> <span class="s2">&quot;s12&quot;</span><span class="p">,</span> <span class="s2">&quot;s21&quot;</span><span class="p">,</span> <span class="s2">&quot;s22&quot;</span><span class="p">]</span>
+    <span class="n">found_files</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">find_file</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">infolder</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span>
+    <span class="n">available</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">found_files</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">available</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+        <span class="c1"># print(f&quot;Found valid S-matrix set with {len(available)} files:&quot;)</span>
+        <span class="c1"># for path in available:</span>
+        <span class="c1">#     print(f&quot;  {path}&quot;)</span>
+        <span class="k">return</span> <span class="n">available</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Only found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">available</span><span class="p">)</span><span class="si">}</span><span class="s2"> S-matrix files; need exactly 2 or 4.&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_output_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">outType</span><span class="p">):</span>
@@ -384,6 +416,8 @@
         <span class="s2">&quot;C2VX&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;C11&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_real&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;C22&quot;</span><span class="p">],</span>
         <span class="s2">&quot;C2HV&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;C11&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_real&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;C22&quot;</span><span class="p">],</span>
         <span class="s2">&quot;T2HV&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;T11&quot;</span><span class="p">,</span> <span class="s2">&quot;T12_real&quot;</span><span class="p">,</span> <span class="s2">&quot;T12_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;T22&quot;</span><span class="p">,],</span>
+        <span class="s2">&quot;C2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;C11&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_real&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;C22&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;T2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;T11&quot;</span><span class="p">,</span> <span class="s2">&quot;T12_real&quot;</span><span class="p">,</span> <span class="s2">&quot;T12_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;T22&quot;</span><span class="p">]</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">matrix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">matrix_keys</span><span class="p">:</span>
@@ -395,30 +429,30 @@
 
     <span class="k">return</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outfolder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">matrix_keys</span><span class="p">[</span><span class="n">matrix</span><span class="p">]]</span>
 
-<div class="viewcode-block" id="convert_S2">
-<a class="viewcode-back" href="../../../files/functions/others.html#polsartools.convert_S2">[docs]</a>
+<div class="viewcode-block" id="convert_S">
+<a class="viewcode-back" href="../../../files/functions/others.html#polsartools.convert_S">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">convert_S2</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cf</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_S</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cf</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
                   <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> 
                   <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert full-polarimetric scattering (S2) matrix into multi-looked</span>
+<span class="sd">    Convert full/dual-polarimetric scattering (S2,Sxy) matrix into multi-looked</span>
 <span class="sd">    coherency (T4, T3, T2) or covariance (C4, C3, C2) matrices.</span>
 <span class="sd">    It supports both GeoTIFF and PolSARpro-compatible output.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; # Convert to C3 matrix with 10x5 multi-looking</span>
-<span class="sd">    &gt;&gt;&gt; convert_S2(&quot;/path/to/S2_data&quot;, matrix=&quot;C3&quot;, azlks=10, rglks=5)</span>
+<span class="sd">    &gt;&gt;&gt; convert_S(&quot;/path/to/S_data&quot;, matrix=&quot;C3&quot;, azlks=10, rglks=5)</span>
 
 <span class="sd">    &gt;&gt;&gt; # Output as tiled GeoTIFF with Cloud Optimized overviews</span>
-<span class="sd">    &gt;&gt;&gt; convert_S2(&quot;/data/S2&quot;, matrix=&quot;T4&quot;, cog_flag=True)</span>
+<span class="sd">    &gt;&gt;&gt; convert_S(&quot;/data/S_data&quot;, matrix=&quot;C2&quot;, cog_flag=True)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    infolder : str</span>
 <span class="sd">        Path to the input folder containing S11, S12, S21, S22 scattering components.</span>
-<span class="sd">    matrix : str, default=&#39;T3&#39;</span>
+<span class="sd">    matrixType : str, default=&#39;T3&#39;</span>
 <span class="sd">        Output matrix format. Supported values:</span>
 <span class="sd">        - &#39;T4&#39;, &#39;T3&#39;, &#39;T2HV&#39; (Coherency)</span>
 <span class="sd">        - &#39;C4&#39;, &#39;C3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39; (Covariance)</span>
@@ -450,12 +484,22 @@
     
     <span class="n">window_size</span><span class="o">=</span><span class="kc">None</span>
     
-    <span class="n">input_filepaths</span> <span class="o">=</span>  <span class="n">get_s2_input_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">)</span>
-    <span class="n">output_filepaths</span> <span class="o">=</span> <span class="n">get_output_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">outType</span><span class="p">)</span>
+    <span class="n">input_filepaths</span> <span class="o">=</span>  <span class="n">get_s_input_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">)</span>
+    <span class="n">output_filepaths</span> <span class="o">=</span> <span class="n">get_output_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">matrixType</span><span class="p">,</span> <span class="n">outType</span><span class="p">)</span>
     
-    <span class="n">VALID_MATRICES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C4&#39;</span><span class="p">,</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2VX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HV&#39;</span><span class="p">,</span> <span class="s1">&#39;T2HV&#39;</span><span class="p">}</span>
-    <span class="k">if</span> <span class="n">matrix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VALID_MATRICES</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">matrix</span><span class="si">}</span><span class="s2">&#39; - please choose one of </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">VALID_MATRICES</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid S folder: must contain either 2 (dual/compact-pol) or 4 (full-pol) S-matrix files&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">matrixType</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">matrixType</span><span class="si">}</span><span class="s2">&#39; for dual-pol input - please choose one of &#39;C2&#39;, &#39;T2&#39;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">matrixType</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;C4&#39;</span><span class="p">,</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2VX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HV&#39;</span><span class="p">,</span> <span class="s1">&#39;T2HV&#39;</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">matrixType</span><span class="si">}</span><span class="s2">&#39; for full-pol input - please choose one of &#39;C4&#39;, &#39;T4&#39;, &#39;C3&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39;,&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># VALID_MATRICES = {&#39;C4&#39;, &#39;T4&#39;, &#39;C3&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39;, &#39;C2&#39;, &#39;T2&#39;}</span>
+    <span class="c1"># if matrix not in VALID_MATRICES:</span>
+    <span class="c1">#     raise Exception(f&quot;Invalid matrix type &#39;{matrix}&#39; - please choose one of {&#39;, &#39;.join(VALID_MATRICES)}&quot;)</span>
+<span class="w">    </span>
+<span class="w">    </span>
+<span class="w">    </span>
 <span class="w">        </span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    GET MULTI-LOOKED RASTER PROPERTIES</span>
@@ -501,11 +545,13 @@
     <span class="c1"># print(block_x_size,block_y_size)</span>
     <span class="n">block_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">block_x_size</span><span class="p">,</span> <span class="n">block_y_size</span><span class="p">)</span>
     
-    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> 
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Processing dual-pol S-matrix...&quot;)</span>
+        <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> 
                              <span class="n">window_size</span><span class="p">,</span>
                             <span class="n">write_flag</span><span class="p">,</span>
-                            <span class="n">process_chunk_s2ct</span><span class="p">,</span>
-                            <span class="o">*</span><span class="p">[</span><span class="n">cf</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">],</span>
+                            <span class="n">process_chunk_sxyct</span><span class="p">,</span>
+                            <span class="o">*</span><span class="p">[</span><span class="n">cf</span><span class="p">,</span> <span class="n">matrixType</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">],</span>
                             <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
                             <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  
                             <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
@@ -517,8 +563,59 @@
                             <span class="n">out_projection</span><span class="o">=</span><span class="n">in_projection</span><span class="p">,</span>
                             <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
                             <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span>
-                            <span class="p">)</span></div>
+                            <span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Processing full-pol S-matrix...&quot;)</span>
+        <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> 
+                                <span class="n">window_size</span><span class="p">,</span>
+                                <span class="n">write_flag</span><span class="p">,</span>
+                                <span class="n">process_chunk_s2ct</span><span class="p">,</span>
+                                <span class="o">*</span><span class="p">[</span><span class="n">cf</span><span class="p">,</span> <span class="n">matrixType</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">],</span>
+                                <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
+                                <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  
+                                <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
+                                <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
+                                <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                                <span class="n">out_x_size</span><span class="o">=</span><span class="n">out_x_size</span><span class="p">,</span>
+                                <span class="n">out_y_size</span><span class="o">=</span><span class="n">out_y_size</span><span class="p">,</span>
+                                <span class="n">out_geotransform</span><span class="o">=</span><span class="n">out_geotransform</span><span class="p">,</span>
+                                <span class="n">out_projection</span><span class="o">=</span><span class="n">in_projection</span><span class="p">,</span>
+                                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
+                                <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span>
+                                <span class="p">)</span></div>
 
+
+
+
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_sxyct</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># print(args[-1],args[-2],args[-3])</span>
+    <span class="n">abs_cf</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">matrix</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">azlks</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">rglks</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">s11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">abs_cf</span>
+    <span class="n">s12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">abs_cf</span>
+
+    <span class="k">if</span> <span class="n">matrix</span><span class="o">==</span><span class="s1">&#39;C2&#39;</span><span class="p">:</span>
+        <span class="n">C11</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">s11</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">C22</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">s12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>    
+        <span class="n">C12</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">s11</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">s12</span><span class="p">),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C11</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C22</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">matrix</span><span class="o">==</span><span class="s1">&#39;T2&#39;</span><span class="p">:</span>
+        <span class="n">C11</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">s11</span><span class="o">+</span><span class="n">s12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">C22</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">s11</span><span class="o">-</span><span class="n">s12</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>    
+        <span class="n">C12</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">((</span><span class="n">s11</span><span class="o">+</span><span class="n">s12</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">s11</span><span class="o">-</span><span class="n">s12</span><span class="p">),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C11</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C22</span><span class="p">)</span>         
+    
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Invalid matrix type !!&#39;</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_s2ct</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="c1"># print(args[-1],args[-2],args[-3])</span>

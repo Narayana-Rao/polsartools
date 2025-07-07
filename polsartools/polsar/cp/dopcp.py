@@ -142,4 +142,4 @@ def process_chunk_dopcp(chunks, window_size, *args, **kwargs):
 
     dop= np.sqrt(np.power(s1,2) + np.power(s2,2) + np.power(s3,2))/(s0);   
 
-    return dop
+    return np.real(dop).astype(np.float32)

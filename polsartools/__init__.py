@@ -17,7 +17,8 @@ from .sensors.alos2 import alos2_fbd_l11,alos2_hbq_l11
 from .sensors.chyaan2 import chyaan2_fp
 from .sensors.rs2_fp import rs2_fp
 from .sensors.isro_asar import isro_asar
-from .utils import convert_T3_C3,convert_C3_T3, convert_S2
+from .sensors.risat import risat_l11
+from .utils import convert_T3_C3,convert_C3_T3, convert_S
 from .utils import fp_sign
 from .utils import pauliRGB, dxpRGB
 
@@ -30,6 +31,7 @@ __all__ = [
     'uavsar_grd', 'uavsar_mlc','isro_asar',  
     'nisar_gslc', 'nisar_rslc',
     'alos2_fbd_l11','alos2_hbq_l11', 'chyaan2_fp','rs2_fp',  
+    'risat_l11',
     #
     'fp_sign','pauliRGB','dxpRGB',
     # SPECKEL FILTERS

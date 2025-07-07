@@ -5,10 +5,10 @@ Multi-looking (``mlook``)
 .. autofunction:: polsartools.mlook
    :noindex:
 
-Conver full-pol S2 (``convert_S2``)
+Conver full-pol S2 (``convert_S``)
 -----------------------------------
 
-.. autofunction:: polsartools.convert_S2
+.. autofunction:: polsartools.convert_S
    :noindex:
 
 Derive stokes parameters (``stokes_parm``)

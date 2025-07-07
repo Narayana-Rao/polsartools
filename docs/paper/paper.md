@@ -36,7 +36,21 @@ Synthetic Aperture Radar has been proven a more reliable as an earth obsvarion r
 <!-- The demand for processing tools increases with the increasing number of ***Synthetic Aperture Radar (SAR)*** satellite missions and datasets. However, to process SAR data, a minimal number of free tools are available ([PolSARpro](https://earth.esa.int/web/polsarpro/home), [SNAP](https://step.esa.int/main/toolboxes/snap/)) that consolidate all necessary pre-processing steps. Bearing this in mind, there is a need to develop specific tools for the remote sensing user community to derive polarimetric descriptors like vegetation indices and decomposition parameters. With current  -->
 PolSAR tools QGIS plugin [@bhogapurapu2021polsar]
 
+Native python for easy usability on cloud-based workflows, like jupyter notebooks; also useful as a teaching/demonstrating tutorial of polrimetric SAR applications;
+
 The functionalities can be boradly catogerized into Processing & Analysis. Processing functions genrate several SAR polarimetric parameters in a raster format while analysis functions genrates plots and quick looks from the PolSAR data. A schematic processing flow is presented in Figure \autoref{fig:flowchart}. 
+
+A typical polarimetric SAR data processing workflow e following steps; 
+1) load data and extract polarimetric matrix (Scattering matrix, [S], Covariance matrix, [⟨C⟩] or Coherence matrix [⟨T⟩]); 
+2) A [⟨C⟩] or [⟨T⟩], in general requires multi-looking (spatial averaging)
+3) Optinal speckle filtering
+4) Computing derived polarimetric paramters (decomposition parameters or other descriptors)
+5) Analysis of the derived parameters
+
+
+
+polsartools currently supports several SAR sensors including spaceborne and airborne sensors. 
+
 
 ![Schematic of core processing flow of polsartools package \label{fig:flowchart}](figures/flowchart.png){width=60%}
 

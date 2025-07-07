@@ -11,7 +11,9 @@ added .tif for all functions
 added pwg (psuedo geotag) for RGB .png, added optional geotif RGB
 added dprvic, dp_desc, fp_sign (4 types of polarimetric signatures)
 added stokes_parm function
-updated convert_S2 for full pol
+added risat L11 reader
+update convert_S for full and dual/compact
+update dxpRGB for sxy 
 
 NISAR reader
 	added full-pol support rslc, gslc 
@@ -24,8 +26,10 @@ ISRO_ASAR reader
 	updated with chunk-based mem-load; 
 	parallel processing
 
-replaced h5py package with tables for qgis plugin support
-updated functions for QGIS plugin support
+
+QGIS plugin support
+	replaced h5py package with tables for qgis plugin support
+	added QGIS plugin support for functions 
 
 
 

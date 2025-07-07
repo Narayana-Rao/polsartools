@@ -8,25 +8,57 @@ import os
 from osgeo import gdal
 
 
-def get_s2_input_filepaths(infolder):
-    """
-    Searches for s11/s12/s21/s22 files in .bin or .tif format.
-    Returns input file paths or raises an exception if files are missing.
-    """
-    def find_file(base):
-        for ext in [".bin", ".tif"]:
-            path = os.path.join(infolder, f"{base}{ext}")
-            if os.path.isfile(path):
-                return path
-        return None
+# def get_s2_input_filepaths(infolder):
+#     """
+#     Searches for s11/s12/s21/s22 files in .bin or .tif format.
+#     Returns input file paths or raises an exception if files are missing.
+#     """
+#     def find_file(base):
+#         for ext in [".bin", ".tif"]:
+#             path = os.path.join(infolder, f"{base}{ext}")
+#             if os.path.isfile(path):
+#                 return path
+#         return None
 
-    keys = ["s11", "s12", "s21", "s22"]
-    input_filepaths = [find_file(k) for k in keys]
+#     keys = ["s11", "s12", "s21", "s22"]
+#     input_filepaths = [find_file(k) for k in keys]
 
-    if not all(input_filepaths):
-        raise FileNotFoundError("Invalid S2 folder: missing s11/s12/s21/s22 files")
+#     if not all(input_filepaths):
+#         raise FileNotFoundError("Invalid S2 folder: missing s11/s12/s21/s22 files")
     
-    return input_filepaths
+#     return input_filepaths
+
+def find_file(base, infolder):
+    for ext in [".bin", ".tif"]:
+        path = os.path.join(infolder, f"{base}{ext}")
+        if os.path.isfile(path):
+            return path
+    return None
+
+# def get_s_input_filepaths(infolder):
+#     keys = ["s11", "s12", "s21", "s22"]
+#     found_files = {k: find_file(k, infolder) for k in keys}
+#     available = {k: v for k, v in found_files.items() if v is not None}
+
+#     if len(available) in [2, 4]:
+#         print(f"Found valid S-matrix set with {len(available)} files:")
+#         for k, path in available.items():
+#             print(f"  {k}: {path}")
+#         return available
+#     else:
+#         raise FileNotFoundError
+
+def get_s_input_filepaths(infolder):
+    keys = ["s11", "s12", "s21", "s22"]
+    found_files = {k: find_file(k, infolder) for k in keys}
+    available = [v for v in found_files.values() if v is not None]
+    if len(available) in [2, 4]:
+        # print(f"Found valid S-matrix set with {len(available)} files:")
+        # for path in available:
+        #     print(f"  {path}")
+        return available
+    else:
+        raise FileNotFoundError(f"Only found {len(available)} S-matrix files; need exactly 2 or 4.")
 
 
 def get_output_filepaths(infolder, matrix, outType):
@@ -49,6 +81,8 @@ def get_output_filepaths(infolder, matrix, outType):
         "C2VX": ["C11", "C12_real", "C12_imag", "C22"],
         "C2HV": ["C11", "C12_real", "C12_imag", "C22"],
         "T2HV": ["T11", "T12_real", "T12_imag", "T22",],
+        "C2": ["C11", "C12_real", "C12_imag", "C22"],
+        "T2": ["T11", "T12_real", "T12_imag", "T22"]
     }
 
     if matrix not in matrix_keys:
@@ -61,27 +95,27 @@ def get_output_filepaths(infolder, matrix, outType):
     return [os.path.join(outfolder, f"{name}{ext}") for name in matrix_keys[matrix]]
 
 @time_it
-def convert_S2(infolder, matrix='T3', azlks=4,rglks=2, cf = 1, 
+def convert_S(infolder, matrixType='T3', azlks=4,rglks=2, cf = 1, 
                   outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], 
                   write_flag=True, max_workers=None,block_size=(512, 512)):
     """
-    Convert full-polarimetric scattering (S2) matrix into multi-looked
+    Convert full/dual-polarimetric scattering (S2,Sxy) matrix into multi-looked
     coherency (T4, T3, T2) or covariance (C4, C3, C2) matrices.
     It supports both GeoTIFF and PolSARpro-compatible output.
 
     Examples
     --------
     >>> # Convert to C3 matrix with 10x5 multi-looking
-    >>> convert_S2("/path/to/S2_data", matrix="C3", azlks=10, rglks=5)
+    >>> convert_S("/path/to/S_data", matrix="C3", azlks=10, rglks=5)
 
     >>> # Output as tiled GeoTIFF with Cloud Optimized overviews
-    >>> convert_S2("/data/S2", matrix="T4", cog_flag=True)
+    >>> convert_S("/data/S_data", matrix="C2", cog_flag=True)
 
     Parameters
     ----------
     infolder : str
         Path to the input folder containing S11, S12, S21, S22 scattering components.
-    matrix : str, default='T3'
+    matrixType : str, default='T3'
         Output matrix format. Supported values:
         - 'T4', 'T3', 'T2HV' (Coherency)
         - 'C4', 'C3', 'C2HX', 'C2VX', 'C2HV' (Covariance)
@@ -113,12 +147,22 @@ def convert_S2(infolder, matrix='T3', azlks=4,rglks=2, cf = 1,
     
     window_size=None
     
-    input_filepaths =  get_s2_input_filepaths(infolder)
-    output_filepaths = get_output_filepaths(infolder, matrix, outType)
+    input_filepaths =  get_s_input_filepaths(infolder)
+    output_filepaths = get_output_filepaths(infolder, matrixType, outType)
     
-    VALID_MATRICES = {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV'}
-    if matrix not in VALID_MATRICES:
-        raise Exception(f"Invalid matrix type '{matrix}' - please choose one of {', '.join(VALID_MATRICES)}")
+    if len(input_filepaths) not in [2, 4]:
+        raise Exception("Invalid S folder: must contain either 2 (dual/compact-pol) or 4 (full-pol) S-matrix files")
+    if len(input_filepaths) == 2 and matrixType not in {'C2', 'T2'}:
+        raise Exception(f"Invalid matrix type '{matrixType}' for dual-pol input - please choose one of 'C2', 'T2'")
+    if len(input_filepaths) == 4 and matrixType not in {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV'}:
+        raise Exception(f"Invalid matrix type '{matrixType}' for full-pol input - please choose one of 'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV',")
+    
+    # VALID_MATRICES = {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV', 'C2', 'T2'}
+    # if matrix not in VALID_MATRICES:
+    #     raise Exception(f"Invalid matrix type '{matrix}' - please choose one of {', '.join(VALID_MATRICES)}")
+    
+    
+    
         
     """
     GET MULTI-LOOKED RASTER PROPERTIES
@@ -164,11 +208,13 @@ def convert_S2(infolder, matrix='T3', azlks=4,rglks=2, cf = 1,
     # print(block_x_size,block_y_size)
     block_size = (block_x_size, block_y_size)
     
-    process_chunks_parallel(input_filepaths, list(output_filepaths), 
+    if len(input_filepaths) == 2:
+        # print("Processing dual-pol S-matrix...")
+        process_chunks_parallel(input_filepaths, list(output_filepaths), 
                              window_size,
                             write_flag,
-                            process_chunk_s2ct,
-                            *[cf, matrix, azlks, rglks],
+                            process_chunk_sxyct,
+                            *[cf, matrixType, azlks, rglks],
                             block_size=block_size, 
                             max_workers=max_workers,  
                             num_outputs=len(output_filepaths),
@@ -181,6 +227,57 @@ def convert_S2(infolder, matrix='T3', azlks=4,rglks=2, cf = 1,
                             azlks=azlks,
                             rglks=rglks
                             )
+    elif len(input_filepaths) == 4:
+        # print("Processing full-pol S-matrix...")
+        process_chunks_parallel(input_filepaths, list(output_filepaths), 
+                                window_size,
+                                write_flag,
+                                process_chunk_s2ct,
+                                *[cf, matrixType, azlks, rglks],
+                                block_size=block_size, 
+                                max_workers=max_workers,  
+                                num_outputs=len(output_filepaths),
+                                cog_flag=cog_flag,
+                                cog_overviews=cog_overviews,
+                                out_x_size=out_x_size,
+                                out_y_size=out_y_size,
+                                out_geotransform=out_geotransform,
+                                out_projection=in_projection,
+                                azlks=azlks,
+                                rglks=rglks
+                                )
+
+
+
+
+
+
+def process_chunk_sxyct(chunks, *args, **kwargs):
+    # print(args[-1],args[-2],args[-3])
+    abs_cf = args[-4]
+    matrix=args[-3]
+    azlks=args[-2]
+    rglks=args[-1]
+    
+    s11 = np.array(chunks[0])*abs_cf
+    s12 = np.array(chunks[1])*abs_cf
+
+    if matrix=='C2':
+        C11 = mlook_arr(np.abs(s11)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(s12)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook_arr(s11*np.conjugate(s12),azlks,rglks).astype(np.complex64)
+        
+        return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)
+
+    elif matrix=='T2':
+        C11 = mlook_arr(np.abs(s11+s12)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(s11-s12)**2,azlks,rglks).astype(np.float32)    
+        C12 = mlook_arr((s11+s12)*np.conjugate(s11-s12),azlks,rglks).astype(np.complex64)
+        
+        return np.real(C11),np.real(C12),np.imag(C12),np.real(C22)         
+    
+    else:
+        raise('Invalid matrix type !!')
 
 def process_chunk_s2ct(chunks, *args, **kwargs):
     # print(args[-1],args[-2],args[-3])
