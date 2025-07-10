@@ -1,5 +1,6 @@
 
 from osgeo import gdal
+gdal.UseExceptions()
 import numpy as np
 from functools import wraps
 import time

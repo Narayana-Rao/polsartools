@@ -1,6 +1,7 @@
 
 import numpy as np
 from osgeo import gdal,osr
+gdal.UseExceptions()
 import os,tempfile
 import tables
 from skimage.util.shape import view_as_blocks

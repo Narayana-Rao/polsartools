@@ -6,9 +6,14 @@ plt.rcParams.update({'font.size': 8})
 # plt.rcParams["font.family"] = "sans-serif"
 # plt.rcParams["mathtext.fontset"] = "dejavuserif"
 
-def pol_sign(data1, data2, title='', pname='',cmap='jet'):
+def pol_sign(data1, data2, title='', pname='',cmap='jet',fig=None, axes=None, start_index=0):
     x, y = np.mgrid[-90: 91 : 1, -45 : 46 : 1]
-    fig, axes = plt.subplots(1, 2, figsize=(8, 4), dpi=300, subplot_kw={'projection': '3d'})
+    if axes is None or fig is None:
+        fig, axes = plt.subplots(1, 2, figsize=(6, 4), dpi=300, subplot_kw={'projection': '3d'})
+    else:
+        axes = axes[start_index:start_index+2]
+
+    # fig, axes = plt.subplots(1, 2, figsize=(8, 4), dpi=300, subplot_kw={'projection': '3d'})
 
     for ax, data, subtitle in zip(axes, [data1, data2], ["Co-pol","Cross-pol"]):
         ax.plot_surface(x, y, data, rstride=2, cstride=2, lw=0.2, edgecolor="black", cmap=cmap, alpha=0.3)
@@ -43,6 +48,7 @@ def pol_sign(data1, data2, title='', pname='',cmap='jet'):
         plt.savefig(pname, dpi=300)
     
     plt.show()
+    return fig, axes
 
 def poincare_plot(cp_sign, xp_sign, title='', pname='',cmap='jet'):
     

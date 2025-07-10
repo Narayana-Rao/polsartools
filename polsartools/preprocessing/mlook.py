@@ -4,6 +4,8 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import time_it, mlook_arr
 from polsartools.preprocessing.pre_utils import get_filter_io_paths
 from osgeo import gdal
+gdal.UseExceptions()
+
 @time_it
 def mlook(infolder,  azlks=2, rglks=2, outType="tif", 
           cog_flag=False, cog_overviews = [2, 4, 8, 16], 

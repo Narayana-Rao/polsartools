@@ -1,6 +1,7 @@
 import numpy as np
 import glob
 from osgeo import gdal,osr
+gdal.UseExceptions()
 import os
 import sys
 # import simplekml

@@ -1,4 +1,5 @@
 from osgeo import gdal
+gdal.UseExceptions()
 import numpy as np
 
 def save_polarimetric_geotiff(output_path, matrices, metadata, x_size, y_size, projection, geo_transform):

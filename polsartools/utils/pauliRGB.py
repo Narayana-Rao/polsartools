@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from osgeo import gdal,osr
+gdal.UseExceptions()
 import matplotlib.pyplot as plt
 from polsartools.utils.utils import conv2d,time_it
 # from pyproj import CRS

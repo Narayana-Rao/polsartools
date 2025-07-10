@@ -1,7 +1,7 @@
 import glob,os
 import numpy as np
 from osgeo import gdal 
-
+gdal.UseExceptions()
 from polsartools.utils.utils import time_it,mlook_arr
 from polsartools.utils.io_utils import  write_T3, write_C3
 

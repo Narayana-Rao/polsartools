@@ -1,4 +1,5 @@
 from osgeo import gdal
+gdal.UseExceptions()
 from scipy.interpolate import RegularGridInterpolator
 import numpy as np
 import xml.etree.ElementTree as ET

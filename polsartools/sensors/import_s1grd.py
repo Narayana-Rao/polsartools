@@ -1,4 +1,5 @@
 from osgeo import gdal
+gdal.UseExceptions()
 import os
 import numpy as np
 import glob

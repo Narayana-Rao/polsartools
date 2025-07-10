@@ -4,6 +4,7 @@ import struct
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator
 from osgeo import gdal
+gdal.UseExceptions()
 from polsartools.utils.utils import conv2d,time_it, mlook_arr
 
 def get_bandmeta(filepath):

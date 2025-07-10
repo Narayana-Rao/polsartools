@@ -66,7 +66,8 @@ def prepare_data(S2):
 
 
 
-def fp_sign(S2=None, title='',pname='',cmap='jet',plotType = 1):
+def fp_sign(S2=None, title='',pname='',cmap='jet',plotType = 1,
+    fig=None, axes=None, start_index=0):
     """
     Generates and visualizes polarimetric signatures from a given 2x2 scattering matrix (S2).
     
@@ -106,7 +107,10 @@ def fp_sign(S2=None, title='',pname='',cmap='jet',plotType = 1):
     elif S2 is not None and plotType==2:
         pol_sign2d(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap)
     else:
-        pol_sign(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap)
+        figout, axesout = pol_sign(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap,
+            fig=fig, axes=axes, start_index=start_index)
+
+        return figout, axesout
 
 
 

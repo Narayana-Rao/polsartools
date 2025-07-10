@@ -1,5 +1,6 @@
 import numpy as np
 from osgeo import gdal
+gdal.UseExceptions()
 import os
 import xml.etree.ElementTree as ET
 from polsartools.utils.utils import time_it,mlook_arr

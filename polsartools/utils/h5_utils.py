@@ -10,8 +10,9 @@ from tqdm import tqdm
 import sys
 from netCDF4 import Dataset
 from osgeo import gdal, osr
-import multiprocessing
 gdal.UseExceptions()
+import multiprocessing
+
 
 
 import warnings

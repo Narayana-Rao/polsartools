@@ -2,6 +2,7 @@ import os
 import numpy as np
 from polsartools.utils.utils import conv2d,time_it
 from osgeo import gdal
+gdal.UseExceptions()
 import matplotlib.pyplot as plt
 
 from .pauliRGB import generate_rgb_png, create_pgw, generate_rgb_tif, norm_data, read_bin #create_prj

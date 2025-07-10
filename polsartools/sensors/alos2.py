@@ -4,6 +4,7 @@ from osgeo import gdal
 import os, glob
 from polsartools.utils.utils import time_it, mlook_arr
 from polsartools.utils.io_utils import write_T3, write_C3
+gdal.UseExceptions()
 def read_bin(file):
     ds = gdal.Open(file)
     band = ds.GetRasterBand(1)

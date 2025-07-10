@@ -6,7 +6,7 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 import numpy as np
 import os
 from osgeo import gdal
-
+gdal.UseExceptions()
 
 # def get_s2_input_filepaths(infolder):
 #     """

@@ -1,5 +1,6 @@
 import numpy as np
 from osgeo import gdal 
+gdal.UseExceptions()
 from skimage.util.shape import view_as_blocks
 import os
 def read_bin(file):

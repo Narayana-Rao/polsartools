@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from osgeo import gdal
+gdal.UseExceptions()
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 
