@@ -23,10 +23,10 @@
 [![image](docs/contributions/umass_logo.png)](https://www.umass.edu) -->
 
 
-<h2>Jointly developed by</h2>
+<!-- <h2>Jointly developed by</h2>
 
-<div style="display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: nowrap; max-width: 1000px; margin: auto;">
-  <!-- MRSLab logo block -->
+<div style="display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: nowrap; max-width: 1000px; margin: auto;">
+
   <div style="text-align: center;">
     <a href="http://mrslab.in">
       <img src="docs/contributions/mrslab_logo.png" alt="MRSLab" width="100">
@@ -34,14 +34,22 @@
     <span><strong>Microwave Remote Sensing Lab (MRSLab), <br>Indian Institute of Technology Bombay, India</strong></span>
   </div>
 
-  <!-- MIRSL logo block -->
+
   <div style="text-align: center;">
     <a href="https://www.umass.edu/microwave-remote-sensing">
-      <img src="docs/contributions/mirsl_logo.png" alt="MIRSL" width="170">
+      <img src="docs/contributions/mirsl_logo.png" alt="MIRSL" width="180">
     </a><br>
     <span><strong>Microwave Remote Sensing Laboratory (MiRSL), <br>University of Massachusetts Amherst, USA</strong></span>
   </div>
-</div>
+</div> -->
+
+
+## Jointly Developed By
+
+| [![MRSLab](docs/contributions/mrslab_logo.png)](http://mrslab.in) | [![MiRSL](docs/contributions/mirsl_logo.png)](https://www.umass.edu/microwave-remote-sensing) |
+|:--:|:--:|
+| **Microwave Remote Sensing Lab (MRSLab),** <br> Indian Institute of Technology Bombay, India | **Microwave Remote Sensing Laboratory (MiRSL),** <br> University of Massachusetts Amherst, USA |
+
 
 ## General Information
 
