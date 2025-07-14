@@ -16,6 +16,48 @@
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
 
 
+<!-- ## Developed by contributions from 
+[![image](docs/contributions/mrslab_logo.png)](http://mrslab.in)
+[![image](docs/contributions/iitb_logo.png)](https://www.iitb.ac.in)
+[![image](docs/contributions/mirsl_logo.png)](https://www.umass.edu/microwave-remote-sensing)
+[![image](docs/contributions/umass_logo.png)](https://www.umass.edu) -->
+
+
+<h2>Jointly developed by</h2>
+
+<div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;">
+
+  <div style="text-align: center; margin: 10px;">
+    <a href="http://mrslab.in">
+      <img src="docs/contributions/mrslab_logo.png" alt="MRSLab" width="100">
+    </a><br>
+    <span><strong>Microwave Remote Sensing Lab (MRSLab), <br> Indian Institue of Technology Bombay, India</strong></span>
+  </div>
+
+  <!-- <div style="text-align: center; margin: 10px;">
+    <a href="https://www.iitb.ac.in">
+      <img src="docs/contributions/iitb_logo.png" alt="IIT Bombay" width="100">
+    </a><br>
+    <span><strong>IIT Bombay, India</strong></span>
+  </div> -->
+
+  <div style="text-align: center; margin: 10px;">
+    <a href="https://www.umass.edu/microwave-remote-sensing">
+      <img src="docs/contributions/mirsl_logo.png" alt="MIRSL" width="170">
+    </a><br>
+    <span><strong>Microwave Remote Sensing Laboratory (MiRSL), <br>University of Massachusetts Amherst, USA</strong></span>
+  </div>
+<!-- 
+  <div style="text-align: center; margin: 10px;">
+    <a href="https://www.umass.edu">
+      <img src="docs/contributions/umass_logo.png" alt="UMass Amherst" width="100">
+    </a><br>
+    <span><strong>University of Massachusetts Amherst</strong></span>
+  </div> -->
+
+</div>
+
+
 ## General Information
 
 This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from different SAR sensors or input polarimetric matrix (C3, T3,C2, T2). 
