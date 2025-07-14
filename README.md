@@ -60,7 +60,7 @@
 
 ## General Information
 
-This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from different SAR sensors or input polarimetric matrix (C3, T3,C2, T2). 
+This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from different SAR sensors or input polarimetric matrix (S2, C3, T3, Sxy, C2, T2). 
 
 <!-- The input data needs to be in [PolSARpro](https://earth.esa.int/web/polsarpro/home)/[ENVI](https://www.l3harrisgeospatial.com/Software-Technology/ENVI) format (\*.bin and \*.hdr).  -->
 
@@ -73,17 +73,21 @@ conda install gdal -c conda-forge
 
 ### 2. Install **`polsartools`** Package
 
-You can install it using `pip`:
+a. You can install it using `pip`:
 
 ```bash
 pip install polsartools
 ```
 
-If you encounter an error like "function not found" or need the latest version, you can install the updated version directly from GitHub:
+b. If you encounter an error like "function not found" or need the latest version, you can install the updated version directly from GitHub:
 
 ```bash
 pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
 ```
+
+>**Note for Windows users:** 
+> To install from GitHub (2.b), Microsoft C++ build tools must be installed first. 
+Download here: https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
 
 ## Example Usage
@@ -92,15 +96,22 @@ Sample use cases and notebooks are provided at [polsartools-notebooks](https://g
 
 ## Available functionalities:
 * Supported sensors
-  * UAVSAR (GRD, MLC)
-  * ISRO ASAR (H5)
-  * NISAR (RSLC, GSLC)
-  * RADARSAT-2 (Full-pol)
-  * ALOS-2 (Fine Beam Dual-pol (FBD), Quad-pol (HBQ) Level 1.1 CEOS)
-  * Chandrayaan-II DFSAR (Full-pol)
+  * Airborne
+    * UAVSAR (GRD, MLC)
+    * ISRO ASAR (H5)
+    * E-SAR (GTC)
+  * Spaceborne
+    * NISAR (RSLC, GSLC)
+    * RISAT-1 (Compact-pol)
+    * RADARSAT-2 (Full-pol)
+    * ALOS-2 (Fine Beam Dual-pol (FBD), Quad-pol (HBQ) Level 1.1 CEOS)
+  * Planetary 
+    * Chandrayaan-II DFSAR (Full-pol)
+
 
  * Full-pol :
-	* H-Alpha decomposition
+	* H-A-Alpha decomposition
+    * Yamaguchi 4-Component decomposition
     * Shannon Entropy parameters
 	* Non-negative Eigen value decomposition
 	* Neumann Decomposition 
@@ -110,12 +121,6 @@ Sample use cases and notebooks are provided at [polsartools-notebooks](https://g
    * Generalized volume Radar Vegetation Index (GRVI) [[2]](references.md#2)
    * Polarimetric Radar Vegetation Index (PRVI) [[1]](references.md#1)
    * Degree of Polarization (DOP) [[10]](references.md#10) 
-
-* Compact-pol : 
-  * Model free 3-Component decomposition for compact-pol data (MF3CC) [[4]](references.md#4)
-  * Improved S-Omega decomposition for compact-pol data (iS-Omega) [[7]](references.md#7)
-  * Compact-pol Radar Vegetation Index (CpRVI)  [[6]](references.md#6)
-  * Degree of Polarization (DOP)  [[10]](references.md#10) 
 
 * Dual-pol:
   * H-Alpha parameters
@@ -128,9 +133,24 @@ Sample use cases and notebooks are provided at [polsartools-notebooks](https://g
   * Dual-pol descriptors [[13]](references.md#13)
   * Model free 3-Component decomposition for dual-copol data (MF3CD)
 
+* Compact-pol : 
+  * Model free 3-Component decomposition for compact-pol data (MF3CC) [[4]](references.md#4)
+  * Improved S-Omega decomposition for compact-pol data (iS-Omega) [[7]](references.md#7)
+  * Compact-pol Radar Vegetation Index (CpRVI)  [[6]](references.md#6)
+  * Degree of Polarization (DOP)  [[10]](references.md#10) 
+
 * Polarimetric speckle filters:
   * boxcar
   * refine lee
+
+* Other polarimetric functions
+  * Stokes parameters
+  * multi-look PolSAR matrix
+  * Convert matrices
+  * Pauli RGB from full-pol data
+  * Psuedo RGB from Dual/compact pol data
+  * Polarimetric signatures
+  * Full-pol and Dual-pol H-Alpha plot
 
 
 ## Contributing
