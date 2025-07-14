@@ -18,6 +18,7 @@ from .sensors.chyaan2 import chyaan2_fp
 from .sensors.rs2_fp import rs2_fp
 from .sensors.isro_asar import isro_asar
 from .sensors.risat import risat_l11
+from .sensors.esar import esar_gtc
 from .utils import convert_T3_C3,convert_C3_T3, convert_S
 from .utils import fp_sign
 from .utils import pauliRGB, dxpRGB
@@ -28,7 +29,7 @@ from .utils.stokes_parm import stokes_parm
 
 __all__ = [
     # SENSORS
-    'uavsar_grd', 'uavsar_mlc','isro_asar',  
+    'uavsar_grd', 'uavsar_mlc','isro_asar',  'esar_gtc',
     'nisar_gslc', 'nisar_rslc',
     'alos2_fbd_l11','alos2_hbq_l11', 'chyaan2_fp','rs2_fp',  
     'risat_l11',
