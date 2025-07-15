@@ -1,5 +1,5 @@
 ---
-title: 'PolSAR tools: A python package to process Polarimetric Synthetic Aperture Radar (PolSAR) data'
+title: 'PolSAR tools: A python package to process and analyse Polarimetric Synthetic Aperture Radar (PolSAR) data'
 tags:
   - SAR
   - PolSAR
@@ -35,7 +35,7 @@ bibliography: refs.bib
 
 ---
 
-# Summary
+# Intoduction
 Synthetic Aperture Radar has been proven to be more reliable as an earth observation remote sensing technique due to its all-weather and day-night capabilities. Since its initial development and use on an airborne platform seven decades ago, it has significantly evolved in terms of spatial resolution and observing frequencies. It took nearly four decades since then to have a full/quad polarimetric SAR (PolSAR) instrument in space for earth observation [@ulaby1981microwave;@jordan2002sir]. Since then, PolSAR has become a critical data source in a wide variety of earth observation applications [@lee2017polarimetric;@cloude2010polarisation;@van2011synthetic]. On the other hand, there are several operational SAR satellite missions (e.g., Sentinel-1, ALOS-2/4, EOS-04, BIOMASS, etc) that have been collecting and proposed future missions such as NISAR, ROSE-L, that are planned to collect Petabytes of data and distributing openly. For an efficient use of PolSAR data, it is essential to process it and derive interpretable polarimetric parameters to support further downstream applications. 
 
 
@@ -54,6 +54,39 @@ Based on the above processing steps, the functionalities of `polsartools` packag
 
 ![Schematic of core processing flow of polsartools package \label{fig:flowchart}](figures/flowchart.png){width=70%}
 
+# Usage
+
+## Installation
+can be installed using prebuilt wheel or .conda packages or can be build and installed from source.
+
+### Pre-built packages
+wheels and conda 
+
+linux
+windows
+OSX-mac silicon
+
+
+### Build and install from source 
+pybind11
+
+For windows Microsoft C++ build tools are required
+
+developers
+sphinx, pydata, pytests
+
+## IO
+
+The PolSAR data are in general distributed in either raw binary with metadata, HDF5 or tiff with metadata formats. The current implementaion of `polsartools` supports all these three input data formats which are sensor specific and extracts the polarimetric matrix elements S2, Sxy, C4, T4, C3, T3, C2, T2. The output data  format is by default set to widely used GeoTiff format with optional arguments for Cloud Optimized Geotiff (COG). Additionally, it also supports raw binary format as output for better compatability with other softwares like PolSARpro.
+
+For the analysis functions, the default output is the plot display and also returns axis handle for further plotting and manipulation. Additionally, pname is provided to export the default output to a `.png` or any other matplotlib compatable output format with `dpi=300`. 
+
+
+
+## Tutorials and docs
+A comprehensive collection of Jupyter notebooks for each sensor specific data processing and other polarimetric functionalities are provided in the polsartools-tutorials git repository: [https://github.com/Narayana-Rao/polsartools-tutorials](https://github.com/Narayana-Rao/polsartools-tutorials)
+
+A detailed documentaion of all the available functions is provided at: [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/)
 
 <!-- 
 # Acknowledgements
