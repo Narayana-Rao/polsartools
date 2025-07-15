@@ -9,10 +9,14 @@ pytest -v tests/tests.py
 """
 
 def utils_processing(T3_folder, window_size=5):
-    pst.utils.pauliRGB(T3_folder)
+    pst.pauliRGB(T3_folder)
+
+def preproc_processing(T3_folder, azlks,rglks,window_size):
+    pst.mlook(T3_folder,azlks,rglks)
     
 def filters_processing(T3_folder, window_size=5):
     pst.rlee(T3_folder, window_size=window_size)
+    pst.boxcar(T3_folder, window_size=window_size)
 
 def cp_processing(compact_c2, chi_in=45, window_size=3):
     """ Decompositions """
@@ -64,7 +68,8 @@ full_T3 = './tests/sample_data/full_pol/T3'
 dxp_C2 = './tests/sample_data/dual_pol/C2_VVVH'
 
 window_size  = 5
-
+azlks=3
+rglks=3
 
 
 # Tests for refined_lee_filter function
@@ -90,7 +95,52 @@ def test_filters_processing():
         print(f"Deleted {file_path}")
     
     shutil.rmtree(os.path.dirname(outFolder)) 
+
+
+    outFolder = os.path.join(os.path.dirname(T3_folder)+ f"_boxcar_{window_size}x{window_size}", os.path.basename(T3_folder) )
     
+    output_files = [
+        os.path.join(outFolder, 'T11.tif'),
+        os.path.join(outFolder, 'T22.tif'),
+        os.path.join(outFolder, 'T33.tif'),
+
+    ]
+
+    for file_path in output_files:
+        assert os.path.exists(file_path), f"{file_path} was not created"
+        assert os.path.getsize(file_path) > 0, f"{file_path} is empty"
+    
+    for file_path in output_files:
+        os.remove(file_path)
+        print(f"Deleted {file_path}")
+    
+    shutil.rmtree(os.path.dirname(outFolder)) 
+    
+
+
+def test_preproc_processing():
+    # We expect this to run without any exceptions or errors
+    preproc_processing(T3_folder,azlks,rglks,window_size)
+    
+    outFolder = os.path.join(os.path.dirname(T3_folder)+ f"_ml_{azlks}x{rglks}", os.path.basename(T3_folder) )
+    
+    output_files = [
+        os.path.join(outFolder, 'T11.tif'),
+        os.path.join(outFolder, 'T22.tif'),
+        os.path.join(outFolder, 'T33.tif'),
+
+    ]
+
+    for file_path in output_files:
+        assert os.path.exists(file_path), f"{file_path} was not created"
+        assert os.path.getsize(file_path) > 0, f"{file_path} is empty"
+    
+    for file_path in output_files:
+        os.remove(file_path)
+        print(f"Deleted {file_path}")
+    
+    shutil.rmtree(os.path.dirname(outFolder)) 
+
 
 
 def test_cp_processing():

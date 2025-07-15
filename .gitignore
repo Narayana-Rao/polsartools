@@ -1,12 +1,15 @@
 /polsartools/__pycache__/*.pyc
 /polsartools/preprocessing/__pycache__/*.pyc
+/polsartools/analysis/__pycache__/*.pyc
 /polsartools/polsar/__pycache__/*.pyc
+/polsartools/polsar/others/__pycache__/*.pyc
 /polsartools/polsar/dxp/__pycache__/*.pyc
 /polsartools/polsar/dcp/__pycache__/*.pyc
 /polsartools/polsar/cp/__pycache__/*.pyc
 /polsartools/polsar/fp/__pycache__/*.pyc
 /polsartools/sensors/__pycache__/*.pyc
 /polsartools/utils/__pycache__/*.pyc
+/tests/__pycache__/*.pyc
 
 /polsartools.egg-info/
 /build/

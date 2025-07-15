@@ -2,7 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import os 
+from pathlib import Path
 
+from polsartools.utils.utils import read_bin
 def get_feas_bounds():
     c1l = np.array([[           0, 0.00000000e+00],
            [5.68070458e-02, 8.91089109e-01],
@@ -730,10 +732,10 @@ def halpha_plot_fp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
     
     Parameters:
     -----------
-    h : array-like
-        Array representing entropy values.
+    h : path or array-like
+        path to the Entropy file or Array representing entropy values.
     alpha : array-like
-        Array representing alpha values in degrees.
+        path to the Alpha file or Array representing alpha values in degrees.
     path : str, optional
         Path to save the generated plot. If a folder is given, the plot is saved as 'halpha_plot_fp.png' inside that folder.
         If the file already exists, it will be overwritten.
@@ -764,6 +766,16 @@ def halpha_plot_fp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
     - Uses `get_feas_bounds()` to obtain feasible boundary curves for plotting.
     - If `norm` is 'log', a `LogNorm()` normalization is applied.
     """
+    
+    
+    
+
+    if isinstance(h, (str, os.PathLike, Path)):
+        h = read_bin(h)
+    if isinstance(alpha, (str, os.PathLike, Path)):
+        alpha = read_bin(alpha)
+    
+    
     
     c1l,c22l,c21l = get_feas_bounds()
     fs = 12
