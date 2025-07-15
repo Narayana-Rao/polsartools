@@ -17,14 +17,31 @@
 
 
 
-## Jointly Developed By
+<!-- ## Jointly Developed By
 
 | [![MRSLab](docs/contributions/mrslab_logo.png)](http://mrslab.in) | [![MiRSL](docs/contributions/mirsl_logo.png)](https://www.umass.edu/microwave-remote-sensing) |
 |:--:|:--:|
 | **Microwave Remote Sensing Lab (MRSLab),** <br> Indian Institute of Technology Bombay, India | **Microwave Remote Sensing Laboratory (MiRSL),** <br> University of Massachusetts Amherst, USA | 
+ -->
 
+<h2>Jointly Developed By</h2>
 
-
+<table align="center">
+  <tr>
+    <td align="center" style="padding: 20px;">
+      <a href="http://mrslab.in">
+        <img src="docs/contributions/mrslab_logo.png" alt="MRSLab" width="100"><br>
+        <strong>Microwave Remote Sensing Lab (MRSLab)<br>Indian Institute of Technology Bombay, India</strong>
+      </a>
+    </td>
+    <td align="center" style="padding: 20px;">
+      <a href="https://www.umass.edu/microwave-remote-sensing">
+        <img src="docs/contributions/mirsl_logo.png" alt="MIRSL" width="180"><br>
+        <strong>Microwave Remote Sensing Laboratory (MiRSL)<br>University of Massachusetts Amherst, USA</strong>
+      </a>
+    </td>
+  </tr>
+</table>
 
 ## General Information
 
@@ -47,7 +64,7 @@ a. You can install it using `pip`:
 pip install polsartools
 ```
 
-b. If you encounter an error like "function not found" or need the latest version, you can install the updated version directly from GitHub:
+b. If you encounter an error like `` AttributeError: module 'polsartools' has no atribute 'xyzabc' ``  or need the latest version, you can install the updated version directly from GitHub:
 
 ```bash
 pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
