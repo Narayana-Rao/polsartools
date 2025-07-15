@@ -30,13 +30,13 @@
   <tr>
     <td align="center" style="padding: 20px;">
       <a href="http://mrslab.in">
-        <img src="docs/contributions/mrslab_logo.png" alt="MRSLab" width="100"><br>
+        <img src="docs/contributions/mrslab_iitb.png" alt="MRSLab" width="200"><br>
         <strong>Microwave Remote Sensing Lab (MRSLab)<br>Indian Institute of Technology Bombay, India</strong>
       </a>
     </td>
     <td align="center" style="padding: 20px;">
       <a href="https://www.umass.edu/microwave-remote-sensing">
-        <img src="docs/contributions/mirsl_logo.png" alt="MIRSL" width="180"><br>
+        <img src="docs/contributions/mirsl_umass.png" alt="MIRSL" width="250"><br>
         <strong>Microwave Remote Sensing Laboratory (MiRSL)<br>University of Massachusetts Amherst, USA</strong>
       </a>
     </td>
