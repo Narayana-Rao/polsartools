@@ -13,11 +13,22 @@ authors:
     orcid: 0000-0002-6496-7283
     affiliation: "1, 2" 
 
+  - name: Avik Bhattacharya
+    orcid: 0000-0001-6720-6108
+    affiliation: "3" 
+
+  - name: Paul Siqueira
+    orcid: 0000-0001-5781-8282
+    affiliation: "1, 2"
+
+
 affiliations:
  - name: Microwave Remote Sensing Laboratory, University of Massachusetts Amherst, USA
    index: 1
  - name: Division of Geological and Planetary Sciences, California Institute of Technology, USA
    index: 2
+ - name: Microwave Remote Sensing Lab, Indian Institute of Technology Bombay, India
+   index: 3
 
 date: 4 July 2025
 bibliography: refs.bib
@@ -39,7 +50,7 @@ A typical polarimetric SAR data processing workflow contains the following steps
 - Computing derived polarimetric  parameters (decomposition parameters or other descriptors)
 - Analysis of the derived parameters
 
-Based on the above processing steps, the functionalities of `polsartools` package can be broadly categorized into Processing & Analysis. Processing functions generate several SAR polarimetric parameters in a raster format, while analysis functions generate plots and quicklooks from the PolSAR data. \autoref{fig:flowchart} presents the core processing architecture of the `polsartools` package. PolSARtools currently supports several SAR sensors, including spaceborne and airborne sensors. The package designed to support various forms of PolSAR datasets viz. full/quad-, dual-, compact- and hybrid polarimtric.
+Based on the above processing steps, the functionalities of `polsartools` package can be broadly categorized into Processing & Analysis. Processing functions generate several SAR polarimetric parameters in a raster format, while analysis functions generate plots and quicklooks from the PolSAR data. \autoref{fig:flowchart} presents the core processing architecture of the `polsartools` package. PolSAR tools currently supports data from several SAR sensors, including spaceborne and airborne sensors. The package designed to support various forms of PolSAR datasets viz. full/quad-, dual-, compact- and hybrid polarimtric.
 
 ![Schematic of core processing flow of polsartools package \label{fig:flowchart}](figures/flowchart.png){width=70%}
 
