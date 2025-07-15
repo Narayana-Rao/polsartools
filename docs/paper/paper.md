@@ -84,6 +84,21 @@ For the analysis functions, the default output is the plot display and also retu
 
 
 ## Tutorials and docs
+
+PolSAR tools package structured in modular way for effcient data processing. 
+
+- sensors: handles importing the PolSAR data from different sensors and extract PolSAR matrix
+- preprocessing: proprocess like multi-looking, speckle filtering, matrix conversion
+- polsar: core polarimetric functions like polarimetric descriptors, decomposition parameters, vegetation idices specific to different PolSAR forms
+  - fp full/quad polarimetric (HH,HV,VH,VV)
+  - cp compact-pol or hybrid polarimetry
+  - dxp dual-cross pol
+  - dcp dual -co-pol
+- analysis: analysis functions
+- utilities: extra utilities function 
+
+Although the functions accessesd through each module (E.g.`polsartools.sensors.sensor_name.data_format`), for an easy usage, all function are given unique identfiers such that they can directly from parent package. for example: `polsartools.example_function`.
+
 A comprehensive collection of Jupyter notebooks for each sensor specific data processing and other polarimetric functionalities are provided in the polsartools-tutorials git repository: [https://github.com/Narayana-Rao/polsartools-tutorials](https://github.com/Narayana-Rao/polsartools-tutorials)
 
 A detailed documentaion of all the available functions is provided at: [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/)
