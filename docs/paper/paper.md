@@ -104,11 +104,11 @@ The `polsartools` package is structured in a modular way for efficiency. The mai
 - `sensors`: handles importing the PolSAR data from different sensors and extracting the PolSAR matrices
 - `preprocess`: includes preprocessing and preparing the data for Polarimetric functions
 - `polsar`: consists of core polarimetric functions with submodules for different PolSAR forms as listed below
-  - `fp` full/quad polarimetry functions module
-  - `cp` compact or hybrid polarimetry functions module
-  - `dxp` dual cross-polarimetry functions module
-  - `dcp` dual co-polarimetry functions module
-  - `others` other miscellaneous polarimetry functions module
+  - `fp` full/quad polarimetry functions module
+  - `cp` compact or hybrid polarimetry functions module
+  - `dxp` dual cross-polarimetry functions module
+  - `dcp` dual co-polarimetry functions module
+  - `others` other miscellaneous polarimetry functions module
 - `analysis`: consists of analysis functions
 - `utils`: extra utilities and helper functions 
 
