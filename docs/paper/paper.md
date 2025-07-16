@@ -54,7 +54,7 @@ A typical polarimetric SAR data processing workflow contains the following steps
 
 Based on the above processing steps, the functionalities of the `polsartools` package can be broadly categorized into Processing & Analysis. Processing functions generate several SAR polarimetric parameters in a raster format, while analysis functions generate plots and quicklooks from the PolSAR data. \autoref{fig:flowchart} presents the core processing architecture of the `polsartools` package. PolSAR tools currently support data from several SAR sensors, including spaceborne and airborne sensors. The package is designed to support various forms of PolSAR datasets, viz., full/quad-, dual-, compact-, and hybrid polarimetry. 
 
-![Schematic of core processing flow of polsartools package \label{fig:flowchart}](figures/flowchart.png){width=70%}
+![Schematic of core processing flow of polsartools package \label{fig:flowchart}](figures/flowchart.pdf){width=70%}
 
 # Usage
 
@@ -103,11 +103,11 @@ The `polsartools` package is structured in a modular way for efficiency. Followi
 - `sensors`: handles importing the PolSAR data from different sensors and extracting the PolSAR matrices
 - `preprocess`: includes preprocessing and preparing the data for Polarimetric functions
 - `polsar`: consists of core polarimetric functions with submodules for different PolSAR forms as listed below
-  - `fp` full/quad polarimetry functions module
-  - `cp` compact or hybrid polarimetry functions module
-  - `dxp` dual cross-polarimetry functions module
-  - `dcp` dual co-polarimetry functions module
-  - `others` other miscellaneous polarimetry functions module
+  - `fp` full/quad polarimetry functions module
+  - `cp` compact or hybrid polarimetry functions module
+  - `dxp` dual cross-polarimetry functions module
+  - `dcp` dual co-polarimetry functions module
+  - `others` other miscellaneous polarimetry functions module
 - `analysis`: consists of analysis functions
 - `utils`: extra utilities  and helper functions 
 
