@@ -13,13 +13,15 @@ authors:
     orcid: 0000-0002-6496-7283
     affiliation: "1, 2" 
 
+  - name: Paul Siqueira
+    orcid: 0000-0001-5781-8282
+    affiliation: "1, 2"  
+  
   - name: Avik Bhattacharya
     orcid: 0000-0001-6720-6108
     affiliation: "3" 
 
-  - name: Paul Siqueira
-    orcid: 0000-0001-5781-8282
-    affiliation: "1, 2"
+
 
 
 affiliations:
@@ -36,7 +38,7 @@ bibliography: refs.bib
 ---
 
 # Intoduction
-Synthetic Aperture Radar has been proven to be more reliable as an earth observation remote sensing technique due to its all-weather and day-night capabilities. Since its initial development and use on an airborne platform seven decades ago, it has significantly evolved in terms of spatial resolution and observing frequencies. It took nearly four decades since then to have a full/quad polarimetric SAR (PolSAR) instrument in space for earth observation [@ulaby1981microwave;@jordan2002sir]. Since then, PolSAR has become a critical data source in a wide variety of earth observation applications [@lee2017polarimetric;@cloude2010polarisation;@van2011synthetic]. On the other hand, there are several operational SAR satellite missions (e.g., Sentinel-1, ALOS-2/4, EOS-04, BIOMASS, etc) that have been collecting and proposed future missions such as NISAR, ROSE-L, that are planned to collect Petabytes of data and distributing openly. For an efficient use of PolSAR data, it is essential to process it and derive interpretable polarimetric parameters to support further downstream applications. 
+Synthetic Aperture Radar has been proven to be more reliable as an earth observation remote sensing technique due to its all-weather and day-night capabilities. Since its initial development and use on an airborne platform seven decades ago, it has significantly evolved in terms of spatial resolution and observing frequencies. It took nearly four decades since then to have a full/quad polarimetric SAR (PolSAR) instrument in space for earth observation [@ulaby1981microwave;@jordan2002sir]. Since then, PolSAR has become a critical data source in a wide variety of earth observation applications [@lee2017polarimetric;@cloude2010polarisation;@van2011synthetic]. On the other hand, there are several operational SAR satellite missions (e.g., Sentinel-1, ALOS-2/4, EOS-04, BIOMASS, etc) that have been collecting and proposed future missions such as NISAR[@rosen2017global], ROSE-L[@davidson2021rose] that are planned to collect Petabytes of data and distributing openly. For an efficient use of PolSAR data, it is essential to process it and derive interpretable polarimetric parameters to support further downstream applications. 
 
 
 # Statement of need
@@ -57,45 +59,54 @@ Based on the above processing steps, the functionalities of `polsartools` packag
 # Usage
 
 ## Installation
-can be installed using prebuilt wheel or .conda packages or can be build and installed from source.
+PolSAR tools package can be installed using prebuilt wheel (`.whl`) or Anaconda (`.conda`) packages. Alternatively it can be build and installed from source code from the GitHub repository. 
 
 ### Pre-built packages
-wheels and conda 
+The prebuilt packages are provided for linux, windows, and OSX-mac silicon. And can be installed through either of the follownig ways
 
-linux
-windows
-OSX-mac silicon
+- Wheel 
+
+      pip install polsartools
+
+- Conda
+
+      conda install polsartools -c bnarayanarao
+
+
 
 
 ### Build and install from source 
-pybind11
 
-For windows Microsoft C++ build tools are required
+To build and install from source, one use the `pip`. To build the  `polsartools` from source windows users need to install as Microsoft C++ build tools. It can installed from source using the following command
 
-developers
-sphinx, pydata, pytests
+    pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
 
-## IO
+<!-- ### Testing the installation -->
 
-The PolSAR data are in general distributed in either raw binary with metadata, HDF5 or tiff with metadata formats. The current implementaion of `polsartools` supports all these three input data formats which are sensor specific and extracts the polarimetric matrix elements S2, Sxy, C4, T4, C3, T3, C2, T2. The output data  format is by default set to widely used GeoTiff format with optional arguments for Cloud Optimized Geotiff (COG). Additionally, it also supports raw binary format as output for better compatability with other softwares like PolSARpro.
+<!-- For the developers who want to contribute this opensource effort through their own code and test the integrated functions Extra packages are required. For documentation update sphinx, pydata, pytests -->
 
-For the analysis functions, the default output is the plot display and also returns axis handle for further plotting and manipulation. Additionally, pname is provided to export the default output to a `.png` or any other matplotlib compatable output format with `dpi=300`. 
+## I/O
+
+The PolSAR data are in general distributed in either raw binary with metadata, HDF5 or tiff with metadata formats. The current implementaion of `polsartools` supports all these three input data formats which are sensor specific and extracts the polarimetric matrix elements $S2,~Sxy,~C4,~T4,~C3,~T3,~C2,~T2$. The output data  format is by default set to widely used GeoTiff format with optional arguments for Cloud Optimized Geotiff (COG). Additionally, it also supports raw binary format as output for better compatability with other softwares like PolSARpro.
+
+For the analysis functions, the default output is the plot display and also returns axis handle for further manipulation. Additionally, aplot plot name argument `pname` can be provided to export the default output to a `.png` or any other matplotlib compatable output extension with `dpi=300`. 
 
 
 
 ## Tutorials and docs
 
-PolSAR tools package structured in modular way for effcient data processing. 
+PolSAR tools package structured in modular way for efficient data processing. 
 
-- sensors: handles importing the PolSAR data from different sensors and extract PolSAR matrix
-- preprocessing: proprocess like multi-looking, speckle filtering, matrix conversion
-- polsar: core polarimetric functions like polarimetric descriptors, decomposition parameters, vegetation idices specific to different PolSAR forms
-  - fp full/quad polarimetric (HH,HV,VH,VV)
-  - cp compact-pol or hybrid polarimetry
-  - dxp dual-cross pol
-  - dcp dual -co-pol
-- analysis: analysis functions
-- utilities: extra utilities function 
+- `sensors`: handles importing the PolSAR data from different sensors and extract PolSAR matrix
+- `preprocessing`: proprocess and prepare the data for Polarimetric functions
+- `polsar`: consists core polarimetric functions with submodules for different PolSAR forms as listed below
+  - `fp` full/quad polarimetry functions module
+  - `cp` compact or hybrid polarimetry functions module
+  - `dxp` dual cross polarimetry functions module
+  - `dcp` dual co polarimetry functions module
+  - `others` other miscillenous polarimetry functions module
+- `analysis`: consists analysis functions
+- `utils`: extra utilities  and helper functions 
 
 Although the functions accessesd through each module (E.g.`polsartools.sensors.sensor_name.data_format(*args)`), for an easy usage, all function are given unique identfiers such that they can directly from parent package. for example: `polsartools.example_function(*args)`.
 
