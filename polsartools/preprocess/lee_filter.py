@@ -2,7 +2,7 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
-from polsartools.preprocessing.pre_utils import get_filter_io_paths
+from polsartools.preprocess.pre_utils import get_filter_io_paths
 
 @time_it
 def lee_filter(infolder, outname=None, window_size=3, write_flag=True, max_workers=None):

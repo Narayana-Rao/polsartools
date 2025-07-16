@@ -5,8 +5,9 @@ tags:
   - PolSAR
   - Speckle filtering
   - polarimetric signature
-  - Vegetation indices
   - Polarimetric decompositions
+  - Vegetation indices
+
 
 authors:
   - name: Narayanarao Bhogapurapu
@@ -38,7 +39,7 @@ bibliography: refs.bib
 ---
 
 # Introduction
-Synthetic Aperture Radar has been proven to be a highly reliable Earth observation (EO) remote sensing technique due to its all-weather and day-night capabilities. Since its initial development and use on an airborne platform seven decades ago, it has significantly evolved in terms of spatial resolution, observing frequencies, and applications. It took nearly four decades since then to have a full/quad polarimetric SAR (PolSAR) instrument in space for earth observation [@ulaby1981microwave;@jordan2002sir]. Since then, PolSAR has become a critical data source in various earth observation applications [@lee2017polarimetric;@cloude2010polarisation;@van2011synthetic]. The wide reach of SAR data applications has become possible through several airborne and spaceborne SAR instruments and their open data. As the world moves towards open data and open science, several operational SAR satellite missions (e.g., Sentinel-1, ALOS-2/4, EOS-04, BIOMASS, etc) have been collecting and distributing data openly. Further, the proposed future missions, such as NISAR[@rosen2017global], ROSE-L[@davidson2021rose], and the Sentinel-1 constellation, are planned to collect Petabytes of EO data. For an efficient use of these PolSAR data, it is essential to process them and derive interpretable polarimetric parameters to support further downstream applications. 
+Synthetic Aperture Radar has been proven to be a highly reliable Earth observation (EO) remote sensing technique due to its all-weather and day-night capabilities. Since its initial development and use on an airborne platform seven decades ago, it has significantly evolved in terms of spatial resolution, observing frequencies, and applications. It took nearly four decades since then to have a full/quad polarimetric SAR (PolSAR) instrument in space for earth observation [@ulaby1981microwave;@jordan2002sir]. Since then, PolSAR has become a critical data source in various earth observation applications [@lee2017polarimetric;@cloude2010polarisation;@van2011synthetic]. The wide reach of SAR data applications has become possible through several airborne and spaceborne SAR instruments and their open data. As the world moves towards open data and open science, several operational SAR satellite missions (e.g., Sentinel-1, ALOS-2/4, EOS-04, BIOMASS, etc) have been collecting and distributing data openly. Further, the proposed future missions, such as NISAR [@rosen2017global], ROSE-L [@davidson2021rose], and the Sentinel-1 Next Generation (S1 NG) [@geudtner2021copernicus], are planned to collect Petabytes of EO data. For an efficient use of these PolSAR data, it is essential to process them and derive interpretable polarimetric parameters to support further downstream applications. 
 
 
 # Statement of need
@@ -109,7 +110,7 @@ The `polsartools` package is structured in a modular way for efficiency. Followi
   - `dcp` dual co-polarimetry functions module
   - `others` other miscellaneous polarimetry functions module
 - `analysis`: consists of analysis functions
-- `utils`: extra utilities  and helper functions 
+- `utils`: extra utilities and helper functions 
 
 Although the functions can be accessed through each module (E.g., `polsartools.sensors.sensor_name.data_format(*args)`), for easy usage, all functions are given unique identifiers such that these functions can be directly accessed from the parent package. For example, `polsartools.example_function(*args)`.
 

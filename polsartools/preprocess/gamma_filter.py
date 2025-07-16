@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from polsartools.utils.utils import process_chunks_parallel, time_it, conv2d
-from polsartools.preprocessing.pre_utils import get_filter_io_paths
+from polsartools.preprocess.pre_utils import get_filter_io_paths
 
 @time_it
 def gamma_filter(infolder, outname=None, window_size=3, enl=1, write_flag=True, max_workers=None):

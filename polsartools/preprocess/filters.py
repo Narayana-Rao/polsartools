@@ -2,9 +2,9 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
-from polsartools.preprocessing.pre_utils import get_filter_io_paths
+from polsartools.preprocess.pre_utils import get_filter_io_paths
 
-from polsartools.preprocessing.rflee_filter import process_chunk_refined_lee
+from polsartools.preprocess.rflee_filter import process_chunk_refined_lee
 from polsartools.rflee import process_chunk_rfleecpp
 @time_it
 def boxcar(infolder,  window_size=3, outType="tif", 

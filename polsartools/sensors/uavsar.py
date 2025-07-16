@@ -7,7 +7,7 @@ import sys
 # import simplekml
 import json
 from polsartools.utils.utils import time_it
-from polsartools.preprocessing.convert_C3_T3 import convert_C3_T3
+from polsartools.preprocess.convert_C3_T3 import convert_C3_T3
 
 def write_bin_uav_old(file,wdata,lat,lon,dx,dy):
     

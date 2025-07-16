@@ -2,7 +2,7 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import time_it, mlook_arr
-from polsartools.preprocessing.pre_utils import get_filter_io_paths
+from polsartools.preprocess.pre_utils import get_filter_io_paths
 from osgeo import gdal
 gdal.UseExceptions()
 

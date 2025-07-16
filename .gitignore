@@ -1,5 +1,6 @@
 /polsartools/__pycache__/*.pyc
 /polsartools/preprocessing/__pycache__/*.pyc
+/polsartools/preprocess/__pycache__/*.pyc
 /polsartools/analysis/__pycache__/*.pyc
 /polsartools/polsar/__pycache__/*.pyc
 /polsartools/polsar/others/__pycache__/*.pyc
