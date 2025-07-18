@@ -52,6 +52,7 @@ def halphadp(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overvi
     if outType == "bin":
         output_filepaths.append(os.path.join(infolder, "Hdp.bin"))
         output_filepaths.append(os.path.join(infolder, "alphadp.bin"))
+        
     else:
         output_filepaths.append(os.path.join(infolder, "Hdp.tif"))
         output_filepaths.append(os.path.join(infolder, "alphadp.tif"))
@@ -118,5 +119,7 @@ def process_chunk_halphadp(chunks, window_size,*args):
     # alpha2 = alpha2.reshape(C2_stack.shape[0],C2_stack.shape[1])
 
     # print(np.nanmean(H),np.nanmean(alpha_))
+    eval_norm1 = np.real(eval_norm1.reshape(C2_stack.shape[0],C2_stack.shape[1])), 
+    eval_norm2 = np.real(eval_norm2.reshape(C2_stack.shape[0],C2_stack.shape[1])), 
 
-    return np.real(H),np.real(alpha_)
+    return np.real(H),np.real(alpha_),eval_norm1,eval_norm2

@@ -261,13 +261,13 @@ def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
         
     # # %Cloude Alpha
     alpha_ = (eval_norm1*alpha1 + eval_norm2*alpha2+ eval_norm3*alpha3)
-    alpha_ = alpha_.reshape(rows,cols)
+    alpha_ = np.real(alpha_.reshape(rows,cols))
     
     # print('Alpha!')
     
     # # %Entropy
     H = - eval_norm1*np.log10(eval_norm1)/np.log10(3) - eval_norm2*np.log10(eval_norm2)/np.log10(3) - eval_norm3*np.log10(eval_norm3)/np.log10(3)
-    H = H.reshape(rows,cols)
+    H = np.real(H.reshape(rows,cols))
 
     # alpha1 = alpha1.reshape(rows,cols)
     # alpha2 = alpha2.reshape(rows,cols)
@@ -275,5 +275,10 @@ def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
     
     ## POLARIMETRIC SCATTERING ANISOTROPY (A)
     Anisotropy = (eval_norm2-eval_norm3)/(eval_norm2+eval_norm3)
+    Anisotropy = np.real(Anisotropy.reshape(rows,cols))
+    eval_norm1 = np.real(eval_norm1.reshape(rows,cols))
+    eval_norm2 = np.real(eval_norm2.reshape(rows,cols))
+    eval_norm3 = np.real(eval_norm3.reshape(rows,cols))
     
-    return H,alpha_,Anisotropy.reshape(rows,cols),eval_norm1.reshape(rows,cols),eval_norm2.reshape(rows,cols),eval_norm3.reshape(rows,cols)
+    
+    return H,alpha_,Anisotropy,eval_norm1,eval_norm2,eval_norm3
