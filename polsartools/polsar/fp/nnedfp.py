@@ -254,4 +254,4 @@ def process_chunk_nnedfp(chunks, window_size, input_filepaths, *args):
     NNED_dbl = np.clip(NNED_dbl, 0., SpanMax)
     NNED_vol = np.clip(NNED_vol, 0., SpanMax)
     
-    return NNED_odd,NNED_dbl,NNED_vol
+    return NNED_odd.astype(np.float32),NNED_dbl.astype(np.float32),NNED_vol.astype(np.float32)

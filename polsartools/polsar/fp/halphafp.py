@@ -281,4 +281,5 @@ def process_chunk_halphafp(chunks, window_size, input_filepaths, *args):
     eval_norm3 = np.real(eval_norm3.reshape(rows,cols))
     
     
-    return H,alpha_,Anisotropy,eval_norm1,eval_norm2,eval_norm3
+    return H.astype(np.float32),alpha_.astype(np.float32),Anisotropy.astype(np.float32),\
+        eval_norm1.astype(np.float32),eval_norm2.astype(np.float32),eval_norm3.astype(np.float32)

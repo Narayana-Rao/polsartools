@@ -192,4 +192,4 @@ def process_chunk_neufp(chunks, window_size, input_filepaths, *args):
     Neumann_delta_pha = np.arctan2(T12im0, T12re0) * 180. / np.pi
     Neumann_tau = 1. - ((np.sqrt(T12re0 ** 2 + T12im0 ** 2) / T110) / (Neumann_delta_mod + np.finfo(float).eps))
 
-    return Neumann_psi, Neumann_delta_mod, Neumann_delta_pha,Neumann_tau
+    return Neumann_psi.astype(np.float32), Neumann_delta_mod.astype(np.float32), Neumann_delta_pha.astype(np.float32),Neumann_tau.astype(np.float32)

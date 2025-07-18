@@ -211,4 +211,6 @@ def proc_shannon_h_fp(chunks, window_size, input_filepaths, *args):
 
 
     
-    return np.real(HS).reshape(rows,cols),np.real(HSI).reshape(rows,cols),np.real(HSP).reshape(rows,cols)#,np.real(HS_norm).reshape(rows,cols),np.real(HSI_norm).reshape(rows,cols),np.real(HSP_norm).reshape(rows,cols) 
+    return np.real(HS).reshape(rows,cols).astype(np.float32),\
+        np.real(HSI).reshape(rows,cols).astype(np.float32) ,\
+        np.real(HSP).reshape(rows,cols).astype(np.float32)#,np.real(HS_norm).reshape(rows,cols),np.real(HSI_norm).reshape(rows,cols),np.real(HSP_norm).reshape(rows,cols) 
