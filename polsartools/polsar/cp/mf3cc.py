@@ -146,4 +146,4 @@ def process_chunk_mf3cc(chunks, window_size, *args, **kwargs):
     Pv_CP= (c2_trace*(1.0-m1))
     
 
-    return Ps_CP, Pd_CP, Pv_CP, theta_CP
+    return Ps_CP.astype(np.float32), Pd_CP.astype(np.float32), Pv_CP.astype(np.float32), theta_CP.astype(np.float32)

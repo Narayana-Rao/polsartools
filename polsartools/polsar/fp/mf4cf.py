@@ -186,4 +186,4 @@ def process_chunk_mf4cf(chunks, window_size, input_filepaths,*args):
     ps_f = ((res_pow/2)*(1+np.sin((2*theta_f)))).astype(np.float32)
     pd_f = ((res_pow/2)*(1-np.sin((2*theta_f)))).astype(np.float32)
 
-    return ps_f, pd_f, pv_f,pc_f,theta_FP,tau_FP
+    return ps_f.astype(np.float32), pd_f.astype(np.float32), pv_f.astype(np.float32),pc_f.astype(np.float32),theta_FP.astype(np.float32),tau_FP.astype(np.float32)

@@ -362,4 +362,4 @@ def process_chunk_grvi(chunks, window_size, input_filepaths,*args):
     vi[~idx1] = vi[~idx1];
     vi = np.real(vi)
 
-    return vi
+    return vi.astype(np.float32)

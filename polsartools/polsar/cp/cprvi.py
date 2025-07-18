@@ -98,6 +98,6 @@ def process_chunk_cprvi(chunks, window_size, *args, **kwargs):
     # CPP function
     vi_c_raw = process_chunk_cprvicpp( chunk_arrays, window_size, chi_in, psi_in )
 
-    return np.array(vi_c_raw, copy=True)  
+    return np.array(vi_c_raw, copy=True).astype(np.float32) 
     
  

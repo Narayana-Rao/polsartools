@@ -140,4 +140,4 @@ def process_chunk_rvifp(chunks, window_size,input_filepaths,*args):
 
     rvi = np.real(rvi)
 
-    return rvi
+    return rvi.astype(np.float32)

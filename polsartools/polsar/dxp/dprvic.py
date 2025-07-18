@@ -103,4 +103,4 @@ def process_chunk_dprvic(chunks, window_size,*args):
         # thetac = np.arctan(((1-q)**2)/(1-q+q**2)) * (180/np.pi)
         DpRVIc = (q*(q+3)/((q+1)**2))
 
-    return DpRVIc
+    return DpRVIc.astype(np.float32)

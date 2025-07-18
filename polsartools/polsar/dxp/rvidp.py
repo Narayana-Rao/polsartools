@@ -94,4 +94,4 @@ def process_chunk_rvidp(chunks, window_size,*args):
         c2_trace = c11_T1+c22_T1
         rvidp = np.real(4*c22_T1/c2_trace)
 
-    return rvidp
+    return rvidp.astype(np.float32)

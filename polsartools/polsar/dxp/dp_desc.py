@@ -105,4 +105,4 @@ def process_chunk_dpdesc(chunks, window_size,*args):
         thetac = np.arctan(((1-q)**2)/(1-q+q**2)) * (180/np.pi)
         
 
-    return mc,Hc,thetac
+    return mc.astype(np.float32),Hc.astype(np.float32),thetac.astype(np.float32)

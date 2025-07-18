@@ -78,4 +78,4 @@ def process_chunk_dopdp(chunks, window_size,*args):
     c2_trace = c11_T1+c22_T1
     dopdp = np.real(np.sqrt(1.0-(4.0*c2_det/np.power(c2_trace,2))))
 
-    return dopdp
+    return dopdp.astype(np.float32)

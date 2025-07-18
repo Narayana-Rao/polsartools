@@ -106,4 +106,4 @@ def process_chunk_dprvi(chunks, window_size,*args):
         dprvi = np.real(1-(m*beta))
 
 
-    return dprvi
+    return dprvi.astype(np.float32)

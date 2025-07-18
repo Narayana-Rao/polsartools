@@ -146,4 +146,4 @@ def process_chunk_dopfp(chunks, window_size,input_filepaths,*args):
     m1 = np.real(np.sqrt(1-(27*(det_T3/(trace_T3**3)))))
     
 
-    return m1
+    return m1.astype(np.float32)

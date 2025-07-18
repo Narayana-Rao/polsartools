@@ -172,4 +172,4 @@ def process_chunk_misomega(chunks, window_size, *args, **kwargs):
     diffused_new[diffused_new==0] = np.nan
     
 
-    return surface_new, double_bounce_new, diffused_new
+    return surface_new.astype(np.float32), double_bounce_new.astype(np.float32), diffused_new.astype(np.float32)

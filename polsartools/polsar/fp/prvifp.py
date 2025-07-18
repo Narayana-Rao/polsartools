@@ -142,4 +142,4 @@ def process_chunk_prvifp(chunks, window_size, input_filepaths,*args):
     
     prvi = np.real((1-dop_fp)* T_T1[2,2,:,:]*0.5)  # (1-dop)*vh
 
-    return prvi
+    return prvi.astype(np.float32)

@@ -122,4 +122,4 @@ def process_chunk_halphadp(chunks, window_size,*args):
     eval_norm1 = np.real(eval_norm1.reshape(C2_stack.shape[0],C2_stack.shape[1])), 
     eval_norm2 = np.real(eval_norm2.reshape(C2_stack.shape[0],C2_stack.shape[1])), 
 
-    return np.real(H),np.real(alpha_),eval_norm1,eval_norm2
+    return np.real(H).astype(np.float32),np.real(alpha_).astype(np.float32),eval_norm1.astype(np.float32),eval_norm2.astype(np.float32)

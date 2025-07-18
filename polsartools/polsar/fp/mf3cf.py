@@ -167,4 +167,4 @@ def process_chunk_mf3cf(chunks, window_size, input_filepaths, *args):
     Pd_FP = np.nan_to_num(np.real(((m1*(span)*(1-np.sin(2*thet))/2)))).astype(np.float32)
     Pv_FP = np.nan_to_num(np.real(span*(1-m1))).astype(np.float32)
 
-    return Ps_FP, Pd_FP, Pv_FP,theta_FP
+    return Ps_FP.astype(np.float32), Pd_FP.astype(np.float32), Pv_FP.astype(np.float32),theta_FP.astype(np.float32)

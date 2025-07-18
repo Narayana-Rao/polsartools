@@ -434,4 +434,5 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths,  *args, **kwargs
                 M_vol[ii, jj] = Pv
                 M_hlx[ii, jj] = Pc
     # print(np.nanmean(M_odd),np.nanmean(M_dbl),np.nanmean(M_vol),np.nanmean(M_hlx))
-    return M_odd, M_dbl, M_vol, M_hlx
+    return M_odd.astype(np.float32), M_dbl.astype(np.float32), \
+        M_vol.astype(np.float32), M_hlx.astype(np.float32)

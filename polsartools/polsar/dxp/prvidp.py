@@ -83,4 +83,4 @@ def process_chunk_prvidp(chunks, window_size,*args):
         dopdp = np.real(np.sqrt(1.0-(4.0*c2_det/np.power(c2_trace,2))))
         prvidp = np.real((1-dopdp)*c22_T1)  
 
-    return prvidp
+    return prvidp.astype(np.float32)
