@@ -26,12 +26,12 @@ from .preprocess.mlook import mlook
 """ Importing polsar modules """
 from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,halphafp,yam4cfp,shannon_h_fp
 from .polsar.cp import cprvi, dopcp, misomega, mf3cc
-from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp, shannon_h_dp,halpha_plot_dp,dprvic, dp_desc
+from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp, shannon_h_dp,dprvic, dp_desc
 from .polsar.dcp import mf3cd
 from .polsar.others.stokes_parm import stokes_parm
 
 """ Importing analysis modules """
-from .analysis import fp_sign, pauliRGB, dxpRGB, halpha_plot_fp
+from .analysis import fp_sign, halpha_plot_dp, pauliRGB, dxpRGB, halpha_plot_fp
 
 
 
