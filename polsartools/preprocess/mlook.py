@@ -7,7 +7,7 @@ from osgeo import gdal
 gdal.UseExceptions()
 
 @time_it
-def mlook(infolder,  azlks=2, rglks=2, outType="tif", 
+def mlook(infolder,  azlks=2, rglks=2, outType="tif",sub_dir=True, 
           cog_flag=False, cog_overviews = [2, 4, 8, 16], 
           write_flag=True, max_workers=None,block_size=(512, 512)):
     
@@ -67,7 +67,7 @@ def mlook(infolder,  azlks=2, rglks=2, outType="tif",
   
     input_filepaths, output_filepaths = get_filter_io_paths(infolder, [azlks, rglks],
                                                             outType=outType, 
-                                                            filter_type="ml")
+                                                            filter_type="ml",sub_dir=sub_dir)
 
     window_size=None
 
