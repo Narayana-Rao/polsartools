@@ -8,7 +8,9 @@ Supported sensors
 
     sensors/uavsar
     sensors/isro_asar
+    sensors/esar
     sensors/nisar
+    sensors/risat
     sensors/radarsat2
     sensors/alos2
     sensors/chandrayaan2

@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -333,21 +333,22 @@
                 <article class="bd-article">
                   
   <h1>Source code for polsartools.sensors.isro_asar</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="nn">glob</span><span class="o">,</span><span class="nn">tables</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">xml.etree.ElementTree</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ET</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span> <span class="n">mlook_arr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_T3</span><span class="p">,</span> <span class="n">write_C3</span><span class="p">,</span><span class="n">write_C4</span><span class="p">,</span><span class="n">write_s2_bin</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.geo_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">geocode_grid</span><span class="p">,</span> <span class="n">intp_grid</span><span class="p">,</span> <span class="n">update_vrt</span><span class="p">,</span> <span class="n">write_latlon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span><span class="nn">glob</span><span class="o">,</span><span class="nn">tables</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span> <span class="n">mlook_arr</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.io_utils</span> <span class="kn">import</span> <span class="n">write_T3</span><span class="p">,</span> <span class="n">write_C3</span><span class="p">,</span><span class="n">write_C4</span><span class="p">,</span><span class="n">write_s2_bin</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.geo_utils</span> <span class="kn">import</span> <span class="n">geocode_grid</span><span class="p">,</span> <span class="n">intp_grid</span><span class="p">,</span> <span class="n">update_vrt</span><span class="p">,</span> <span class="n">write_latlon</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.proc_utils</span> <span class="kn">import</span> <span class="n">process_chunks_parallel</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.h5_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">h5_polsar</span><span class="p">,</span> <span class="n">get_ml_chunk</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.h5_utils</span> <span class="kn">import</span> <span class="n">h5_polsar</span><span class="p">,</span> <span class="n">get_ml_chunk</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">asar_geo_T3</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">asar_geo_T3</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Considering S12 = S21&quot;</span><span class="p">)</span>
            
     <span class="k">try</span><span class="p">:</span>
@@ -437,7 +438,7 @@
     <span class="k">del</span> <span class="n">S11</span><span class="p">,</span><span class="n">S12</span><span class="p">,</span><span class="n">S21</span><span class="p">,</span><span class="n">S22</span>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">write_element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">outname</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">outname</span><span class="p">):</span>
         <span class="n">write_latlon</span><span class="p">(</span><span class="s1">&#39;data.bin&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="n">gdal</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="s1">&#39;data.vrt&#39;</span><span class="p">,</span> <span class="s1">&#39;data.bin&#39;</span><span class="p">)</span>
         <span class="n">update_vrt</span><span class="p">(</span><span class="s1">&#39;data.vrt&#39;</span><span class="p">)</span>
@@ -489,7 +490,7 @@
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;lon.vrt&#39;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;lon.hdr&#39;</span><span class="p">)</span>
     
-<span class="k">def</span><span class="w"> </span><span class="nf">asar_T3</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">asar_T3</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Considering S12 = S21&quot;</span><span class="p">)</span>
            
     <span class="k">try</span><span class="p">:</span>
@@ -549,7 +550,7 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T22</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T23</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T23</span><span class="p">),</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T33</span><span class="p">)],</span><span class="n">T3Folder</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">asar_geo_C3</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">asar_geo_C3</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Considering S12 = S21&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">h5File</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
@@ -629,7 +630,7 @@
     <span class="c1"># Kl- 3-D Lexicographic feature vector</span>
     <span class="n">Kl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">S11</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">S12</span><span class="o">+</span><span class="n">S21</span><span class="p">),</span> <span class="n">S22</span><span class="p">])</span>
     <span class="k">del</span> <span class="n">S11</span><span class="p">,</span> <span class="n">S12</span><span class="p">,</span> <span class="n">S21</span><span class="p">,</span> <span class="n">S22</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">write_element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">outname</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">outname</span><span class="p">):</span>
         <span class="n">write_latlon</span><span class="p">(</span><span class="s1">&#39;data.bin&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="n">gdal</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="s1">&#39;data.vrt&#39;</span><span class="p">,</span> <span class="s1">&#39;data.bin&#39;</span><span class="p">)</span>
         <span class="n">update_vrt</span><span class="p">(</span><span class="s1">&#39;data.vrt&#39;</span><span class="p">)</span>
@@ -681,7 +682,7 @@
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;lon.hdr&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">asar_C3</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>    
+<span class="k">def</span> <span class="nf">asar_C3</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>    
     
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Considering S12 = S21&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -748,7 +749,7 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">asar_geo_C4</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">asar_geo_C4</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>
     <span class="c1"># print(&quot;Considering S12 = S21&quot;)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">h5File</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
@@ -828,7 +829,7 @@
     <span class="c1"># Kl- 3-D Lexicographic feature vector</span>
     <span class="n">Kl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">S11</span><span class="p">,</span> <span class="n">S12</span><span class="p">,</span> <span class="n">S21</span><span class="p">,</span> <span class="n">S22</span><span class="p">])</span>
     <span class="k">del</span> <span class="n">S11</span><span class="p">,</span> <span class="n">S12</span><span class="p">,</span> <span class="n">S21</span><span class="p">,</span> <span class="n">S22</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">write_element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">outname</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">write_element</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">outname</span><span class="p">):</span>
         <span class="n">write_latlon</span><span class="p">(</span><span class="s1">&#39;data.bin&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="n">gdal</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="s1">&#39;data.vrt&#39;</span><span class="p">,</span> <span class="s1">&#39;data.bin&#39;</span><span class="p">)</span>
         <span class="n">update_vrt</span><span class="p">(</span><span class="s1">&#39;data.vrt&#39;</span><span class="p">)</span>
@@ -907,7 +908,7 @@
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;lon.vrt&#39;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;lon.hdr&#39;</span><span class="p">)</span>
     
-<span class="k">def</span><span class="w"> </span><span class="nf">asar_C4</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>    
+<span class="k">def</span> <span class="nf">asar_C4</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">,</span><span class="n">cc_linear</span><span class="p">):</span>    
     
     <span class="c1"># print(&quot;Considering S12 = S21&quot;)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -978,7 +979,7 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C33</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C34</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C34</span><span class="p">),</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C44</span><span class="p">)],</span><span class="n">C4Folder</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">load_asar_meta</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">load_asar_meta</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -990,7 +991,7 @@
     <span class="k">return</span> <span class="n">data_dict</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">convert_l1_tif_dB</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">backscatter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">complex_flag</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> 
+<span class="k">def</span> <span class="nf">convert_l1_tif_dB</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">backscatter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">complex_flag</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> 
                    <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> 
                    <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     
@@ -1035,13 +1036,13 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">out_fix</span> <span class="o">=</span> <span class="s1">&#39;s0&#39;</span> 
     
-    <span class="k">def</span><span class="w"> </span><span class="nf">output_names_dB</span><span class="p">(</span><span class="n">band_files</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">output_names_dB</span><span class="p">(</span><span class="n">band_files</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
         <span class="n">out_paths</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">band_files</span><span class="p">:</span>
             <span class="n">pol</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_LEVEL1_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.tif&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Extract polarization (e.g., HH, HV, VH, VV)</span>
             <span class="n">out_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">pol</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">out_fix</span><span class="si">}</span><span class="s2">_dB.</span><span class="si">{</span><span class="n">outType</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">out_paths</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">output_names_complex</span><span class="p">(</span><span class="n">band_files</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">output_names_complex</span><span class="p">(</span><span class="n">band_files</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
         <span class="n">out_paths</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">band_files</span><span class="p">:</span>
             <span class="n">pol</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_LEVEL1_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.tif&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Extract polarization (e.g., HH, HV, VH, VV)           </span>
@@ -1067,7 +1068,7 @@
             <span class="n">output_s_filepaths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">output_names_dB</span><span class="p">(</span><span class="n">s_band_files</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">))</span>
     
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">copy_gcps_to_outputs</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="n">output_filepaths</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">copy_gcps_to_outputs</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="n">output_filepaths</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Copies GCPs from one input file to all output files. &quot;&quot;&quot;</span>
         <span class="n">input_filepath</span> <span class="o">=</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="c1"># Open the input file</span>
@@ -1125,7 +1126,7 @@
     
     
 
-<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_gtif</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">process_chunk_gtif</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="c1"># kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)</span>
     <span class="n">complex_flag</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span>
     <span class="n">backscatter</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span>
@@ -1191,7 +1192,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">hh</span><span class="p">,</span><span class="n">hv</span><span class="p">,</span><span class="n">vh</span><span class="p">,</span><span class="n">vv</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_rslc_path</span><span class="p">(</span><span class="n">h5</span><span class="p">,</span> <span class="n">freq_band</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_rslc_path</span><span class="p">(</span><span class="n">h5</span><span class="p">,</span> <span class="n">freq_band</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">product_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RSLC&#39;</span><span class="p">,</span> <span class="s1">&#39;SLC&#39;</span><span class="p">]:</span>
         <span class="n">base_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s1">/swaths/frequencyA&#39;</span>
         <span class="k">if</span> <span class="n">h5</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
@@ -1200,7 +1201,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base path not found: </span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">rslc_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">rslc_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">):</span>
     <span class="n">band_table</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s1">&#39;/science/LSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;/science/SSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span>
@@ -1239,10 +1240,11 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid .h5 file !!&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span>
+
 <div class="viewcode-block" id="isro_asar">
 <a class="viewcode-back" href="../../../files/sensors/isro_asar.html#polsartools.isro_asar">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">isro_asar</span><span class="p">(</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+<span class="k">def</span> <span class="nf">isro_asar</span><span class="p">(</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
                <span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span><span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                <span class="n">geocode_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">calibration_constant</span> <span class="o">=</span> <span class="mi">42</span>
               <span class="p">):</span>
@@ -1623,7 +1625,7 @@
 
     
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">isro_asar_old</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">geocode_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">calibration_constant</span> <span class="o">=</span> <span class="mi">42</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">isro_asar_old</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">geocode_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">calibration_constant</span> <span class="o">=</span> <span class="mi">42</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the S2/C3/T3  matrix elements from a ASAR RSLC HDF5 file </span>
 <span class="sd">    and saves them into respective binary files.</span>

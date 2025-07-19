@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -333,21 +333,22 @@
                 <article class="bd-article">
                   
   <h1>Source code for polsartools.sensors.rs2_fp</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">xml.etree.ElementTree</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ET</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span><span class="n">mlook_arr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_T3</span><span class="p">,</span> <span class="n">write_C3</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span><span class="n">mlook_arr</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.io_utils</span> <span class="kn">import</span> <span class="n">write_T3</span><span class="p">,</span> <span class="n">write_C3</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">read_rs2_tif</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">read_rs2_tif</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="n">band1</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
     <span class="n">band2</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
     <span class="n">ds</span><span class="o">=</span><span class="kc">None</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">band1</span><span class="p">,</span><span class="n">band2</span><span class="p">))</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">write_s2_bin</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">write_s2_bin</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">):</span>
     <span class="p">[</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">]</span> <span class="o">=</span> <span class="n">wdata</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;ENVI&quot;</span><span class="p">)</span>
     <span class="n">outdata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
@@ -358,7 +359,7 @@
 <div class="viewcode-block" id="rs2_fp">
 <a class="viewcode-back" href="../../../files/sensors/radarsat2.html#polsartools.rs2_fp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">rs2_fp</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;sigma0&#39;</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">rs2_fp</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;sigma0&#39;</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.</span>
 

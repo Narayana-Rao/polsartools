@@ -95,21 +95,6 @@ def process_chunk_T3C3(chunks, window_size, input_filepaths, *args):
     else:
         raise Exception(f"Invalid T3 folder!!")
 
-    # if 'C11' in input_filepaths[0] and 'C22' in input_filepaths[5] and 'C33' in input_filepaths[8]:
-    #     C11 = np.array(chunks[0])
-    #     C12 = np.array(chunks[1])+1j*np.array(chunks[2])
-    #     C13 = np.array(chunks[3])+1j*np.array(chunks[4])
-    #     C21 = np.conj(C12)
-    #     C22 = np.array(chunks[5])
-    #     C23 = np.array(chunks[6])+1j*np.array(chunks[7])
-    #     C31 = np.conj(C13)
-    #     C32 = np.conj(C23)
-    #     C33 = np.array(chunks[8])
-    #     T_T1 = np.array([[C11, C12, C13], 
-    #                      [C21, C22, C23], 
-    #                      [C31, C32, C33]])
-
-
     if window_size>1:
         kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
 

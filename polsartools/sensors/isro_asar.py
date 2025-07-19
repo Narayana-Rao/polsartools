@@ -905,6 +905,7 @@ def rslc_meta(inFile):
         raise RuntimeError("Invalid .h5 file !!")
 
     return freq_band,listOfPolarizations
+
 @time_it
 def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10, 
                outType='tif',max_workers=None, 

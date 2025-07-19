@@ -29,7 +29,7 @@
   <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -333,16 +333,16 @@
                 <article class="bd-article">
                   
   <h1>Source code for polsartools.polsar.fp.neufp</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.convert_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">C3_T3_mat</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.fp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">fp_c3t3files</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.proc_utils</span> <span class="kn">import</span> <span class="n">process_chunks_parallel</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.convert_matrices</span> <span class="kn">import</span> <span class="n">C3_T3_mat</span>
+<span class="kn">from</span> <span class="nn">.fp_infiles</span> <span class="kn">import</span> <span class="n">fp_c3t3files</span>
 <div class="viewcode-block" id="neufp">
 <a class="viewcode-back" href="../../../../files/functions/full_pol/neufp.html#polsartools.neufp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">neufp</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+<span class="k">def</span> <span class="nf">neufp</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
           <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
           <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Neumann Decomposition for full-pol SAR data.</span>
@@ -427,7 +427,7 @@
                         <span class="p">)</span></div>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_neufp</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">input_filepaths</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">process_chunk_neufp</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">input_filepaths</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 
     <span class="c1"># additional_arg1 = args[0] if len(args) &gt; 0 else None</span>
     <span class="c1"># additional_arg2 = args[1] if len(args) &gt; 1 else None</span>
@@ -530,7 +530,7 @@
     <span class="n">Neumann_delta_pha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">T12im0</span><span class="p">,</span> <span class="n">T12re0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">180.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
     <span class="n">Neumann_tau</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">T12re0</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">T12im0</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">T110</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Neumann_delta_mod</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">Neumann_psi</span><span class="p">,</span> <span class="n">Neumann_delta_mod</span><span class="p">,</span> <span class="n">Neumann_delta_pha</span><span class="p">,</span><span class="n">Neumann_tau</span>
+    <span class="k">return</span> <span class="n">Neumann_psi</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">Neumann_delta_mod</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">Neumann_delta_pha</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span><span class="n">Neumann_tau</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 
                 </article>

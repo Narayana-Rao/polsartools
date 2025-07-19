@@ -29,7 +29,7 @@
   <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -333,15 +333,15 @@
                 <article class="bd-article">
                   
   <h1>Source code for polsartools.polsar.dxp.dprvic</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span><span class="n">eig22</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.proc_utils</span> <span class="kn">import</span> <span class="n">process_chunks_parallel</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span><span class="n">eig22</span>
+<span class="kn">from</span> <span class="nn">.dxp_infiles</span> <span class="kn">import</span> <span class="n">dxpc2files</span>
 <div class="viewcode-block" id="dprvic">
 <a class="viewcode-back" href="../../../../files/functions/dual_pol/dprvic.html#polsartools.dprvic">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">dprvic</span><span class="p">(</span><span class="n">cpFile</span><span class="p">,</span><span class="n">xpFile</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)):</span>
+<span class="k">def</span> <span class="nf">dprvic</span><span class="p">(</span><span class="n">cpFile</span><span class="p">,</span><span class="n">xpFile</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute dual-pol Radar Vegetation Index (DpRVIc) from Dual-pol GRD data.</span>
 
 <span class="sd">    This function calculates the DpRVIc using co-polarized (`cpFile`) and cross-polarized (`xpFile`) SAR raster files. </span>
@@ -413,7 +413,7 @@
                             <span class="p">)</span></div>
 
     
-<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_dprvic</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">process_chunk_dprvic</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span><span class="n">window_size</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">window_size</span><span class="o">*</span><span class="n">window_size</span><span class="p">)</span>
     <span class="n">c11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">c22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -441,7 +441,7 @@
         <span class="c1"># thetac = np.arctan(((1-q)**2)/(1-q+q**2)) * (180/np.pi)</span>
         <span class="n">DpRVIc</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span><span class="o">*</span><span class="p">(</span><span class="n">q</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="n">q</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">DpRVIc</span>
+    <span class="k">return</span> <span class="n">DpRVIc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 
                 </article>

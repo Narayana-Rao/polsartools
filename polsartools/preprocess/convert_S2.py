@@ -61,7 +61,7 @@ def get_s_input_filepaths(infolder):
         raise FileNotFoundError(f"Only found {len(available)} S-matrix files; need exactly 2 or 4.")
 
 
-def get_output_filepaths(infolder, matrix, outType):
+def get_output_filepaths(infolder, outfolder, matrix, outType):
     """
     Returns output filepaths for the specified matrix and output type (bin or tif).
     Also ensures the target directory exists.
@@ -89,14 +89,16 @@ def get_output_filepaths(infolder, matrix, outType):
         raise ValueError(f"Invalid matrix type '{matrix}'")
 
     ext = ".bin" if outType == "bin" else ".tif"
-    outfolder = os.path.join(infolder, matrix)
+    if outfolder is None:
+        outfolder = os.path.join(infolder, matrix)
     os.makedirs(outfolder, exist_ok=True)
 
     return [os.path.join(outfolder, f"{name}{ext}") for name in matrix_keys[matrix]]
 
 @time_it
-def convert_S(infolder, matrixType='T3', azlks=4,rglks=2, cf = 1, 
-                  outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], 
+def convert_S(infolder, matrixType='T3', azlks=4,rglks=2,  cf = 1, 
+                  outType="tif", outfolder=None,
+                  cog_flag=False, cog_overviews = [2, 4, 8, 16], 
                   write_flag=True, max_workers=None,block_size=(512, 512)):
     """
     Convert full/dual-polarimetric scattering (S2,Sxy) matrix into multi-looked
@@ -148,7 +150,7 @@ def convert_S(infolder, matrixType='T3', azlks=4,rglks=2, cf = 1,
     window_size=None
     
     input_filepaths =  get_s_input_filepaths(infolder)
-    output_filepaths = get_output_filepaths(infolder, matrixType, outType)
+    output_filepaths = get_output_filepaths(infolder, outfolder,matrixType, outType)
     
     if len(input_filepaths) not in [2, 4]:
         raise Exception("Invalid S folder: must contain either 2 (dual/compact-pol) or 4 (full-pol) S-matrix files")
@@ -189,12 +191,14 @@ def convert_S(infolder, matrixType='T3', azlks=4,rglks=2, cf = 1,
         out_geotransform[1] *= 1 
         out_geotransform[5] *= 1 
     else:
-        out_geotransform[1] *= rglks 
-        out_geotransform[5] *= azlks
+        out_geotransform[1] = (in_geotransform[1] * in_cols) / out_x_size
+        out_geotransform[5] = (in_geotransform[5] * in_rows) / out_y_size
         
-    out_geotransform = tuple(out_geotransform)  # back to immutable
-    # print(in_geotransform,out_geotransform)
-    dataset = None  # Close GDAL dataset
+        # out_geotransform[1] *= rglks 
+        # out_geotransform[5] *= azlks
+        
+    out_geotransform = tuple(out_geotransform)
+    dataset = None 
     
 
 

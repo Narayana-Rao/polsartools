@@ -140,6 +140,40 @@ def get_inc(file_path):
 @time_it
 def risat_l11(prod_dir,matrixType='C2',azlks=10,rglks=7,outType='tif'):
 
+    """
+    Extracts the Sxy/C2 matrix elements from a RISAT-1A compact-pol SLC data 
+    
+    Example:
+    --------
+    >>> risat_l11("path_to_folder", matrixType='C2', azlks=10, rglks=7, outType='tif')
+    This will extract the C2 from compact-pol RISAT-1A SLC data and save them as geotiff files.
+    Additionally, it will also extract the incidence angle map and save it as a geotiff file.
+    
+    Parameters:
+    -----------
+    inFile : str
+        The path to the RISAT-1A SLCfolder containing the data and metadata.
+        
+    matrixType : str, optional (default = 'C2')
+        Type of matrix to extract. Valid options 'Sxy','C2'.
+
+    azlks : int, optional (default=10)
+        The number of azimuth looks for multi-looking. 
+
+    rglks : int, optional (default=7)
+        The number of range looks for multi-looking. 
+
+    Returns:
+    --------
+    None
+        The function does not return any value. Instead, it creates a folder 
+        named `Sxy/C2` (if not already present) and saves the geotiff/binary files:
+
+
+
+    """   
+
+
     band_meta = os.path.join(prod_dir,'BAND_META.txt')
     metadata_dict = get_bandmeta(band_meta)
     ImagingMode = str(metadata_dict['ImagingMode'])
@@ -215,28 +249,31 @@ def risat_l11(prod_dir,matrixType='C2',azlks=10,rglks=7,outType='tif'):
                 print(f"Saved file: {os.path.join(outFolder,'s11.tif')}")
                 write_rst(os.path.join(outFolder,'s21.tif'),s21,gdal.GDT_CFloat32)
                 print(f"Saved file: {os.path.join(outFolder,'s21.tif')}")
+                
         elif matrixType == 'C2':
             outFolder = os.path.join(prod_dir,'C2')
             os.makedirs(outFolder,  exist_ok=True)
             
-
+            write_rst(os.path.join(outFolder,'inc.tif'),mlook_arr(resized_inc,azlks,rglks).astype(np.float32),
+                      gdal.GDT_Float32)
+            
+            del resized_inc
+            
             if outType=='bin':
                 write_rst(os.path.join(outFolder,'C11.bin'),mlook_arr(np.abs(s11)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32)
                 print(f"Saved file: {os.path.join(outFolder,'C11.bin')}")
+                write_rst(os.path.join(outFolder,'C22.bin'),mlook_arr(np.abs(s21)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32)
+                print(f"Saved file: {os.path.join(outFolder,'C22.bin')}")            
             else:
                 write_rst(os.path.join(outFolder,'C11.tif'),mlook_arr(np.abs(s11)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32)
                 print(f"Saved file: {os.path.join(outFolder,'C11.tif')}")
-
-            if outType=='bin':
-                write_rst(os.path.join(outFolder,'C22.bin'),mlook_arr(np.abs(s21)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32)
-                print(f"Saved file: {os.path.join(outFolder,'C22.bin')}")
-            else:
                 write_rst(os.path.join(outFolder,'C22.tif'),mlook_arr(np.abs(s21)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32)
                 print(f"Saved file: {os.path.join(outFolder,'C22.tif')}")
 
-
             
             C12 = mlook_arr(s11*np.conjugate(s21),azlks,rglks).astype(np.complex64)
+            
+
             rows,cols = C12.shape
             if outType=='bin':
                 write_rst(os.path.join(outFolder,'C12_real.bin'),np.real(C12).astype(np.float32),gdal.GDT_Float32)

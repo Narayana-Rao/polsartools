@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -333,17 +333,18 @@
                 <article class="bd-article">
                   
   <h1>Source code for polsartools.sensors.uavsar</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="c1"># import simplekml</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.convert_C3_T3</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_C3_T3</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">time_it</span>
+<span class="kn">from</span> <span class="nn">polsartools.preprocess.convert_C3_T3</span> <span class="kn">import</span> <span class="n">convert_C3_T3</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">write_bin_uav_old</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">write_bin_uav_old</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">):</span>
     
     <span class="p">[</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">]</span> <span class="o">=</span> <span class="n">wdata</span><span class="o">.</span><span class="n">shape</span>
 
@@ -356,7 +357,7 @@
     <span class="c1"># outdata.GetRasterBand(1).SetNoDataValue(np.NaN)##if you want these values transparent</span>
     <span class="n">outdata</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span> <span class="c1">##saves to disk!!</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">write_bin_uav</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">wdata</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">sensor_type</span><span class="o">=</span><span class="s2">&quot;UAVSAR&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">write_bin_uav</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">wdata</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">sensor_type</span><span class="o">=</span><span class="s2">&quot;UAVSAR&quot;</span><span class="p">):</span>
     <span class="p">[</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">wdata</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;ENVI&quot;</span><span class="p">)</span>
     <span class="n">outdata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">)</span>
@@ -386,7 +387,7 @@
     <span class="c1">#     # Write the projection information</span>
     <span class="c1">#     # header_file.write(&quot;projection = GEOGCS[\&quot;WGS 84\&quot;,DATUM[\&quot;WGS_1984\&quot;,SPHEROID[\&quot;WGS_84\&quot;,6378137,298.257223563]],PRIMEM[\&quot;Greenwich\&quot;,0],UNIT[\&quot;degree\&quot;,0.017453292519943295],AUTHORITY[\&quot;EPSG\&quot;,\&quot;4326\&quot;]]\n&quot;)</span>
     <span class="c1">#     header_file.write(f&quot;band names = {{{os.path.basename(file)}}}\n&quot;)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">update_hdr</span><span class="p">(</span><span class="n">hdrFile</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">update_hdr</span><span class="p">(</span><span class="n">hdrFile</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hdrFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
@@ -407,7 +408,7 @@
 <span class="c1">#     pol.style.polystyle.color = simplekml.Color.changealphaint(150, simplekml.Color.red)  </span>
 <span class="c1">#     kml.save(output_filename)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">create_extent</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">create_extent</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">annFile</span><span class="p">)</span>
     <span class="n">annFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">annFile</span><span class="p">:</span>
@@ -461,7 +462,7 @@
         <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">geojson_polygon</span><span class="p">,</span> <span class="n">out_file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">grdList</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">grdList</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
     <span class="n">grdkeys</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;grdHHHH&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;grdHVHV&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -481,7 +482,7 @@
     
     <span class="k">return</span> <span class="n">grdkeys</span>                
 
-<span class="k">def</span><span class="w"> </span><span class="nf">mlcList</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">mlcList</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
     <span class="n">mlckeys</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;mlcHHHH&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;mlcHVHV&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -505,7 +506,7 @@
 <div class="viewcode-block" id="uavsar_grd">
 <a class="viewcode-back" href="../../../files/sensors/uavsar.html#polsartools.uavsar_grd">[docs]</a>
 <span class="nd">@time_it</span>    
-<span class="k">def</span><span class="w"> </span><span class="nf">uavsar_grd</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">uavsar_grd</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them </span>
 <span class="sd">    into respective directories (C3 or T3).</span>
@@ -630,7 +631,7 @@
 <div class="viewcode-block" id="uavsar_mlc">
 <a class="viewcode-back" href="../../../files/sensors/uavsar.html#polsartools.uavsar_mlc">[docs]</a>
 <span class="nd">@time_it</span>  
-<span class="k">def</span><span class="w"> </span><span class="nf">uavsar_mlc</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">uavsar_mlc</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them </span>
 <span class="sd">    into respective directories (C3 or T3).</span>

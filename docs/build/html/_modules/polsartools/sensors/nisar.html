@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -334,22 +334,23 @@
                   
   <h1>Source code for polsartools.sensors.nisar</h1><div class="highlight"><pre>
 <span></span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="nn">tempfile</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tables</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.util.shape</span><span class="w"> </span><span class="kn">import</span> <span class="n">view_as_blocks</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span> <span class="n">mlook_arr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_s2_bin_ref</span><span class="p">,</span> <span class="n">write_s2_ct_ref</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.h5_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">h5_polsar</span><span class="p">,</span> <span class="n">get_ml_chunk</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span><span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">tables</span>
+<span class="kn">from</span> <span class="nn">skimage.util.shape</span> <span class="kn">import</span> <span class="n">view_as_blocks</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span> <span class="n">mlook_arr</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.io_utils</span> <span class="kn">import</span> <span class="n">write_s2_bin_ref</span><span class="p">,</span> <span class="n">write_s2_ct_ref</span>
+<span class="kn">from</span> <span class="nn">polsartools.utils.h5_utils</span> <span class="kn">import</span> <span class="n">h5_polsar</span><span class="p">,</span> <span class="n">get_ml_chunk</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
 <span class="c1">#%%</span>
 
 <span class="c1"># def get_ml_chunk(multiplier, default_size):</span>
 <span class="c1">#     # Rounds up to the next multiple of `multiplier`</span>
 <span class="c1">#     return ((default_size + multiplier - 1) // multiplier) * multiplier</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">rslc_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">rslc_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">):</span>
     <span class="n">band_table</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s1">&#39;/science/LSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;/science/SSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span>
@@ -388,7 +389,7 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid .h5 file !!&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_rslc_path</span><span class="p">(</span><span class="n">h5</span><span class="p">,</span> <span class="n">freq_band</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_rslc_path</span><span class="p">(</span><span class="n">h5</span><span class="p">,</span> <span class="n">freq_band</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">product_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RSLC&#39;</span><span class="p">,</span> <span class="s1">&#39;SLC&#39;</span><span class="p">]:</span>
         <span class="n">base_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s1">/swaths/frequencyA&#39;</span>
         <span class="k">if</span> <span class="n">h5</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
@@ -398,7 +399,7 @@
     <span class="k">return</span> <span class="kc">None</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">gslc_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">gslc_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">):</span>
     <span class="n">band_table</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">(</span><span class="s1">&#39;/science/LSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;/science/SSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span>
@@ -445,7 +446,7 @@
 <div class="viewcode-block" id="nisar_gslc">
 <a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_gslc">[docs]</a>
 <span class="nd">@time_it</span> 
-<span class="k">def</span><span class="w"> </span><span class="nf">nisar_gslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span><span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">nisar_gslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span><span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file </span>
 <span class="sd">    and saves them into respective binary files.</span>
@@ -810,7 +811,7 @@
 <div class="viewcode-block" id="nisar_rslc">
 <a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_rslc">[docs]</a>
 <span class="nd">@time_it</span>  
-<span class="k">def</span><span class="w"> </span><span class="nf">nisar_rslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+<span class="k">def</span> <span class="nf">nisar_rslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
                <span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span><span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from a NISAR RSLC HDF5 file </span>
