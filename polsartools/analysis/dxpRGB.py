@@ -83,7 +83,7 @@ def dxpRGB(infolder, type=1, tif_flag=False, azlks=1, rglks=1):
                 C12 = (S1 * np.conj(S2)).astype(np.complex64)
                 break
         else:
-            raise FileNotFoundError("No valid S-matrix pair found. Expected one of: (s11,s12), (s11,s21), (s22,s12), (s22,s21)")
+            raise FileNotFoundError("No valid C2 or Sxy data found. Expected one of:  (s11,s12), (s11,s21), (s22,s12), (s22,s21)  (C11,C22,C12_real)")
 
     # Compute RGB channels
     if type == 1:

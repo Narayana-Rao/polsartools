@@ -58,6 +58,29 @@ def read_bin(file):
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
     return arr
+
+def read_rst(file, band_num=None):
+    ds = gdal.Open(file, gdal.GA_ReadOnly)
+    if ds is None:
+        raise FileNotFoundError(f"Could not open file: {file}")
+
+    num_bands = ds.RasterCount
+    rows = ds.RasterYSize
+    cols = ds.RasterXSize
+
+    if band_num is not None:
+        if band_num < 1 or band_num > num_bands:
+            raise ValueError(f"band_num must be between 1 and {num_bands}")
+        band = ds.GetRasterBand(band_num)
+        arr = band.ReadAsArray()
+    else:
+        arr = np.zeros((rows, cols, num_bands), dtype=np.float32)
+        for i in range(num_bands):
+            band = ds.GetRasterBand(i + 1)
+            arr[:, :, i] = band.ReadAsArray()
+
+    ds = None
+    return arr
 # def h5_keys(obj):
 #     "Recursively find all keys in an h5py.Group."
 #     keys = (obj.name,)

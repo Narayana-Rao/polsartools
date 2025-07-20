@@ -52,13 +52,17 @@ def halphadp(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overvi
     if outType == "bin":
         output_filepaths.append(os.path.join(infolder, "Hdp.bin"))
         output_filepaths.append(os.path.join(infolder, "alphadp.bin"))
+        output_filepaths.append(os.path.join(infolder, "e1_norm.bin"))
+        output_filepaths.append(os.path.join(infolder, "e2_norm.bin"))
         
     else:
         output_filepaths.append(os.path.join(infolder, "Hdp.tif"))
         output_filepaths.append(os.path.join(infolder, "alphadp.tif"))
+        output_filepaths.append(os.path.join(infolder, "e1_norm.tif"))
+        output_filepaths.append(os.path.join(infolder, "e2_norm.tif"))
 
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
-                            processing_func=process_chunk_halphadp,block_size=block_size, max_workers=max_workers,  num_outputs=2,
+                            processing_func=process_chunk_halphadp,block_size=block_size, max_workers=max_workers,  num_outputs=len(output_filepaths),
                             cog_flag=cog_flag,
                             cog_overviews=cog_overviews,
                             )
@@ -119,7 +123,7 @@ def process_chunk_halphadp(chunks, window_size,*args):
     # alpha2 = alpha2.reshape(C2_stack.shape[0],C2_stack.shape[1])
 
     # print(np.nanmean(H),np.nanmean(alpha_))
-    eval_norm1 = np.real(eval_norm1.reshape(C2_stack.shape[0],C2_stack.shape[1])), 
-    eval_norm2 = np.real(eval_norm2.reshape(C2_stack.shape[0],C2_stack.shape[1])), 
+    eval_norm1 = np.real(eval_norm1.reshape(C2_stack.shape[0],C2_stack.shape[1]))
+    eval_norm2 = np.real(eval_norm2.reshape(C2_stack.shape[0],C2_stack.shape[1]))
 
     return np.real(H).astype(np.float32),np.real(alpha_).astype(np.float32),eval_norm1.astype(np.float32),eval_norm2.astype(np.float32)

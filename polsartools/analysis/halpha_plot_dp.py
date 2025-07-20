@@ -2,7 +2,8 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
-
+from pathlib import Path
+from polsartools.utils.utils import read_bin
 
 def get_dp_halpha_bounds():
     datal = []
@@ -216,6 +217,13 @@ def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
     - Uses `get_feas_bounds()` to obtain feasible boundary curves for plotting.
     - If `norm` is 'log', a `LogNorm()` normalization is applied.
     """
+
+    if isinstance(h, (str, os.PathLike, Path)):
+        h = read_bin(h)
+    if isinstance(alpha, (str, os.PathLike, Path)):
+        alpha = read_bin(alpha)
+    
+
 
     data = get_feas_bounds()
     fs = 12

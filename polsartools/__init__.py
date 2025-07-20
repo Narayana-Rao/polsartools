@@ -33,7 +33,8 @@ from .polsar.others.stokes_parm import stokes_parm
 """ Importing analysis modules """
 from .analysis import fp_sign, halpha_plot_dp, pauliRGB, dxpRGB, halpha_plot_fp
 
-
+""" Importing utils """
+from .utils import time_it, read_rst
 
 __all__ = [
     # SENSORS
@@ -47,6 +48,7 @@ __all__ = [
     'rlee', 'boxcar',
     # UTILS
     'mlook', 'stokes_parm',
+    'read_rst', 'time_it',
     'convert_T3_C3', 'convert_C3_T3', 'pauliRGB', 'convert_S', 
     # FULL-POL
     'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 
