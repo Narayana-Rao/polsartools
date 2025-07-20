@@ -22,7 +22,7 @@ def write_s2_bin(file,wdata):
     outdata.FlushCache()
 
 @time_it
-def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
+def rs2_fp(inFolder,matrixType='T3',azlks=8,rglks=2,type='sigma0'):
     """
     Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.
 
@@ -51,7 +51,7 @@ def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
     inFolder : str
         Path to the folder containing the radar imagery files and the lookup tables (`lutSigma.xml`, `lutGamma.xml`, `lutBeta.xml`).
     
-    matrix : str, optional (default='T3')
+    matrixType : str, optional (default='T3')
         The type of matrix to generate. Can be:
         
         - 'S2' : Generates S2 matrix from the input imagery (S12 = S21 assumption).
@@ -104,7 +104,7 @@ def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
     else:
         raise ValueError(f'Unknown type {type} \n Available types: sigma0,gamma0,beta0')
 
-    if matrix == 'S2':
+    if matrixType == 'S2':
 
         out_dir = os.path.join(inFolder,"S2")
         os.makedirs(out_dir,exist_ok=True)
@@ -145,8 +145,8 @@ def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
         file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
         file.close() 
         
-    elif matrix == 'T3':
-        print("Considering S12 = S21")
+    elif matrixType == 'T3':
+        # print("Considering S12 = S21")
         # Kp- 3-D Pauli feature vector
         # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[1,0]])
         # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[0,1]])
@@ -195,8 +195,8 @@ def rs2_fp(inFolder,matrix='T3',type='sigma0',azlks=8,rglks=2):
                   np.real(T33)],T3Folder)
         
         
-    elif matrix == 'C3':
-        print("Considering S12 = S21")
+    elif matrixType == 'C3':
+        # print("Considering S12 = S21")
         inFile = os.path.join(inFolder,"imagery_HH.tif")
         data = read_rs2_tif(inFile)
         s11 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)

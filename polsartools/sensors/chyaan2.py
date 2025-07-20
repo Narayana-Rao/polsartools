@@ -61,7 +61,7 @@ def write_bin(file,wdata):
     outdata.FlushCache() ##saves to disk!! 
 
 @time_it
-def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
+def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
     
     """
     Extracts specified matrix elements (S2, T3, or C3) from Chandrayaan-II DFSAR Full-Pol data 
@@ -78,7 +78,7 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
     inFolder : str
         The path to the folder containing the Chandrayaan-II DFSAR Full-Pol data files.
 
-    matrix : str, optional (default='T3')
+    matrixType : str, optional (default='T3')
         The type of matrix to extract. Can either be 'S2', 'T3', or 'C3'.
 
         - 'S2' will extract the S2 matrix elements.
@@ -167,7 +167,7 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
 
     calFactor = 1/np.sqrt(10**(cc/10))
 
-    if matrix == 'S2':
+    if matrixType == 'S2':
 
         out_dir = os.path.join(inFolder,"S2")
         os.makedirs(out_dir,exist_ok=True)
@@ -216,8 +216,8 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
         
         
         
-    elif matrix == 'T3':
-        print("Considering S12 = S21")
+    elif matrixType == 'T3':
+        # print("Considering S12 = S21")
         
         inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
         data = read_rs2_tif(inFile)
@@ -275,8 +275,8 @@ def chyaan2_fp(inFolder,matrix='T3',azlks=None,rglks=None):
             f.writelines(lines)
         f.close()
         
-    elif matrix == 'C3':
-        print("Considering S12 = S21")
+    elif matrixType == 'C3':
+        # print("Considering S12 = S21")
 
         inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
         data = read_rs2_tif(inFile)
