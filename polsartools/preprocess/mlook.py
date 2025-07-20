@@ -9,7 +9,9 @@ gdal.UseExceptions()
 @time_it
 def mlook(infolder,  azlks=2, rglks=2, outType="tif",sub_dir=True, 
           cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-          write_flag=True, max_workers=None,block_size=(512, 512)):
+          write_flag=True, max_workers=None,block_size=(512, 512),
+          progress_callback=None,  # for QGIS plugin
+        ):
     
     """
     Generate multilooked polarimetric matrix from C4, T4, C3, T3, C2, or T2 formats.
@@ -131,7 +133,8 @@ def mlook(infolder,  azlks=2, rglks=2, outType="tif",sub_dir=True,
                             out_geotransform=out_geotransform,
                             out_projection=in_projection,
                             azlks=azlks,
-                            rglks=rglks
+                            rglks=rglks,
+                            progress_callback=progress_callback
                             )
 
 def process_chunk_mlook(chunks, window_size, *args, **kwargs):

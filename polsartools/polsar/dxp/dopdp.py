@@ -6,7 +6,9 @@ from .dxp_infiles import dxpc2files
 @time_it
 def dopdp(infolder,  window_size=1, outType="tif", cog_flag=False, 
           cog_overviews = [2, 4, 8, 16], write_flag=True, 
-          max_workers=None,block_size=(512, 512)):
+          max_workers=None,block_size=(512, 512),
+          progress_callback=None,  # for QGIS plugin
+          ):
     """
         
         Computes Barakat degree of polarization (DOP) from the input dual-polarization (dual-pol) C2 matrix data, and writes
@@ -59,6 +61,7 @@ def dopdp(infolder,  window_size=1, outType="tif", cog_flag=False,
                             processing_func=process_chunk_dopdp,block_size=block_size, max_workers=max_workers,  num_outputs=1,
                             cog_flag=cog_flag,
                             cog_overviews=cog_overviews,
+                            progress_callback=progress_callback
                             )
 
 def process_chunk_dopdp(chunks, window_size,*args):

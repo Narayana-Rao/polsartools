@@ -4,7 +4,11 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from .dxp_infiles import dxpc2files
 @time_it
-def halphadp(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
+def halphadp(infolder,  window_size=1, outType="tif", 
+             cog_flag=False, cog_overviews = [2, 4, 8, 16], 
+             write_flag=True, max_workers=None,block_size=(512, 512),
+             progress_callback=None,  # for QGIS plugin          
+                ):
     """
     
     Computes Entropy and alpha parameters from the input dual-polarization (dual-pol) C2 matrix data, and writes
@@ -65,6 +69,7 @@ def halphadp(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overvi
                             processing_func=process_chunk_halphadp,block_size=block_size, max_workers=max_workers,  num_outputs=len(output_filepaths),
                             cog_flag=cog_flag,
                             cog_overviews=cog_overviews,
+                            progress_callback=progress_callback
                             )
 def process_chunk_halphadp(chunks, window_size,*args):
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)

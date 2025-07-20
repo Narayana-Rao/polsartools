@@ -7,7 +7,9 @@ from .fp_infiles import fp_c3t3files
 @time_it
 def halphafp(infolder,  window_size=1, outType="tif", cog_flag=False, 
           cog_overviews = [2, 4, 8, 16], write_flag=True, 
-          max_workers=None,block_size=(512, 512)):
+          max_workers=None,block_size=(512, 512),
+            progress_callback=None  # for QGIS plugin
+          ):
     """Perform H/α/A (Entropy/Alpha/Anisotropy) decomposition for full-pol SAR data.
 
     This function implements the Cloude-Pottier decomposition, computing entropy (H),
@@ -132,6 +134,7 @@ def halphafp(infolder,  window_size=1, outType="tif", cog_flag=False,
                         max_workers=max_workers,  num_outputs=len(output_filepaths),
                         cog_flag=cog_flag,
                         cog_overviews=cog_overviews,
+                        progress_callback=progress_callback
                         )
 
 

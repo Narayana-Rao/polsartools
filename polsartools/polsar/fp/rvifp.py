@@ -8,7 +8,9 @@ from .fp_infiles import fp_c3t3files
 @time_it
 def rvifp(infolder,  window_size=1, outType="tif", cog_flag=False, 
           cog_overviews = [2, 4, 8, 16], write_flag=True, 
-          max_workers=None,block_size=(512, 512)):
+          max_workers=None,block_size=(512, 512),
+          progress_callback=None,  # for QGIS plugin
+            ):
     """Calculate Radar Vegetation Index (RVI) from full-pol SAR data.
 
     This function computes the Radar Vegetation Index (RVI) using full-polarimetric
@@ -76,23 +78,42 @@ def rvifp(infolder,  window_size=1, outType="tif", cog_flag=False,
                         max_workers=max_workers,  num_outputs=len(output_filepaths),
                         cog_flag=cog_flag,
                         cog_overviews=cog_overviews,
+                        progress_callback=progress_callback
                         )
 
 def process_chunk_rvifp(chunks, window_size,input_filepaths,*args):
 
-    t11_T1 = np.array(chunks[0])
-    t12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
-    t13_T1 = np.array(chunks[3])+1j*np.array(chunks[4])
-    t21_T1 = np.conj(t12_T1)
-    t22_T1 = np.array(chunks[5])
-    t23_T1 = np.array(chunks[6])+1j*np.array(chunks[7])
-    t31_T1 = np.conj(t13_T1)
-    t32_T1 = np.conj(t23_T1)
-    t33_T1 = np.array(chunks[8])
+    if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
+        t11_T1 = np.array(chunks[0])
+        t12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
+        t13_T1 = np.array(chunks[3])+1j*np.array(chunks[4])
+        t21_T1 = np.conj(t12_T1)
+        t22_T1 = np.array(chunks[5])
+        t23_T1 = np.array(chunks[6])+1j*np.array(chunks[7])
+        t31_T1 = np.conj(t13_T1)
+        t32_T1 = np.conj(t23_T1)
+        t33_T1 = np.array(chunks[8])
 
-    T_T1 = np.array([[t11_T1, t12_T1, t13_T1], 
+        T_T1 = np.array([[t11_T1, t12_T1, t13_T1], 
                      [t21_T1, t22_T1, t23_T1], 
                      [t31_T1, t32_T1, t33_T1]])
+
+
+    if 'C11' in input_filepaths[0] and 'C22' in input_filepaths[5] and 'C33' in input_filepaths[8]:
+        C11 = np.array(chunks[0])
+        C12 = np.array(chunks[1])+1j*np.array(chunks[2])
+        C13 = np.array(chunks[3])+1j*np.array(chunks[4])
+        C21 = np.conj(C12)
+        C22 = np.array(chunks[5])
+        C23 = np.array(chunks[6])+1j*np.array(chunks[7])
+        C31 = np.conj(C13)
+        C32 = np.conj(C23)
+        C33 = np.array(chunks[8])
+        C3 = np.array([[C11, C12, C13], 
+                         [C21, C22, C23], 
+                         [C31, C32, C33]])
+
+        T_T1 = C3_T3_mat(C3)
 
     if window_size>1:
         kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
@@ -132,12 +153,16 @@ def process_chunk_rvifp(chunks, window_size,input_filepaths,*args):
     
     rvi = np.real((4*p3)/(p1 + p2 + p3))
 
-    idx = np.argwhere(rvi>1)
+    # idx = np.argwhere(rvi>1)
 
-    rvi[idx] = (3/4)*rvi[idx]
-    rvi[~idx] = rvi[~idx]
-    rvi[rvi==0] = np.nan
+    # rvi[idx] = (3/4)*rvi[idx]
+    # rvi[~idx] = rvi[~idx]
+    # rvi[rvi==0] = np.nan
 
+    # rvi = np.real(rvi)
+    
+    rvi[rvi > 1] *= 0.75
+    rvi[rvi == 0] = np.nan
     rvi = np.real(rvi)
 
     return rvi.astype(np.float32)

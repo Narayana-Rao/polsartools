@@ -12,11 +12,11 @@ def utils_processing(T3_folder, window_size=5):
     pst.pauliRGB(T3_folder)
 
 def preproc_processing(T3_folder, azlks,rglks,window_size):
-    pst.mlook(T3_folder,azlks,rglks)
+    pst.mlook(T3_folder,azlks,rglks,sub_dir=False)
     
 def filters_processing(T3_folder, window_size=5):
-    pst.rlee(T3_folder, window_size=window_size)
-    pst.boxcar(T3_folder, window_size=window_size)
+    pst.rlee(T3_folder, window_size=window_size,sub_dir=False)
+    pst.boxcar(T3_folder, window_size=window_size,sub_dir=False)
 
 def cp_processing(compact_c2, chi_in=45, window_size=3):
     """ Decompositions """

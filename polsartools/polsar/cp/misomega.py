@@ -6,7 +6,9 @@ from .cp_infiles import cpc2files
 @time_it
 def misomega(infolder,   chi_in=45, psi_in=0, window_size=1, outType="tif", cog_flag=False, 
           cog_overviews = [2, 4, 8, 16], write_flag=True, 
-          max_workers=None,block_size=(512, 512)):
+          max_workers=None,block_size=(512, 512),
+          progress_callback=None,  # for QGIS plugin
+          ):
     """Perform Modified/Improved S-Omega Decomposition for compact-pol SAR data.
 
     This function implements an enhanced version of the S-Omega decomposition
@@ -95,7 +97,7 @@ def misomega(infolder,   chi_in=45, psi_in=0, window_size=1, outType="tif", cog_
                         num_outputs=len(output_filepaths),
                         cog_flag=cog_flag,
                         cog_overviews=cog_overviews,
-
+                        progress_callback=progress_callback
                         )
     
 def process_chunk_misomega(chunks, window_size, *args, **kwargs):

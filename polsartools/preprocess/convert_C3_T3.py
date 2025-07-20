@@ -8,7 +8,12 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import C3_T3_mat
 
 @time_it
-def convert_C3_T3(infolder, outType="tif", window_size=1, write_flag=True, max_workers=None):
+def convert_C3_T3(infolder, outType="tif", window_size=1, 
+                  write_flag=True, max_workers=None,block_size=(512, 512), 
+                  cog_flag=False,cog_overviews = [2, 4, 8, 16], 
+                  progress_callback=None  
+                  
+                  ):
 
     if os.path.isfile(os.path.join(infolder,"C11.bin")):
         ds = gdal.Open(os.path.join(infolder,"C11.bin"))
@@ -66,10 +71,14 @@ def convert_C3_T3(infolder, outType="tif", window_size=1, write_flag=True, max_w
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T23_imag.tif"))
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T33.tif"))
     
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
+    process_chunks_parallel(input_filepaths, list(output_filepaths), 
+                            window_size=window_size, write_flag=write_flag,
             processing_func=process_chunk_C3T3,
-            block_size=(512, 512), max_workers=max_workers, 
-            num_outputs=9)
+            block_size=block_size, max_workers=max_workers, 
+            num_outputs=len(output_filepaths), cog_flag=cog_flag, 
+            cog_overviews=cog_overviews, 
+            progress_callback=progress_callback
+            )
     
     file = open(os.path.join(os.path.dirname(infolder), "T3",'config.txt') ,"w+")
     file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))

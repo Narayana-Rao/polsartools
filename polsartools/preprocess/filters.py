@@ -9,7 +9,9 @@ from polsartools.rflee import process_chunk_rfleecpp
 @time_it
 def boxcar(infolder,  window_size=3, outType="tif", sub_dir=True,
            cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-           write_flag=True, max_workers=None,block_size=(512, 512)):
+           write_flag=True, max_workers=None,block_size=(512, 512),
+           progress_callback=None,  # for QGIS plugin
+           ):
     """
     Apply a Boxcar speckle filter to polarimetric SAR data to reduce speckle noise.
 
@@ -63,6 +65,7 @@ def boxcar(infolder,  window_size=3, outType="tif", sub_dir=True,
                             processing_func=process_chunk_boxcar,block_size=block_size, max_workers=max_workers,  num_outputs=num_outputs,
                             cog_flag=cog_flag,
                             cog_overviews=cog_overviews,
+                            progress_callback=progress_callback
                             )
 
 def process_chunk_boxcar(chunks, window_size, *args):
@@ -78,7 +81,9 @@ def process_chunk_boxcar(chunks, window_size, *args):
 @time_it
 def rlee(infolder,  window_size=3, outType="tif",sub_dir=True, 
          cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-         write_flag=True, max_workers=None,block_size=(512, 512)):
+         write_flag=True, max_workers=None,block_size=(512, 512),
+         progress_callback=None,  # for QGIS plugin
+         ):
 
     """
     Apply Refined Lee (RLee) speckle filter to polarimetric SAR data.
@@ -141,6 +146,7 @@ def rlee(infolder,  window_size=3, outType="tif",sub_dir=True,
                             processing_func=process_chunk_rfl,block_size=block_size, max_workers=max_workers,  num_outputs=num_outputs,
                             cog_flag=cog_flag,
                             cog_overviews=cog_overviews,
+                            progress_callback=progress_callback
                             )
 
 

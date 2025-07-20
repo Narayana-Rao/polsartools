@@ -99,7 +99,9 @@ def get_output_filepaths(infolder, outfolder, matrix, outType):
 def convert_S(infolder, matrixType='T3', azlks=4,rglks=2,  cf = 1, 
                   outType="tif", outfolder=None,
                   cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-                  write_flag=True, max_workers=None,block_size=(512, 512)):
+                  write_flag=True, max_workers=None,block_size=(512, 512),
+                  progress_callback=None,  # for QGIS plugin
+                  ):
     """
     Convert full/dual-polarimetric scattering (S2,Sxy) matrix into multi-looked
     coherency (T4, T3, T2) or covariance (C4, C3, C2) matrices.
@@ -229,7 +231,8 @@ def convert_S(infolder, matrixType='T3', azlks=4,rglks=2,  cf = 1,
                             out_geotransform=out_geotransform,
                             out_projection=in_projection,
                             azlks=azlks,
-                            rglks=rglks
+                            rglks=rglks,
+                            progress_callback=progress_callback
                             )
     elif len(input_filepaths) == 4:
         # print("Processing full-pol S-matrix...")
@@ -248,7 +251,8 @@ def convert_S(infolder, matrixType='T3', azlks=4,rglks=2,  cf = 1,
                                 out_geotransform=out_geotransform,
                                 out_projection=in_projection,
                                 azlks=azlks,
-                                rglks=rglks
+                                rglks=rglks,
+                                progress_callback=progress_callback
                                 )
 
 

@@ -17,13 +17,13 @@ update dxpRGB for sxy
 
 NISAR reader
 	added full-pol support rslc, gslc 
-	updated with chunk-based mem-load; 
+	updated with chunk-based mem-load
 	parallel processing
 	fix rslc memory issue 
 
 ISRO_ASAR reader 
 	addedLevel-1 .tif support 
-	updated with chunk-based mem-load; 
+	updated with chunk-based mem-load
 	parallel processing
 
 

@@ -6,7 +6,9 @@ from .cp_infiles import cpc2files
 @time_it
 def dopcp(infolder,   chi_in=45, psi_in=0, window_size=1, outType="tif", cog_flag=False, 
           cog_overviews = [2, 4, 8, 16], write_flag=True, 
-          max_workers=None,block_size=(512, 512)):
+          max_workers=None,block_size=(512, 512),
+          progress_callback=None,  # for QGIS plugin          
+          ):
     """Compute Degree of Polarization (DoP) from compact-pol SAR data.
 
         This function calculates the Degree of Polarization (DoP) from compact-polarimetric
@@ -112,7 +114,7 @@ def dopcp(infolder,   chi_in=45, psi_in=0, window_size=1, outType="tif", cog_fla
                         num_outputs=len(output_filepaths),
                         cog_flag=cog_flag,
                         cog_overviews=cog_overviews,
-
+                        progress_callback=progress_callback
                         )
 
 def process_chunk_dopcp(chunks, window_size, *args, **kwargs):

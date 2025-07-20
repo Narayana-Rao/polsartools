@@ -10,7 +10,11 @@ others are fine
 
 """
 @time_it
-def shannon_h_dp(infolder,  window_size=1, outType="tif", cog_flag=False, cog_overviews = [2, 4, 8, 16], write_flag=True, max_workers=None,block_size=(512, 512)):
+def shannon_h_dp(infolder,  window_size=1, outType="tif", 
+                 cog_flag=False, cog_overviews = [2, 4, 8, 16], 
+                 write_flag=True, max_workers=None,block_size=(512, 512),
+                 progress_callback=None,  # for QGIS plugin          
+                 ):
     """
     
     Computes Shannon entropy parameter, total entropy, SE, intensity (SEI) and polarimetry (SEP) from the input dual-polarization (dual-pol) C2 matrix data, and writes
@@ -71,6 +75,7 @@ def shannon_h_dp(infolder,  window_size=1, outType="tif", cog_flag=False, cog_ov
                             processing_func=process_chunk_shannondp,block_size=block_size, max_workers=max_workers,  num_outputs=3,
                             cog_flag=cog_flag,
                             cog_overviews=cog_overviews,
+                            progress_callback=progress_callback
                             )
 
 def process_chunk_shannondp(chunks, window_size,*args):
