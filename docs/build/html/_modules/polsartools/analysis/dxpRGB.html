@@ -420,7 +420,7 @@
                 <span class="n">C12</span> <span class="o">=</span> <span class="p">(</span><span class="n">S1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">S2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
                 <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;No valid S-matrix pair found. Expected one of: (s11,s12), (s11,s21), (s22,s12), (s22,s21)&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;No valid C2 or Sxy data found. Expected one of:  (s11,s12), (s11,s21), (s22,s12), (s22,s21)  (C11,C22,C12_real)&quot;</span><span class="p">)</span>
 
     <span class="c1"># Compute RGB channels</span>
     <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>

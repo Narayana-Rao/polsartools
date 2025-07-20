@@ -363,7 +363,7 @@
 <p>The <cite>chyaan2_fp</cite> function extracts matrix elements (S2, C3 or T3) from the given Chandrayaan-II folder and saves them into respective directories (S2, C3 or T3).</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">chyaan2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/chyaan2.html#chyaan2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">chyaan2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrixType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/chyaan2.html#chyaan2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extracts specified matrix elements (S2, T3, or C3) from Chandrayaan-II DFSAR Full-Pol data
 and saves them into respective directories.</p>
 <section id="example">
@@ -379,7 +379,7 @@ and saves them into respective directories.</p>
 <dl class="simple">
 <dt>inFolder<span class="classifier">str</span></dt><dd><p>The path to the folder containing the Chandrayaan-II DFSAR Full-Pol data files.</p>
 </dd>
-<dt>matrix<span class="classifier">str, optional (default=’T3’)</span></dt><dd><p>The type of matrix to extract. Can either be ‘S2’, ‘T3’, or ‘C3’.</p>
+<dt>matrixType<span class="classifier">str, optional (default=’T3’)</span></dt><dd><p>The type of matrix to extract. Can either be ‘S2’, ‘T3’, or ‘C3’.</p>
 <ul class="simple">
 <li><p>‘S2’ will extract the S2 matrix elements.</p></li>
 <li><p>‘T3’ will extract the T3 matrix elements.</p></li>
