@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
   - python
-  - gdal==3.9.0
+  - gdal<=3.11.0
   - numpy
   - tables
   - netcdf4
