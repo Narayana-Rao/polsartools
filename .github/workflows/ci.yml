@@ -412,9 +412,9 @@ jobs:
         echo "Building for $ARCH architecture"
         conda config --add channels conda-forge
         conda config --set channel_priority strict
-        conda build ./conda-recipe --output-folder output --python 3.8
-        conda build ./conda-recipe --output-folder output --python 3.9
-        conda build ./conda-recipe --output-folder output --python 3.10
+        # conda build ./conda-recipe --output-folder output --python 3.8
+        # conda build ./conda-recipe --output-folder output --python 3.9
+        # conda build ./conda-recipe --output-folder output --python 3.10
         conda build ./conda-recipe --output-folder output --python 3.11
         conda build ./conda-recipe --output-folder output --python 3.12
         conda build ./conda-recipe --output-folder output --python 3.13
@@ -438,10 +438,10 @@ jobs:
         python -m pip install --upgrade pip
         conda config --add channels conda-forge
         conda config --set channel_priority strict
-        conda build ./conda-recipe --output-folder output --python 3.7
-        conda build ./conda-recipe --output-folder output --python 3.8
-        conda build ./conda-recipe --output-folder output --python 3.9
-        conda build ./conda-recipe --output-folder output --python 3.10
+        # conda build ./conda-recipe --output-folder output --python 3.7
+        # conda build ./conda-recipe --output-folder output --python 3.8
+        # conda build ./conda-recipe --output-folder output --python 3.9
+        # conda build ./conda-recipe --output-folder output --python 3.10
         conda build ./conda-recipe --output-folder output --python 3.11
         conda build ./conda-recipe --output-folder output --python 3.12
         conda build ./conda-recipe --output-folder output --python 3.13  
