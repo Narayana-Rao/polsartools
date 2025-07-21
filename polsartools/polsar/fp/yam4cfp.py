@@ -103,7 +103,7 @@ def yam4cfp(infolder,  model="", window_size=1, outType="tif", cog_flag=False,
             output_filepaths.append(os.path.join(infolder, "Yam4csr_vol.bin"))
             output_filepaths.append(os.path.join(infolder, "Yam4csr_hlx.bin"))
         else:
-            raise(f"Invalid model!! \n model type argument must be either '' for default or Y4R or S4R")
+            raise(f"Invalid model!! \n model type argument must be either y4co for default or y4cr or y4cs")
     
     else:
         if not model or model=="y4co":
@@ -254,6 +254,13 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths,  *args, **kwargs
                 teta = 0.5 * np.arctan(2 * T3[5].real / (T3[4].real - T3[8].real))
                 T3 = unitary_rotation(T3, teta)
 
+            if np.allclose(T3, 0,rtol=1e-8, atol=1e-10):
+                M_odd[ii, jj] = np.nan
+                M_dbl[ii, jj] = np.nan
+                M_vol[ii, jj] = np.nan
+                M_hlx[ii, jj] = np.nan
+                continue
+
             Pc = 2.0 * np.abs(T3[5].imag)
             HV_type = 1
             
@@ -280,6 +287,14 @@ def process_chunk_yam4cfp(chunks, window_size, input_filepaths,  *args, **kwargs
             TP = np.real(T3[0] + T3[4] + T3[8])
             
             if Pv < 0.0:
+                BETre = 0.0
+                BETim = 0.0
+                ALPre = 0.0
+                ALPim = 0.0
+                FS = 0.0
+                FD = 0.0
+                FV = 0.0
+                
                 # Freeman - Yamaguchi 3-components algorithm
                 HHHH = (T3[0] + 2.0 * T3[1].real + T3[4]) / 2.0
                 HHVVre = (T3[0] - T3[4]) / 2.0
