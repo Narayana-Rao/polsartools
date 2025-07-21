@@ -13,12 +13,10 @@ requirements:
   host:
     - python
     - pip
-    - pybind11
     - setuptools
     - wheel
-    - conda-build  
-    - gdal         
-    - anaconda-client
+    - pybind11
+    - gdal <=3.11.0
   run:
     - python
     - pip
@@ -27,14 +25,14 @@ requirements:
     - click
     - tqdm
     - matplotlib
-    - pybind11  
-    - tables
     - netcdf4
     - scikit-image
-    - gdal  
+    - gdal <=3.11.0
+    - pytest
 
 test:
   commands:
+    - python -m pip install tables
     - python -c "import polsartools"
 
 about:
@@ -42,7 +40,3 @@ about:
   license: GPL-3.0
   summary: "A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data."
 
-# platforms:
-#   - linux
-#   - osx
-#   - win
