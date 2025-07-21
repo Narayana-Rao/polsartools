@@ -259,119 +259,119 @@ jobs:
 # Build wheels with cibuildwheel
 ##########################################################################
 
-    # - name: Clean build artifacts (Linux/macOS)
-    #   if: runner.os != 'Windows'
-    #   run: |
-    #     find . -name '*.so' -delete
-    #     rm -rf build/ dist/ *.egg-info wheelhouse
+    - name: Clean build artifacts (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        find . -name '*.so' -delete
+        rm -rf build/ dist/ *.egg-info wheelhouse
 
-    # - name: Clean build artifacts (Windows)
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #     Remove-Item -Recurse -Force "*.so" -ErrorAction SilentlyContinue
+    - name: Clean build artifacts (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        Remove-Item -Recurse -Force "*.so" -ErrorAction SilentlyContinue
 
-    #     # Clean directories if they exist
-    #     if (Test-Path "build") {
-    #       Remove-Item -Recurse -Force "build"
-    #     }
+        # Clean directories if they exist
+        if (Test-Path "build") {
+          Remove-Item -Recurse -Force "build"
+        }
 
-    #     if (Test-Path "dist") {
-    #       Remove-Item -Recurse -Force "dist"
-    #     }
+        if (Test-Path "dist") {
+          Remove-Item -Recurse -Force "dist"
+        }
 
-    #     if (Test-Path "*.egg-info") {
-    #       Remove-Item -Recurse -Force "*.egg-info"
-    #     }
+        if (Test-Path "*.egg-info") {
+          Remove-Item -Recurse -Force "*.egg-info"
+        }
 
-    #     if (Test-Path "wheelhouse") {
-    #       Remove-Item -Recurse -Force "wheelhouse"
-    #     }
+        if (Test-Path "wheelhouse") {
+          Remove-Item -Recurse -Force "wheelhouse"
+        }
 
 
 
-    # - name: Build wheels with cibuildwheel (Linux)
-    #   if: runner.os == 'Linux'
-    #   env:
-    #     # CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64"  
-    #     CIBW_BUILD: "cp38-manylinux_x86_64 cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp311-manylinux_x86_64 cp312-manylinux_x86_64 cp313-manylinux_x86_64"   
-    #     CIBW_OUTPUT_DIR: wheelhouse
-    #   run: |
-    #     conda init bash 
-    #     # Check if ~/.bashrc exists. If not, use ~/.bash_profile
-    #     if [ -f ~/.bashrc ]; then
-    #       source ~/.bashrc  # Use .bashrc if it exists
-    #     else
-    #       source ~/.bash_profile  # Fallback to .bash_profile
-    #     fi
-    #     conda activate pst-env  
-    #     echo "Active Conda Environment:"
+    - name: Build wheels with cibuildwheel (Linux)
+      if: runner.os == 'Linux'
+      env:
+        # CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64"  
+        CIBW_BUILD: "cp38-manylinux_x86_64 cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp311-manylinux_x86_64 cp312-manylinux_x86_64 cp313-manylinux_x86_64"   
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: |
+        conda init bash 
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
+        conda activate pst-env  
+        echo "Active Conda Environment:"
 
-    #     python -m cibuildwheel --output-dir wheelhouse
+        python -m cibuildwheel --output-dir wheelhouse
     
     
-    # - name: Build wheels with cibuildwheel (macOS)
-    #   if: runner.os == 'macOS'
-    #   env:
-    #     # Initially, leave CIBW_BUILD unset to be configured dynamically
-    #     CIBW_OUTPUT_DIR: wheelhouse
-    #   run: |
-    #     conda init bash
+    - name: Build wheels with cibuildwheel (macOS)
+      if: runner.os == 'macOS'
+      env:
+        # Initially, leave CIBW_BUILD unset to be configured dynamically
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: |
+        conda init bash
 
-    #     # Check if ~/.bashrc exists. If not, use ~/.bash_profile
-    #     if [ -f ~/.bashrc ]; then
-    #       source ~/.bashrc  # Use .bashrc if it exists
-    #     else
-    #       source ~/.bash_profile  # Fallback to .bash_profile
-    #     fi
+        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+        if [ -f ~/.bashrc ]; then
+          source ~/.bashrc  # Use .bashrc if it exists
+        else
+          source ~/.bash_profile  # Fallback to .bash_profile
+        fi
 
-    #     conda activate pst-env
-    #     echo "Active Conda Environment:"
+        conda activate pst-env
+        echo "Active Conda Environment:"
 
-    #     # Detect the architecture of the runner (ARM or Intel) on macOS
-    #     if [[ "$(uname -m)" == "x86_64" ]]; then
-    #       # Intel architecture (x86_64) - macOS
-    #       ARCH="macosx_x86_64"
-    #       # export CIBW_BUILD="cp38-macosx_x86_64 cp39-macosx_x86_64"
-    #       export CIBW_BUILD="cp38-macosx_x86_64 cp39-macosx_x86_64 cp310-macosx_x86_64 cp311-macosx_x86_64 cp312-macosx_x86_64 cp313-macosx_x86_64"
-    #     elif [[ "$(uname -m)" == "arm64" ]]; then
-    #       # ARM architecture (arm64) - macOS Apple Silicon
-    #       ARCH="macosx_arm64"
-    #       # export CIBW_BUILD="cp38-macosx_arm64 cp39-macosx_arm64"
-    #       export CIBW_BUILD="cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
-    #     else
-    #       echo "Unsupported architecture: $(uname -m)"
-    #       exit 1
-    #     fi
+        # Detect the architecture of the runner (ARM or Intel) on macOS
+        if [[ "$(uname -m)" == "x86_64" ]]; then
+          # Intel architecture (x86_64) - macOS
+          ARCH="macosx_x86_64"
+          # export CIBW_BUILD="cp38-macosx_x86_64 cp39-macosx_x86_64"
+          export CIBW_BUILD="cp38-macosx_x86_64 cp39-macosx_x86_64 cp310-macosx_x86_64 cp311-macosx_x86_64 cp312-macosx_x86_64 cp313-macosx_x86_64"
+        elif [[ "$(uname -m)" == "arm64" ]]; then
+          # ARM architecture (arm64) - macOS Apple Silicon
+          ARCH="macosx_arm64"
+          # export CIBW_BUILD="cp38-macosx_arm64 cp39-macosx_arm64"
+          export CIBW_BUILD="cp38-macosx_arm64 cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
+        else
+          echo "Unsupported architecture: $(uname -m)"
+          exit 1
+        fi
 
-    #     echo "Building for architecture: $ARCH"
-    #     echo "CIBW_BUILD: $CIBW_BUILD"
+        echo "Building for architecture: $ARCH"
+        echo "CIBW_BUILD: $CIBW_BUILD"
 
-    #     # Run cibuildwheel to build the wheels
-    #     python -m cibuildwheel --output-dir wheelhouse
+        # Run cibuildwheel to build the wheels
+        python -m cibuildwheel --output-dir wheelhouse
 
 
-    # - name: Build wheels with cibuildwheel (Windows)
-    #   if: runner.os == 'Windows'
-    #   env:
-    #     # CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64"  # For Windows x86_64
-    #     CIBW_BUILD: "cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
-    #     CIBW_OUTPUT_DIR: wheelhouse
-    #   run: |
-    #     conda init cmd.exe  # Initialize Conda for Windows
-    #     refreshenv  # Refresh environment variables (needed on Windows)
-    #     conda activate pst-env  # Activate the Conda environment
-    #     echo "Active Conda Environment:"
+    - name: Build wheels with cibuildwheel (Windows)
+      if: runner.os == 'Windows'
+      env:
+        # CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64"  # For Windows x86_64
+        CIBW_BUILD: "cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: |
+        conda init cmd.exe  # Initialize Conda for Windows
+        refreshenv  # Refresh environment variables (needed on Windows)
+        conda activate pst-env  # Activate the Conda environment
+        echo "Active Conda Environment:"
 
-    #     python -m cibuildwheel --output-dir wheelhouse
+        python -m cibuildwheel --output-dir wheelhouse
 
-    # - name: Upload wheel artifacts
-    #   uses: actions/upload-artifact@v4.6.0
-    #   with:
-    #     name: python-wheels-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}  # Unique name based on run ID
-    #     path: wheelhouse/*.whl
-    #     if-no-files-found: ignore
-    #     overwrite: false
-    #     include-hidden-files: false
+    - name: Upload wheel artifacts
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        name: python-wheels-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}  # Unique name based on run ID
+        path: wheelhouse/*.whl
+        if-no-files-found: ignore
+        overwrite: false
+        include-hidden-files: false
 
 
 ##########################################################################
