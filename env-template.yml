@@ -6,14 +6,14 @@ dependencies:
   - python
   - gdal<=3.11.0
   - numpy
-  - tables
-  - netcdf4
   - matplotlib
   - scipy
   - scikit-image
-  - pytest
   - pip
   - pip:
       - git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
       - pytest
       - cibuildwheel
+      - tables
+      - netcdf4
+      - pytest
