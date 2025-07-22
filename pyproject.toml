@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42","setuptools_scm", "wheel", "pybind11", "cibuildwheel==2.23.3"]
+requires = ["setuptools>=42","setuptools_scm", "wheel", "pybind11", "cibuildwheel"]
 build-backend = "setuptools.build_meta"
 [tool.cibuildwheel]
 skip = "cp27-*"
