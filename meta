@@ -8,7 +8,8 @@
 
 0.8
 added .tif for all functions 
-added pwg (psuedo geotag) for RGB .png, added optional geotif RGB
+added pwg (psuedo geotag) for RGB .png, added optional geotif RGB, optional moving average smoothing
+added rgb function for decomposed powers
 added dprvic, dp_desc, fp_sign (4 types of polarimetric signatures)
 added stokes_parm function
 added risat L11 reader, esar_gtc reader

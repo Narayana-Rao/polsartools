@@ -13,19 +13,21 @@ def read_bin(file):
     arr = band.ReadAsArray()
     return arr
 
-def norm_data(data):
+def norm_data(data,lp=5,gp=95,dB_scale = True):
     
-    data = 10*np.log10(data)
+    if dB_scale:
+        data = 10*np.log10(data)
     data[data==-np.inf] = np.nan
     data[data==np.inf] = np.nan
     data = (data - np.nanmin(data)) / (np.nanmax(data) - np.nanmin(data))
 
-    p5 = np.nanpercentile(data, 5)
-    p95 = np.nanpercentile(data, 95)
+    p5 = np.nanpercentile(data, lp)
+    p95 = np.nanpercentile(data, gp)
     data = np.clip(data, p5, p95)
     data = (data - p5) / (p95 - p5)
 
-    return data   
+    return data 
+
 def read_and_normalize(file_path):
     """Reads binary data and normalizes it."""
     return norm_data(read_bin(file_path)) if os.path.isfile(file_path) else None
@@ -48,16 +50,21 @@ def read_and_normalize(file_path):
 #     with open(prj_path, "w") as f:
 #         f.write(wkt_text)
 
+
+def get_alpha_channel(red, green, blue):
+    """
+    Creates an alpha channel based on the RGB values.
+    Transparent where all RGB values are zero or NaN.
+    """
+    zeros_mask = (red == 0.0) & (green == 0.0) & (blue == 0.0)
+    nan_mask = np.isnan(red) & np.isnan(green) & np.isnan(blue)
+    transparent_mask = zeros_mask | nan_mask
+    return np.where(transparent_mask, 0, 255).astype(np.uint8)
+
 def generate_rgb_png(red, green, blue,georef_file, output_path):
     
-    # Get geotransform and projection from reference file
-    ref = gdal.Open(georef_file)
-    ref_band = ref.GetRasterBand(1).ReadAsArray()
-    alpha_channel = np.where(ref_band == 0, 0, 255).astype(np.uint8)
-    del ref_band
-    
-    
-    """Creates an RGBA image and saves it."""
+
+    alpha_channel = get_alpha_channel(red, green, blue)
     rgb_uint8 = (np.dstack((red, green, blue)) * 255).astype(np.uint8)
     # alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
     rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
@@ -85,10 +92,11 @@ def generate_rgb_tif(red, green, blue, georef_file, output_path):
     ref = gdal.Open(georef_file)
     dataset.SetGeoTransform(ref.GetGeoTransform())
     dataset.SetProjection(ref.GetProjection())
-    ref_band = ref.GetRasterBand(1).ReadAsArray()
-    alpha = np.where(ref_band == 0, 0, 255).astype(np.uint8)
-    del ref_band
 
+    
+    alpha = get_alpha_channel(red, green, blue)
+    
+    
 
     dataset.GetRasterBand(1).WriteArray(red_uint8)
     dataset.GetRasterBand(2).WriteArray(green_uint8)
@@ -101,12 +109,9 @@ def generate_rgb_tif(red, green, blue, georef_file, output_path):
 
 
 def create_pgw(reference_file, output_png_path):
-    from osgeo import gdal
-    import os
-
     ds = gdal.Open(reference_file)
     gt = ds.GetGeoTransform()
-    
+    ds=None
     pgw_values = [
         gt[1],     # pixel width
         gt[2],     # rotation (typically 0)
@@ -120,10 +125,55 @@ def create_pgw(reference_file, output_png_path):
     with open(pgw_path, "w") as f:
         for val in pgw_values:
             f.write(f"{val:.10f}\n")
-    # print(f"PGW file created at {pgw_path}")
+    # print(f"PGW file created at {pgw_path}")\
+
+
+
+# def create_pgw(reference_file, output_png_path):
+#     ds = gdal.Open(reference_file)
+#     gt = ds.GetGeoTransform()
+#     proj = ds.GetProjection()
+#     ds = None
+
+#     # Prepare source spatial reference
+#     source_ref = osr.SpatialReference()
+#     source_ref.ImportFromWkt(proj)
+
+#     # Prepare target spatial reference (WGS84)
+#     target_ref = osr.SpatialReference()
+#     target_ref.ImportFromEPSG(4326)
+
+#     # Create coordinate transformation if needed
+#     if not source_ref.IsGeographic() or not source_ref.IsSame(target_ref):
+#         transform = osr.CoordinateTransformation(source_ref, target_ref)
+
+#         # Transform center of top-left pixel to WGS84
+#         x_geo = gt[0] + gt[1] / 2
+#         y_geo = gt[3] + gt[5] / 2
+#         x_wgs84, y_wgs84, _ = transform.TransformPoint(x_geo, y_geo)
+#     else:
+#         x_wgs84 = gt[0] + gt[1] / 2
+#         y_wgs84 = gt[3] + gt[5] / 2
+
+#     # Create PGW values (preserve pixel scale and rotation)
+#     pgw_values = [
+#         gt[1],     # pixel width
+#         gt[2],     # rotation
+#         gt[4],     # rotation
+#         gt[5],     # pixel height
+#         x_wgs84,   # transformed X
+#         y_wgs84    # transformed Y
+#     ]
+
+#     # Write PGW
+#     pgw_path = os.path.splitext(output_png_path)[0] + ".pgw"
+#     with open(pgw_path, "w") as f:
+#         for val in pgw_values:
+#             f.write(f"{val:.10f}\n")
+
     
 @time_it
-def pauliRGB(infolder,tif_flag=False):
+def pauliRGB(infolder,save_tif=False, window_size=None):
     """
     Generate Pauli RGB image from polarimetric SAR data (C4, C3, T4, T3, or S2 matrices).
 
@@ -142,9 +192,10 @@ def pauliRGB(infolder,tif_flag=False):
     infolder : str
         Path to the folder containing polarimetric matrix files (.bin or .tif). 
         Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.
-    tif_flag : bool, default=False
+    save_tif : bool, default=False
         If True, generates both PNG and GeoTIFF (.tif) versions of the Pauli RGB image.
-
+    window_size : int, optional
+        Size of the moving average window for smoothing. If None, no smoothing is applied.
     Returns
     -------
     None
@@ -203,11 +254,18 @@ def pauliRGB(infolder,tif_flag=False):
     else:
         raise ValueError("No matching dataset found for C4, C3, T3, or S2!")
     output_path = os.path.join(infolder, "PauliRGB.png")
+    
+    if window_size is not None:
+        kernel = np.ones((window_size, window_size), np.float32) / (window_size * window_size)
+        red = conv2d(red, kernel).astype(np.float32)
+        green = conv2d(green, kernel).astype(np.float32)
+        blue = conv2d(blue, kernel).astype(np.float32)
+    
     generate_rgb_png(red, green, blue,georef_file, output_path)
     create_pgw(georef_file, output_path)
     # create_prj(georef_file, output_path)
     print(f"Pauli RGB image saved as {output_path}")
-    if tif_flag:
+    if save_tif:
         output_path = os.path.join(infolder, "PauliRGB.tif")
         generate_rgb_tif(red, green, blue, georef_file, output_path)
         print(f"Pauli RGB image saved as {output_path}")

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.pauliRGB &#8212; PolSARtools 0.7 documentation</title>
+    <title>polsartools.analysis.pauliRGB &#8212; PolSARtools 0.8 documentation</title>
   
   
   
@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=48f8e935"></script>
+    <script src="../../../_static/documentation_options.js?v=a0e24af7"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/pauliRGB';</script>
@@ -333,35 +333,37 @@
                 <article class="bd-article">
                   
   <h1>Source code for polsartools.analysis.pauliRGB</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
 <span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
 <span class="c1"># from pyproj import CRS</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="k">def</span> <span class="nf">read_bin</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_bin</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="n">band</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">arr</span> <span class="o">=</span> <span class="n">band</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">arr</span>
 
-<span class="k">def</span> <span class="nf">norm_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">norm_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">lp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">gp</span><span class="o">=</span><span class="mi">95</span><span class="p">,</span><span class="n">dB_scale</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     
-    <span class="n">data</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dB_scale</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">==-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
     <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 
-    <span class="n">p5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="n">p95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">95</span><span class="p">)</span>
+    <span class="n">p5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">lp</span><span class="p">)</span>
+    <span class="n">p95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">gp</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">p5</span><span class="p">,</span> <span class="n">p95</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">p5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p95</span> <span class="o">-</span> <span class="n">p5</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">data</span>   
-<span class="k">def</span> <span class="nf">read_and_normalize</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">data</span> 
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_and_normalize</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads binary data and normalizes it.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">read_bin</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
@@ -383,16 +385,21 @@
 <span class="c1">#     with open(prj_path, &quot;w&quot;) as f:</span>
 <span class="c1">#         f.write(wkt_text)</span>
 
-<span class="k">def</span> <span class="nf">generate_rgb_png</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_alpha_channel</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates an alpha channel based on the RGB values.</span>
+<span class="sd">    Transparent where all RGB values are zero or NaN.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">zeros_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">red</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">green</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">blue</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">red</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">green</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">blue</span><span class="p">)</span>
+    <span class="n">transparent_mask</span> <span class="o">=</span> <span class="n">zeros_mask</span> <span class="o">|</span> <span class="n">nan_mask</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">transparent_mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_rgb_png</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
     
-    <span class="c1"># Get geotransform and projection from reference file</span>
-    <span class="n">ref</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">georef_file</span><span class="p">)</span>
-    <span class="n">ref_band</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
-    <span class="n">alpha_channel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ref_band</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-    <span class="k">del</span> <span class="n">ref_band</span>
-<span class="w">    </span>
-<span class="w">    </span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates an RGBA image and saves it.&quot;&quot;&quot;</span>
+
+    <span class="n">alpha_channel</span> <span class="o">=</span> <span class="n">get_alpha_channel</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">)</span>
     <span class="n">rgb_uint8</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">))</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
     <span class="c1"># alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)</span>
     <span class="n">rgba_uint8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">rgb_uint8</span><span class="p">,</span> <span class="n">alpha_channel</span><span class="p">))</span>
@@ -406,7 +413,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.png&quot;</span><span class="p">,</span> <span class="s2">&quot;_thumb.png&quot;</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> 
                 <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">generate_rgb_tif</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_rgb_tif</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
     <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s1">&#39;GTiff&#39;</span><span class="p">)</span>
     <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">red</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Byte</span><span class="p">,</span><span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;COMPRESS=DEFLATE&#39;</span><span class="p">,</span><span class="s1">&#39;PREDICTOR=2&#39;</span><span class="p">,</span><span class="s1">&#39;ZLEVEL=9&#39;</span><span class="p">,</span> <span class="s1">&#39;BIGTIFF=YES&#39;</span><span class="p">,</span><span class="s1">&#39;TILED=YES&#39;</span><span class="p">])</span>
@@ -420,10 +427,11 @@
     <span class="n">ref</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">georef_file</span><span class="p">)</span>
     <span class="n">dataset</span><span class="o">.</span><span class="n">SetGeoTransform</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">GetGeoTransform</span><span class="p">())</span>
     <span class="n">dataset</span><span class="o">.</span><span class="n">SetProjection</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">GetProjection</span><span class="p">())</span>
-    <span class="n">ref_band</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
-    <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ref_band</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-    <span class="k">del</span> <span class="n">ref_band</span>
 
+    
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">get_alpha_channel</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">)</span>
+    
+    
 
     <span class="n">dataset</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">red_uint8</span><span class="p">)</span>
     <span class="n">dataset</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">green_uint8</span><span class="p">)</span>
@@ -435,13 +443,10 @@
     <span class="c1"># print(f&quot;RGB GeoTIFF saved to {output_path}&quot;)</span>
 
 
-<span class="k">def</span> <span class="nf">create_pgw</span><span class="p">(</span><span class="n">reference_file</span><span class="p">,</span> <span class="n">output_png_path</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
-    <span class="kn">import</span> <span class="nn">os</span>
-
+<span class="k">def</span><span class="w"> </span><span class="nf">create_pgw</span><span class="p">(</span><span class="n">reference_file</span><span class="p">,</span> <span class="n">output_png_path</span><span class="p">):</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">reference_file</span><span class="p">)</span>
     <span class="n">gt</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetGeoTransform</span><span class="p">()</span>
-    
+    <span class="n">ds</span><span class="o">=</span><span class="kc">None</span>
     <span class="n">pgw_values</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">gt</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>     <span class="c1"># pixel width</span>
         <span class="n">gt</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>     <span class="c1"># rotation (typically 0)</span>
@@ -455,12 +460,57 @@
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pgw_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">pgw_values</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.10f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1"># print(f&quot;PGW file created at {pgw_path}&quot;)</span>
+    <span class="c1"># print(f&quot;PGW file created at {pgw_path}&quot;)\</span>
+
+
+
+<span class="c1"># def create_pgw(reference_file, output_png_path):</span>
+<span class="c1">#     ds = gdal.Open(reference_file)</span>
+<span class="c1">#     gt = ds.GetGeoTransform()</span>
+<span class="c1">#     proj = ds.GetProjection()</span>
+<span class="c1">#     ds = None</span>
+
+<span class="c1">#     # Prepare source spatial reference</span>
+<span class="c1">#     source_ref = osr.SpatialReference()</span>
+<span class="c1">#     source_ref.ImportFromWkt(proj)</span>
+
+<span class="c1">#     # Prepare target spatial reference (WGS84)</span>
+<span class="c1">#     target_ref = osr.SpatialReference()</span>
+<span class="c1">#     target_ref.ImportFromEPSG(4326)</span>
+
+<span class="c1">#     # Create coordinate transformation if needed</span>
+<span class="c1">#     if not source_ref.IsGeographic() or not source_ref.IsSame(target_ref):</span>
+<span class="c1">#         transform = osr.CoordinateTransformation(source_ref, target_ref)</span>
+
+<span class="c1">#         # Transform center of top-left pixel to WGS84</span>
+<span class="c1">#         x_geo = gt[0] + gt[1] / 2</span>
+<span class="c1">#         y_geo = gt[3] + gt[5] / 2</span>
+<span class="c1">#         x_wgs84, y_wgs84, _ = transform.TransformPoint(x_geo, y_geo)</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         x_wgs84 = gt[0] + gt[1] / 2</span>
+<span class="c1">#         y_wgs84 = gt[3] + gt[5] / 2</span>
+
+<span class="c1">#     # Create PGW values (preserve pixel scale and rotation)</span>
+<span class="c1">#     pgw_values = [</span>
+<span class="c1">#         gt[1],     # pixel width</span>
+<span class="c1">#         gt[2],     # rotation</span>
+<span class="c1">#         gt[4],     # rotation</span>
+<span class="c1">#         gt[5],     # pixel height</span>
+<span class="c1">#         x_wgs84,   # transformed X</span>
+<span class="c1">#         y_wgs84    # transformed Y</span>
+<span class="c1">#     ]</span>
+
+<span class="c1">#     # Write PGW</span>
+<span class="c1">#     pgw_path = os.path.splitext(output_png_path)[0] + &quot;.pgw&quot;</span>
+<span class="c1">#     with open(pgw_path, &quot;w&quot;) as f:</span>
+<span class="c1">#         for val in pgw_values:</span>
+<span class="c1">#             f.write(f&quot;{val:.10f}\n&quot;)</span>
+
     
 <div class="viewcode-block" id="pauliRGB">
 <a class="viewcode-back" href="../../../files/functions/others.html#polsartools.pauliRGB">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span> <span class="nf">pauliRGB</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span><span class="n">tif_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pauliRGB</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span><span class="n">save_tif</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate Pauli RGB image from polarimetric SAR data (C4, C3, T4, T3, or S2 matrices).</span>
 
@@ -479,9 +529,10 @@
 <span class="sd">    infolder : str</span>
 <span class="sd">        Path to the folder containing polarimetric matrix files (.bin or .tif). </span>
 <span class="sd">        Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.</span>
-<span class="sd">    tif_flag : bool, default=False</span>
+<span class="sd">    save_tif : bool, default=False</span>
 <span class="sd">        If True, generates both PNG and GeoTIFF (.tif) versions of the Pauli RGB image.</span>
-
+<span class="sd">    window_size : int, optional</span>
+<span class="sd">        Size of the moving average window for smoothing. If None, no smoothing is applied.</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
@@ -492,7 +543,7 @@
 <span class="sd">        - PauliRGB.tif: Optional GeoTIFF output if `tif_flag=True`</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">find_file</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">base_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_file</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">base_name</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;.tif&quot;</span><span class="p">]:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_name</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
@@ -540,11 +591,18 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No matching dataset found for C4, C3, T3, or S2!&quot;</span><span class="p">)</span>
     <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;PauliRGB.png&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">window_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span> <span class="n">window_size</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">window_size</span> <span class="o">*</span> <span class="n">window_size</span><span class="p">)</span>
+        <span class="n">red</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">green</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">green</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">blue</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">blue</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    
     <span class="n">generate_rgb_png</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
     <span class="n">create_pgw</span><span class="p">(</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
     <span class="c1"># create_prj(georef_file, output_path)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pauli RGB image saved as </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">tif_flag</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">save_tif</span><span class="p">:</span>
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;PauliRGB.tif&quot;</span><span class="p">)</span>
         <span class="n">generate_rgb_tif</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pauli RGB image saved as </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>

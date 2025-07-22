@@ -31,7 +31,7 @@ from .polsar.dcp import mf3cd
 from .polsar.others.stokes_parm import stokes_parm
 
 """ Importing analysis modules """
-from .analysis import fp_sign, halpha_plot_dp, pauliRGB, dxpRGB, halpha_plot_fp
+from .analysis import fp_sign, halpha_plot_dp, pauliRGB, dxpRGB, halpha_plot_fp, rgb
 
 """ Importing utils """
 from .utils import time_it, read_rst
@@ -43,7 +43,7 @@ __all__ = [
     'alos2_fbd_l11','alos2_hbq_l11', 'chyaan2_fp','rs2_fp',  
     'risat_l11',
     #
-    'fp_sign','pauliRGB','dxpRGB',
+    'fp_sign','pauliRGB','dxpRGB','halpha_plot_fp','halpha_plot_dp','rgb',
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS
@@ -52,12 +52,12 @@ __all__ = [
     'convert_T3_C3', 'convert_C3_T3', 'pauliRGB', 'convert_S', 
     # FULL-POL
     'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 
-    'halphafp', 'shannon_h_fp','yam4cfp', 'halpha_plot_fp', 
+    'halphafp', 'shannon_h_fp','yam4cfp',  
     # COMPACT-POL
     'cprvi', 'dopcp', 'misomega', 'mf3cc',                 
     # DUAL-CROSS-POL
     'dprvi', 'dopdp', 'prvidp', 'rvidp', 'halphadp', 
-    'shannon_h_dp', 'halpha_plot_dp',    
+    'shannon_h_dp',     
     'dprvic','dp_desc',
     # DUAL-CO-POL
     'mf3cd'      

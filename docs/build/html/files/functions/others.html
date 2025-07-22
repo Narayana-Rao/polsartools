@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Multi-looking (mlook) &#8212; PolSARtools 0.7 documentation</title>
+    <title>Multi-looking (mlook) &#8212; PolSARtools 0.8 documentation</title>
   
   
   
@@ -30,7 +30,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=48f8e935"></script>
+    <script src="../../_static/documentation_options.js?v=a0e24af7"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/others';</script>
@@ -337,6 +337,7 @@
 
 
 
+
 <li class="toctree-l1"><a class="reference internal" href="full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
 </ul>
@@ -403,7 +404,7 @@
 <h1>Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)<a class="headerlink" href="#multi-looking-mlook" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">mlook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/mlook.html#mlook"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">mlook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/mlook.html#mlook"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generate multilooked polarimetric matrix from C4, T4, C3, T3, C2, or T2 formats.</p>
 <p>This function applies multilooking (spatial averaging) to reduce speckle noise
 and improve radiometric stability in polarimetric SAR datasets.</p>
@@ -454,7 +455,7 @@ files depend on matrix type (e.g., C3 → C11.tif, C12_real.tif, etc.).</p>
 <h1>Conver full-pol S2 (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)<a class="headerlink" href="#conver-full-pol-s2-convert-s" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">convert_S</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrixType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfolder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/convert_S2.html#convert_S"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">convert_S</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrixType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfolder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/convert_S2.html#convert_S"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Convert full/dual-polarimetric scattering (S2,Sxy) matrix into multi-looked
 coherency (T4, T3, T2) or covariance (C4, C3, C2) matrices.
 It supports both GeoTIFF and PolSARpro-compatible output.</p>
@@ -574,7 +575,7 @@ Larger blocks use more memory but may be more efficient.</p></li>
 <h1>Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)<a class="headerlink" href="#generate-paulirgb-for-fp-data-paulirgb" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">pauliRGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/pauliRGB.html#pauliRGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">pauliRGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_tif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/pauliRGB.html#pauliRGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generate Pauli RGB image from polarimetric SAR data (C4, C3, T4, T3, or S2 matrices).</p>
 <p>This function creates a Pauli decomposition RGB composite image from full polarimetric SAR data.</p>
 <p class="rubric">Examples</p>
@@ -591,7 +592,8 @@ Larger blocks use more memory but may be more efficient.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>infolder</strong> (<em>str</em>) – Path to the folder containing polarimetric matrix files (.bin or .tif).
 Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.</p></li>
-<li><p><strong>tif_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates both PNG and GeoTIFF (.tif) versions of the Pauli RGB image.</p></li>
+<li><p><strong>save_tif</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates both PNG and GeoTIFF (.tif) versions of the Pauli RGB image.</p></li>
+<li><p><strong>window_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the moving average window for smoothing. If None, no smoothing is applied.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -614,7 +616,7 @@ Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.</p></li>
 <h1>Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">dxpRGB</span></code>)<a class="headerlink" href="#generate-false-color-rgb-for-dp-cp-data-dxprgb" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">dxpRGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/dxpRGB.html#dxpRGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">dxpRGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_tif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/dxpRGB.html#dxpRGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generate false-color RGB visualization from dual-polarimetric Sxy, C2 SAR data.</p>
 <p>This function creates an RGB image from dual-pol (Sxy, C2)  matrix inputs.</p>
 <p class="rubric">Examples</p>
@@ -635,7 +637,7 @@ Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.</p></li>
 - 2: Blue=C22, Red=C11, Green=|C11 + C22 - 2·C12_real|
 - 3: Blue=C11, Red=C22, Green=|C11 - C22|
 - 4: Blue=C22, Red=C11, Green=|C22 - C11|</p></li>
-<li><p><strong>tif_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates a GeoTIFF (.tif) file alongside the PNG image.</p></li>
+<li><p><strong>save_tif</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates a GeoTIFF (.tif) file alongside the PNG image.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -645,6 +647,47 @@ Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="generate-false-color-rgb-for-decomposed-powers-rgb">
+<h1>Generate false color RGB for decomposed powers (<code class="docutils literal notranslate"><span class="pre">rgb</span></code>)<a class="headerlink" href="#generate-false-color-rgb-for-decomposed-powers-rgb" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Rpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Bpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_each</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_tif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/rgb.html#rgb"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate false-color RGB visualization from three input raster files.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate Pauli RGB from a polarimetric folder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rgb</span><span class="p">(</span><span class="s2">&quot;/path/to/red.tif&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/green.tif&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/blue.tif&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Output both PNG and GeoTIFF versions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rgb</span><span class="p">(</span><span class="s2">&quot;/path/to/red.tif&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/green.tif&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/blue.tif&quot;</span><span class="p">,</span> <span class="n">tif_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Rpath</strong> (<em>str</em>) – Path to the red channel raster file.</p></li>
+<li><p><strong>Gpath</strong> (<em>str</em>) – Path to the green channel raster file.</p></li>
+<li><p><strong>Bpath</strong> (<em>str</em>) – Path to the blue channel raster file.</p></li>
+<li><p><strong>norm_each</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, normalize each channel separately.</p></li>
+<li><p><strong>lp</strong> (<em>int</em><em>, </em><em>default=5</em>) – Lower percentile for normalization (0-100). Only used if <cite>norm_each=True</cite>.</p></li>
+<li><p><strong>gp</strong> (<em>int</em><em>, </em><em>default=95</em>) – Upper percentile for normalization(0-100). Only used if <cite>norm_each=True</cite>.</p></li>
+<li><p><strong>save_tif</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates a GeoTIFF (.tif) file alongside the PNG image.</p></li>
+<li><p><strong>window_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the moving average window for smoothing. If None, no smoothing is applied.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>None</em></p></li>
+<li><p><em>Writes output to</em></p></li>
+<li><p><strong>- RGB.png</strong> (<em>RGB composite with world file for georeferencing</em>)</p></li>
+<li><p><strong>- RGB.tif</strong> (Optional GeoTIFF output if <cite>tif_flag=True</cite>)</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -738,6 +781,7 @@ Is None, for theoretical plot that don’t require S2 will be generated.</p></li
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#derive-stokes-parameters-stokes-parm">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-paulirgb-for-fp-data-paulirgb">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-false-color-rgb-for-dp-cp-data-dxprgb">Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">dxpRGB</span></code>)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-false-color-rgb-for-decomposed-powers-rgb">Generate false color RGB for decomposed powers (<code class="docutils literal notranslate"><span class="pre">rgb</span></code>)</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-polarimetric-signatures-for-fp-data-fp-sign">Generate polarimetric signatures for FP data (<code class="docutils literal notranslate"><span class="pre">fp_sign</span></code>)</a></li>
 </ul>
 

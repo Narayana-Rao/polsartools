@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Model Free 3-Component decomposition (mf3cf) &#8212; PolSARtools 0.7 documentation</title>
+    <title>Model Free 3-Component decomposition (mf3cf) &#8212; PolSARtools 0.8 documentation</title>
   
   
   
@@ -30,7 +30,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=48f8e935"></script>
+    <script src="../../../_static/documentation_options.js?v=a0e24af7"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -338,6 +338,7 @@
 
 
 
+
 <li class="toctree-l1"><a class="reference internal" href="halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
 </ul>
@@ -404,7 +405,7 @@
 <h1>Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)<a class="headerlink" href="#model-free-3-component-decomposition-mf3cf" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">mf3cf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/fp/mf3cf.html#mf3cf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">mf3cf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/fp/mf3cf.html#mf3cf"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Perform Model-Free 3-Component Decomposition for full-pol SAR data.</p>
 <p>This function implements the model-free three-component decomposition for
 full-polarimetric SAR data, decomposing the total scattered power into surface (Ps),

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.preprocess.filters &#8212; PolSARtools 0.7 documentation</title>
+    <title>polsartools.preprocess.filters &#8212; PolSARtools 0.8 documentation</title>
   
   
   
@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=48f8e935"></script>
+    <script src="../../../_static/documentation_options.js?v=a0e24af7"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/preprocess/filters';</script>
@@ -333,20 +333,22 @@
                 <article class="bd-article">
                   
   <h1>Source code for polsartools.preprocess.filters</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">polsartools.utils.proc_utils</span> <span class="kn">import</span> <span class="n">process_chunks_parallel</span>
-<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
-<span class="kn">from</span> <span class="nn">polsartools.preprocess.pre_utils</span> <span class="kn">import</span> <span class="n">get_filter_io_paths</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.preprocess.pre_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_filter_io_paths</span>
 
-<span class="kn">from</span> <span class="nn">polsartools.preprocess.rflee_filter</span> <span class="kn">import</span> <span class="n">process_chunk_refined_lee</span>
-<span class="kn">from</span> <span class="nn">polsartools.rflee</span> <span class="kn">import</span> <span class="n">process_chunk_rfleecpp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.preprocess.rflee_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunk_refined_lee</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.rflee</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunk_rfleecpp</span>
 <div class="viewcode-block" id="boxcar">
 <a class="viewcode-back" href="../../../files/functions/speckle_filts.html#polsartools.boxcar">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span> <span class="nf">boxcar</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">sub_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">boxcar</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">sub_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
            <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> 
-           <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)):</span>
+           <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+           <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin</span>
+           <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply a Boxcar speckle filter to polarimetric SAR data to reduce speckle noise.</span>
 
@@ -400,10 +402,11 @@
                             <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_boxcar</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="n">num_outputs</span><span class="p">,</span>
                             <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
                             <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                            <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                             <span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">process_chunk_boxcar</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_boxcar</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 
     <span class="n">filtered_chunks</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)):</span>
@@ -416,9 +419,11 @@
 <div class="viewcode-block" id="rlee">
 <a class="viewcode-back" href="../../../files/functions/speckle_filts.html#polsartools.rlee">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span> <span class="nf">rlee</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span><span class="n">sub_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">rlee</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span><span class="n">sub_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
          <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> 
-         <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)):</span>
+         <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+         <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin</span>
+         <span class="p">):</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply Refined Lee (RLee) speckle filter to polarimetric SAR data.</span>
@@ -481,11 +486,12 @@
                             <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_rfl</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="n">num_outputs</span><span class="p">,</span>
                             <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
                             <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                            <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                             <span class="p">)</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">process_chunk_rfl</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_rfl</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 
     <span class="c1"># print(&#39;before pad&#39;,np.shape(chunks[0]))</span>
     
@@ -520,7 +526,7 @@
         <span class="n">proc_chunks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">proc_chunks</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">pad_top_left</span><span class="p">:</span><span class="o">-</span><span class="n">pad_bottom_right</span><span class="p">,</span> <span class="n">pad_top_left</span><span class="p">:</span><span class="o">-</span><span class="n">pad_bottom_right</span><span class="p">]</span>
     
     
-    <span class="k">def</span> <span class="nf">shift_array</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">shift</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shift_array</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">shift</span><span class="p">):</span>
         <span class="c1"># Get the number of rows and columns in the array</span>
         <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span>
 

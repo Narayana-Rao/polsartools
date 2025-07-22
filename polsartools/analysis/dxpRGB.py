@@ -9,7 +9,7 @@ from .pauliRGB import generate_rgb_png, create_pgw, generate_rgb_tif, norm_data,
 
 
 @time_it
-def dxpRGB(infolder, type=1, tif_flag=False, azlks=1, rglks=1):
+def dxpRGB(infolder, type=1, save_tif=False, window_size=None):
     
     """
     Generate false-color RGB visualization from dual-polarimetric Sxy, C2 SAR data.
@@ -34,7 +34,7 @@ def dxpRGB(infolder, type=1, tif_flag=False, azlks=1, rglks=1):
         - 2: Blue=C22, Red=C11, Green=|C11 + C22 - 2·C12_real|
         - 3: Blue=C11, Red=C22, Green=|C11 - C22|
         - 4: Blue=C22, Red=C11, Green=|C22 - C11|
-    tif_flag : bool, default=False
+    save_tif : bool, default=False
         If True, generates a GeoTIFF (.tif) file alongside the PNG image.
 
     Returns
@@ -109,19 +109,26 @@ def dxpRGB(infolder, type=1, tif_flag=False, azlks=1, rglks=1):
     else:
         georef_file = pathA  # Use the first file for georeferencing
     output_path = os.path.join(infolder, f'RGB{type}.png')
+    
+    if window_size is not None:
+        kernel = np.ones((window_size, window_size), np.float32) / (window_size * window_size)
+        red = conv2d(red, kernel).astype(np.float32)
+        green = conv2d(green, kernel).astype(np.float32)
+        blue = conv2d(blue, kernel).astype(np.float32)
+    
     generate_rgb_png(red, green, blue, georef_file, output_path)
     create_pgw(georef_file, output_path)
     
     print(f"RGB image saved as {output_path}")
     
-    if tif_flag:
+    if save_tif:
         tif_path = os.path.join(infolder, f'RGB{type}.tif')
         generate_rgb_tif(red, green, blue, georef_file, tif_path)
         print(f"RGB GeoTIFF saved as {tif_path}")
 
 
 @time_it
-def dxpRGB_old(infolder, type = 1 , tif_flag = False):
+def dxpRGB_old(infolder, type = 1 , save_tif = False):
     """
     Generate false-color RGB visualization from C2 dual-polarimetric SAR data.
 
@@ -148,7 +155,7 @@ def dxpRGB_old(infolder, type = 1 , tif_flag = False):
         - 2: Blue=C22, Red=C11, Green=|C11 + C22 - 2·C12_real|
         - 3: Blue=C11, Red=C22, Green=|C11 - C22|
         - 4: Blue=C22, Red=C11, Green=|C22 - C11|
-    tif_flag : bool, default=False
+    save_tif : bool, default=False
         If True, generates a GeoTIFF (.tif) file alongside the PNG image.
 
     Returns
@@ -202,7 +209,7 @@ def dxpRGB_old(infolder, type = 1 , tif_flag = False):
         # create_prj(georef_file, output_path)
         
         print(f"RGB image saved as {output_path}")
-        if tif_flag:
+        if save_tif:
             output_path = os.path.join(infolder,  f'RGB{type}.png')
             generate_rgb_tif(red, green, blue, georef_file, output_path)
             print(f"RGB image saved as {output_path}")
