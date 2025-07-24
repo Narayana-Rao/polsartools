@@ -3,7 +3,7 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-__version__ = "0.8"  
+__version__ = "0.9"  
 
 
 # Importing functions from the submodules for direct access
@@ -31,7 +31,7 @@ from .polsar.dcp import mf3cd
 from .polsar.others.stokes_parm import stokes_parm
 
 """ Importing analysis modules """
-from .analysis import fp_sign, halpha_plot_dp, pauliRGB, dxpRGB, halpha_plot_fp, rgb
+from .analysis import fp_sign, halpha_plot_dp, haalpha_plot_fp, pauliRGB, dxpRGB, halpha_plot_fp, rgb, halpha_cluster_fp
 
 """ Importing utils """
 from .utils import time_it, read_rst
@@ -43,7 +43,8 @@ __all__ = [
     'alos2_fbd_l11','alos2_hbq_l11', 'chyaan2_fp','rs2_fp',  
     'risat_l11',
     #
-    'fp_sign','pauliRGB','dxpRGB','halpha_plot_fp','halpha_plot_dp','rgb',
+    'fp_sign','pauliRGB','dxpRGB','halpha_plot_fp','haalpha_plot_fp','halpha_cluster_fp',
+    'halpha_plot_dp','rgb',
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS

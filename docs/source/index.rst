@@ -72,7 +72,7 @@ BibTeX 📄
 Disclaimer
 ----------
 
-PolSARtools v0.6.1 is released under the `GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.html>`_ (GPL-3.0). 
+PolSARtools is released under the `GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.html>`_ (GPL-3.0). 
 This means you are free to use, modify, and distribute the software, provided you adhere to the terms of the license.
 
 No Warranty

@@ -148,7 +148,7 @@ def proc_shannon_h_fp(chunks, window_size, input_filepaths, *args):
                          [C31, C32, C33]])
 
     else:
-        raise ValueError("Invalid input matrices. Ensure the input is either T3 or C3 matrix foolder.")
+        raise ValueError("Invalid input matrices. Ensure the input is either T3 or C3 matrix folder.")
 
 
     if window_size>1:

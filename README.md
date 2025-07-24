@@ -3,6 +3,7 @@
 </p>
 
 ## A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
+
 [![Build](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml/badge.svg)](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
 
@@ -44,10 +45,7 @@
 </table>
 
 ## General Information
-
-This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from different SAR sensors or input polarimetric matrix (S2, C3, T3, Sxy, C2, T2). 
-
-<!-- The input data needs to be in [PolSARpro](https://earth.esa.int/web/polsarpro/home)/[ENVI](https://www.l3harrisgeospatial.com/Software-Technology/ENVI) format (\*.bin and \*.hdr).  -->
+This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from various SAR sensors or input polarimetric matrix (S2, C3, T3, Sxy, C2, T2). 
 
 ## Installation
 ### 1. Install **`gdal`** Package
@@ -58,21 +56,29 @@ conda install gdal -c conda-forge
 
 ### 2. Install **`polsartools`** Package
 
-a. You can install it using `pip`:
+a. You can install it using `pip` (stable release):
 
 ```bash
 pip install polsartools
 ```
 
-b. If you encounter an error like `` AttributeError: module 'polsartools' has no atribute 'xyzabc' ``  or need the latest version, you can install the updated version directly from GitHub:
+b. Install from `conda` (stable release)
+
+```bash
+conda install polsartools -c bnarayanarao
+```
+
+c. Install the latest version from GitHub (if you need recent updates or fixes)
+
+If you encounter an error like `` AttributeError: module 'polsartools' has no atribute 'xyzabc' ``  use this option
 
 ```bash
 pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
 ```
 
 >**Note for Windows users:** 
-> To install from GitHub (2.b), Microsoft C++ build tools must be installed first. 
-Download here: https://visualstudio.microsoft.com/visual-cpp-build-tools/
+> To install from GitHub (2.c), Microsoft C++ build tools must be installed first. 
+Download here: https://visualstudio.microsoft.com/visual-cpp-build-tools
 
 
 ## Example Usage
@@ -101,7 +107,7 @@ Sample use cases and notebooks are provided at [polsartools-notebooks](https://g
 	* Non-negative Eigen value decomposition
 	* Neumann Decomposition 
    * Model free 4-Component decomposition for full-pol data (MF4CF)[[11]](references.md#11)
-   * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]]references.md(#4)
+   * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]](references.md#4)
 	* Radar Vegetation Index (RVI) [[8]](references.md#8) 
    * Generalized volume Radar Vegetation Index (GRVI) [[2]](references.md#2)
    * Polarimetric Radar Vegetation Index (PRVI) [[1]](references.md#1)
@@ -136,6 +142,8 @@ Sample use cases and notebooks are provided at [polsartools-notebooks](https://g
   * Psuedo RGB from Dual/compact pol data
   * Polarimetric signatures
   * Full-pol and Dual-pol H-Alpha plot
+  * Full-pol H-A-Alpha plot
+  * H-Alpha clusters (Full-pol)
 
 
 ## Contributing

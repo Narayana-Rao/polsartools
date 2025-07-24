@@ -6,31 +6,10 @@
 # conda-recipe/meta.yaml
 # docs/source/conf.py
 
-0.8
-added .tif for all functions 
-added pwg (psuedo geotag) for RGB .png, added optional geotif RGB, optional moving average smoothing
-added rgb function for decomposed powers
-added dprvic, dp_desc, fp_sign (4 types of polarimetric signatures)
-added stokes_parm function
-added risat L11 reader, esar_gtc reader
-update convert_S for full and dual/compact
-update dxpRGB for sxy 
-
-NISAR reader
-	added full-pol support rslc, gslc 
-	updated with chunk-based mem-load
-	parallel processing
-	fix rslc memory issue 
-
-ISRO_ASAR reader 
-	addedLevel-1 .tif support 
-	updated with chunk-based mem-load
-	parallel processing
-
-
-QGIS plugin support
-	replaced h5py package with tables for qgis plugin support
-	added QGIS plugin support for functions 
+0.9
+fp_sign for T3
+haalpha_plot_fp
+halpha_cluster_fp
 
 
 
