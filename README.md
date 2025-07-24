@@ -44,48 +44,49 @@
   </tr>
 </table>
 
-## General Information
+## 💠General Information
 This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from various SAR sensors or input polarimetric matrix (S2, C3, T3, Sxy, C2, T2). 
 
-## Installation
-### 1. Install **`gdal`** Package
+## 💠Installation
+1. **Install `gdal` Package**
+	
+	```bash
+	conda install gdal -c conda-forge
+	```
 
-```bash
-conda install gdal -c conda-forge
-```
+2. **Install `polsartools` Package**
 
-### 2. Install **`polsartools`** Package
-
-a. You can install it using `pip` (stable release):
-
-```bash
-pip install polsartools
-```
-
-b. Install from `conda` (stable release)
-
-```bash
-conda install polsartools -c bnarayanarao
-```
-
-c. Install the latest version from GitHub (if you need recent updates or fixes)
-
-If you encounter an error like `` AttributeError: module 'polsartools' has no atribute 'xyzabc' ``  use this option
-
-```bash
-pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
-```
-
->**Note for Windows users:** 
-> To install from GitHub (2.c), Microsoft C++ build tools must be installed first. 
-Download here: https://visualstudio.microsoft.com/visual-cpp-build-tools
+	You may choose any of the following options 
+	  
+	  - a. `pip` (stable release):
+	
+		```bash
+		pip install polsartools
+		```
+	
+	 - b. `conda` (stable release)
+	
+		```bash
+		conda install polsartools -c bnarayanarao
+		```
+	
+	 - c. GitHub (Weekly Build)
+	
+		```bash
+		pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
+		```
+		Use this if you encounter errors like: `AttributeError: module 'polsartools' has no attribute 'xyzabc'`
+		
+		>**Note for Windows users:** 
+		> If installing via GitHub (option c), make sure to install Microsoft C++ build tools first. 
+		Download here: https://visualstudio.microsoft.com/visual-cpp-build-tools
 
 
-## Example Usage
+## 💠Example Usage
 
 Sample use cases and notebooks are provided at [polsartools-notebooks](https://github.com/Narayana-Rao/polsartools-notebooks) repo. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
 
-## Available functionalities:
+## 💠Available functionalities:
 * Supported sensors
   * Airborne
     * UAVSAR (GRD, MLC)
@@ -146,7 +147,7 @@ Sample use cases and notebooks are provided at [polsartools-notebooks](https://g
   * H-Alpha clusters (Full-pol)
 
 
-## Contributing
+## 💠Contributing
 
 We welcome contributions! Whether it's fixing bugs, adding new features, or improving documentation, your help is greatly appreciated.
 
@@ -178,7 +179,7 @@ We welcome contributions! Whether it's fixing bugs, adding new features, or impr
 <!-- For more detailed guidelines on contributing, see the CONTRIBUTING.md (if available). -->
 
 
-## Bug Reporting
+## 💠Bug Reporting
 
 If you encounter a bug or issue, please follow these steps to report it:
 
@@ -195,7 +196,7 @@ If you encounter a bug or issue, please follow these steps to report it:
 [Click here to report a bug](https://github.com/Narayana-Rao/polsartools/issues/new?template=bug_report.md)
 
 
-## Feature Requests
+## 💠Feature Requests
 
 We’re always open to suggestions for new features or improvements!
 
@@ -209,7 +210,7 @@ We’re always open to suggestions for new features or improvements!
 [Click here to request a feature](https://github.com/Narayana-Rao/polsartools/issues/new?template=feature_request.md)
 
 
-## Cite
+## 💠Cite
 
 If you use **`PolSARtools`** in your research or projects, please cite it as follows:
 
