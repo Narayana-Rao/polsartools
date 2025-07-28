@@ -147,6 +147,18 @@ Sample use cases and notebooks are provided at [polsartools-notebooks](https://g
   * H-Alpha clusters (Full-pol)
 
 
+## 🎨 Logo Vibes Explained
+
+The package logo visually encapsulates key concepts in PolSAR data processing:
+
+- **Poincaré Sphere Representation**: Central to the logo is a stylized visualization of the Poincaré sphere, highlighting the diversity of polarization states encountered in SAR imaging.
+- **Huynen Polarization Fork**: A dotted elliptical curve represents the great circle containing Huynen's characteristic polarization states: co-polarized maximum, saddle point, and minima. These vectors lie in a common plane, revealing target symmetries and scattering behaviors.
+- **Quadrant Background**: The four background squares reflect brightness variations in SAR intensity data, showcasing:
+  - Bright vs. dark reflectivity regions
+  - Co-polarized (diagonal) vs. cross-polarized (off-diagonal) intensity distribution
+
+> Designed to reflect what this package does best: demystify PolSAR, one pixel at a time.
+
 ## 💠Contributing
 
 We welcome contributions! Whether it's fixing bugs, adding new features, or improving documentation, your help is greatly appreciated.
