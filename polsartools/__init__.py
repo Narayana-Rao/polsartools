@@ -31,7 +31,7 @@ from .polsar.dcp import mf3cd
 from .polsar.others.stokes_parm import stokes_parm
 
 """ Importing analysis modules """
-from .analysis import fp_sign, halpha_plot_dp, haalpha_plot_fp, pauliRGB, dxpRGB, halpha_plot_fp, rgb, halpha_cluster_fp
+from .analysis import fp_sign, halpha_plot_dp, haalpha_plot_fp, pauliRGB, dxpRGB, halpha_plot_fp, rgb, halpha_cluster_fp, htheta_plot_fp
 
 """ Importing utils """
 from .utils import time_it, read_rst
@@ -44,7 +44,7 @@ __all__ = [
     'risat_l11',
     #
     'fp_sign','pauliRGB','dxpRGB','halpha_plot_fp','haalpha_plot_fp','halpha_cluster_fp',
-    'halpha_plot_dp','rgb',
+    'halpha_plot_dp','rgb', 'htheta_plot_fp',
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS
