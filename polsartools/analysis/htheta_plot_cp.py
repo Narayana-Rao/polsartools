@@ -17,61 +17,112 @@ def get_bounds():
     # m=0
     
     c1l=[]
-    for m in np.arange(0,1.005,0.005):
-        T31 = np.array([[1,0,0],[0,m,0],[0,0,m]])
+    for m in np.arange(0,0.505,0.005):
+        chi = -45
+        C21 = np.array([[(2*m+1)/4, 1j*(2*m-1)/4 ],
+                        [-1j*(2*m-1)/4,(2*m+1)/4]])
         # mfp = np.sqrt(1-27*np.linalg.det(T31)/(np.trace(T31))**3)
         
-        mfp = np.sqrt(1-((27*np.linalg.det(T31))/(np.trace(T31))**3))
+        c11s = C21[0,0]
+        c22s = C21[1,1]
+        c12s = C21[0,1]
+        c21s = C21[1,0]
+    
+        c2_detr = (c11s*c22s-c12s*c21s)
+        c2_trace = c11s+c22s
+        # t2_span = t11s*t22s
+        mcp = np.real(np.sqrt(1.0-(4.0*c2_detr/np.power(c2_trace,2))))
+    
+        # Stokes Parameter
+        s0  = c11s + c22s;
+        s1 = c11s - c22s;
+        s2 = (c12s + c21s);
+    
+        if (chi >= 0):
+            s3 = (1j*(c12s - c21s)); # The sign is according to RC or LC sign !!
+        if (chi < 0):
+            s3 = -(1j*(c12s - c21s)); # The sign is according to RC or LC sign !!
         
-        tfp1 = 2*np.arctan(mfp*np.trace(T31)*(1-m-m)/(1*(m+m)+np.trace(T31)**2*mfp**2))*180/np.pi
+        SC = ((s0)-(s3))/2;
+        OC = ((s0)+(s3))/2;
+    
+        h = (OC-SC)
+        span = c11s + c22s
+    
+        val = ((mcp*s0*h))/((SC*OC + (mcp**2)*(s0**2)))
+        tcp1 = np.real(np.arctan(val))
+        # tcp1 = np.rad2deg(thet) 
         
-        eigenValues, eigenVectors = np.linalg.eig(T31)
+        eigenValues, eigenVectors = np.linalg.eig(C21)
         idx = eigenValues.argsort()[::-1]   
         eigenValues = eigenValues[idx]
         eigenVectors = eigenVectors[:,idx]
         
         p1 = eigenValues[0]/eigenValues.sum()
         p2 = eigenValues[1]/eigenValues.sum()
-        p3 = eigenValues[2]/eigenValues.sum()
-        
-        # print(m,p1,p2,p3)        
-        # h1=-(p1*np.log(p1) / np.log(3)+ p2*np.log(p2) / np.log(3) +p3*np.log(p3) / np.log(3))
-        h1 = -(h_log(p1) + h_log(p2) + h_log(p3))
-        if tfp1==90:
-            h1=0
-            
-        c1l.append([tfp1,1-h1,mfp])
 
-    c2l=[[-90,1]]
-    c2l=[]
-
-    for m in np.arange(0.5,1.005,0.005):
-        T31 = np.array([[2*m-1,0,0],[0,1,0],[0,0,1]])
-        # mfp = np.sqrt(1-27*np.linalg.det(T31)/(np.trace(T31))**3)
-        
-        mfp = np.sqrt(1-((27*np.linalg.det(T31))/(np.trace(T31))**3))
-        
-        tfp1 = 2*np.arctan(mfp*np.trace(T31)*(2*m-1-1-1)/((2*m-1)*(1+1)+np.trace(T31)**2*mfp**2))*180/np.pi
-        
-        eigenValues, eigenVectors = np.linalg.eig(T31)
-        idx = eigenValues.argsort()[::-1]   
-        eigenValues = eigenValues[idx]
-        eigenVectors = eigenVectors[:,idx]
-        
-        p1 = eigenValues[0]/eigenValues.sum()
-        p2 = eigenValues[1]/eigenValues.sum()
-        p3 = eigenValues[2]/eigenValues.sum()
                 
-        # h1=-(p1*np.log(p1) / np.log(3)+ p2*np.log(p2) / np.log(3) +p3*np.log(p3) / np.log(3))
+        h1=-(p1*np.log(p1) / np.log(2)+ p2*np.log(p2) / np.log(2) )
+        h1 = np.real(h1)
         
-        h1 = -(h_log(p1) + h_log(p2) + h_log(p3))
-        # if tfp1==0:
-            # h1=0
-            
-        c2l.append([tfp1,1-h1,mfp])
+        if np.isnan(h1):
+            h1=0       
+        c1l.append([tcp1,1-h1,mcp])
+    
+    # curve-I
 
-    # c2l=[[-90,1],[-60,0.5],[-20,0.3],[0,0]]
+    c2l=[]
+    for m in np.arange(0,0.505,0.005):
+        C21 = np.array([[(2*m+1)/4, -1j*(2*m-1)/4 ],
+                        [1j*(2*m-1)/4,(2*m+1)/4]])
+        # mfp = np.sqrt(1-27*np.linalg.det(T31)/(np.trace(T31))**3)
+        
+        c11s = C21[0,0]
+        c22s = C21[1,1]
+        c12s = C21[0,1]
+        c21s = C21[1,0]
+    
+        c2_detr = (c11s*c22s-c12s*c21s)
+        c2_trace = c11s+c22s
+        # t2_span = t11s*t22s
+        mcp = np.real(np.sqrt(1.0-(4.0*c2_detr/np.power(c2_trace,2))))
+    
+        # Stokes Parameter
+        s0  = c11s + c22s;
+        s1 = c11s - c22s;
+        s2 = (c12s + c21s);
+    
+        if (chi >= 0):
+            s3 = (1j*(c12s - c21s)); # The sign is according to RC or LC sign !!
+        if (chi < 0):
+            s3 = -(1j*(c12s - c21s)); # The sign is according to RC or LC sign !!
+        
+        SC = ((s0)-(s3))/2;
+        OC = ((s0)+(s3))/2;
+    
+        h = (OC-SC)
+        span = c11s + c22s
+    
+        val = ((mcp*s0*h))/((SC*OC + (mcp**2)*(s0**2)))
+        tcp1 = np.real(np.arctan(val))
+        # tcp1 = np.rad2deg(thet) 
+        
+        eigenValues, eigenVectors = np.linalg.eig(C21)
+        idx = eigenValues.argsort()[::-1]   
+        eigenValues = eigenValues[idx]
+        eigenVectors = eigenVectors[:,idx]
+        
+        p1 = eigenValues[0]/eigenValues.sum()
+        p2 = eigenValues[1]/eigenValues.sum()
 
+                
+        h1=-(p1*np.log(p1) / np.log(2)+ p2*np.log(p2) / np.log(2) )
+        h1 = np.real(h1)
+        
+        if np.isnan(h1):
+            h1=0       
+        c2l.append([tcp1,1-h1,mcp])  
+    
     # curve-II
     c2l = np.array(c2l)
     c2l = c2l[~np.isnan(c2l).any(axis=1)]
@@ -80,13 +131,13 @@ def get_bounds():
     return c1l,c2l
     
 #%%
-def htheta_plot_fp(h,theta, pname=None, cmap='jet', 
+def htheta_plot_cp(h,theta, pname=None, cmap='jet', 
                    cbar=True, norm='', vmin=None,vmax=None, 
                     grey_region=True, zone_lines=True,
                     zone_line_color='k',zone_ids=True,gridsize=200):
         
     """
-    Generates and saves a density plot of entropy (H) versus theta (degrees) for full-pol data,
+    Generates and saves a density plot of entropy (H) versus theta (degrees) for compact-pol data,
     including optional zone lines, zone IDs, and grey regions.
     
     radial axis is 1-H
@@ -94,7 +145,7 @@ def htheta_plot_fp(h,theta, pname=None, cmap='jet',
     
     Example:
     --------
-    >>> htheta_plot_fp(h, theta, path="HT_plot.png", cmap='jet', cbar=True, norm='log')
+    >>> htheta_plot_cp(h, theta, path="HT_plot.png", cmap='jet', cbar=True, norm='log')
     This will generates a H/Theta plot  from the input arrays and save it as HT_plot.png, using the 'jet' colormap and logarithmic normalization
     
     Parameters:
@@ -104,7 +155,7 @@ def htheta_plot_fp(h,theta, pname=None, cmap='jet',
     theta : path or array-like
         path to the Theta file or Array representing theta values in degrees.
     pname : str, optional
-        Path to save the generated plot. If a folder is given, the plot is saved as 'htheta_plot_fp.png' inside that folder.
+        Path to save the generated plot. If a folder is given, the plot is saved as 'htheta_plot_cp.png' inside that folder.
         If the file already exists, it will be overwritten.
     cmap : str, optional
         Colormap used for the hexbin plot. Defaults to 'jet'.
@@ -187,13 +238,13 @@ def htheta_plot_fp(h,theta, pname=None, cmap='jet',
     if grey_region:
         c1l,c2l = get_bounds()
         # curve-I
-        ax.plot((np.array(c1l)[:,0]*np.pi/180),np.array(c1l)[:,1],'k-',linewidth = lw)
-        ax.fill_between((np.array(c1l)[:,0]*np.pi/180),np.array(c1l)[:,1],color='#bababa', 
+        ax.plot((np.array(c1l)[:,0]-45*np.pi/180),np.array(c1l)[:,1],'k-',linewidth = lw)
+        ax.fill_between((np.array(c1l)[:,0]-45*np.pi/180),np.array(c1l)[:,1],color='#bababa', 
                         linewidth=0,
                         zorder=10)
         # curve-II
-        ax.plot((np.array(c2l)[:,0]*np.pi/180),np.array(c2l)[:,1],'k-',linewidth = lw)
-        ax.fill_between((np.array(c2l)[:,0]*np.pi/180),np.array(c2l)[:,1],color='#bababa', 
+        ax.plot((np.array(c2l)[:,0]+45*np.pi/180),np.array(c2l)[:,1],'k-',linewidth = lw)
+        ax.fill_between((np.array(c2l)[:,0]+45*np.pi/180),np.array(c2l)[:,1],color='#bababa', 
                         linewidth=0,
                         zorder=10)
 
@@ -220,7 +271,7 @@ def htheta_plot_fp(h,theta, pname=None, cmap='jet',
         ax.text(0.7, 0.1,'  'r'$\overline{H}$',transform=ax.transAxes)
 
 
-    ax.text(0.45, 0.9,'  'r'$\overline{\theta}_{\mathrm{FP}}$',
+    ax.text(0.45, 0.9,'  'r'$\overline{\theta}_{\mathrm{CP}}$',
             transform=ax.transAxes,
             )
 
@@ -264,7 +315,7 @@ def htheta_plot_fp(h,theta, pname=None, cmap='jet',
 
     if pname is not None:
         if os.path.isdir(pname):
-            pname = os.path.join(pname, 'htheta_plot_fp.png')  
+            pname = os.path.join(pname, 'htheta_plot_cp.png')  
             
         plt.savefig(pname,dpi=300,bbox_inches='tight')
 

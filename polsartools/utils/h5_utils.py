@@ -423,7 +423,7 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
                                azlks, rglks, matrix_type, apply_multilook, temp_dir, 
                                start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=epsg,
                                calibration_constant=calibration_constant) for job in jobs]
-        with tqdm(total=len(futures), desc="Processing chunks") as pbar:
+        with tqdm(total=len(futures), desc="Progress") as pbar:
             for _ in as_completed(futures):
                 pbar.update(1)
 
