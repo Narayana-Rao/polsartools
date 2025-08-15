@@ -11,6 +11,9 @@ fp_sign for T3
 haalpha_plot_fp
 halpha_cluster_fp
 htheta_plot_fp
+htheta_plot_cp
+freeman_3c_fp
+praks_parm_fp
 
 
 # BUILD DOCS

@@ -11,3 +11,5 @@ from .nnedfp import nnedfp
 from .halphafp import halphafp
 from .yam4cfp import yam4cfp
 from .shannon_h_fp import shannon_h_fp
+from .freeman_3c import freeman_3c
+from .praks_parm_fp import praks_parm_fp
