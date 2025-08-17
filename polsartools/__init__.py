@@ -19,7 +19,7 @@ from .sensors.risat import risat_l11
 from .sensors.esar import esar_gtc
 
 """ Importing preprocessing modules """
-from .preprocess import convert_T3_C3,convert_C3_T3, convert_S
+from .preprocess import convert_T3_C3,convert_C3_T3, convert_S, clip
 from .preprocess.filters import boxcar, rlee
 from .preprocess.mlook import mlook
 
@@ -50,7 +50,7 @@ __all__ = [
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS
-    'mlook', 'stokes_parm',
+    'mlook', 'clip','stokes_parm',
     'read_rst', 'time_it',
     'convert_T3_C3', 'convert_C3_T3', 'pauliRGB', 'convert_S', 
     # FULL-POL
