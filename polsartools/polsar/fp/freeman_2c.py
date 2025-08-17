@@ -5,7 +5,7 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import T3_C3_mat
 from .fp_infiles import fp_c3t3files
 @time_it
-def freeman_3c(infolder,  window_size=1, outType="tif", cog_flag=False, 
+def freeman_2c(infolder,  window_size=1, outType="tif", cog_flag=False, 
           cog_overviews = [2, 4, 8, 16], write_flag=True, 
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
@@ -15,24 +15,23 @@ def freeman_3c(infolder,  window_size=1, outType="tif", cog_flag=False,
 
     output_filepaths = []
     if outType == "bin":
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_odd.bin"))
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_dbl.bin"))
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_vol.bin"))
+        output_filepaths.append(os.path.join(infolder, "Freeman_2c_grd.bin"))
+        output_filepaths.append(os.path.join(infolder, "Freeman_2c_vol.bin"))
     else:
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_odd.tif"))
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_dbl.tif"))
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_vol.tif"))
+        output_filepaths.append(os.path.join(infolder, "Freeman_2c_grd.tif"))
+        output_filepaths.append(os.path.join(infolder, "Freeman_2c_vol.tif"))
+
         
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
                             window_size=window_size, write_flag=write_flag,
-                        processing_func=process_chunk_free3c,block_size=block_size, 
+                        processing_func=process_chunk_free2c,block_size=block_size, 
                         max_workers=max_workers,  num_outputs=len(output_filepaths),
                         cog_flag=cog_flag,
                         cog_overviews=cog_overviews,
                         progress_callback=progress_callback
                         )
 
-def process_chunk_free3c(chunks, window_size, input_filepaths, *args):
+def process_chunk_free2c(chunks, window_size, input_filepaths, *args):
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])
@@ -68,7 +67,7 @@ def process_chunk_free3c(chunks, window_size, input_filepaths, *args):
     # print("Window size: ",window_size)
     if window_size>1:
         kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
-
+        # print('Filtering with window size: ', window_size)
         t11f = conv2d(T_T1[0,0,:,:],kernel)
         t12f = conv2d(np.real(T_T1[0,1,:,:]),kernel)+1j*conv2d(np.imag(T_T1[0,1,:,:]),kernel)
         t13f = conv2d(np.real(T_T1[0,2,:,:]),kernel)+1j*conv2d(np.imag(T_T1[0,2,:,:]),kernel)
@@ -96,75 +95,40 @@ def process_chunk_free3c(chunks, window_size, input_filepaths, *args):
     Span = C11+C22+C33
     SpanMax = np.nanmax(Span)
     eps = 1e-10
-
-
-    # Copy inputs to avoid in-place corruption
-    C11_ = C11.copy()
-    C33_ = C33.copy()
-    C13_re_ = C13_re.copy()
-    FV = 3. * C22 / 2.
-
-    # Subtract volume component
-    C11_ -= FV
-    C33_ -= FV
-    C13_re_ -= FV / 3.
-
-    # Initialize outputs
-    FD = np.zeros_like(C11_)
-    FS = np.zeros_like(C11_)
-    ALP = np.zeros_like(C11_)
-    BET = np.zeros_like(C11_)
-    odd = np.zeros_like(C11_)
-    dbl = np.zeros_like(C11_)
-    vol = np.zeros_like(C11_)
-
-    # Mask for low power (volume dominates)
-    mask_eps = (C11_ <= eps) | (C33_ <= eps)
-    FV_eps = 3. * (C11_[mask_eps] + C22[mask_eps] + C33_[mask_eps] + 2 * FV[mask_eps]) / 8.
-    FV[mask_eps] = FV_eps  # Update FV only for masked pixels
-
-    # Data conditioning
-    rtemp = C13_re_**2 + C13_im**2
-    mask_non_realizable = rtemp > (C11_ * C33_)
-    scale = np.sqrt((C11_ * C33_) / rtemp)
-    scale[~mask_non_realizable] = 1.0  # Avoid modifying valid pixels
-    C13_re_ *= scale
-    C13_im *= scale
-
-    # Bounce classification
-    mask_odd = (C13_re_ >= 0.) & ~mask_eps
-    mask_even = (C13_re_ < 0.) & ~mask_eps
-
-    # Odd Bounce
-    FD[mask_odd] = (C11_[mask_odd] * C33_[mask_odd] - C13_re_[mask_odd]**2 - C13_im[mask_odd]**2) / \
-                (C11_[mask_odd] + C33_[mask_odd] + 2 * C13_re_[mask_odd])
-    FS[mask_odd] = C33_[mask_odd] - FD[mask_odd]
-    ALP[mask_odd] = -1.
-    BET[mask_odd] = np.sqrt((FD[mask_odd] + C13_re_[mask_odd])**2 + C13_im[mask_odd]**2) / FS[mask_odd]
-
-    # Even Bounce
-    FS[mask_even] = (C11_[mask_even] * C33_[mask_even] - C13_re_[mask_even]**2 - C13_im[mask_even]**2) / \
-                    (C11_[mask_even] + C33_[mask_even] - 2 * C13_re_[mask_even])
-    FD[mask_even] = C33_[mask_even] - FS[mask_even]
-    BET[mask_even] = 1.
-    FD_safe = np.where(FD[mask_even] <= eps, eps, FD[mask_even])
-    ALP[mask_even] = np.sqrt((FS[mask_even] - C13_re_[mask_even])**2 + C13_im[mask_even]**2) / FD_safe
-
-
-    odd = FS * (1 + BET**2)
-    dbl = FD * (1 + ALP**2)
-    vol = 8. * FV / 3.
-    odd = np.clip(odd, 0, SpanMax)
-    dbl = np.clip(dbl, 0, SpanMax)
-    vol = np.clip(vol, 0, SpanMax)
     
-    zero_mask = (odd == 0) & (dbl == 0) & (vol == 0)
-    odd = odd.astype(np.float32)
-    dbl = dbl.astype(np.float32)
-    vol = vol.astype(np.float32)
-
-    odd[zero_mask] = np.nan
-    dbl[zero_mask] = np.nan
-    vol[zero_mask] = np.nan
     
-    return odd, dbl, vol
+    z1 = C11 - C33
+    z1 = np.where(np.abs(z1) == 0, eps, z1)
+
+    z2r = C22 + C13_re - C11
+    z2i = C13_im
+
+    z3r = z2r / z1
+    z3i = z2i / z1
+
+    denom = z3r**2 + z3i**2 + eps
+    y = -(z3i * (1.0 + 2.0 * z3r)) / denom
+    x = 1.0 + (y * z3r / (z3i + eps))
+
+    denom_fg = 1.0 - x**2 - y**2
+    # denom_fg = np.where(denom_fg == 0, eps, denom_fg)
+    FG = z1 / denom_fg
+    FV = C11 - FG
+    RHO = 1.0 - (C22/ (FV + eps))
+
+    vol = FV * (3.0 - RHO)
+    grd = FG * (1.0 + x**2 + y**2)
+
+    grd = np.clip(grd, 0.0, SpanMax).astype(np.float32)
+    vol = np.clip(vol, 0.0, SpanMax).astype(np.float32)
+    
+    mask1 = (grd <= eps) & (vol <= eps)
+    mask2 = np.isnan(C11) & np.isnan(C22) & np.isnan(C33)
+    mask3 = (np.abs(C11) <= eps) & (np.abs(C22) <= eps) & (np.abs(C33) <= eps)
+    combined_mask = mask1 | mask2 | mask3
+
+    grd[combined_mask] = np.nan
+    vol[combined_mask] = np.nan
+    
+    
+    return grd, vol

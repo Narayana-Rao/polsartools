@@ -12,8 +12,10 @@ haalpha_plot_fp
 halpha_cluster_fp
 htheta_plot_fp
 htheta_plot_cp
-freeman_3c_fp
+freeman_3c
+freeman_2c
 praks_parm_fp
+tsvm
 
 
 # BUILD DOCS

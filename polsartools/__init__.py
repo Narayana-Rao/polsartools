@@ -24,14 +24,16 @@ from .preprocess.filters import boxcar, rlee
 from .preprocess.mlook import mlook
 
 """ Importing polsar modules """
-from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,halphafp,yam4cfp,shannon_h_fp,freeman_3c,praks_parm_fp
+from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,halphafp,\
+                        yam4cfp,shannon_h_fp,freeman_3c,freeman_2c,praks_parm_fp, tsvm
 from .polsar.cp import cprvi, dopcp, misomega, mf3cc
 from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp, shannon_h_dp,dprvic, dp_desc
 from .polsar.dcp import mf3cd
 from .polsar.others.stokes_parm import stokes_parm
 
 """ Importing analysis modules """
-from .analysis import fp_sign, halpha_plot_dp, haalpha_plot_fp, pauliRGB, dxpRGB, halpha_plot_fp, rgb, halpha_cluster_fp, htheta_plot_fp,htheta_plot_cp
+from .analysis import fp_sign, halpha_plot_dp, haalpha_plot_fp, pauliRGB, dxpRGB, halpha_plot_fp, \
+                        rgb, halpha_cluster_fp, htheta_plot_fp,htheta_plot_cp
 
 """ Importing utils """
 from .utils import time_it, read_rst
@@ -52,8 +54,9 @@ __all__ = [
     'read_rst', 'time_it',
     'convert_T3_C3', 'convert_C3_T3', 'pauliRGB', 'convert_S', 
     # FULL-POL
-    'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 'nnedfp', 'freeman_3c',
-    'halphafp', 'shannon_h_fp','yam4cfp',  'praks_parm_fp',
+    'grvi', 'rvifp', 'mf3cf', 'mf4cf', 'dopfp', 'prvifp', 'neufp', 
+    'nnedfp', 'freeman_3c','freeman_2c',
+    'halphafp', 'shannon_h_fp','yam4cfp',  'praks_parm_fp','tsvm',
     # COMPACT-POL
     'cprvi', 'dopcp', 'misomega', 'mf3cc',                 
     # DUAL-CROSS-POL
