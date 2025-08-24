@@ -17,3 +17,6 @@ dependencies:
       - tables
       - netcdf4
       - pytest
+      - requests
+      - zipfile
+      - tqdm 

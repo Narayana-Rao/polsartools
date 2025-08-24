@@ -1,9 +1,73 @@
 import os
 from osgeo import gdal, ogr, osr
 import tempfile
-def clip(folder_path, output_folder, start_x=None, start_y=None, dx=None, dy=None,
+from polsartools.utils.utils import time_it
+
+
+@time_it
+def clip(folder_path, output_folder, 
+         start_x=None, start_y=None, dx=None, dy=None,
          north=None, south=None, east=None, west=None,
          vector_path=None, outType='tif', auto_reference=True):
+
+    """
+    Subsets PolSAR matrix rasters (e.g., C3, C2, T3) from a given folder using spatial or pixel-based criteria.
+
+    This function processes all raster files in the input folder and clips them based on one of three methods:
+    - Pixel-based window (`start_x`, `start_y`, `dx`, `dy`)
+    - Geographic bounding box (`north`, `south`, `east`, `west`)
+    - Vector file mask (`vector_path`)
+
+    The clipped rasters are saved to the specified output folder in either GeoTIFF (.tif) or ENVI binary (.bin) format.
+
+    Examples
+    --------
+    >>> clip("input_path", "out_path", start_x=100, start_y=200, dx=512, dy=512)
+    >>> clip("input_path", "out_path", north=45.0, south=44.5, east=-66.0, west=-67.0)
+    >>> clip("input_path", "out_path", vector_path="clip_mask.shp", outType='bin')
+
+    Parameters
+    ----------
+    folder_path : str
+        Path to the input folder containing PolSAR matrix rasters (e.g., C3, C2, T3).
+    output_folder : str
+        Path to the folder where clipped rasters will be saved.
+    start_x : int, optional
+        Starting pixel index along the x-axis (column) for pixel-based clipping.
+    start_y : int, optional
+        Starting pixel index along the y-axis (row) for pixel-based clipping.
+    dx : int, optional
+        Width of the pixel window to clip.
+    dy : int, optional
+        Height of the pixel window to clip.
+    north : float, optional
+        Northern latitude boundary for geographic clipping.
+    south : float, optional
+        Southern latitude boundary for geographic clipping.
+    east : float, optional
+        Eastern longitude boundary for geographic clipping.
+    west : float, optional
+        Western longitude boundary for geographic clipping.
+    vector_path : str, optional
+        Path to a vector file (e.g., shapefile or GeoJSON) used for spatial masking.
+    outType : str, optional
+        Output format: 'tif' for GeoTIFF or 'bin' for ENVI binary. Defaults to 'tif'.
+    auto_reference : bool, optional
+        If True, automatically infers georeferencing from input rasters. Defaults to True.
+
+    Returns
+    -------
+    None
+        The function saves clipped raster files to the specified output folder.
+
+    Notes
+    -----
+    - Only one clipping method should be used per call: pixel window, geographic bbox, or vector mask.
+    - All rasters in the input folder are processed and clipped uniformly.
+    - ENVI binary output includes accompanying `.hdr` header files.
+
+    """
+
 
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -15,7 +79,7 @@ def clip(folder_path, output_folder, start_x=None, start_y=None, dx=None, dy=Non
 
     mode_count = sum([pixel_params, geo_params, vector_param])
     if mode_count != 1:
-        print("Error: Please provide exactly one clipping method: pixel-based, geo-based (NSEW), or vector file.")
+        print("Error: Please provide only one clipping method: pixel-based, geo-based (NSEW), or vector file.")
         return
 
     raster_exts = ['.tif', '.bin']

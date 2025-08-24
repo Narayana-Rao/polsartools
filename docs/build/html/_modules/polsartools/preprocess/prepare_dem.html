@@ -1,0 +1,719 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>polsartools.preprocess.prepare_dem &#8212; PolSARtools 0.8 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/preprocess/prepare_dem';</script>
+    <link rel="icon" href="../../../_static/icon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/icon.png" class="logo__image only-light" alt=""/>
+    <img src="../../../_static/icon.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PolSARtools</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.preprocess.prepare_dem</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for polsartools.preprocess.prepare_dem</h1><div class="highlight"><pre>
+<span></span>
+<span class="c1">#%%</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gzip</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>
+
+
+<span class="c1"># === DEM Metadata Dictionary ===</span>
+<span class="n">DEM_SOURCES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;SRTM1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;url_template&quot;</span><span class="p">:</span> <span class="s2">&quot;https://s3.amazonaws.com/elevation-tiles-prod/skadi/</span><span class="si">{prefix}</span><span class="s2">/</span><span class="si">{name}</span><span class="s2">.hgt.gz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ext&quot;</span><span class="p">:</span> <span class="s2">&quot;.hgt.gz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;extract&quot;</span><span class="p">:</span> <span class="s2">&quot;gzip&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;COP30&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;api_template&quot;</span><span class="p">:</span> <span class="s2">&quot;https://portal.opentopography.org/API/globaldem?demtype=COP30&amp;south=</span><span class="si">{south}</span><span class="s2">&amp;north=</span><span class="si">{north}</span><span class="s2">&amp;west=</span><span class="si">{west}</span><span class="s2">&amp;east=</span><span class="si">{east}</span><span class="s2">&amp;outputFormat=GTiff&amp;API_Key=</span><span class="si">{api_key}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ext&quot;</span><span class="p">:</span> <span class="s2">&quot;.tif&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;extract&quot;</span><span class="p">:</span> <span class="s2">&quot;direct&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;COP90&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;api_template&quot;</span><span class="p">:</span> <span class="s2">&quot;https://portal.opentopography.org/API/globaldem?demtype=COP90&amp;south=</span><span class="si">{south}</span><span class="s2">&amp;north=</span><span class="si">{north}</span><span class="s2">&amp;west=</span><span class="si">{west}</span><span class="s2">&amp;east=</span><span class="si">{east}</span><span class="s2">&amp;outputFormat=GTiff&amp;API_Key=</span><span class="si">{api_key}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ext&quot;</span><span class="p">:</span> <span class="s2">&quot;.tif&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;extract&quot;</span><span class="p">:</span> <span class="s2">&quot;direct&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;SRTM3&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;url_template&quot;</span><span class="p">:</span> <span class="s2">&quot;https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/</span><span class="si">{name}</span><span class="s2">.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ext&quot;</span><span class="p">:</span> <span class="s2">&quot;.zip&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;extract&quot;</span><span class="p">:</span> <span class="s2">&quot;zip&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tile_name</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="s1">&#39;N&#39;</span> <span class="k">if</span> <span class="n">lat</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;S&#39;</span>
+    <span class="n">ew</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span> <span class="k">if</span> <span class="n">lon</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;W&#39;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ns</span><span class="si">}{</span><span class="nb">abs</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lat</span><span class="p">))</span><span class="si">:</span><span class="s2">02d</span><span class="si">}{</span><span class="n">ew</span><span class="si">}{</span><span class="nb">abs</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lon</span><span class="p">))</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cgiar_tile_name</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+    
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span><span class="o">+</span><span class="mi">5</span> <span class="c1">#right bottom indexing </span>
+    <span class="c1"># print(lat,lon)</span>
+    
+    <span class="n">lat_base</span> <span class="o">=</span> <span class="p">(</span><span class="n">lat</span> <span class="o">//</span> <span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span>
+    <span class="n">lon_base</span> <span class="o">=</span> <span class="p">(</span><span class="n">lon</span> <span class="o">//</span> <span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span>
+    <span class="n">lat_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">60</span> <span class="o">-</span> <span class="n">lat_base</span><span class="p">)</span> <span class="o">//</span> <span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Top-down indexing</span>
+    <span class="n">lon_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">lon_base</span> <span class="o">+</span> <span class="mi">180</span><span class="p">)</span> <span class="o">//</span> <span class="mi">5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Left-right indexing</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;srtm_</span><span class="si">{</span><span class="n">lon_index</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">lat_index</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">download_tile</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">hgt_dir</span><span class="p">,</span> <span class="n">dem_type</span><span class="o">=</span><span class="s2">&quot;SRTM1&quot;</span><span class="p">):</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">DEM_SOURCES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dem_type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">meta</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported DEM type: </span><span class="si">{</span><span class="n">dem_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">hgt_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.hgt&quot;</span><span class="p">)</span>
+    <span class="n">tif_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.tif&quot;</span><span class="p">)</span>
+
+    <span class="c1"># === Copernicus DEMs via OpenTopography API ===</span>
+    <span class="k">if</span> <span class="n">dem_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;COP&quot;</span><span class="p">):</span>
+        <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENTOPO_API_KEY&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span><span class="s2">&quot;Missing OpenTopography API key. Set OPENTOPO_API_KEY.&quot;</span><span class="p">)</span>
+
+        <span class="n">lat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;N&#39;</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;E&#39;</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">south</span><span class="p">,</span> <span class="n">north</span> <span class="o">=</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lat</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">west</span><span class="p">,</span> <span class="n">east</span> <span class="o">=</span> <span class="n">lon</span><span class="p">,</span> <span class="n">lon</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;api_template&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">south</span><span class="o">=</span><span class="n">south</span><span class="p">,</span> <span class="n">north</span><span class="o">=</span><span class="n">north</span><span class="p">,</span> <span class="n">west</span><span class="o">=</span><span class="n">west</span><span class="p">,</span> <span class="n">east</span><span class="o">=</span><span class="n">east</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+                <span class="c1"># print(f&quot;Downloaded: {name} ({dem_type})&quot;)</span>
+                <span class="k">return</span> <span class="n">tif_path</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Copernicus tile not found: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error downloading Copernicus tile </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># === CGIAR SRTM90 ===</span>
+    <span class="k">if</span> <span class="n">dem_type</span> <span class="o">==</span> <span class="s2">&quot;SRTM3&quot;</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;url_template&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">archive_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.zip&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Skip download if any matching .tif already exists</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tif&quot;</span><span class="p">):</span>
+                <span class="c1"># print(f&quot;Already downloaded: {file}&quot;)</span>
+                <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_ref</span><span class="p">:</span>
+                    <span class="n">zip_ref</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">archive_path</span><span class="p">)</span>
+                <span class="c1"># print(f&quot;Downloaded: {name} (SRTM3)&quot;)</span>
+                <span class="c1"># Return first matching .tif file</span>
+                <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tif&quot;</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No .tif file found after extracting </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CGIAR tile not found: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error downloading CGIAR tile </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># === SRTM1 ===</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="n">name</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;url_template&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">archive_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;ext&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">hgt_path</span><span class="p">):</span>
+        <span class="c1"># print(f&quot;Already downloaded: {name}&quot;)</span>
+        <span class="k">return</span> <span class="n">hgt_path</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;extract&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;gzip&quot;</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_in</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">hgt_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_out</span><span class="p">:</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">f_in</span><span class="p">,</span> <span class="n">f_out</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">archive_path</span><span class="p">)</span>
+            <span class="c1"># print(f&quot;Downloaded: {name} ({dem_type})&quot;)</span>
+            <span class="k">return</span> <span class="n">hgt_path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tile not found: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error downloading </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_empty_hgt</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="n">empty_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">3601</span><span class="p">,</span> <span class="mi">3601</span><span class="p">),</span> <span class="o">-</span><span class="mi">32768</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">empty_data</span><span class="o">.</span><span class="n">tobytes</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created empty HGT tile: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="prepare_dem">
+<a class="viewcode-back" href="../../../files/functions/others.html#polsartools.prepare_dem">[docs]</a>
+<span class="nd">@time_it</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_dem</span><span class="p">(</span><span class="n">bbox</span><span class="p">,</span><span class="n">out_path</span><span class="o">=</span><span class="s2">&quot;dem.tif&quot;</span><span class="p">,</span> 
+                <span class="n">dem_type</span><span class="o">=</span><span class="s2">&quot;SRTM1&quot;</span><span class="p">,</span>
+                <span class="n">hgt_dir</span><span class="o">=</span><span class="s2">&quot;hgt_tiles&quot;</span><span class="p">,</span>  
+                <span class="n">apply_correction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                 
+                <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">clean_tiles</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">):</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prepares a Digital Elevation Model (DEM) from downloaded elevation tiles.</span>
+
+<span class="sd">    This function downloads elevation tiles based on a bounding box, mosaics them into a single raster,</span>
+<span class="sd">    optionally applies ellipsoid height correction, clips to the bounding box, and saves the result as a GeoTIFF.</span>
+<span class="sd">    Temporary tile files can be cleaned up after processing.</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; bbox = (-70.2, 43.5, -66.2, 45.8)  # xmin, ymin, xmax, ymax</span>
+<span class="sd">    &gt;&gt;&gt; prepare_dem(bbox, out_path=&quot;SRTM1_mosaic_clip.tif&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; prepare_dem(bbox, out_path=&quot;SRTM3_mosaic_clip.tif&quot;, dem_type=&quot;SRTM3&quot;)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bbox : tuple of float</span>
+<span class="sd">        Bounding box in the format (xmin, ymin, xmax, ymax), in geographic coordinates (longitude, latitude).</span>
+<span class="sd">    out_path : str, optional</span>
+<span class="sd">        Path to save the output DEM GeoTIFF file. Defaults to &quot;dem.tif&quot;.    </span>
+<span class="sd">    dem_type : str, optional</span>
+<span class="sd">        Type of DEM source. Options include &quot;SRTM1&quot;, &quot;SRTM3&quot;, &quot;COP30&quot;, &quot;COP90&quot;. Defaults to &quot;SRTM1&quot;.    </span>
+<span class="sd">    hgt_dir : str, optional</span>
+<span class="sd">        Directory to store downloaded tiles. Defaults to &quot;hgt_tiles&quot;.</span>
+<span class="sd">    apply_correction : bool, optional</span>
+<span class="sd">        Whether to apply WGS84ellipsoid height correction to SRTM tiles. Defaults to True.</span>
+<span class="sd">    clip : bool, optional</span>
+<span class="sd">        Whether to clip the output DEM to the bounding box. Defaults to False.</span>
+<span class="sd">    clean_tiles : bool, optional</span>
+<span class="sd">        Whether to delete the tile directory after processing. Defaults to True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        The function saves the DEM to the specified `out_path`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Uses GDAL for mosaicking and warping.</span>
+<span class="sd">    - Supports ellipsoid correction for SRTM1 and SRTM3.</span>
+<span class="sd">    - Automatically creates empty tiles for missing SRTM1 data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tile_limit</span><span class="o">=</span><span class="mi">9</span>
+    
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">bbox</span>
+
+    <span class="k">if</span> <span class="n">dem_type</span> <span class="o">==</span> <span class="s2">&quot;SRTM3&quot;</span><span class="p">:</span>
+        <span class="n">lon_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">xmin</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">xmax</span><span class="p">)))</span>
+        <span class="n">lat_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">ymin</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">ymax</span><span class="p">)))</span>
+        <span class="n">tiles</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">lon</span> <span class="ow">in</span> <span class="n">lon_range</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">lat</span> <span class="ow">in</span> <span class="n">lat_range</span><span class="p">:</span>
+                <span class="n">tiles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cgiar_tile_name</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lon_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">xmin</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">xmax</span><span class="p">)))</span>
+        <span class="n">lat_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">ymin</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">ymax</span><span class="p">)))</span>
+        <span class="n">tiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">tile_name</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span> <span class="k">for</span> <span class="n">lon</span> <span class="ow">in</span> <span class="n">lon_range</span> <span class="k">for</span> <span class="n">lat</span> <span class="ow">in</span> <span class="n">lat_range</span><span class="p">]</span>
+    
+    <span class="c1"># print(f&quot;Downloading {len(tiles)} tiles...&quot;)</span>
+    
+    <span class="c1"># def chunk(lst, size):</span>
+    <span class="c1">#     for i in range(0, len(lst), size):</span>
+    <span class="c1">#         yield lst[i:i + size]</span>
+
+    <span class="c1"># hgt_paths = []</span>
+
+    <span class="c1"># for batch in chunk(list(tiles), tile_limit):</span>
+        
+    <span class="c1">#     for name in batch:</span>
+    <span class="c1">#         ext = &quot;.tif&quot; if dem_type in [&quot;COP30&quot;, &quot;COP90&quot;, &quot;SRTM3&quot;] else &quot;.hgt&quot;</span>
+    <span class="c1">#         hgt_path = os.path.join(hgt_dir, f&quot;{name}{ext}&quot;)</span>
+
+    <span class="c1">#         if not os.path.exists(hgt_path):</span>
+    <span class="c1">#             downloaded = download_tile(name, hgt_dir=hgt_dir, dem_type=dem_type)</span>
+    <span class="c1">#             if not downloaded and dem_type == &quot;SRTM1&quot;:</span>
+    <span class="c1">#                 create_empty_hgt(hgt_path)</span>
+
+    <span class="c1">#         hgt_paths.append(hgt_path)</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">chunk</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">),</span> <span class="n">size</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">lst</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">size</span><span class="p">]</span>
+
+    <span class="n">hgt_paths</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Create a single progress bar over all tiles</span>
+    <span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">tiles</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Downloading tiles&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;tile&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">chunk</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">tiles</span><span class="p">),</span> <span class="n">tile_limit</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
+                <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.tif&quot;</span> <span class="k">if</span> <span class="n">dem_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;COP30&quot;</span><span class="p">,</span> <span class="s2">&quot;COP90&quot;</span><span class="p">,</span> <span class="s2">&quot;SRTM3&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;.hgt&quot;</span>
+                <span class="n">hgt_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">hgt_path</span><span class="p">):</span>
+                    <span class="n">hgt_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hgt_path</span><span class="p">)</span>
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="n">downloaded</span> <span class="o">=</span> <span class="n">download_tile</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">hgt_dir</span><span class="o">=</span><span class="n">hgt_dir</span><span class="p">,</span> <span class="n">dem_type</span><span class="o">=</span><span class="n">dem_type</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">downloaded</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">downloaded</span> <span class="ow">and</span> <span class="n">dem_type</span> <span class="o">==</span> <span class="s2">&quot;SRTM1&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">downloaded</span><span class="p">:</span>
+                        <span class="n">create_empty_hgt</span><span class="p">(</span><span class="n">hgt_path</span><span class="p">)</span>
+                    <span class="n">hgt_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hgt_path</span><span class="p">)</span>
+
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Processing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">hgt_paths</span><span class="p">)</span><span class="si">}</span><span class="s2"> tiles...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># === Mosaic and optional correction ===</span>
+    <span class="n">vrt_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">out_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.vrt&quot;</span>  
+    <span class="n">gdal</span><span class="o">.</span><span class="n">BuildVRT</span><span class="p">(</span><span class="n">vrt_path</span><span class="p">,</span> <span class="n">hgt_paths</span><span class="p">)</span>
+
+    <span class="n">warp_args</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;GTiff&quot;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">apply_correction</span> <span class="ow">and</span> <span class="n">dem_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SRTM1&quot;</span><span class="p">,</span> <span class="s2">&quot;SRTM3&quot;</span><span class="p">]:</span>
+        <span class="n">warp_args</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;srcSRS&quot;</span><span class="p">:</span> <span class="s2">&quot;EPSG:4326+5773&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dstSRS&quot;</span><span class="p">:</span> <span class="s2">&quot;EPSG:4326+4979&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;warpOptions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SOURCE_EXTRA=1000&quot;</span><span class="p">]</span>
+        <span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">clip</span><span class="p">:</span>
+        <span class="n">warp_args</span><span class="p">[</span><span class="s2">&quot;outputBounds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
+
+    <span class="n">gdal</span><span class="o">.</span><span class="n">Warp</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">vrt_path</span><span class="p">,</span> <span class="o">**</span><span class="n">warp_args</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;with ellipsoid correction&quot;</span> <span class="k">if</span> <span class="n">apply_correction</span> <span class="k">else</span> <span class="s2">&quot;without ellipsoid correction&quot;</span>
+    <span class="n">clip_label</span> <span class="o">=</span> <span class="s2">&quot;clipped to bbox&quot;</span> <span class="k">if</span> <span class="n">clip</span> <span class="k">else</span> <span class="s2">&quot;full extent&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">DEM saved to: </span><span class="si">{</span><span class="n">out_path</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">clip_label</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># === Clean up ===</span>
+    <span class="k">if</span> <span class="n">clean_tiles</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">):</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">hgt_dir</span><span class="p">)</span></div>
+
+
+<span class="c1"># bbox = (-70.2, 43.5, -66.2, 45.8)  # xmin, ymin, xmax, ymax</span>
+<span class="c1"># prepare_dem(bbox, out_path=&quot;srtm1_mosaic_clip.tif&quot;, dem_type=&quot;SRTM1&quot;, clip=True)</span>
+<span class="c1"># prepare_dem(bbox, out_path=&quot;SRTM3_mosaic_clip.tif&quot;, dem_type=&quot;SRTM3&quot;, clip=True)</span>
+
+<span class="c1"># # prepare_dem(bbox, out_path=&quot;cop30_mosaic.tif&quot;, dem_type=&quot;COP30&quot;)</span>
+<span class="c1"># # prepare_dem(bbox, out_path=&quot;cop90_mosaic.tif&quot;, dem_type=&quot;COP90&quot;)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Narayanarao Bhogapurapu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

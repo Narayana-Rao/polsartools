@@ -78,7 +78,15 @@ Following are the avaialble functions for dual-pol data:
     functions/dual_pol/dprvic
     functions/dual_pol/dp_desc
 
+Analysis functions
+-------------------
 
+.. toctree::
+    :maxdepth: 3
+
+    functions/analysis
+    functions/full_pol/halpha_plot_fp
+    functions/dual_pol/halpha_plot_dp
     
 Polarimetric speckle filters
 ----------------------------
@@ -88,15 +96,24 @@ Polarimetric speckle filters
 
     functions/speckle_filts
 
-other functions
----------------
+Preprocessing
+--------------
 
 .. toctree::
     :maxdepth: 3
 
-    functions/others
-    functions/full_pol/halpha_plot_fp
-    functions/dual_pol/halpha_plot_dp
+    functions/preprocess/clip
+    functions/preprocess/mlook
+    functions/preprocess/convert_S
+
+Other functions
+-----------------------
+
+.. toctree::
+    :maxdepth: 3
+
+    functions/misc
+
     
 
 

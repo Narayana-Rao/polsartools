@@ -109,27 +109,35 @@ def gslc_meta(inFile):
     return freq_band,listOfPolarizations, xSpacing, ySpacing, int(projection)
 
 @time_it 
-def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_workers=None):
+def nisar_gslc(inFile, matrixType='C3', 
+               azlks=2, rglks=2, outType='tif',
+               out_dir = None,
+               max_workers=None):
     """
     Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
-    and saves them into respective binary files.
+    and saves them into respective geotif files.
 
     Example:
     --------
-    >>> nisar_gslc("path_to_file.h5", azlks=30, rglks=15)
-    This will extract the C2 matrix elements from the specified NISAR GSLC file 
-    and save them in the 'C2' folder.
+    >>> nisar_gslc("path_to_file.h5", azlks=5, rglks=5)
+    This will extract the C2 matrix elements from the dual-pol NISAR GSLC file 
+    and save them in the 'C2HX' folder.
     
     Parameters:
     -----------
     inFile : str
-        The path to the NISAR GSLC HDF5 file containing the radar data.
-
+        The path to the NISAR GSLC HDF5 file containing the NISAR data.
+    matrixType : str, optional (default='C3')
+        The type of matrix to extract. Valid options for full-pol are 'S2', 'C4', 'C3', 'T3', 'T4', 'C2HV', 'C2HX', 'C2VX', 'T2HV'. 
+        Valid options for dual-pol , leave empty.
     azlks : int, optional (default=20)
         The number of azimuth looks for multi-looking. 
-
     rglks : int, optional (default=10)
         The number of range looks for multi-looking. 
+    outType : str, optional (default='tif')
+        The type of output file to save the matrix elements. Valid options are 'tif' and 'bin'.
+    out_dir : str, optional (default=None)
+        The path to the output directory. If not provided, the function will create a matrix folder at the inFile directory.
 
     Returns:
     --------
@@ -137,10 +145,10 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
         The function does not return any value. Instead, it creates a folder 
         named `C2` (if not already present) and saves the following binary files:
         
-        - `C11.bin`: Contains the C11 matrix elements.
-        - `C22.bin`: Contains the C22 matrix elements.
-        - `C12_real.bin`: Contains the real part of the C12 matrix.
-        - `C12_imag.bin`: Contains the imaginary part of the C12 matrix.
+        - `C11.tif`: Contains the C11 matrix elements.
+        - `C22.tif`: Contains the C22 matrix elements.
+        - `C12_real.tif`: Contains the real part of the C12 matrix.
+        - `C12_imag.tif`: Contains the imaginary part of the C12 matrix.
         - `config.txt`: A text file containing grid dimensions and polarimetric configuration.
 
     Raises:
@@ -181,10 +189,24 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
     base_path = f'/science/{freq_band}SAR/GSLC/grids/frequencyA'
     
     if nchannels==2:
-        out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2')
-        temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2','temp')
+        # if out_dir is None:
+        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2')
+        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2','temp')
+        # else:
+        #     os.makedirs(out_dir, exist_ok=True)
+        #     out_dir = os.path.join(out_dir,'C2')
+        #     temp_dir = os.path.join(out_dir,'temp')
+            
         print("Extracting C2 matrix elements...")
         if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX')
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX','temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,'C2HX')
+                temp_dir = os.path.join(out_dir,'temp')
+            
             h5_polsar(
                         h5_file=inFile,
                         dataset_paths={
@@ -209,6 +231,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
     
 
         elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX')
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX','temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,'C2VX')
+                temp_dir = os.path.join(out_dir,'temp')
             h5_polsar(
                         h5_file=inFile,
                         dataset_paths={
@@ -232,6 +261,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
                     )
 
         elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV')
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV','temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,'C2HV')
+                temp_dir = os.path.join(out_dir,'temp')
             h5_polsar(
                         h5_file=inFile,
                         dataset_paths={
@@ -262,8 +298,15 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
     elif nchannels==4:
         if matrixType=='S2':
             print("Extracting S2 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
+                
+                
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -290,8 +333,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
             
         elif matrixType=='T4':
             print("Extracting T4 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -318,8 +366,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
 
         elif matrixType=='T3':
             print("Extracting T3 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -345,8 +398,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
             )
         elif matrixType=='C4':
             print("Extracting C4 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -372,8 +430,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
             )   
         elif matrixType=='C3':
             print("Extracting C3 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -400,8 +463,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
         
         elif matrixType=='C2HV':
             print("Extracting C2HV matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -417,8 +485,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
 
         elif matrixType=='C2HX':
             print("Extracting C2HX matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -434,8 +507,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
 
         elif matrixType=='C2VX':
             print("Extracting C2VX matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -451,8 +529,13 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
 
         elif matrixType=='T2HV':
             print("Extracting T2HV matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -472,7 +555,9 @@ def nisar_gslc(inFile, matrixType='C3', azlks=2, rglks=2, outType='tif',max_work
 
 @time_it  
 def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10, 
-               outType='tif',max_workers=None ):
+               outType='tif',
+               out_dir=None,
+               max_workers=None ):
     """
     Extracts the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from a NISAR RSLC HDF5 file 
     and saves them into respective binary files.
@@ -486,23 +571,25 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
     Parameters:
     -----------
     inFile : str
-        The path to the NISAR RSLC HDF5 file containing the radar data.
-
-    azlks : int, optional (default=22)
+        The path to the NISAR RSLC HDF5 file containing the NISAR data.
+    matrixType : str, optional (default='C3')
+        The type of matrix to extract. Valid options for full-pol are 'S2', 'C4', 'C3', 'T3', 'T4', 'C2HV', 'C2HX', 'C2VX', 'T2HV'. 
+        Valid options for dual-pol , leave empty.
+    azlks : int, optional (default=20)
         The number of azimuth looks for multi-looking. 
-
     rglks : int, optional (default=10)
         The number of range looks for multi-looking. 
-        
-    matrixType : str, optional (default = C2 for dual-pol, C3 for full-pol)
-        Type of matrix to extract. Valid options are 'C2', 'S2', 'C3', and 'T3'.
+    outType : str, optional (default='tif')
+        The type of output file to save the matrix elements. Valid options are 'tif' and 'bin'.
+    out_dir : str, optional (default=None)
+        The path to the output directory. If not provided, the function will create a matrix folder at the inFile directory.
          
 
     Returns:
     --------
     None
         The function does not return any value. Instead, it creates a folder 
-        named `C2/S2/C3/T3` (if not already present) and saves the following binary files:
+        named `C2/S2/C3/T3` and saves the respective files.
 
 
     Raises:
@@ -533,8 +620,14 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
     if nchannels==2:       
         if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
             print("Extracting C2HX matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX','temp')
+            matrixType = 'C2HX'
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             
             h5_polsar(
                         h5_file=inFile,
@@ -561,8 +654,14 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
 
         elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
             print("Extracting C2VX matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX','temp')
+            matrixType = 'C2VX'
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                         h5_file=inFile,
                         dataset_paths={
@@ -587,8 +686,14 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
 
         elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
             print("Extracting C2HV matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV','temp')
+            matrixType = 'C2HV'
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                         h5_file=inFile,
                         dataset_paths={
@@ -620,8 +725,13 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
     elif nchannels==4:
         if matrixType=='S2':
             print("Extracting S2 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -648,8 +758,13 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
             
         elif matrixType=='T4':
             print("Extracting T4 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -676,8 +791,13 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
 
         elif matrixType=='T3':
             print("Extracting T3 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -703,8 +823,13 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
             )
         elif matrixType=='C4':
             print("Extracting C4 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -730,8 +855,13 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
             )   
         elif matrixType=='C3':
             print("Extracting C3 matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -758,8 +888,13 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
         
         elif matrixType=='C2HV':
             print("Extracting C2HV matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -776,8 +911,13 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
 
         elif matrixType=='C2HX':
             print("Extracting C2HX matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -794,8 +934,13 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
 
         elif matrixType=='C2VX':
             print("Extracting C2VX matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
@@ -812,8 +957,13 @@ def nisar_rslc(inFile, matrixType='C3', azlks=22,rglks=10,
 
         elif matrixType=='T2HV':
             print("Extracting T2HV matrix elements...")
-            out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV')
-            temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV','temp')
+            if out_dir is None:
+                out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType))
+                temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],str(matrixType),'temp')
+            else:
+                os.makedirs(out_dir, exist_ok=True)
+                out_dir = os.path.join(out_dir,str(matrixType))
+                temp_dir = os.path.join(out_dir,str(matrixType),'temp')
             h5_polsar(
                 h5_file=inFile,
                 dataset_paths={
