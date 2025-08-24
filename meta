@@ -17,6 +17,8 @@ freeman_2c
 praks_parm_fp
 tsvm
 clip
+prepare_dem
+
 
 # BUILD DOCS
 sphinx-build -M clean docs/source docs/build

@@ -21,7 +21,7 @@ from .sensors.esar import esar_gtc
 """ Importing preprocessing modules """
 from .preprocess import convert_T3_C3,convert_C3_T3, convert_S, clip
 from .preprocess.filters import boxcar, rlee
-from .preprocess.mlook import mlook
+from .preprocess import prepare_dem, mlook
 
 """ Importing polsar modules """
 from .polsar.fp import grvi, rvifp, mf3cf, mf4cf, dopfp, prvifp,nnedfp, neufp,halphafp,\
@@ -64,6 +64,9 @@ __all__ = [
     'shannon_h_dp',     
     'dprvic','dp_desc',
     # DUAL-CO-POL
-    'mf3cd'      
+    'mf3cd' ,
+    'prepare_dem',
+    
+    
     
 ]
