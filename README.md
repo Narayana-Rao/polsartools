@@ -87,64 +87,7 @@ This package generates derived SAR parameters (viz. polarimetric descriptors, ve
 Sample use cases and notebooks are provided at [polsartools-notebooks](https://github.com/Narayana-Rao/polsartools-notebooks) repo. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
 
 ## 💠Available functionalities:
-* Supported sensors
-  * Airborne
-    * UAVSAR (GRD, MLC)
-    * ISRO ASAR (H5)
-    * E-SAR (GTC)
-  * Spaceborne
-    * NISAR (RSLC, GSLC)
-    * RISAT-1 (Compact-pol)
-    * RADARSAT-2 (Full-pol)
-    * ALOS-2 (Fine Beam Dual-pol (FBD), Quad-pol (HBQ) Level 1.1 CEOS)
-  * Planetary 
-    * Chandrayaan-II DFSAR (Full-pol)
-
-
- * Full-pol :
-	* H-A-Alpha decomposition
-    * Yamaguchi 4-Component decomposition
-    * Shannon Entropy parameters
-	* Non-negative Eigen value decomposition
-	* Neumann Decomposition 
-   * Model free 4-Component decomposition for full-pol data (MF4CF)[[11]](references.md#11)
-   * Model free 3-Component decomposition for full-pol data (MF3CF)[[4]](references.md#4)
-	* Radar Vegetation Index (RVI) [[8]](references.md#8) 
-   * Generalized volume Radar Vegetation Index (GRVI) [[2]](references.md#2)
-   * Polarimetric Radar Vegetation Index (PRVI) [[1]](references.md#1)
-   * Degree of Polarization (DOP) [[10]](references.md#10) 
-
-* Dual-pol:
-  * H-Alpha parameters
-  * Shannon Entropy parameters
-  * Dual-pol Radar Vegetation Index (DpRVI) [[5]](references.md#5)
-  * Dual-pol Radar Vegetation Index for GRD data (DpRVIc) [[12]](references.md#12)
-  * Radar Vegetation Index (RVI) [[9]](references.md#9)
-  * Degree of Polarization (DOP) [[10]](references.md#10) 
-  * Polarimetric Radar Vegetation Index (PRVI) [[1]](references.md#1)
-  * Dual-pol descriptors [[13]](references.md#13)
-  * Model free 3-Component decomposition for dual-copol data (MF3CD)
-
-* Compact-pol : 
-  * Model free 3-Component decomposition for compact-pol data (MF3CC) [[4]](references.md#4)
-  * Improved S-Omega decomposition for compact-pol data (iS-Omega) [[7]](references.md#7)
-  * Compact-pol Radar Vegetation Index (CpRVI)  [[6]](references.md#6)
-  * Degree of Polarization (DOP)  [[10]](references.md#10) 
-
-* Polarimetric speckle filters:
-  * boxcar
-  * refine lee
-
-* Other polarimetric functions
-  * Stokes parameters
-  * multi-look PolSAR matrix
-  * Convert matrices
-  * Pauli RGB from full-pol data
-  * Psuedo RGB from Dual/compact pol data
-  * Polarimetric signatures
-  * Full-pol and Dual-pol H-Alpha plot
-  * Full-pol H-A-Alpha plot
-  * H-Alpha clusters (Full-pol)
+Full list of available functions is provided here : [Functions](https://polsartools.readthedocs.io/en/latest/files/02functions.html)
 
 
 ## 🎨 Logo Vibes Explained
