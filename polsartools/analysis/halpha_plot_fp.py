@@ -724,7 +724,7 @@ def halpha_plot_fp(h, alpha, pname=None, cmap='viridis',
                     grey_region=True, zone_lines=True,
                     zone_line_color='k',zone_ids=True,gridsize=300): 
     """
-    Generates and saves a hexbin density plot of entropy (H) versus alpha (degrees) for full-pol data,
+    Generates and saves a  density plot of entropy (H) versus alpha (degrees) for full-pol data,
     including optional zone lines, zone IDs, and grey regions.
     
     Example:

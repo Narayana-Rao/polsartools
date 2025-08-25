@@ -11,6 +11,63 @@ def freeman_3c(infolder,  window_size=1, outType="tif", cog_flag=False,
           progress_callback=None,  # for QGIS plugin
           ):
     
+    """Perform Freeman-Durdan 3-Component Decomposition for full-pol SAR data.
+
+    This function implements the three-component decomposition for
+    full-polarimetric SAR data, decomposing the total scattered power into surface (Ps),
+    double-bounce (Pd), and volume (Pv) scattering components.
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> freeman_3c("/path/to/fullpol_data")
+    
+    >>> # Advanced usage with custom parameters
+    >>> freeman_3c(
+    ...     infolder="/path/to/fullpol_data",
+    ...     window_size=5,
+    ...     outType="tif",
+    ...     cog_flag=True,
+    ...     block_size=(1024, 1024)
+    ... )
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing full-pol T3 or C3 matrix files.
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows reduce speckle noise
+        but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
+
+    Returns
+    -------
+    None
+        Writes three output files to disk:
+        
+        1. Freeman_3c_odd: Surface scattering power component
+        2. Freeman_3c_dbl: Double-bounce scattering power component
+        3. Freeman_3c_vol: Volume scattering power component
+    """
+    
+    
     input_filepaths = fp_c3t3files(infolder)
 
     output_filepaths = []

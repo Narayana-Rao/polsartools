@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Shannon entropy (shannon_h_fp) &#8212; PolSARtools 0.8 documentation</title>
+    <title>Shannon entropy (shannon_h_fp) &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -38,14 +38,14 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/full_pol/shannon_h_fp';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Radar Vegetation Index (rvifp )" href="RVI_fp.html" />
+    <link rel="next" title="Praks polarimetric parameters (praks_parm_fp)" href="praks_parm_fp.html" />
     <link rel="prev" title="Non-negative Eigen Value decomposition (nnedfp)" href="nnedfp.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -292,12 +292,16 @@
 </ul>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halphafp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tsvm.html">Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">tsvm</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4cfp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="freeman_3c.html">Freeman 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_3c</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="freeman_2c.html">Freeman 2-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_2c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neufp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nnedfp</span></code>)</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="praks_parm_fp.html">Praks polarimetric parameters (<code class="docutils literal notranslate"><span class="pre">praks_parm_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="RVI_fp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvifp</span></code> )</a></li>
 <li class="toctree-l1"><a class="reference internal" href="GRVI.html">Generalized volume based Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">grvi</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvifp</span></code> )</a></li>
@@ -327,19 +331,29 @@
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
-
-</ul>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../others.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
-
-
-
+<li class="toctree-l1"><a class="reference internal" href="../analysis.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
 
 
 
 <li class="toctree-l1"><a class="reference internal" href="halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">halpha_cluster_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_cp</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
+
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preprocess/clip.html">Clip PolSAR data (<code class="docutils literal notranslate"><span class="pre">clip</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocess/mlook.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preprocess/convert_S.html">Convert single-look S (S2,Sxy) (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</a></li>
+
 </ul>
 </div>
 </nav></div>
@@ -446,10 +460,13 @@ Larger blocks use more memory but may be more efficient.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Writes three output files to disk:
-1. H_Shannon: Total Shannon Entropy
-2. HI_Shannon: Intensity contribution
-3. HP_Shannon: Polarimetric contribution</p>
+<dd class="field-even"><p><p>Writes three output files to disk:</p>
+<ol class="arabic simple">
+<li><p>H_Shannon: Total Shannon Entropy</p></li>
+<li><p>HI_Shannon: Intensity contribution</p></li>
+<li><p>HP_Shannon: Polarimetric contribution</p></li>
+</ol>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -500,11 +517,11 @@ Larger blocks use more memory but may be more efficient.</p></li>
       </div>
     </a>
     <a class="right-next"
-       href="RVI_fp.html"
+       href="praks_parm_fp.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvifp</span></code> )</p>
+        <p class="prev-next-title">Praks polarimetric parameters (<code class="docutils literal notranslate"><span class="pre">praks_parm_fp</span></code>)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

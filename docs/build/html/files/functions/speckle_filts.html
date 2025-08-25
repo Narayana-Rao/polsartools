@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Refined-Lee filter (rlee) &#8212; PolSARtools 0.8 documentation</title>
+    <title>Refined-Lee filter (rlee) &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -38,15 +38,15 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/speckle_filts';</script>
     <link rel="icon" href="../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Multi-looking (mlook)" href="others.html" />
-    <link rel="prev" title="Dual polarimetric descriptors (dp_desc)" href="dual_pol/dp_desc.html" />
+    <link rel="next" title="Clip PolSAR data (clip)" href="preprocess/clip.html" />
+    <link rel="prev" title="Full-pol H-A-alpha plot (haalpha_plot_fp)" href="analysis/haalpha_plot_fp.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -326,20 +326,27 @@
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/dprvic.html">Dual-pol Radar Vegetation Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprvic</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
 </ul>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
-
-</ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="others.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
-
-
-
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
 
 
 
 <li class="toctree-l1"><a class="reference internal" href="full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
+
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="preprocess/clip.html">Clip PolSAR data (<code class="docutils literal notranslate"><span class="pre">clip</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocess/mlook.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocess/convert_S.html">Convert single-look S (S2,Sxy) (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</a></li>
+
 </ul>
 </div>
 </nav></div>
@@ -497,20 +504,20 @@ visualization.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="dual_pol/dp_desc.html"
+       href="analysis/haalpha_plot_fp.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</p>
+        <p class="prev-next-title">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</p>
       </div>
     </a>
     <a class="right-next"
-       href="others.html"
+       href="preprocess/clip.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</p>
+        <p class="prev-next-title">Clip PolSAR data (<code class="docutils literal notranslate"><span class="pre">clip</span></code>)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

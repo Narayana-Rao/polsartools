@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Clip PolSAR data (clip) &#8212; PolSARtools 0.8 documentation</title>
+    <title>Clip PolSAR data (clip) &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -38,13 +38,15 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/preprocess/clip';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Multi-looking (mlook)" href="mlook.html" />
+    <link rel="prev" title="Refined-Lee filter (rlee)" href="../speckle_filts.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -145,7 +147,7 @@
 </li>
 
 
-<li class="nav-item ">
+<li class="nav-item current active">
   <a class="nav-link nav-internal" href="../../02functions.html">
     Functions
   </a>
@@ -215,10 +217,8 @@
       
       
       
-        
-      
       <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -247,7 +247,7 @@
 </li>
 
 
-<li class="nav-item ">
+<li class="nav-item current active">
   <a class="nav-link nav-internal" href="../../02functions.html">
     Functions
   </a>
@@ -281,6 +281,76 @@
       </div>
     
   </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../dataFP.html">Full-pol data format</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halphafp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4cfp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neufp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nnedfp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/RVI_fp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvifp</span></code> )</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/GRVI.html">Generalized volume based Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">grvi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvifp</span></code> )</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/DOP_fp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopfp</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../dataCP.html">Compact-pol data format</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../compact_pol/cprvi.html">Compact-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">cprvi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">misomega</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compact_pol/MF3CC.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compact_pol/DOP_cp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopcp</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../dataDP.html">Dual-pol data format</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/RVI_dp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvidp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/DpRVI.html">Dual-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">dprvi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/PRVI_dp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvidp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/DOP_dp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopdp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">halphadp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/shannon_h_dp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dprvic.html">Dual-pol Radar Vegetation Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprvic</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../analysis.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
+
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Clip PolSAR data (<code class="docutils literal notranslate"><span class="pre">clip</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlook.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convert_S.html">Convert single-look S (S2,Sxy) (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</a></li>
+
+</ul>
+</div>
+</nav></div>
+    </div>
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
@@ -317,6 +387,9 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
+    
+    <li class="breadcrumb-item"><a href="../../02functions.html" class="nav-link">Functions</a></li>
+    
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Clip PolSAR data (<code class="docutils literal notranslate"><span class="pre">clip</span></code>)</span></li>
   </ul>
 </nav>
@@ -396,6 +469,24 @@
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="../speckle_filts.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="mlook.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               

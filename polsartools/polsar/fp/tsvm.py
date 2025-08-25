@@ -10,7 +10,74 @@ def tsvm(infolder,  window_size=1, outType="tif", cog_flag=False,
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
           ):
+    """Perform Touzi Decomposition for full-pol SAR data.
+
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> tsvm("/path/to/fullpol_data")
     
+    >>> # Advanced usage with custom parameters
+    >>> tsvm(
+    ...     infolder="/path/to/fullpol_data",
+    ...     window_size=5,
+    ...     outType="tif",
+    ...     cog_flag=True,
+    ...     block_size=(1024, 1024)
+    ... )
+
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing full-pol T3 or C3 matrix files.
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows reduce speckle noise
+        but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
+
+    Returns
+    -------
+    None
+        Writes the follwing files to disk:
+        
+        1. TSVM_alpha1
+        2. TSVM_alpha2
+        3. TSVM_alpha3 
+        4. TSVM_phi1 
+        5. TSVM_phi2 
+        6. TSVM_phi3 
+        7. TSVM_tau1 
+        8. TSVM_tau2 
+        9. TSVM_tau3 
+        10. TSVM_psi1 
+        11. TSVM_psi2 
+        12. TSVM_psi3
+        13. TSVM_alphas
+        14. TSVM_phis
+        15. TSVM_taus
+        16. TSVM_psis
+
+    """
+
     input_filepaths = fp_c3t3files(infolder)
 
     output_filepaths = []

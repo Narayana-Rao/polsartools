@@ -18,7 +18,63 @@ def praks_parm_fp(infolder,  window_size=1, outType="tif", cog_flag=False,
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
           ):
+    """Derives praks polarimetric parameters for full-pol SAR data.
+
+    Examples
+    --------
+    >>> # Basic usage with default parameters
+    >>> praks_parm_fp("/path/to/fullpol_data")
     
+    >>> # Advanced usage with custom parameters
+    >>> praks_parm_fp(
+    ...     infolder="/path/to/fullpol_data",
+    ...     window_size=5,
+    ...     outType="tif",
+    ...     cog_flag=True,
+    ...     block_size=(1024, 1024)
+    ... )
+
+    Parameters
+    ----------
+    infolder : str
+        Path to the input folder containing full-pol T3 or C3 matrix files.
+    window_size : int, default=1
+        Size of the spatial averaging window. Larger windows reduce speckle noise
+        but decrease spatial resolution.
+    outType : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format with georeferencing information
+        - 'bin': Raw binary format
+    cog_flag : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
+        and overviews for efficient web access.
+    cog_overviews : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG creation. Each number represents the
+        decimation factor for that overview level.
+    write_flag : bool, default=True
+        If True, writes results to disk. If False, only processes data in memory.
+    max_workers : int | None, default=None
+        Maximum number of parallel processing workers. If None, uses
+        CPU count - 1 workers.
+    block_size : tuple[int, int], default=(512, 512)
+        Size of processing blocks (rows, cols) for parallel computation.
+        Larger blocks use more memory but may be more efficient.
+
+    Returns
+    -------
+    None
+        Writes four output files to disk:
+        
+        1. FrobeniusNorm: Frobenius norm
+        2. ScattPredominance: Scattering predominance
+        3. ScatteringDiversity: Scattering diversity
+        4. DegreePurity: Degrees of purity
+        5. DepolarizationIndex: Depolarization index
+        6. Praks_Alpha: Alpha parameter
+        7. Praks_Entropy: Entropy parameter
+
+
+    """
     input_filepaths = fp_c3t3files(infolder)
 
     output_filepaths = []

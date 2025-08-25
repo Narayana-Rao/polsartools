@@ -61,6 +61,7 @@ def shannon_h_fp(infolder,  window_size=1, outType="tif", cog_flag=False,
     -------
     None
         Writes three output files to disk:
+        
         1. H_Shannon: Total Shannon Entropy
         2. HI_Shannon: Intensity contribution
         3. HP_Shannon: Polarimetric contribution

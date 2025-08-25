@@ -4,9 +4,7 @@ import matplotlib.colors as mcolors
 import os 
 from matplotlib.cm import ScalarMappable
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-
 from pathlib import Path
-
 from polsartools.utils.utils import read_bin
 # from .halpha_plot_dp import get_feas_bounds
 
@@ -729,6 +727,54 @@ def haalpha_plot_fp(H, A, alpha, pname = None, cmap='jet',
                         grey_region=True,zone_lines=True,
                         zone_line_color = 'k', gridsize=200
                               ):
+    
+    """
+    Generates and saves a  density plot of entropy (H) versus alpha (degrees) for full-pol data,
+    including optional zone lines, zone IDs, and grey regions.
+    
+    Example:
+    --------
+    >>> haalpha_plot_fp(h, A, alpha, path="HAAlpha_plot.png", cmap='jet', colorbar=True, norm='log')
+    This will generates a H/A/Alpha plot  from the input arrays and save it as HAAlpha_plot.png, using the 'jet' colormap and logarithmic normalization
+    
+    Parameters:
+    -----------
+    h : path or array-like
+        path to the Entropy file or Array representing entropy values.
+    A : array-like
+        path to the Anisotropy file or Array representing Anisotropy values.
+    alpha : array-like
+        path to the Alpha file or Array representing alpha values in degrees.
+    pname : str, optional
+        Path to save the generated plot. If a folder is given, the plot is saved as 'halpha_plot_fp.png' inside that folder.
+        If the file already exists, it will be overwritten.
+    cmap : str, optional
+        Colormap used for the hexbin plot. Defaults to 'viridis'.
+    colorbar : bool, optional
+        If True, displays a colorbar representing sample count. Defaults to True.
+    norm : str, optional
+        If set to 'log', applies logarithmic normalization to the hexbin plot.
+    grey_region : bool, optional
+        If True, fills non-feasible regions of the plot with a grey color to indicate feasible boundaries. Defaults to True.
+    zone_lines : bool, optional
+        If True, adds dashed lines to mark different entropy-alpha zones. Defaults to True.
+    zone_line_color : str, optional
+        Color used for zone boundary lines. Defaults to 'k' (black).
+    zone_ids : bool, optional
+        If True, labels predefined zones with numerical identifiers. Defaults to True.
+    gridsize : int, optional
+        Number of hexagonal bins used in the plot. Higher values result in finer binning. Defaults to 300.
+    
+    Returns:
+    --------
+    None
+        Displays the plot and optionally saves it to the specified location.
+    
+    Notes:
+    ------
+    - Uses `get_feas_bounds()` to obtain feasible boundary curves for plotting.
+    - If `norm` is 'log', a `LogNorm()` normalization is applied.
+    """
     
     
     

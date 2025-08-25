@@ -63,6 +63,7 @@ def mf3cf(infolder,  window_size=1, outType="tif", cog_flag=False,
     -------
     None
         Writes four output files to disk:
+        
         1. Ps_mf3cf: Surface scattering power component
         2. Pd_mf3cf: Double-bounce scattering power component
         3. Pv_mf3cf: Volume scattering power component

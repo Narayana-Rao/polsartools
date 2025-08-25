@@ -17,12 +17,16 @@ Following are the avaialble functions for full-pol data:
     :maxdepth: 3
 
     functions/full_pol/halphafp
+    functions/full_pol/tsvm
     functions/full_pol/yam4cfp
+    functions/full_pol/freeman_3c
+    functions/full_pol/freeman_2c
     functions/full_pol/MF3CF
     functions/full_pol/mf4cf
     functions/full_pol/neufp
     functions/full_pol/nnedfp
     functions/full_pol/shannon_h_fp
+    functions/full_pol/praks_parm_fp
     functions/full_pol/RVI_fp
     functions/full_pol/GRVI
     functions/full_pol/PRVI_fp
@@ -87,6 +91,10 @@ Analysis functions
     functions/analysis
     functions/full_pol/halpha_plot_fp
     functions/dual_pol/halpha_plot_dp
+    functions/analysis/haalpha_plot_fp
+    functions/analysis/halpha_cluster_fp
+    functions/analysis/htheta_plot_fp
+    functions/analysis/htheta_plot_cp
     
 Polarimetric speckle filters
 ----------------------------
@@ -96,8 +104,8 @@ Polarimetric speckle filters
 
     functions/speckle_filts
 
-Preprocessing functions
------------------------
+Preprocessing
+--------------
 
 .. toctree::
     :maxdepth: 3

@@ -123,7 +123,7 @@ def prepare_dataT3(T3):
 def fp_sign(mat=None, title='',pname='',cmap='jet',plotType = 1,
     fig=None, axes=None, start_index=0):
     """
-        Generates and visualizes polarimetric signatures from a 2x2 scattering matrix (S2) or a 3x3 coherency matrix (T3), based on input shape.
+    Generates and visualizes polarimetric signatures from a 2x2 scattering matrix (S2) or a 3x3 coherency matrix (T3).
     
     Examples
     --------
@@ -147,10 +147,11 @@ def fp_sign(mat=None, title='',pname='',cmap='jet',plotType = 1,
 
     plotType : int, optional
         Determines the type of plot to generate:
-            - 1: Standard polarimetric signature via `pol_sign`.
-            - 2: 2D polarimetric signature via `pol_sign2d`.
-            - 3: Poincaré sphere mapping via `poincare_plot`.
-            - 4: Render empty or canonical Poincaré sphere via `poincare_sphere` (S2 not required).
+        
+        - 1: Standard polarimetric signature via `pol_sign`.
+        - 2: 2D polarimetric signature via `pol_sign2d`.
+        - 3: Poincaré sphere mapping via `poincare_plot`.
+        - 4: Render empty or canonical Poincaré sphere via `poincare_sphere` (S2 not required).
     """
     # if S2 is not None:
     #     cp_sign, xp_sign = prepare_data(S2)

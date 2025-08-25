@@ -61,6 +61,7 @@ def nnedfp(infolder,  window_size=1, outType="tif", cog_flag=False,
     -------
     None
         Writes three output files to disk:
+        
         1. NNED_odd: Odd-bounce (surface) scattering component
         2. NNED_dbl: Double-bounce scattering component
         3. NNED_vol: Volume scattering component

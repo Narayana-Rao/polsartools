@@ -62,6 +62,7 @@ def neufp(infolder,  window_size=1, outType="tif", cog_flag=False,
     -------
     None
         Writes four output files to disk:
+        
         1. Neu_psi: Polarization orientation angle
         2. Neu_delta_mod: Degree of polarization
         3. Neu_delta_pha: Phase difference
