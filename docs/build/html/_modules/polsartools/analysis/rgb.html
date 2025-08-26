@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.rgb &#8212; PolSARtools 0.8 documentation</title>
+    <title>polsartools.analysis.rgb &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/rgb';</script>
@@ -344,10 +344,11 @@
 
 
 <div class="viewcode-block" id="rgb">
-<a class="viewcode-back" href="../../../files/functions/others.html#polsartools.rgb">[docs]</a>
+<a class="viewcode-back" href="../../../files/functions/analysis.html#polsartools.rgb">[docs]</a>
 <span class="nd">@time_it</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">rgb</span><span class="p">(</span><span class="n">Rpath</span><span class="p">,</span><span class="n">Gpath</span><span class="p">,</span><span class="n">Bpath</span><span class="p">,</span>
-        <span class="n">norm_each</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">lp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">gp</span><span class="o">=</span><span class="mi">95</span><span class="p">,</span>
+        <span class="n">norm_each</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">lp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">gp</span><span class="o">=</span><span class="mi">95</span><span class="p">,</span>
+        <span class="n">norm_span</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">save_tif</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">window_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span>
@@ -369,12 +370,14 @@
 <span class="sd">        Path to the green channel raster file.</span>
 <span class="sd">    Bpath : str</span>
 <span class="sd">        Path to the blue channel raster file.</span>
-<span class="sd">    norm_each : bool, default=False</span>
+<span class="sd">    norm_each : bool, default=True</span>
 <span class="sd">        If True, normalize each channel separately.</span>
 <span class="sd">    lp : int, default=5</span>
 <span class="sd">        Lower percentile for normalization (0-100). Only used if `norm_each=True`.</span>
 <span class="sd">    gp : int, default=95</span>
 <span class="sd">        Upper percentile for normalization(0-100). Only used if `norm_each=True`.</span>
+<span class="sd">    norm_span : bool, default=False</span>
+<span class="sd">        If True, normalize each channel with total power.</span>
 <span class="sd">    save_tif : bool, default=False</span>
 <span class="sd">        If True, generates a GeoTIFF (.tif) file alongside the PNG image.</span>
 <span class="sd">    window_size : int, optional</span>
@@ -404,16 +407,21 @@
         <span class="n">B</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         
     <span class="k">if</span> <span class="n">norm_each</span><span class="p">:</span>
-        <span class="n">R</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">lp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">dB_scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">G</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">lp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">dB_scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">B</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">lp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">dB_scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    
-    <span class="n">total</span> <span class="o">=</span> <span class="n">R</span> <span class="o">+</span> <span class="n">G</span> <span class="o">+</span> <span class="n">B</span>
-    <span class="n">red</span> <span class="o">=</span> <span class="n">R</span> <span class="o">/</span> <span class="n">total</span>
-    <span class="n">green</span> <span class="o">=</span> <span class="n">G</span> <span class="o">/</span> <span class="n">total</span>
-    <span class="n">blue</span> <span class="o">=</span> <span class="n">B</span> <span class="o">/</span> <span class="n">total</span>
-    
-    <span class="k">del</span> <span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">total</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">lp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">dB_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">lp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">dB_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">lp</span><span class="p">,</span> <span class="n">gp</span><span class="p">,</span> <span class="n">dB_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">norm_span</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="n">R</span> <span class="o">+</span> <span class="n">G</span> <span class="o">+</span> <span class="n">B</span>
+        <span class="n">red</span> <span class="o">=</span> <span class="n">R</span> <span class="o">/</span> <span class="n">total</span>
+        <span class="n">green</span> <span class="o">=</span> <span class="n">G</span> <span class="o">/</span> <span class="n">total</span>
+        <span class="n">blue</span> <span class="o">=</span> <span class="n">B</span> <span class="o">/</span> <span class="n">total</span>
+        
+        <span class="k">del</span> <span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">total</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">red</span> <span class="o">=</span> <span class="n">R</span>
+        <span class="n">green</span> <span class="o">=</span> <span class="n">G</span>
+        <span class="n">blue</span> <span class="o">=</span> <span class="n">B</span>
     
     <span class="n">georef_file</span> <span class="o">=</span> <span class="n">Rpath</span>
     <span class="n">infolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">georef_file</span><span class="p">)</span>

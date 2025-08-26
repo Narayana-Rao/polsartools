@@ -18,7 +18,8 @@ praks_parm_fp -
 tsvm - #TOUZI decomposition
 clip - 
 prepare_dem - 
-
+update rgb
+update nisar with output path
 
 # BUILD DOCS
 sphinx-build -M clean docs/source docs/build
