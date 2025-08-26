@@ -10,7 +10,8 @@ from .pauliRGB import generate_rgb_png, create_pgw, generate_rgb_tif, norm_data,
 
 @time_it
 def rgb(Rpath,Gpath,Bpath,
-        norm_each=False,lp=5,gp=95,
+        norm_each=True,lp=5,gp=95,
+        norm_span = False,
         save_tif=False,
         window_size=None):
     
@@ -32,12 +33,14 @@ def rgb(Rpath,Gpath,Bpath,
         Path to the green channel raster file.
     Bpath : str
         Path to the blue channel raster file.
-    norm_each : bool, default=False
+    norm_each : bool, default=True
         If True, normalize each channel separately.
     lp : int, default=5
         Lower percentile for normalization (0-100). Only used if `norm_each=True`.
     gp : int, default=95
         Upper percentile for normalization(0-100). Only used if `norm_each=True`.
+    norm_span : bool, default=False
+        If True, normalize each channel with total power.
     save_tif : bool, default=False
         If True, generates a GeoTIFF (.tif) file alongside the PNG image.
     window_size : int, optional
@@ -67,16 +70,21 @@ def rgb(Rpath,Gpath,Bpath,
         B = conv2d(B, kernel).astype(np.float32)
         
     if norm_each:
-        R = norm_data(R, lp, gp, dB_scale=False).astype(np.float32)
-        G = norm_data(G, lp, gp, dB_scale=False).astype(np.float32)
-        B = norm_data(B, lp, gp, dB_scale=False).astype(np.float32)
-    
-    total = R + G + B
-    red = R / total
-    green = G / total
-    blue = B / total
-    
-    del R,G,B,total
+        R = norm_data(R, lp, gp, dB_scale=True).astype(np.float32)
+        G = norm_data(G, lp, gp, dB_scale=True).astype(np.float32)
+        B = norm_data(B, lp, gp, dB_scale=True).astype(np.float32)
+        
+    if norm_span:
+        total = R + G + B
+        red = R / total
+        green = G / total
+        blue = B / total
+        
+        del R,G,B,total
+    else:
+        red = R
+        green = G
+        blue = B
     
     georef_file = Rpath
     infolder = os.path.dirname(georef_file)
