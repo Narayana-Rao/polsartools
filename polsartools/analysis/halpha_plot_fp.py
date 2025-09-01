@@ -773,11 +773,18 @@ def halpha_plot_fp(h, alpha, pname=None, cmap='viridis',
     
 
     if isinstance(h, (str, os.PathLike, Path)):
-        h = read_bin(h)
+        H = read_bin(h)
     if isinstance(alpha, (str, os.PathLike, Path)):
         alpha = read_bin(alpha)
     
-    
+    # --- Drop NaNs and zeros---
+    valid_mask = ~(
+    ((H == 0) & (alpha == 0)) |           # all three are zero
+    (np.isnan(H) & np.isnan(alpha))    # all three are NaN
+    )
+    H = H[valid_mask].flatten()
+    alpha = alpha[valid_mask].flatten()    
+
     
     c1l,c22l,c21l = get_feas_bounds()
     fs = 12
@@ -793,7 +800,7 @@ def halpha_plot_fp(h, alpha, pname=None, cmap='viridis',
     if vmin is None and vmax is not None:
         norm_option = mcolors.Normalize(vmax=vmax) if norm == '' else norm_option
     
-    plt.hexbin(h.flatten(), alpha.flatten(), gridsize=gridsize, cmap=cmap,mincnt=1,norm=norm_option)
+    plt.hexbin(H.flatten(), alpha.flatten(), gridsize=gridsize, cmap=cmap,mincnt=1,norm=norm_option)
     
     if zone_lines:
         plt.axvline(x=0.5,color=zone_line_color,linestyle="--",linewidth=0.5,zorder=1)

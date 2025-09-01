@@ -5,7 +5,8 @@ import os
 from matplotlib.cm import ScalarMappable
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from pathlib import Path
-from polsartools.utils.utils import read_bin
+from polsartools.utils.utils import read_bin, time_it
+
 # from .halpha_plot_dp import get_feas_bounds
 
 def get_feas_bounds():
@@ -721,7 +722,7 @@ def get_feas_bounds():
     return c1l,c22l,c21l
 
 
-
+@time_it
 def haalpha_plot_fp(H, A, alpha, pname = None, cmap='jet', 
                         cbar = True, norm='', vmin=None,vmax=None, 
                         grey_region=True,zone_lines=True,
@@ -785,23 +786,25 @@ def haalpha_plot_fp(H, A, alpha, pname = None, cmap='jet',
     if isinstance(A, (str, os.PathLike, Path)):
         A = read_bin(A)
     
-    # --- Drop NaNs ---
-    valid_mask = ~np.isnan(H) & ~np.isnan(A) & ~np.isnan(alpha)
+    # --- Drop NaNs and zeros---
+    valid_mask = ~(
+    ((H == 0) & (A == 0) & (alpha == 0)) |           # all three are zero
+    (np.isnan(H) & np.isnan(A) & np.isnan(alpha))    # all three are NaN
+    )
     h_vals = H[valid_mask].flatten()
     a_vals = A[valid_mask].flatten()
     alpha_vals = alpha[valid_mask].flatten()    
     
     
     fs = 15
-    
     if cbar:
         fig = plt.figure(figsize=(7.5, 7))
+        fig.subplots_adjust(left=0.18)
     else:
         fig = plt.figure(figsize=(7, 7))
-    
+        fig.subplots_adjust(left=0.15)
+        
     ax = fig.add_subplot(111, projection='3d')
-
-
 
     get_cmap = plt.get_cmap(cmap)
 
@@ -946,8 +949,11 @@ def haalpha_plot_fp(H, A, alpha, pname = None, cmap='jet',
     if cbar:
         sm = ScalarMappable(cmap=cmap, norm=norm_option)
         sm.set_array(all_counts)
-        fig.colorbar(sm, ax=ax, shrink=0.7, pad=0.04, label='# samples')
-
+        # fig.colorbar(sm, ax=ax, shrink=0.7, pad=0.04, label='# samples')
+        cb = fig.colorbar(sm, ax=ax, shrink=0.7, pad=0.04)
+        cb.set_label('# samples', fontsize=fs)         # Label font size
+        cb.ax.tick_params(labelsize=fs)  
+    
     plt.tight_layout()
     
     if pname is not None:
@@ -955,4 +961,5 @@ def haalpha_plot_fp(H, A, alpha, pname = None, cmap='jet',
             pname = os.path.join(pname, 'haalpha_plot_fp.png')  
             
         plt.savefig(pname,dpi=300,bbox_inches='tight',pad_inches=0.3)
-
+        
+    # plt.show()

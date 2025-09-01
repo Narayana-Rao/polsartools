@@ -5,7 +5,7 @@ from polsartools.utils.utils import time_it
 
 
 @time_it
-def clip(folder_path, output_folder, 
+def clip(folder_path, output_folder=None, 
          start_x=None, start_y=None, dx=None, dy=None,
          north=None, south=None, east=None, west=None,
          vector_path=None, outType='tif', auto_reference=True):
@@ -31,7 +31,7 @@ def clip(folder_path, output_folder,
     folder_path : str
         Path to the input folder containing PolSAR matrix rasters (e.g., C3, C2, T3).
     output_folder : str
-        Path to the folder where clipped rasters will be saved.
+        Path to the folder where clipped rasters will be saved. Defaults to a subfolder named "clip" in the input folder.
     start_x : int, optional
         Starting pixel index along the x-axis (column) for pixel-based clipping.
     start_y : int, optional
@@ -68,7 +68,9 @@ def clip(folder_path, output_folder,
 
     """
 
-
+    if output_folder is None:
+        output_folder = os.path.join(os.path.dirname(folder_path), "clip") 
+    
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 

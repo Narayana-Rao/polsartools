@@ -11,6 +11,7 @@ def read_bin(file):
     ds = gdal.Open(file)
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
+    arr[arr==0] = np.nan
     return arr
 
 def norm_data(data,lp=5,gp=95,dB_scale = True):
@@ -58,7 +59,8 @@ def get_alpha_channel(red, green, blue):
     """
     zeros_mask = (red == 0.0) & (green == 0.0) & (blue == 0.0)
     nan_mask = np.isnan(red) & np.isnan(green) & np.isnan(blue)
-    transparent_mask = zeros_mask | nan_mask
+    transparent_mask = nan_mask
+    # transparent_mask = zeros_mask | nan_mask
     return np.where(transparent_mask, 0, 255).astype(np.uint8)
 
 def generate_rgb_png(red, green, blue,georef_file, output_path):
