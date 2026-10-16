@@ -31,6 +31,7 @@ Following are the avaialble functions for full-pol data:
     functions/full_pol/GRVI
     functions/full_pol/PRVI_fp
     functions/full_pol/DOP_fp
+    functions/full_pol/diversity_fp
  
 
 Compact-pol functions

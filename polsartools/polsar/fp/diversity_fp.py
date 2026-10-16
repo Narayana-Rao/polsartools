@@ -7,7 +7,7 @@ from polsartools.utils.convert_matrices import C3_T3_mat
 from polsartools.polsar.fp.fp_infiles import fp_c3t3files
 
 @time_it
-def div_fp(in_dir,win=1, fmt="tif", cog=False, 
+def diversity_fp(in_dir,win=1, fmt="tif", cog=False, 
           ovr = [2, 4, 8, 16], comp=False,
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
