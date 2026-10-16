@@ -107,6 +107,7 @@ setup(
         'tables',
         'requests',
         'netcdf4',
+        'geopandas',
         'scikit-image',
         
     ],

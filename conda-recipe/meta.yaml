@@ -30,6 +30,7 @@ requirements:
     - gdal <=3.11.0
     - pytest
     - requests
+    - geopandas
 
 test:
   commands:
