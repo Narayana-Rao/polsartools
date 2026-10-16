@@ -105,6 +105,7 @@ setup(
         'matplotlib',
         'pybind11',
         'tables',
+        'requests',
         'netcdf4',
         'scikit-image',
         

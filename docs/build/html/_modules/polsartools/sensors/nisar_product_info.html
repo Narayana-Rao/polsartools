@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>polsartools.sensors.nisar_product_info &#8212; PolSARtools 0.13 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+
+    <script src="../../../_static/documentation_options.js?v=9bec1924"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/nisar_product_info';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="../../../_static/icon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/icon.png" class="logo__image only-light" alt=""/>
+    <img src="../../../_static/icon.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PolSARtools</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.sensors.nisar_product_info</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for polsartools.sensors.nisar_product_info</h1><div class="highlight"><pre>
+<span></span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tables</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tables.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataTypeWarning</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">DataTypeWarning</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">polsartools</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">identify_nisar_product</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+
+        <span class="n">band</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;/science/LSAR&quot;</span> <span class="ow">in</span> <span class="n">h5file</span><span class="p">:</span>
+            <span class="n">band</span> <span class="o">=</span> <span class="s2">&quot;LSAR&quot;</span>
+        <span class="k">elif</span> <span class="s2">&quot;/science/SSAR&quot;</span> <span class="ow">in</span> <span class="n">h5file</span><span class="p">:</span>
+            <span class="n">band</span> <span class="o">=</span> <span class="s2">&quot;SSAR&quot;</span>
+
+        <span class="n">product_type</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">supported_products</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;RSLC&quot;</span><span class="p">,</span> <span class="s2">&quot;GSLC&quot;</span><span class="p">,</span> <span class="s2">&quot;GCOV&quot;</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">band</span> <span class="o">!=</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">prod</span> <span class="ow">in</span> <span class="n">supported_products</span><span class="p">:</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">prod</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">h5file</span><span class="p">:</span>
+                    <span class="n">product_type</span> <span class="o">=</span> <span class="n">prod</span>
+                    <span class="k">break</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">product_type</span><span class="p">:</span>
+            <span class="n">product_type</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+
+        <span class="k">return</span> <span class="n">band</span><span class="p">,</span> <span class="n">product_type</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_rslc_meta</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">product_type</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prints a summary of metadata for a given NISAR HDF5 product file.</span>
+
+<span class="sd">    This function checks the given NASA-ISRO NISAR product file, </span>
+<span class="sd">    identifies its radar band (L-band or S-band) and product type (RSLC, GSLC, </span>
+<span class="sd">    or GCOV), and outputs a detailed text summary. </span>
+
+<span class="sd">    The printed report includes:</span>
+<span class="sd">        - Product identification (Band, Product Type, Polarizations)</span>
+<span class="sd">        - Acquisition bandwidth and orbit pass direction</span>
+<span class="sd">        - Acquisition start/end timestamps and calculated duration</span>
+<span class="sd">        - Spatial grid and pixel spacing parameters (along-track, slant/ground range, </span>
+<span class="sd">          or UTM coordinate spacings)</span>
+<span class="sd">        - Bounding polygon geographic corners (NW, NE, SE, SW)</span>
+<span class="sd">        - Near, mid, and far-range incidence angle</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        `product_file` (str or pathlib.Path): Path to the NISAR HDF5 data product file.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If the specified `product_file` does not exist.</span>
+<span class="sd">        KeyError: If expected HDF5 internal paths or datasets are missing.</span>
+<span class="sd">        ValueError: If the product type or band cannot be correctly identified </span>
+<span class="sd">            or is unsupported.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; nisar_product_info(&quot;path/to/NISAR_PRODUCT.h5&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">band</span> <span class="o">==</span> <span class="s2">&quot;LSAR&quot;</span><span class="p">:</span>
+        <span class="n">band_prefix</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+    <span class="k">elif</span> <span class="n">band</span> <span class="o">==</span> <span class="s2">&quot;SSAR&quot;</span><span class="p">:</span>
+        <span class="n">band_prefix</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown band. Cannot proceed.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+        <span class="c1"># 1. Read spacing values</span>
+        <span class="n">along_track</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/RSLC/swaths/frequencyA/sceneCenterAlongTrackSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">ground_range</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/RSLC/swaths/frequencyA/sceneCenterGroundRangeSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">incidence_angle</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/RSLC/metadata/geolocationGrid/incidenceAngle&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">orbit_pass_direction</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/identification/orbitPassDirection&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">slant_range</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/RSLC/swaths/frequencyA/slantRangeSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">zero_doppler_end_time</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/identification/zeroDopplerEndTime&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">zero_doppler_start_time</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/identification/zeroDopplerStartTime&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/swaths/frequencyA/listOfPolarizations&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="n">listOfPolarizations</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="n">acquiredRangeBandwidth</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/swaths/frequencyA/acquiredRangeBandwidth&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">num_cols</span> <span class="o">=</span> <span class="n">incidence_angle</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Calculate the mean of the first, middle, and last columns</span>
+        <span class="n">min_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">incidence_angle</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">center_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">incidence_angle</span><span class="p">[:,</span> <span class="n">num_cols</span> <span class="o">//</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="n">max_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">incidence_angle</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+
+
+        <span class="c1"># 2. Read and decode the bounding polygon</span>
+        <span class="n">polygon_node</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/identification/boundingPolygon&quot;</span><span class="p">)</span>
+        <span class="n">polygon_val</span> <span class="o">=</span> <span class="n">polygon_node</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">polygon_str</span> <span class="o">=</span> <span class="n">polygon_val</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">polygon_val</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">polygon_val</span><span class="p">)</span>
+        
+        <span class="c1"># Extract coordinate triplets (Longitude, Latitude, Height)</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([-+]?\d*\.\d+|\d+)\s+([-+]?\d*\.\d+|\d+)\s+([-+]?\d*\.\d+|\d+)&quot;</span><span class="p">,</span> <span class="n">polygon_str</span><span class="p">)</span>
+        
+        <span class="n">lons</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
+        <span class="n">lats</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
+        
+        <span class="c1"># 3. Derive the 4 bounding rectangle corners (Longitude, Latitude)</span>
+        <span class="n">min_lon</span><span class="p">,</span> <span class="n">max_lon</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lons</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lons</span><span class="p">)</span>
+        <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lat</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lats</span><span class="p">)</span>
+        
+        <span class="n">corners</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Top-Left (NW)&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">min_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">),</span>
+            <span class="s2">&quot;Top-Right (NE)&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">max_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">),</span>
+            <span class="s2">&quot;Bottom-Right (SE)&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">max_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">),</span>
+            <span class="s2">&quot;Bottom-Left (SW)&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">min_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">)</span>
+        <span class="p">}</span>
+
+
+        <span class="n">val</span> <span class="o">=</span> <span class="n">orbit_pass_direction</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">orbit_pass_direction</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">orbit_pass_direction</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">time_bytes</span> <span class="o">=</span> <span class="n">zero_doppler_end_time</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">time_str</span> <span class="o">=</span> <span class="n">time_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">dt_obj</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">time_str</span><span class="p">[:</span><span class="mi">26</span><span class="p">])</span>
+        <span class="n">start_bytes</span> <span class="o">=</span> <span class="n">zero_doppler_start_time</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">end_bytes</span> <span class="o">=</span> <span class="n">zero_doppler_end_time</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="n">start_str</span> <span class="o">=</span> <span class="n">start_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">end_str</span> <span class="o">=</span> <span class="n">end_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+        <span class="c1"># 2. Parse into datetime objects (slicing to [:26] avoids nanosecond overflow errors)</span>
+        <span class="n">start_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">start_str</span><span class="p">[:</span><span class="mi">26</span><span class="p">])</span>
+        <span class="n">end_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">end_str</span><span class="p">[:</span><span class="mi">26</span><span class="p">])</span>
+
+        <span class="c1"># 3. Calculate the time difference (duration)</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">end_dt</span> <span class="o">-</span> <span class="n">start_dt</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">band</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;SAR&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-band </span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2"> with polarizations: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acquired Range Bandwidth: </span><span class="si">{</span><span class="n">acquiredRangeBandwidth</span><span class="o">/</span><span class="mf">1e6</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> MHz&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Orbit Pass Direction: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Acquisition Date/Time (UTC):&quot;</span><span class="p">,</span> <span class="n">dt_obj</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acquisition Duration: </span><span class="si">{</span><span class="n">duration</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Along-Track Spacing:  </span><span class="si">{</span><span class="n">along_track</span><span class="si">:</span><span class="s2">3.3f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ground Range Spacing: </span><span class="si">{</span><span class="n">ground_range</span><span class="si">:</span><span class="s2">3.3f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Slant Range Spacing: </span><span class="si">{</span><span class="n">slant_range</span><span class="si">:</span><span class="s2">3.3f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coverage Coordinates (Longitude, Latitude):&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span> <span class="ow">in</span> <span class="n">corners</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;17</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">lon</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">lat</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Near-range Incidence Angle:  </span><span class="si">{</span><span class="n">min_angle</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mid-range Incidence Angle:  </span><span class="si">{</span><span class="n">center_angle</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;far-range Incidence Angle: </span><span class="si">{</span><span class="n">max_angle</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_gslc_meta</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">product_type</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">band</span> <span class="o">==</span> <span class="s2">&quot;LSAR&quot;</span><span class="p">:</span>
+        <span class="n">band_prefix</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+    <span class="k">elif</span> <span class="n">band</span> <span class="o">==</span> <span class="s2">&quot;SSAR&quot;</span><span class="p">:</span>
+        <span class="n">band_prefix</span> <span class="o">=</span> <span class="s2">&quot;S&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown band. Cannot proceed.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+        <span class="c1"># 1. Read spacing values</span>
+        
+        <span class="k">if</span> <span class="n">band</span> <span class="o">==</span> <span class="s2">&quot;LSAR&quot;</span><span class="p">:</span>
+            <span class="n">along_track</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/metadata/sourceData/swaths/frequencyA/sceneCenterAlongTrackSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">product_type</span> <span class="o">==</span> <span class="s2">&quot;GSLC&quot;</span><span class="p">:</span>
+            <span class="n">slant_range</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/grids/frequencyA/slantRangeSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">product_type</span> <span class="o">==</span> <span class="s2">&quot;GCOV&quot;</span><span class="p">:</span>
+            <span class="n">slant_range</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/metadata/sourceData/swaths/frequencyA/slantRangeSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="c1"># ground_range = h5file.get_node(f&quot;/science/{band_prefix}SAR/{product_type}/metadata/sourceData/swaths/frequencyA/sceneCenterGroundRangeSpacing&quot;).read()</span>
+        <span class="n">x_coordinate_spacing</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/grids/frequencyA/xCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">y_coordinate_spacing</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/grids/frequencyA/yCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/grids/frequencyA/listOfPolarizations&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="n">listOfPolarizations</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">incidence_angle</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/metadata/radarGrid/incidenceAngle&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">orbit_pass_direction</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/identification/orbitPassDirection&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">band</span> <span class="o">==</span> <span class="s2">&quot;LSAR&quot;</span><span class="p">:</span>
+            <span class="n">acquiredRangeBandwidth</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/metadata/sourceData/swaths/frequencyA/acquiredRangeBandwidth&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">band</span> <span class="o">==</span> <span class="s2">&quot;SSAR&quot;</span> <span class="ow">and</span> <span class="n">product_type</span> <span class="o">==</span> <span class="s2">&quot;GCOV&quot;</span><span class="p">:</span>
+            <span class="n">acquiredRangeBandwidth</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/metadata/sourceData/swaths/frequencyA/rangeBandwidth&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">band</span> <span class="o">==</span> <span class="s2">&quot;SSAR&quot;</span> <span class="ow">and</span> <span class="n">product_type</span> <span class="o">==</span> <span class="s2">&quot;GSLC&quot;</span><span class="p">:</span>
+            <span class="n">acquiredRangeBandwidth</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/grids/frequencyA/rangeBandwidth&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">zero_doppler_end_time</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/identification/zeroDopplerEndTime&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">zero_doppler_start_time</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/identification/zeroDopplerStartTime&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">num_cols</span> <span class="o">=</span> <span class="n">incidence_angle</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Calculate the mean of the first, middle, and last columns</span>
+        <span class="n">min_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">incidence_angle</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">center_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">incidence_angle</span><span class="p">[:,</span> <span class="n">num_cols</span> <span class="o">//</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="n">max_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">incidence_angle</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># 2. Read and decode the bounding polygon</span>
+        <span class="n">polygon_node</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">band_prefix</span><span class="si">}</span><span class="s2">SAR/identification/boundingPolygon&quot;</span><span class="p">)</span>
+        <span class="n">polygon_val</span> <span class="o">=</span> <span class="n">polygon_node</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">polygon_str</span> <span class="o">=</span> <span class="n">polygon_val</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">polygon_val</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">polygon_val</span><span class="p">)</span>
+        
+        <span class="c1"># Extract coordinate triplets (Longitude, Latitude, Height)</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([-+]?\d*\.\d+|\d+)\s+([-+]?\d*\.\d+|\d+)\s+([-+]?\d*\.\d+|\d+)&quot;</span><span class="p">,</span> <span class="n">polygon_str</span><span class="p">)</span>
+        
+        <span class="n">lons</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
+        <span class="n">lats</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
+        
+        <span class="c1"># 3. Derive the 4 bounding rectangle corners (Longitude, Latitude)</span>
+        <span class="n">min_lon</span><span class="p">,</span> <span class="n">max_lon</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lons</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lons</span><span class="p">)</span>
+        <span class="n">min_lat</span><span class="p">,</span> <span class="n">max_lat</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lats</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lats</span><span class="p">)</span>
+        
+        <span class="n">corners</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Top-Left (NW)&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">min_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">),</span>
+            <span class="s2">&quot;Top-Right (NE)&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">max_lon</span><span class="p">,</span> <span class="n">max_lat</span><span class="p">),</span>
+            <span class="s2">&quot;Bottom-Right (SE)&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">max_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">),</span>
+            <span class="s2">&quot;Bottom-Left (SW)&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">min_lon</span><span class="p">,</span> <span class="n">min_lat</span><span class="p">)</span>
+        <span class="p">}</span>
+
+
+        <span class="n">val</span> <span class="o">=</span> <span class="n">orbit_pass_direction</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">orbit_pass_direction</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">orbit_pass_direction</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">time_bytes</span> <span class="o">=</span> <span class="n">zero_doppler_end_time</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">time_str</span> <span class="o">=</span> <span class="n">time_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">dt_obj</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">time_str</span><span class="p">[:</span><span class="mi">26</span><span class="p">])</span>
+        <span class="n">start_bytes</span> <span class="o">=</span> <span class="n">zero_doppler_start_time</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">end_bytes</span> <span class="o">=</span> <span class="n">zero_doppler_end_time</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="n">start_str</span> <span class="o">=</span> <span class="n">start_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">end_str</span> <span class="o">=</span> <span class="n">end_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
+        <span class="c1"># 2. Parse into datetime objects (slicing to [:26] avoids nanosecond overflow errors)</span>
+        <span class="n">start_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">start_str</span><span class="p">[:</span><span class="mi">26</span><span class="p">])</span>
+        <span class="n">end_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">end_str</span><span class="p">[:</span><span class="mi">26</span><span class="p">])</span>
+
+        <span class="c1"># 3. Calculate the time difference (duration)</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">end_dt</span> <span class="o">-</span> <span class="n">start_dt</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">band</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;SAR&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-band </span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2"> with polarizations: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acquired Range Bandwidth: </span><span class="si">{</span><span class="n">acquiredRangeBandwidth</span><span class="o">/</span><span class="mf">1e6</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> MHz&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Orbit Pass Direction: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Acquisition Date/Time (UTC):&quot;</span><span class="p">,</span> <span class="n">dt_obj</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Acquisition Duration: </span><span class="si">{</span><span class="n">duration</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">band</span> <span class="o">==</span> <span class="s2">&quot;LSAR&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Along-Track Spacing:  </span><span class="si">{</span><span class="n">along_track</span><span class="si">:</span><span class="s2">3.3f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Slant Range Spacing: </span><span class="si">{</span><span class="n">slant_range</span><span class="si">:</span><span class="s2">3.3f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;X Coordinate Spacing (ground): </span><span class="si">{</span><span class="n">x_coordinate_spacing</span><span class="si">:</span><span class="s2">3.1f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Y Coordinate Spacing (ground): </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">y_coordinate_spacing</span><span class="p">)</span><span class="si">:</span><span class="s2">3.1f</span><span class="si">}</span><span class="s2"> m&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coverage Coordinates (Longitude, Latitude):&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span> <span class="ow">in</span> <span class="n">corners</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;17</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">lon</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">lat</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Near-range Incidence Angle:  </span><span class="si">{</span><span class="n">min_angle</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mid-range Incidence Angle:  </span><span class="si">{</span><span class="n">center_angle</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;far-range Incidence Angle: </span><span class="si">{</span><span class="n">max_angle</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">°&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="nisar_product_info">
+<a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_product_info">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nisar_product_info</span><span class="p">(</span><span class="n">product_file</span><span class="p">):</span>
+
+    <span class="n">band</span><span class="p">,</span> <span class="n">product_type</span> <span class="o">=</span> <span class="n">identify_nisar_product</span><span class="p">(</span><span class="n">product_file</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">product_file</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;FrequencyA metadata&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">product_type</span> <span class="o">==</span> <span class="s2">&quot;RSLC&quot;</span><span class="p">:</span>
+        <span class="n">print_rslc_meta</span><span class="p">(</span><span class="n">product_file</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">product_type</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">product_type</span> <span class="o">==</span> <span class="s2">&quot;GSLC&quot;</span> <span class="ow">or</span> <span class="n">product_type</span> <span class="o">==</span> <span class="s2">&quot;GCOV&quot;</span><span class="p">:</span>
+        <span class="n">print_gslc_meta</span><span class="p">(</span><span class="n">product_file</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">product_type</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported product type: </span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, PolSARtools team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

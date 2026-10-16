@@ -24,3 +24,9 @@ Generate polarimetric signatures for FP data (``signature_fp``)
 
 .. autofunction:: polsartools.signature_fp
    :noindex:
+
+Samples pixel values from rasters(``sample_rasters``)
+------------------------------------------------------
+
+.. autofunction:: polsartools.sample_rasters
+   :noindex:

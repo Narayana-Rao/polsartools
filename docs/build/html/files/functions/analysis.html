@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Generate Pauli RGB for FP data (pauli_rgb) &#8212; PolSARtools 0.12.1 documentation</title>
+    <title>Generate Pauli RGB for FP data (pauli_rgb) &#8212; PolSARtools 0.13 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../_static/documentation_options.js?v=c5b435e8"></script>
+    <script src="../../_static/documentation_options.js?v=9bec1924"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/analysis';</script>
@@ -371,6 +371,7 @@
 
 
 
+
 <li class="toctree-l1"><a class="reference internal" href="full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
@@ -609,6 +610,77 @@ If None, only theoretical/canonical plots will be generated.</p></li>
 </dd></dl>
 
 </section>
+<section id="samples-pixel-values-from-rasters-sample-rasters">
+<h1>Samples pixel values from rasters(<code class="docutils literal notranslate"><span class="pre">sample_rasters</span></code>)<a class="headerlink" href="#samples-pixel-values-from-rasters-sample-rasters" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">sample_rasters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raster_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/sample_rasters.html#sample_rasters"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Samples pixel values from one or more raster files at point locations specified
+in a vector file, with automatic spatial reference verification and reprojection.</p>
+<p>This function automatically checks if the vector file’s coordinate reference system (CRS)
+matches the reference raster. If they mismatch, it reprojects the vector file on-the-fly
+to a temporary GeoPackage, extracts the raster values (or windowed averages if <cite>window &gt; 1</cite>),
+appends them as new attributes, saves the resulting GeoDataFrame, and cleans up any temporary files.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>raster_files<span class="classifier">str or list of str</span></dt><dd><p>A single file path string or a list of file paths pointing to the target raster dataset(s).</p>
+</dd>
+<dt>vector_file<span class="classifier">str</span></dt><dd><p>File path to the input vector dataset (e.g., Shapefile, GeoJSON, GeoPackage) containing point geometries.</p>
+</dd>
+<dt>output_file<span class="classifier">str</span></dt><dd><p>File path where the final sampled vector dataset will be saved.</p>
+</dd>
+<dt>window<span class="classifier">int, optional</span></dt><dd><p>The size of the square neighborhood window (in pixels) to sample around each point.
+- If window=1 (default), it extracts the exact pixel value at the point location.
+- If window &gt; 1, it computes the local spatial mean (ignoring NoData values) within the window.</p>
+</dd>
+<dt>custom_column_names<span class="classifier">dict, optional</span></dt><dd><p>A dictionary mapping raster base names to custom column names for the output attributes.
+If None, column names are automatically generated from the raster file names using <cite>create_column_names()</cite>.
+Example: { “NISAR_HH_band_20260119”: “backscatter_hh”, “NISAR_HV_band_20260119”: “backscatter_hv”}</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>None</dt><dd><p>The sampled dataset is written directly to <cite>output_file</cite>.</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h2>Examples:<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 1: Sampling multiple rasters with default settings</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">raster_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;/ratser1.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;/raster2.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;/raster3.tif&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_rasters</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">raster_files</span><span class="o">=</span><span class="n">raster_list</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">vector_file</span><span class="o">=</span><span class="s2">&quot;test_points.geojson&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;test_points_sampled.geojson&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">window</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 2: Using a 3x3 window mean for neighborhood extraction</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_rasters</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">raster_files</span><span class="o">=</span><span class="n">raster_list</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">vector_file</span><span class="o">=</span><span class="s2">&quot;test_points.geojson&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;test_points_window_sampled.geojson&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">window</span><span class="o">=</span><span class="mi">3</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 3: Passing a single raster file path string</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_rasters</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">raster_files</span><span class="o">=</span><span class="s2">&quot;raster1.tif&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">vector_file</span><span class="o">=</span><span class="s2">&quot;test_points.geojson&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;single_raster_sampled.geojson&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">window</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
 
 
                 </article>
@@ -661,6 +733,7 @@ If None, only theoretical/canonical plots will be generated.</p></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-false-color-rgb-for-dp-cp-data-rgb-dp">Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">rgb_dp</span></code>)</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-false-color-rgb-for-decomposed-powers-rgb">Generate false color RGB for decomposed powers (<code class="docutils literal notranslate"><span class="pre">rgb</span></code>)</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-polarimetric-signatures-for-fp-data-signature-fp">Generate polarimetric signatures for FP data (<code class="docutils literal notranslate"><span class="pre">signature_fp</span></code>)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#samples-pixel-values-from-rasters-sample-rasters">Samples pixel values from rasters(<code class="docutils literal notranslate"><span class="pre">sample_rasters</span></code>)</a></li>
 </ul>
 
   </nav></div>
